@@ -1,0 +1,14 @@
+<h1 id="tableLabel">Weather forecast</h1>
+
+<p>This component demonstrates fetching data from the server.</p>
+
+<p *ngIf="!forecasts?.length"><em>Loading...</em></p>
+
+<ag-grid-angular
+  *ngIf="forecasts.length"
+  [columnDefs]="columnDefs"
+  [rowData]="forecasts"
+  class="ag-theme-quartz"
+  style="height: 500px;"
+>
+</ag-grid-angular>

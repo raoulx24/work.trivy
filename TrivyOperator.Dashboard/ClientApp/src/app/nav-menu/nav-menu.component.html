@@ -1,0 +1,44 @@
+<header>
+  <nav
+    class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3"
+  >
+    <div class="container">
+      <a [routerLink]="['/']" class="navbar-brand">TrivyOperator.Dashboard</a>
+      <button
+        (click)="toggle()"
+        [attr.aria-expanded]="isExpanded"
+        aria-label="Toggle navigation"
+        class="navbar-toggler"
+        data-target=".navbar-collapse"
+        data-toggle="collapse"
+        type="button"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div
+        [ngClass]="{ show: isExpanded }"
+        class="navbar-collapse collapse d-sm-inline-flex justify-content-end"
+      >
+        <ul class="navbar-nav flex-grow">
+          <li
+            [routerLinkActiveOptions]="{ exact: true }"
+            [routerLinkActive]="['link-active']"
+            class="nav-item"
+          >
+            <a [routerLink]="['/']" class="nav-link text-dark">Home</a>
+          </li>
+          <li [routerLinkActive]="['link-active']" class="nav-item">
+            <a [routerLink]="['/counter']" class="nav-link text-dark"
+            >Counter</a
+            >
+          </li>
+          <li [routerLinkActive]="['link-active']" class="nav-item">
+            <a [routerLink]="['/fetch-data']" class="nav-link text-dark"
+            >Fetch data</a
+            >
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>
