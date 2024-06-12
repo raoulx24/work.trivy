@@ -82,10 +82,8 @@ else
 //app.UseHttpsRedirection();
 app.UseSerilogRequestLogging();
 app.UseRouting();
-//app.UseCors();
-app.MapControllerRoute(
-    "default",
-    "{controller}/{action=Index}/{id?}");
+app.UseCors();
+app.MapControllers();
 app.MapFallbackToFile("index.html");
 
 await app.RunAsync().ConfigureAwait(false);

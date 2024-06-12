@@ -5,10 +5,10 @@ using TrivyOperator.Dashboard.Domain.Services.Abstractions;
 namespace TrivyOperator.Dashboard.Application.Controllers;
 
 [ApiController]
-[Route("[controller]")]
-public class WeatherForecastController(
+[Route("api/weather-forecasts")]
+public class WeatherForecastsController(
     IWeatherForecastDomainService weatherForecastDomainService,
-    ILogger<WeatherForecastController> logger) : ControllerBase
+    ILogger<WeatherForecastsController> logger) : ControllerBase
 {
     [HttpGet(Name = "get")]
     [ProducesResponseType<IEnumerable<WeatherForecast>>(StatusCodes.Status200OK)]

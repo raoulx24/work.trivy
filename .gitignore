@@ -233,6 +233,3 @@ _Pvt_Extensions
 # JetBrains Rider
 .idea/
 *.sln.iml
-
-TrivyOperator.Dashboard/ClientApp/.angular
-TrivyOperator.Dashboard/ClientApp/node_modules

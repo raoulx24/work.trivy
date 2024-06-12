@@ -5,6 +5,7 @@
 /dist-server
 /tmp
 /out-tsc
+/.angular
 
 # dependencies
 /node_modules
@@ -41,3 +42,6 @@ Thumbs.db
 
 # ng-openapi-gen generated
 src/api
+
+# allow Angular build folder
+!/build

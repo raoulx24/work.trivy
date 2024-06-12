@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {ColDef} from "ag-grid-community";
-import {WeatherForecastService} from "../../api/services/weather-forecast.service";
+import {WeatherForecastsService} from "../../api/services/weather-forecasts.service";
 import {WeatherForecast} from "../../api/models/weather-forecast";
 
 @Component({
@@ -16,7 +16,7 @@ export class FetchDataComponent {
     {headerName: 'Summary', field: "summary", filter: true, flex: 1}
   ];
 
-  constructor(weatherForecastService: WeatherForecastService) {
-    weatherForecastService.get$Json().subscribe(result => this.forecasts = result, error => console.error(error))
+  constructor(weatherForecastsService: WeatherForecastsService) {
+    weatherForecastsService.get$Json().subscribe(result => this.forecasts = result, error => console.error(error))
   }
 }
