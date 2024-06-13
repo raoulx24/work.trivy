@@ -17,6 +17,6 @@ export class FetchDataComponent {
   ];
 
   constructor(vulnerabilityReportsService: VulnerabilityReportsService) {
-    vulnerabilityReportsService.getAll1$Json().subscribe(result => this.vulnerabilities = result.result!, error => console.error(error))
+    vulnerabilityReportsService.getAll$Json().subscribe(result => this.vulnerabilities = result, error => console.error(error))
   }
 }
