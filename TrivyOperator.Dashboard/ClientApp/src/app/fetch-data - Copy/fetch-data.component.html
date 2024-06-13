@@ -1,13 +1,13 @@
-<h1 id="tableLabel">Weather forecast</h1>
+<h1 id="tableLabel">Weather forecast 1</h1>
 
 <p>This component demonstrates fetching data from the server.</p>
 
-<p *ngIf="!vulnerabilities?.length"><em>Loading...</em></p>
+<p *ngIf="!forecasts?.length"><em>Loading...</em></p>
 
 <ag-grid-angular
-  *ngIf="vulnerabilities.length"
+  *ngIf="forecasts.length"
   [columnDefs]="columnDefs"
-  [rowData]="vulnerabilities"
+  [rowData]="forecasts"
   class="ag-theme-quartz"
   style="height: 500px;"
 >

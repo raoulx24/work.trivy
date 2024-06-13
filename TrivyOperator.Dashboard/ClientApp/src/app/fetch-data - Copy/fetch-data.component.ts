@@ -1,14 +1,14 @@
 import {Component} from '@angular/core';
 import {ColDef} from "ag-grid-community";
-import { VulnerabilityReportsService } from "../../api/services/vulnerability-reports.service";
-import { VulnerabilityDto } from "../../api/models/vulnerability-dto";
+import {WeatherForecastsService} from "../../api/services/weather-forecasts.service";
+import {WeatherForecast} from "../../api/models/weather-forecast";
 
 @Component({
-  selector: 'app-fetch-data',
+  selector: 'app-fetch-data1',
   templateUrl: './fetch-data.component.html',
 })
 export class FetchDataComponent {
-  public vulnerabilities: VulnerabilityDto[] = [];
+  public forecasts: WeatherForecast[] = [];
   public columnDefs: ColDef[] = [
     {headerName: 'Date', field: "date", filter: true, flex: 1},
     {headerName: 'Temp. (C)', field: "temperatureC", filter: true, flex: 1},
@@ -16,7 +16,7 @@ export class FetchDataComponent {
     {headerName: 'Summary', field: "summary", filter: true, flex: 1}
   ];
 
-  constructor(vulnerabilityReportsService: VulnerabilityReportsService) {
-    vulnerabilityReportsService.getAll1$Json().subscribe(result => this.vulnerabilities = result.result!, error => console.error(error))
+  constructor(weatherForecastsService: WeatherForecastsService) {
+    weatherForecastsService.get$Json().subscribe(result => this.forecasts = result, error => console.error(error))
   }
 }
