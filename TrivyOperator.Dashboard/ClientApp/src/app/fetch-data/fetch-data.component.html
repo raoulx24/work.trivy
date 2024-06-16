@@ -7,8 +7,15 @@
 <ag-grid-angular
   *ngIf="vulnerabilities.length"
   [columnDefs]="columnDefs"
+  [defaultColDef]="defaultColDef"
   [rowData]="vulnerabilities"
-  class="ag-theme-quartz"
+  [rowSelection]="rowSelection"
+  class="ag-theme-quartz-auto-dark"
   style="height: 500px;"
+  (gridReady)="onGridReady($event)"
 >
 </ag-grid-angular>
+
+<div style="margin: 10px 0;">
+  <button (click)="onBtnExport()">Download CSV export file</button>
+</div>
