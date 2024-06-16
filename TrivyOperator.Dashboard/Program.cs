@@ -60,8 +60,14 @@ builder.Services.AddCors(options =>
     options.AddDefaultPolicy(configurePolicy => configurePolicy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
 
 builder.Services.AddScoped<IWeatherForecastDomainService, WeatherForecastDomainService>();
+
 builder.Services.AddScoped<IK8sClientFactory, K8sClientFactory>();
+
 builder.Services.AddScoped<IVulnerabilityReportService, VulnerabilityReportService>();
+builder.Services.AddScoped<IVulnerabilityReportDomainService, VulnerabilityReportDomainService>();
+
+builder.Services.AddScoped<IKubernetesNamespaceService, KubernetesNamespaceService>();
+builder.Services.AddScoped<IKubernetesNamespaceDomainService, KubernetesNamespaceDomainService>();
 
 var app = builder.Build();
 
