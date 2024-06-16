@@ -4,10 +4,10 @@ import {WeatherForecastsService} from "../../api/services/weather-forecasts.serv
 import {WeatherForecast} from "../../api/models/weather-forecast";
 
 @Component({
-  selector: 'app-fetch-data1',
-  templateUrl: './fetch-data.component.html',
+  selector: 'app-fetch-weather-forecasts-data',
+  templateUrl: './fetch-weather-forecasts-data.component.html',
 })
-export class FetchDataComponent {
+export class FetchWeatherForecastsDataComponent {
   public forecasts: WeatherForecast[] = [];
   public columnDefs: ColDef[] = [
     {headerName: 'Date', field: "date", filter: true, flex: 1},
