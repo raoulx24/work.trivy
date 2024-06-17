@@ -12,9 +12,6 @@ import {FetchDataComponent} from './fetch-data/fetch-data.component';
 import {AgGridModule} from "ag-grid-angular";
 import {ApiModule} from "../api/api.module";
 import {environment} from "../environments/environment";
-import {
-  FetchWeatherForecastsDataComponent
-} from "./fetch-weather-forecasts-data/fetch-weather-forecasts-data.component";
 
 @NgModule({
   declarations: [
@@ -23,7 +20,6 @@ import {
     HomeComponent,
     CounterComponent,
     FetchDataComponent,
-    FetchWeatherForecastsDataComponent
   ],
   imports: [
     BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
@@ -33,7 +29,6 @@ import {
       {path: '', component: HomeComponent, pathMatch: 'full'},
       {path: 'counter', component: CounterComponent},
       {path: 'fetch-data', component: FetchDataComponent},
-      {path: 'fetch-weather-forecasts-data', component: FetchWeatherForecastsDataComponent},
     ]),
     AgGridModule,
     ApiModule.forRoot({rootUrl: environment.baseUrl})

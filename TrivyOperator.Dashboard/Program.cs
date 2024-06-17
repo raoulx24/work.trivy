@@ -59,7 +59,6 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options =>
     options.AddDefaultPolicy(configurePolicy => configurePolicy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
 
-builder.Services.AddScoped<IWeatherForecastDomainService, WeatherForecastDomainService>();
 
 builder.Services.AddScoped<IK8sClientFactory, K8sClientFactory>();
 
