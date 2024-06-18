@@ -60,13 +60,15 @@ builder.Services.AddCors(options =>
     options.AddDefaultPolicy(configurePolicy => configurePolicy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
 
 
-builder.Services.AddScoped<IK8sClientFactory, K8sClientFactory>();
+builder.Services.AddSingleton<IK8sClientFactory, K8sClientFactory>();
 
 builder.Services.AddScoped<IVulnerabilityReportService, VulnerabilityReportService>();
 builder.Services.AddScoped<IVulnerabilityReportDomainService, VulnerabilityReportDomainService>();
 
 builder.Services.AddScoped<IKubernetesNamespaceService, KubernetesNamespaceService>();
 builder.Services.AddScoped<IKubernetesNamespaceDomainService, KubernetesNamespaceDomainService>();
+
+builder.Services.AddHostedService<KubernetesHostedService>();
 
 var app = builder.Build();
 
