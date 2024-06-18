@@ -14,9 +14,9 @@
             this.kubernetesNamespaceDomainService = kubernetesNamespaceDomainService;
         }
 
-        public async Task<List<string>> GetKubenetesNamespaces()
+        public async Task<List<string>> GetKubernetesNamespaces()
         {
-            return await kubernetesNamespaceDomainService.GetKubenetesNamespaces();
+            return await kubernetesNamespaceDomainService.GetKubernetesNamespaces();
         }
     }
 }

@@ -14,7 +14,7 @@
             k8sClient = k8sClientFactory.GetClient();
         }
 
-        public async Task<List<string>> GetKubenetesNamespaces()
+        public async Task<List<string>> GetKubernetesNamespaces()
         {
             V1NamespaceList namespaceList = await k8sClient.CoreV1.ListNamespaceAsync();
 

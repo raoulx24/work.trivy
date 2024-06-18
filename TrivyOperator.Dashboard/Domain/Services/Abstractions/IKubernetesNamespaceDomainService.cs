@@ -5,6 +5,6 @@
 
     public interface IKubernetesNamespaceDomainService
     {
-        Task<List<string>> GetKubenetesNamespaces();
+        Task<List<string>> GetKubernetesNamespaces();
     }
 }
