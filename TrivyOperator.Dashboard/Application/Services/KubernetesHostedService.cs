@@ -45,7 +45,7 @@ public class KubernetesHostedService(
 
     private async Task WatchPods(Kubernetes k8sClient, string k8sNamespace, CancellationToken cancellationToken)
     {
-        Task<HttpOperationResponse<V1PodList>>? listNamespacedPodResp =
+        Task<HttpOperationResponse<V1PodList>> listNamespacedPodResp =
             k8sClient.CoreV1.ListNamespacedPodWithHttpMessagesAsync(k8sNamespace, watch: true,
                 cancellationToken: cancellationToken);
         await foreach ((WatchEventType type, V1Pod? item) in listNamespacedPodResp.WatchAsync<V1Pod, V1PodList>(
