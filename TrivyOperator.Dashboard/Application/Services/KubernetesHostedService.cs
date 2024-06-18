@@ -7,7 +7,7 @@ using TrivyOperator.Dashboard.Infrastructure.Abstractions;
 
 namespace TrivyOperator.Dashboard.Application.Services;
 
-public readonly struct TaskWithCancellationToken
+public readonly struct TaskWithCts
 {
     public Task Task { get; init; }
     public CancellationTokenSource Cts { get; init; }
@@ -19,7 +19,7 @@ public class KubernetesHostedService(
     ILogger<KubernetesHostedService> logger)
     : BackgroundService
 {
-    private readonly ConcurrentDictionary<string, TaskWithCancellationToken> watchDict = new();
+    private readonly ConcurrentDictionary<string, TaskWithCts> watchDict = new();
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -30,26 +30,26 @@ public class KubernetesHostedService(
         {
             string k8sNamespace = ns.Name();
             CancellationTokenSource cts = new();
-            TaskWithCancellationToken taskWithCancellationToken = new()
+            TaskWithCts taskWithCts = new()
             {
                 Task = WatchPods(k8sClient, k8sNamespace,
                     CancellationTokenSource.CreateLinkedTokenSource(stoppingToken, cts.Token).Token),
                 Cts = cts
             };
-            watchDict[k8sNamespace] = taskWithCancellationToken;
+            watchDict[k8sNamespace] = taskWithCts;
         }
         // TODO: watch namespaces
-        // create watch pods: watchDict["default"] = taskWithCancellationToken;
+        // create watch pods: watchDict["default"] = taskWithCts;
         // cancel watch pods: await watchDict["default"].Cts.CancelAsync();
     }
 
-    private async Task WatchPods(Kubernetes k8sClient, string k8sNamespace, CancellationToken stoppingToken)
+    private async Task WatchPods(Kubernetes k8sClient, string k8sNamespace, CancellationToken cancellationToken)
     {
         Task<HttpOperationResponse<V1PodList>>? listNamespacedPodResp =
             k8sClient.CoreV1.ListNamespacedPodWithHttpMessagesAsync(k8sNamespace, watch: true,
-                cancellationToken: stoppingToken);
+                cancellationToken: cancellationToken);
         await foreach ((WatchEventType type, V1Pod? item) in listNamespacedPodResp.WatchAsync<V1Pod, V1PodList>(
-                           cancellationToken: stoppingToken))
+                           cancellationToken: cancellationToken))
         {
             using IServiceScope scope = services.CreateScope();
             foreach (IKubernetesPodWatchEventHandler handler in scope.ServiceProvider
