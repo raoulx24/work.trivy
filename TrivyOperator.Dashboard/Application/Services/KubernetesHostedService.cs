@@ -77,7 +77,6 @@ public class KubernetesHostedService(
                 case WatchEventType.Added:
                     if (!watchVulnerabilityReportCrsTaskDict.ContainsKey(k8sNamespace))
                     {
-                        // TODO: populate IConcurrentCache<string, VulnerabilityReportCR> for this namespace via some handler?
                         using IServiceScope scope = services.CreateScope();
                         foreach (IKubernetesNamespaceAddedHandler handler in scope.ServiceProvider
                                      .GetServices<IKubernetesNamespaceAddedHandler>())
