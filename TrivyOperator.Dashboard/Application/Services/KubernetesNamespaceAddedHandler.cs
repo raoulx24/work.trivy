@@ -1,15 +1,19 @@
 ﻿using TrivyOperator.Dashboard.Application.Services.Abstractions;
+using TrivyOperator.Dashboard.Domain.Services.Abstractions;
 using TrivyOperator.Dashboard.Domain.Trivy.VulnerabilityReport;
 using TrivyOperator.Dashboard.Infrastructure.Abstractions;
 
 namespace TrivyOperator.Dashboard.Application.Services;
 
-public class KubernetesNamespaceAddedHandler(IConcurrentCache<string, List<VulnerabilityReportCR>> cache)
+public class KubernetesNamespaceAddedHandler(
+    IConcurrentCache<string, List<VulnerabilityReportCR>> cache,
+    IVulnerabilityReportDomainService domainService)
     : IKubernetesNamespaceAddedHandler
 {
-    public Task Handle(string k8sNamespace)
+    public async Task Handle(string k8sNamespace)
     {
-        // TODO:
-        return Task.CompletedTask;
+        List<VulnerabilityReportCR> vulnerabilityReportCrList =
+            await domainService.GetTrivyVulnerabilities(k8sNamespace);
+        cache.TryAddValue(k8sNamespace, vulnerabilityReportCrList);
     }
 }
