@@ -31,7 +31,13 @@ public class KubernetesHostedService(
         foreach (V1Namespace item in nsList.Items)
         {
             string k8sNamespace = item.Name();
-            // TODO: populate IConcurrentCache<string, VulnerabilityReportCR> for all namespaces via some handler?
+            using IServiceScope scope = services.CreateScope();
+            foreach (IKubernetesNamespaceAddedHandler handler in scope.ServiceProvider
+                         .GetServices<IKubernetesNamespaceAddedHandler>())
+            {
+                await handler.Handle(k8sNamespace);
+            }
+
             CreateWatchVulnerabilityReportCrsTask(k8sClient, k8sNamespace, stoppingToken);
         }
 
@@ -72,6 +78,13 @@ public class KubernetesHostedService(
                     if (!watchVulnerabilityReportCrsTaskDict.ContainsKey(k8sNamespace))
                     {
                         // TODO: populate IConcurrentCache<string, VulnerabilityReportCR> for this namespace via some handler?
+                        using IServiceScope scope = services.CreateScope();
+                        foreach (IKubernetesNamespaceAddedHandler handler in scope.ServiceProvider
+                                     .GetServices<IKubernetesNamespaceAddedHandler>())
+                        {
+                            await handler.Handle(k8sNamespace);
+                        }
+
                         CreateWatchVulnerabilityReportCrsTask(k8sClient, k8sNamespace, stoppingToken);
                     }
 
@@ -80,13 +93,19 @@ public class KubernetesHostedService(
                     if (watchVulnerabilityReportCrsTaskDict.TryRemove(k8sNamespace, out TaskWithCts taskWithCts))
                     {
                         await taskWithCts.Cts.CancelAsync();
-                        // TODO: remove this namespace from IConcurrentCache<string, VulnerabilityReportCR> via some handler?
+                        using IServiceScope scope = services.CreateScope();
+                        foreach (IKubernetesNamespaceDeletedHandler handler in scope.ServiceProvider
+                                     .GetServices<IKubernetesNamespaceDeletedHandler>())
+                        {
+                            await handler.Handle(k8sNamespace);
+                        }
                     }
 
                     break;
                 case WatchEventType.Modified:
                 case WatchEventType.Error:
                 case WatchEventType.Bookmark:
+                default:
                     // Ignore
                     break;
             }

@@ -73,6 +73,10 @@ builder.Services.AddScoped<IKubernetesNamespaceService, KubernetesNamespaceServi
 builder.Services.AddScoped<IKubernetesNamespaceDomainService, KubernetesNamespaceDomainService>();
 
 builder.Services
+    .AddScoped<IKubernetesNamespaceAddedHandler, KubernetesNamespaceAddedHandler>();
+builder.Services
+    .AddScoped<IKubernetesNamespaceDeletedHandler, KubernetesNamespaceDeletedHandler>();
+builder.Services
     .AddScoped<IKubernetesVulnerabilityReportCrWatchEventHandler, KubernetesVulnerabilityReportCrWatchEventHandler>();
 builder.Services.AddHostedService<KubernetesHostedService>();
 
