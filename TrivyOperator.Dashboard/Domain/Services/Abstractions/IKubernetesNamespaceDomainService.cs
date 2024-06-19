@@ -1,10 +1,6 @@
-﻿namespace TrivyOperator.Dashboard.Domain.Services.Abstractions
-{
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
+﻿namespace TrivyOperator.Dashboard.Domain.Services.Abstractions;
 
-    public interface IKubernetesNamespaceDomainService
-    {
-        Task<List<string>> GetKubernetesNamespaces();
-    }
+public interface IKubernetesNamespaceDomainService
+{
+    Task<List<string>> GetKubernetesNamespaces();
 }

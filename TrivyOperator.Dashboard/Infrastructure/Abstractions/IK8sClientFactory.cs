@@ -1,9 +1,8 @@
-﻿namespace TrivyOperator.Dashboard.Infrastructure.Abstractions
-{
-    using k8s;
+﻿using k8s;
 
-    public interface IK8sClientFactory
-    {
-        Kubernetes GetClient();
-    }
+namespace TrivyOperator.Dashboard.Infrastructure.Abstractions;
+
+public interface IK8sClientFactory
+{
+    Kubernetes GetClient();
 }
