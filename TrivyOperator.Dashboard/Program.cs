@@ -72,6 +72,8 @@ builder.Services.AddScoped<IVulnerabilityReportDomainService, VulnerabilityRepor
 builder.Services.AddScoped<IKubernetesNamespaceService, KubernetesNamespaceService>();
 builder.Services.AddScoped<IKubernetesNamespaceDomainService, KubernetesNamespaceDomainService>();
 
+builder.Services
+    .AddScoped<IKubernetesVulnerabilityReportCrWatchEventHandler, KubernetesVulnerabilityReportCrWatchEventHandler>();
 builder.Services.AddHostedService<KubernetesHostedService>();
 
 WebApplication app = builder.Build();
