@@ -13,6 +13,8 @@ using TrivyOperator.Dashboard.Infrastructure.Clients;
 using TrivyOperator.Dashboard.Infrastructure.Services;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 
+Directory.SetCurrentDirectory(AppContext.BaseDirectory);
+
 const string applicationName = "TrivyOperator.Dashboard";
 WebApplicationBuilder builder = WebApplication.CreateBuilder(new WebApplicationOptions
 {
