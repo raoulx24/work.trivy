@@ -92,19 +92,24 @@ appLifetime.ApplicationStopped.Register(OnStopped);
 app.UseForwardedHeaders();
 if (!app.Environment.IsProduction())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
     app.UseDeveloperExceptionPage();
 }
 else
 {
+    app.UseExceptionHandler("/Error");
     app.UseHsts();
 }
 
 //app.UseHttpsRedirection();
-app.UseSerilogRequestLogging();
 app.UseRouting();
 app.UseCors();
+app.UseSerilogRequestLogging();
+if (!app.Environment.IsProduction())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
 app.MapControllers();
 app.MapFallbackToFile("index.html");
 
