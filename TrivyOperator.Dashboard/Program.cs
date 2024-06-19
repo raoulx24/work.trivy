@@ -7,21 +7,23 @@ using TrivyOperator.Dashboard.Application.Services;
 using TrivyOperator.Dashboard.Application.Services.Abstractions;
 using TrivyOperator.Dashboard.Domain.Services;
 using TrivyOperator.Dashboard.Domain.Services.Abstractions;
+using TrivyOperator.Dashboard.Domain.Trivy.VulnerabilityReport;
 using TrivyOperator.Dashboard.Infrastructure.Abstractions;
 using TrivyOperator.Dashboard.Infrastructure.Clients;
+using TrivyOperator.Dashboard.Infrastructure.Services;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 const string applicationName = "TrivyOperator.Dashboard";
-var builder = WebApplication.CreateBuilder(new WebApplicationOptions
+WebApplicationBuilder builder = WebApplication.CreateBuilder(new WebApplicationOptions
 {
     ApplicationName = applicationName, ContentRootPath = Directory.GetCurrentDirectory()
 });
 
-var configuration = CreateConfiguration();
+IConfiguration configuration = CreateConfiguration();
 builder.Configuration.Sources.Clear();
 builder.Configuration.AddConfiguration(configuration);
 
-var loggerConfiguration = new LoggerConfiguration().ReadFrom.Configuration(configuration);
+LoggerConfiguration loggerConfiguration = new LoggerConfiguration().ReadFrom.Configuration(configuration);
 loggerConfiguration.Enrich.FromLogContext();
 loggerConfiguration.Enrich.WithMachineName();
 loggerConfiguration.Enrich.WithThreadId();
@@ -62,6 +64,8 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddSingleton<IK8sClientFactory, K8sClientFactory>();
 
+builder.Services
+    .AddSingleton<IConcurrentCache<string, VulnerabilityReportCR>, ConcurrentCache<string, VulnerabilityReportCR>>();
 builder.Services.AddScoped<IVulnerabilityReportService, VulnerabilityReportService>();
 builder.Services.AddScoped<IVulnerabilityReportDomainService, VulnerabilityReportDomainService>();
 
@@ -70,9 +74,9 @@ builder.Services.AddScoped<IKubernetesNamespaceDomainService, KubernetesNamespac
 
 builder.Services.AddHostedService<KubernetesHostedService>();
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
-var appLifetime = app.Lifetime;
+IHostApplicationLifetime appLifetime = app.Lifetime;
 appLifetime.ApplicationStarted.Register(OnStarted);
 appLifetime.ApplicationStopping.Register(OnStopping);
 appLifetime.ApplicationStopped.Register(OnStopped);
@@ -102,7 +106,7 @@ return 0;
 
 static IConfiguration CreateConfiguration()
 {
-    var configurationBuilder = new ConfigurationBuilder()
+    IConfigurationBuilder configurationBuilder = new ConfigurationBuilder()
         .AddJsonFile("appsettings.json", true)
         .AddJsonFile("serilog.config.json", true)
         .AddEnvironmentVariables();
@@ -117,8 +121,8 @@ static void CurrentDomainUnhandledException(object sender, UnhandledExceptionEve
     }
     else
     {
-        var msg = e.ExceptionObject.ToString();
-        var exCode = Marshal.GetLastWin32Error();
+        string? msg = e.ExceptionObject.ToString();
+        int exCode = Marshal.GetLastWin32Error();
         if (exCode != 0)
         {
             msg += " ErrorCode: " + exCode.ToString("X16");
