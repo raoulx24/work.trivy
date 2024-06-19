@@ -4,7 +4,7 @@ using TrivyOperator.Dashboard.Infrastructure.Abstractions;
 
 namespace TrivyOperator.Dashboard.Application.Services;
 
-public class KubernetesNamespaceAddedHandler(IConcurrentCache<string, VulnerabilityReportCR> cache)
+public class KubernetesNamespaceAddedHandler(IConcurrentCache<string, List<VulnerabilityReportCR>> cache)
     : IKubernetesNamespaceAddedHandler
 {
     public Task Handle(string k8sNamespace)

@@ -4,7 +4,7 @@ using TrivyOperator.Dashboard.Infrastructure.Abstractions;
 
 namespace TrivyOperator.Dashboard.Application.Services;
 
-public class KubernetesNamespaceDeletedHandler(IConcurrentCache<string, VulnerabilityReportCR> cache)
+public class KubernetesNamespaceDeletedHandler(IConcurrentCache<string, List<VulnerabilityReportCR>> cache)
     : IKubernetesNamespaceDeletedHandler
 {
     public Task Handle(string k8sNamespace)
