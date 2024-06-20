@@ -26,8 +26,8 @@ public class KubernetesHostedService(
     {
         logger.LogInformation("Kubernetes Hosted Service running.");
         Kubernetes k8sClient = k8sClientFactory.GetClient();
-        V1NamespaceList? nsList = await k8sClient.CoreV1.ListNamespaceAsync(cancellationToken: stoppingToken);
-        foreach (V1Namespace? item in nsList.Items)
+        V1NamespaceList nsList = await k8sClient.CoreV1.ListNamespaceAsync(cancellationToken: stoppingToken);
+        foreach (V1Namespace item in nsList.Items)
         {
             string k8sNamespace = item.Name();
             using IServiceScope scope = services.CreateScope();

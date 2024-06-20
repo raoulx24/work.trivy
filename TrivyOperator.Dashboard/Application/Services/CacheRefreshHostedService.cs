@@ -4,8 +4,8 @@ using TrivyOperator.Dashboard.Infrastructure.Abstractions;
 namespace TrivyOperator.Dashboard.Application.Services;
 
 public class CacheRefreshHostedService(
+    IServiceProvider services,
     IConcurrentCache<string, DateTime> cache,
-    IKubernetesNamespaceAddedHandler kubernetesNamespaceAddedHandler,
     ILogger<KubernetesHostedService> logger) : BackgroundService
 {
     private DateTime lastExecution { get; } = DateTime.UtcNow;
@@ -24,7 +24,12 @@ public class CacheRefreshHostedService(
 
             foreach (string k8snamespace in k8sNamespaces)
             {
-                await kubernetesNamespaceAddedHandler.Handle(k8snamespace);
+                using IServiceScope scope = services.CreateScope();
+                foreach (IKubernetesNamespaceAddedHandler handler in scope.ServiceProvider
+                             .GetServices<IKubernetesNamespaceAddedHandler>())
+                {
+                    await handler.Handle(k8snamespace);
+                }
             }
         }
     }
