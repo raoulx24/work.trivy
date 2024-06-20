@@ -87,6 +87,7 @@ builder.Services.AddScoped<IKubernetesNamespaceDeletedHandler, KubernetesNamespa
 builder.Services
     .AddScoped<IKubernetesVulnerabilityReportCrWatchEventHandler, KubernetesVulnerabilityReportCrWatchEventHandler>();
 builder.Services.AddHostedService<KubernetesHostedService>();
+builder.Services.AddHostedService<CacheRefreshHostedService>();
 
 WebApplication app = builder.Build();
 

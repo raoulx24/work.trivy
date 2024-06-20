@@ -12,6 +12,8 @@ public class CacheRefreshHostedService(
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        logger.LogInformation("Cache Refresh Hosted Service running.");
+
         while (!stoppingToken.IsCancellationRequested)
         {
             await Task.Delay(60000);
@@ -25,5 +27,11 @@ public class CacheRefreshHostedService(
                 await kubernetesNamespaceAddedHandler.Handle(k8snamespace);
             }
         }
+    }
+
+    public override async Task StopAsync(CancellationToken stoppingToken)
+    {
+        logger.LogInformation("Cache Refresh Hosted Service is stopping.");
+        await base.StopAsync(stoppingToken);
     }
 }
