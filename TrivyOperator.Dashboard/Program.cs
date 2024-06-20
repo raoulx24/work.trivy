@@ -69,6 +69,8 @@ builder.Services.AddSingleton<IK8sClientFactory, K8sClientFactory>();
 builder.Services
     .AddSingleton<IConcurrentCache<string, List<VulnerabilityReportCR>>,
         ConcurrentCache<string, List<VulnerabilityReportCR>>>();
+builder.Services
+    .AddSingleton<IConcurrentCache<string, DateTime>>();
 builder.Services.AddScoped<IVulnerabilityReportService, VulnerabilityReportService>();
 builder.Services.AddScoped<IVulnerabilityReportDomainService, VulnerabilityReportDomainService>();
 
