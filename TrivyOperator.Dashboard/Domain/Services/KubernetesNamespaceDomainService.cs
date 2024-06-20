@@ -11,7 +11,7 @@ public class KubernetesNamespaceDomainService(IK8sClientFactory k8sClientFactory
 
     public async Task<List<string>> GetKubernetesNamespaces()
     {
-        V1NamespaceList namespaceList = await k8sClient.CoreV1.ListNamespaceAsync();
+        V1NamespaceList? namespaceList = await k8sClient.CoreV1.ListNamespaceAsync();
         List<string> namespaceNames = [];
         namespaceNames.AddRange(namespaceList.Items.Select(item => item.Name()));
         return namespaceNames;

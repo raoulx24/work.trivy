@@ -6,8 +6,6 @@ namespace TrivyOperator.Dashboard.Application.Services;
 public class KubernetesNamespaceService(IKubernetesNamespaceDomainService kubernetesNamespaceDomainService)
     : IKubernetesNamespaceService
 {
-    public async Task<List<string>> GetKubernetesNamespaces()
-    {
-        return await kubernetesNamespaceDomainService.GetKubernetesNamespaces();
-    }
+    public async Task<List<string>> GetKubernetesNamespaces() =>
+        await kubernetesNamespaceDomainService.GetKubernetesNamespaces();
 }

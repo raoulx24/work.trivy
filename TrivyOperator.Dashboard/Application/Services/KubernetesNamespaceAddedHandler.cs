@@ -8,8 +8,7 @@ namespace TrivyOperator.Dashboard.Application.Services;
 //TODO: change name
 public class KubernetesNamespaceAddedHandler(
     IConcurrentCache<string, List<VulnerabilityReportCR>> cache,
-    IVulnerabilityReportDomainService domainService)
-    : IKubernetesNamespaceAddedHandler
+    IVulnerabilityReportDomainService domainService) : IKubernetesNamespaceAddedHandler
 {
     public async Task Handle(string k8sNamespace)
     {

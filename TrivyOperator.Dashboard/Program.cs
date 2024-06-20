@@ -16,10 +16,11 @@ using ILogger = Microsoft.Extensions.Logging.ILogger;
 Directory.SetCurrentDirectory(AppContext.BaseDirectory);
 
 const string applicationName = "TrivyOperator.Dashboard";
-WebApplicationBuilder builder = WebApplication.CreateBuilder(new WebApplicationOptions
-{
-    ApplicationName = applicationName, ContentRootPath = Directory.GetCurrentDirectory()
-});
+WebApplicationBuilder builder = WebApplication.CreateBuilder(
+    new WebApplicationOptions
+    {
+        ApplicationName = applicationName, ContentRootPath = Directory.GetCurrentDirectory(),
+    });
 
 IConfiguration configuration = CreateConfiguration();
 builder.Configuration.Sources.Clear();
@@ -44,29 +45,36 @@ builder.Host.UseSerilog(Log.Logger);
 builder.WebHost.UseShutdownTimeout(TimeSpan.FromSeconds(10));
 builder.WebHost.ConfigureKestrel(options => { options.AddServerHeader = false; });
 
-builder.Services.AddControllersWithViews().AddJsonOptions(options =>
-{
-    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-});
+builder.Services.AddControllersWithViews()
+    .AddJsonOptions(
+        options =>
+        {
+            options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        });
 builder.Services
     .AddHttpClient(); // see: https://docs.microsoft.com/en-us/dotnet/architecture/microservices/implement-resilient-applications/use-httpclientfactory-to-implement-resilient-http-requests
-builder.Services.Configure<ForwardedHeadersOptions>(options =>
-{
-    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto |
-                               ForwardedHeaders.XForwardedHost;
-    options.KnownNetworks.Clear();
-    options.KnownProxies.Clear();
-});
+builder.Services.Configure<ForwardedHeadersOptions>(
+    options =>
+    {
+        options.ForwardedHeaders = ForwardedHeaders.XForwardedFor |
+                                   ForwardedHeaders.XForwardedProto |
+                                   ForwardedHeaders.XForwardedHost;
+        options.KnownNetworks.Clear();
+        options.KnownProxies.Clear();
+    });
 builder.Services.AddProblemDetails();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddCors(options =>
-    options.AddDefaultPolicy(configurePolicy => configurePolicy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
+builder.Services.AddCors(
+    options => options.AddDefaultPolicy(
+        configurePolicy => configurePolicy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
 
 
 builder.Services.AddSingleton<IK8sClientFactory, K8sClientFactory>();
 
-builder.Services.AddSingleton<IConcurrentCache<string, List<VulnerabilityReportCR>>, ConcurrentCache<string, List<VulnerabilityReportCR>>>();
+builder.Services
+    .AddSingleton<IConcurrentCache<string, List<VulnerabilityReportCR>>,
+        ConcurrentCache<string, List<VulnerabilityReportCR>>>();
 builder.Services.AddSingleton<IConcurrentCache<string, DateTime>, ConcurrentCache<string, DateTime>>();
 builder.Services.AddScoped<IVulnerabilityReportService, VulnerabilityReportService>();
 builder.Services.AddScoped<IVulnerabilityReportDomainService, VulnerabilityReportDomainService>();
@@ -74,10 +82,8 @@ builder.Services.AddScoped<IVulnerabilityReportDomainService, VulnerabilityRepor
 builder.Services.AddScoped<IKubernetesNamespaceService, KubernetesNamespaceService>();
 builder.Services.AddScoped<IKubernetesNamespaceDomainService, KubernetesNamespaceDomainService>();
 
-builder.Services
-    .AddScoped<IKubernetesNamespaceAddedHandler, KubernetesNamespaceAddedHandler>();
-builder.Services
-    .AddScoped<IKubernetesNamespaceDeletedHandler, KubernetesNamespaceDeletedHandler>();
+builder.Services.AddScoped<IKubernetesNamespaceAddedHandler, KubernetesNamespaceAddedHandler>();
+builder.Services.AddScoped<IKubernetesNamespaceDeletedHandler, KubernetesNamespaceDeletedHandler>();
 builder.Services
     .AddScoped<IKubernetesVulnerabilityReportCrWatchEventHandler, KubernetesVulnerabilityReportCrWatchEventHandler>();
 builder.Services.AddHostedService<KubernetesHostedService>();
@@ -119,8 +125,7 @@ return 0;
 
 static IConfiguration CreateConfiguration()
 {
-    IConfigurationBuilder configurationBuilder = new ConfigurationBuilder()
-        .AddJsonFile("appsettings.json", true)
+    IConfigurationBuilder configurationBuilder = new ConfigurationBuilder().AddJsonFile("appsettings.json", true)
         .AddJsonFile("serilog.config.json", true)
         .AddEnvironmentVariables();
     return configurationBuilder.Build();
@@ -151,15 +156,9 @@ static void TaskSchedulerUnobservedTaskException(object? sender, UnobservedTaskE
     e.SetObserved();
 }
 
-static void OnStarted()
-{
-    Logger?.LogInformation("OnStarted has been called.");
-}
+static void OnStarted() => Logger?.LogInformation("OnStarted has been called.");
 
-static void OnStopping()
-{
-    Logger?.LogInformation("OnStopping has been called.");
-}
+static void OnStopping() => Logger?.LogInformation("OnStopping has been called.");
 
 static void OnStopped()
 {

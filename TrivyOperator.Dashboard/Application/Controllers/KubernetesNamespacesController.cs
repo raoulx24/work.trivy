@@ -13,8 +13,5 @@ public class KubernetesNamespacesController(
     [ProducesResponseType<IEnumerable<string>>(StatusCodes.Status200OK)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status500InternalServerError)]
-    public async Task<IEnumerable<string>> GetAll()
-    {
-        return await kubernetesNamespaceService.GetKubernetesNamespaces();
-    }
+    public async Task<IEnumerable<string>> GetAll() => await kubernetesNamespaceService.GetKubernetesNamespaces();
 }

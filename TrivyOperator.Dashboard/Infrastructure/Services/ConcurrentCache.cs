@@ -11,14 +11,8 @@ public class ConcurrentCache<TKey, TValue> : IConcurrentCache<TKey, TValue> wher
 
     public TValue this[TKey key]
     {
-        get
-        {
-            return dictionary[key];
-        }
-        set
-        {
-            dictionary[key] = value;
-        }
+        get => dictionary[key];
+        set => dictionary[key] = value;
     }
 
     public IEnumerable<TKey> Keys => dictionary.Keys;
@@ -27,43 +21,21 @@ public class ConcurrentCache<TKey, TValue> : IConcurrentCache<TKey, TValue> wher
 
     public int Count => dictionary.Count;
 
-    public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
-    {
-        return dictionary.TryGetValue(key, out value);
-    }
+    public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value) =>
+        dictionary.TryGetValue(key, out value);
 
-    public bool TryAdd(TKey key, TValue value)
-    {
-        return dictionary.TryAdd(key, value);
-    }
+    public bool TryAdd(TKey key, TValue value) => dictionary.TryAdd(key, value);
 
-    public bool TryUpdate(TKey key, TValue newValue, TValue comparisonValue)
-    {
-        return dictionary.TryUpdate(key, newValue, comparisonValue);
-    }
+    public bool TryUpdate(TKey key, TValue newValue, TValue comparisonValue) =>
+        dictionary.TryUpdate(key, newValue, comparisonValue);
 
-    public bool TryRemove(TKey key, [MaybeNullWhen(false)] out TValue value)
-    {
-        return dictionary.TryRemove(key, out value);
-    }
+    public bool TryRemove(TKey key, [MaybeNullWhen(false)] out TValue value) => dictionary.TryRemove(key, out value);
 
-    public bool ContainsKey(TKey key)
-    {
-        return dictionary.ContainsKey(key);
-    }
+    public bool ContainsKey(TKey key) => dictionary.ContainsKey(key);
 
-    public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
-    {
-        return dictionary.GetEnumerator();
-    }
+    public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() => dictionary.GetEnumerator();
 
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        return dictionary.GetEnumerator();
-    }
+    IEnumerator IEnumerable.GetEnumerator() => dictionary.GetEnumerator();
 
-    public void Clear()
-    {
-        dictionary.Clear();
-    }
+    public void Clear() => dictionary.Clear();
 }

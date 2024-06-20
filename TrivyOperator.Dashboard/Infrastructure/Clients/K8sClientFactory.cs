@@ -9,14 +9,11 @@ public class K8sClientFactory : IK8sClientFactory
 
     public K8sClientFactory()
     {
-        KubernetesClientConfiguration config = KubernetesClientConfiguration.IsInCluster()
+        KubernetesClientConfiguration? config = KubernetesClientConfiguration.IsInCluster()
             ? KubernetesClientConfiguration.InClusterConfig()
             : KubernetesClientConfiguration.BuildConfigFromConfigFile();
         k8sClient = new Kubernetes(config);
     }
 
-    public Kubernetes GetClient()
-    {
-        return k8sClient;
-    }
+    public Kubernetes GetClient() => k8sClient;
 }
