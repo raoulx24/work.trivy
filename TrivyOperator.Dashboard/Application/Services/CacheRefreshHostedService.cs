@@ -8,11 +8,12 @@ public class CacheRefreshHostedService(
     IConcurrentCache<string, DateTime> cache,
     ILogger<KubernetesHostedService> logger) : BackgroundService
 {
-    private readonly DateTime lastExecution = DateTime.UtcNow;
+    private DateTime lastExecution = DateTime.UtcNow;
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         logger.LogInformation("Cache Refresh Hosted Service running.");
+
         while (!stoppingToken.IsCancellationRequested)
         {
             await Task.Delay(60000, stoppingToken);
