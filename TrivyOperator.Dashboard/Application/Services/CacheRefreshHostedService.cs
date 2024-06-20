@@ -8,7 +8,7 @@ public class CacheRefreshHostedService(
     IConcurrentCache<string, DateTime> cache,
     ILogger<KubernetesHostedService> logger) : BackgroundService
 {
-    private DateTime lastExecution { get; } = DateTime.UtcNow;
+    private readonly DateTime lastExecution = DateTime.UtcNow;
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -16,19 +16,18 @@ public class CacheRefreshHostedService(
 
         while (!stoppingToken.IsCancellationRequested)
         {
-            await Task.Delay(60000);
+            await Task.Delay(60000, stoppingToken);
 
             IEnumerable<string> k8sNamespaces = cache.Where(x => x.Key.StartsWith("vulenrabilityreportcr."))
                 .Where(x => x.Value > lastExecution)
                 .Select(x => x.Key.Replace("vulenrabilityreportcr.", ""));
-
-            foreach (string k8snamespace in k8sNamespaces)
+            foreach (string k8sNamespace in k8sNamespaces)
             {
                 using IServiceScope scope = services.CreateScope();
                 foreach (IKubernetesNamespaceAddedHandler handler in scope.ServiceProvider
                              .GetServices<IKubernetesNamespaceAddedHandler>())
                 {
-                    await handler.Handle(k8snamespace);
+                    await handler.Handle(k8sNamespace);
                 }
             }
         }

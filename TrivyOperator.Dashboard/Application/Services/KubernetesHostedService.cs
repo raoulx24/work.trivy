@@ -81,7 +81,10 @@ public class KubernetesHostedService(
                     }
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                logger.LogError(ex.Message, ex);
+            }
         }
     }
 
@@ -107,7 +110,6 @@ public class KubernetesHostedService(
         while (!stoppingToken.IsCancellationRequested)
         {
             //TODO: poly etc
-
             try
             {
                 Task<HttpOperationResponse<V1NamespaceList>> listNamespaceResp =
@@ -159,7 +161,10 @@ public class KubernetesHostedService(
                     }
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                logger.LogError(ex.Message, ex);
+            }
         }
     }
 }
