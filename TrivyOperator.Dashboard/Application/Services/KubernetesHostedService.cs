@@ -54,20 +54,27 @@ public class KubernetesHostedService(
         CancellationToken cancellationToken)
     {
         VulnerabilityReportCRD myCrd = new();
-        Task<HttpOperationResponse<CustomResourceList<VulnerabilityReportCR>>> listNamespacedCustomObjectResp =
-            k8sClient.CustomObjects
-                .ListNamespacedCustomObjectWithHttpMessagesAsync<CustomResourceList<VulnerabilityReportCR>>(myCrd.Group,
-                    myCrd.Version, k8sNamespace, myCrd.PluralName, watch: true, cancellationToken: cancellationToken);
-        await foreach ((WatchEventType type, VulnerabilityReportCR item) in listNamespacedCustomObjectResp
-                           .WatchAsync<VulnerabilityReportCR, CustomResourceList<VulnerabilityReportCR>>(
-                               cancellationToken: cancellationToken))
+        while (!cancellationToken.IsCancellationRequested)
         {
-            using IServiceScope scope = services.CreateScope();
-            foreach (IKubernetesVulnerabilityReportCrWatchEventHandler handler in scope.ServiceProvider
-                         .GetServices<IKubernetesVulnerabilityReportCrWatchEventHandler>())
-            {
-                await handler.Handle(type, item);
+            try
+            { 
+                Task<HttpOperationResponse<CustomResourceList<VulnerabilityReportCR>>> listNamespacedCustomObjectResp =
+                    k8sClient.CustomObjects
+                        .ListNamespacedCustomObjectWithHttpMessagesAsync<CustomResourceList<VulnerabilityReportCR>>(myCrd.Group,
+                            myCrd.Version, k8sNamespace, myCrd.PluralName, watch: true, timeoutSeconds: int.MaxValue, cancellationToken: cancellationToken);
+                    await foreach ((WatchEventType type, VulnerabilityReportCR item) in listNamespacedCustomObjectResp
+                                       .WatchAsync<VulnerabilityReportCR, CustomResourceList<VulnerabilityReportCR>>(
+                                           cancellationToken: cancellationToken))
+                    {
+                        using IServiceScope scope = services.CreateScope();
+                        foreach (IKubernetesVulnerabilityReportCrWatchEventHandler handler in scope.ServiceProvider
+                                     .GetServices<IKubernetesVulnerabilityReportCrWatchEventHandler>())
+                        {
+                            await handler.Handle(type, item);
+                        }
+                    }
             }
+            catch { }
         }
     }
 
@@ -86,49 +93,59 @@ public class KubernetesHostedService(
 
     private async Task WatchNamespaces(Kubernetes k8sClient, CancellationToken stoppingToken)
     {
-        Task<HttpOperationResponse<V1NamespaceList>> listNamespaceResp =
-            k8sClient.CoreV1.ListNamespaceWithHttpMessagesAsync(watch: true, cancellationToken: stoppingToken);
-        await foreach ((WatchEventType type, V1Namespace item) in listNamespaceResp
-                           .WatchAsync<V1Namespace, V1NamespaceList>(
-                               cancellationToken: stoppingToken))
+        while (!stoppingToken.IsCancellationRequested)
         {
-            string k8sNamespace = item.Name();
-            switch (type)
+            //TODO: poly etc
+
+            try
             {
-                case WatchEventType.Added:
-                    if (!watchVulnerabilityReportCrsTaskDict.ContainsKey(k8sNamespace))
+
+                Task<HttpOperationResponse<V1NamespaceList>> listNamespaceResp =
+                    k8sClient.CoreV1.ListNamespaceWithHttpMessagesAsync(watch: true, timeoutSeconds: int.MaxValue, cancellationToken: stoppingToken);
+                await foreach ((WatchEventType type, V1Namespace item) in listNamespaceResp
+                                   .WatchAsync<V1Namespace, V1NamespaceList>(
+                                       cancellationToken: stoppingToken))
+                {
+                    string k8sNamespace = item.Name();
+                    switch (type)
                     {
-                        using IServiceScope scope = services.CreateScope();
-                        foreach (IKubernetesNamespaceAddedHandler handler in scope.ServiceProvider
-                                     .GetServices<IKubernetesNamespaceAddedHandler>())
-                        {
-                            await handler.Handle(k8sNamespace);
-                        }
+                        case WatchEventType.Added:
+                            if (!watchVulnerabilityReportCrsTaskDict.ContainsKey(k8sNamespace))
+                            {
+                                using IServiceScope scope = services.CreateScope();
+                                foreach (IKubernetesNamespaceAddedHandler handler in scope.ServiceProvider
+                                             .GetServices<IKubernetesNamespaceAddedHandler>())
+                                {
+                                    await handler.Handle(k8sNamespace);
+                                }
 
-                        CreateWatchVulnerabilityReportCrsTask(k8sClient, k8sNamespace, stoppingToken);
+                                CreateWatchVulnerabilityReportCrsTask(k8sClient, k8sNamespace, stoppingToken);
+                            }
+
+                            break;
+                        case WatchEventType.Deleted:
+                            if (watchVulnerabilityReportCrsTaskDict.TryRemove(k8sNamespace, out TaskWithCts taskWithCts))
+                            {
+                                await taskWithCts.Cts.CancelAsync();
+                                using IServiceScope scope = services.CreateScope();
+                                foreach (IKubernetesNamespaceDeletedHandler handler in scope.ServiceProvider
+                                             .GetServices<IKubernetesNamespaceDeletedHandler>())
+                                {
+                                    await handler.Handle(k8sNamespace);
+                                }
+                            }
+
+                            break;
+                        case WatchEventType.Modified:
+                        case WatchEventType.Error:
+                        case WatchEventType.Bookmark:
+                        default:
+                            // Ignore
+                            break;
                     }
-
-                    break;
-                case WatchEventType.Deleted:
-                    if (watchVulnerabilityReportCrsTaskDict.TryRemove(k8sNamespace, out TaskWithCts taskWithCts))
-                    {
-                        await taskWithCts.Cts.CancelAsync();
-                        using IServiceScope scope = services.CreateScope();
-                        foreach (IKubernetesNamespaceDeletedHandler handler in scope.ServiceProvider
-                                     .GetServices<IKubernetesNamespaceDeletedHandler>())
-                        {
-                            await handler.Handle(k8sNamespace);
-                        }
-                    }
-
-                    break;
-                case WatchEventType.Modified:
-                case WatchEventType.Error:
-                case WatchEventType.Bookmark:
-                default:
-                    // Ignore
-                    break;
+                }
             }
+            catch { }
         }
     }
 }
