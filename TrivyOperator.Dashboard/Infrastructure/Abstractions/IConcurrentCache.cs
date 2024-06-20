@@ -4,7 +4,10 @@ namespace TrivyOperator.Dashboard.Infrastructure.Abstractions;
 
 public interface IConcurrentCache<TKey, TValue> : IReadOnlyDictionary<TKey, TValue>
 {
-    bool TryAddValue(TKey key, TValue value);
-    bool TryRemoveValue(TKey key, [MaybeNullWhen(false)] out TValue value);
+    new TValue this[TKey key] { get; set; }
+
+    bool TryAdd(TKey key, TValue value);
+    bool TryUpdate(TKey key, TValue newValue, TValue comparisonValue);
+    bool TryRemove(TKey key, [MaybeNullWhen(false)] out TValue value);
     void Clear();
 }

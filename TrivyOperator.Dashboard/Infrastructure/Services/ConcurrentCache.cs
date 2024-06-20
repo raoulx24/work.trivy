@@ -9,7 +9,17 @@ public class ConcurrentCache<TKey, TValue> : IConcurrentCache<TKey, TValue> wher
 {
     private readonly ConcurrentDictionary<TKey, TValue> dictionary = new();
 
-    public TValue this[TKey key] => dictionary[key];
+    public TValue this[TKey key]
+    {
+        get
+        {
+            return dictionary[key];
+        }
+        set
+        {
+            dictionary[key] = value;
+        }
+    }
 
     public IEnumerable<TKey> Keys => dictionary.Keys;
 
@@ -22,12 +32,17 @@ public class ConcurrentCache<TKey, TValue> : IConcurrentCache<TKey, TValue> wher
         return dictionary.TryGetValue(key, out value);
     }
 
-    public bool TryAddValue(TKey key, TValue value)
+    public bool TryAdd(TKey key, TValue value)
     {
         return dictionary.TryAdd(key, value);
     }
 
-    public bool TryRemoveValue(TKey key, [MaybeNullWhen(false)] out TValue value)
+    public bool TryUpdate(TKey key, TValue newValue, TValue comparisonValue)
+    {
+        return dictionary.TryUpdate(key, newValue, comparisonValue);
+    }
+
+    public bool TryRemove(TKey key, [MaybeNullWhen(false)] out TValue value)
     {
         return dictionary.TryRemove(key, out value);
     }

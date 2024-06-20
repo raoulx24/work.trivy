@@ -9,7 +9,7 @@ public class KubernetesNamespaceDeletedHandler(IConcurrentCache<string, List<Vul
 {
     public Task Handle(string k8sNamespace)
     {
-        cache.TryRemoveValue(k8sNamespace, out _);
+        cache.TryRemove(k8sNamespace, out _);
         return Task.CompletedTask;
     }
 }

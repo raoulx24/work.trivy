@@ -14,6 +14,6 @@ public class KubernetesNamespaceAddedHandler(
     {
         List<VulnerabilityReportCR> vulnerabilityReportCrList =
             await domainService.GetTrivyVulnerabilities(k8sNamespace);
-        cache.TryAddValue(k8sNamespace, vulnerabilityReportCrList);
+        cache.TryAdd(k8sNamespace, vulnerabilityReportCrList);
     }
 }
