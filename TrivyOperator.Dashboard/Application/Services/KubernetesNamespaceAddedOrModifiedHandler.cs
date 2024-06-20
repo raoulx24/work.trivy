@@ -5,11 +5,10 @@ using TrivyOperator.Dashboard.Infrastructure.Abstractions;
 
 namespace TrivyOperator.Dashboard.Application.Services;
 
-//TODO: change name
-public class KubernetesNamespaceAddedHandler(
+public class KubernetesNamespaceAddedOrModifiedHandler(
     IConcurrentCache<string, List<VulnerabilityReportCR>> cache,
     IVulnerabilityReportDomainService domainService,
-    ILogger<KubernetesNamespaceAddedHandler> logger) : IKubernetesNamespaceAddedHandler
+    ILogger<KubernetesNamespaceAddedOrModifiedHandler> logger) : IKubernetesNamespaceAddedOrModifiedHandler
 {
     public async Task Handle(string k8sNamespace)
     {

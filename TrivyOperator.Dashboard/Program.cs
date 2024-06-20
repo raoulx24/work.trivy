@@ -82,7 +82,7 @@ builder.Services.AddScoped<IVulnerabilityReportDomainService, VulnerabilityRepor
 builder.Services.AddScoped<IKubernetesNamespaceService, KubernetesNamespaceService>();
 builder.Services.AddScoped<IKubernetesNamespaceDomainService, KubernetesNamespaceDomainService>();
 
-builder.Services.AddScoped<IKubernetesNamespaceAddedHandler, KubernetesNamespaceAddedHandler>();
+builder.Services.AddScoped<IKubernetesNamespaceAddedOrModifiedHandler, KubernetesNamespaceAddedOrModifiedHandler>();
 builder.Services.AddScoped<IKubernetesNamespaceDeletedHandler, KubernetesNamespaceDeletedHandler>();
 builder.Services
     .AddScoped<IKubernetesVulnerabilityReportCrWatchEventHandler, KubernetesVulnerabilityReportCrWatchEventHandler>();

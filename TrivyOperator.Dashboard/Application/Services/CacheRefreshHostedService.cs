@@ -30,8 +30,8 @@ public class CacheRefreshHostedService(
             foreach (string k8sNamespace in k8sNamespaces)
             {
                 using IServiceScope scope = services.CreateScope();
-                foreach (IKubernetesNamespaceAddedHandler handler in scope.ServiceProvider
-                             .GetServices<IKubernetesNamespaceAddedHandler>())
+                foreach (IKubernetesNamespaceAddedOrModifiedHandler handler in scope.ServiceProvider
+                             .GetServices<IKubernetesNamespaceAddedOrModifiedHandler>())
                 {
                     await handler.Handle(k8sNamespace);
                 }

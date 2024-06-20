@@ -1,6 +1,6 @@
 ﻿namespace TrivyOperator.Dashboard.Application.Services.Abstractions;
 
-public interface IKubernetesNamespaceAddedHandler
+public interface IKubernetesNamespaceAddedOrModifiedHandler
 {
     Task Handle(string k8sNamespace);
 }

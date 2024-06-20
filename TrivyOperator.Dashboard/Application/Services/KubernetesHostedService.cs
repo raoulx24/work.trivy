@@ -31,8 +31,8 @@ public class KubernetesHostedService(
         {
             string k8sNamespace = item.Name();
             using IServiceScope scope = services.CreateScope();
-            foreach (IKubernetesNamespaceAddedHandler handler in scope.ServiceProvider
-                         .GetServices<IKubernetesNamespaceAddedHandler>())
+            foreach (IKubernetesNamespaceAddedOrModifiedHandler handler in scope.ServiceProvider
+                         .GetServices<IKubernetesNamespaceAddedOrModifiedHandler>())
             {
                 await handler.Handle(k8sNamespace);
             }
@@ -127,8 +127,8 @@ public class KubernetesHostedService(
                             if (!watchVulnerabilityReportCrsTaskDict.ContainsKey(k8sNamespace))
                             {
                                 using IServiceScope scope = services.CreateScope();
-                                foreach (IKubernetesNamespaceAddedHandler handler in scope.ServiceProvider
-                                             .GetServices<IKubernetesNamespaceAddedHandler>())
+                                foreach (IKubernetesNamespaceAddedOrModifiedHandler handler in scope.ServiceProvider
+                                             .GetServices<IKubernetesNamespaceAddedOrModifiedHandler>())
                                 {
                                     await handler.Handle(k8sNamespace);
                                 }
