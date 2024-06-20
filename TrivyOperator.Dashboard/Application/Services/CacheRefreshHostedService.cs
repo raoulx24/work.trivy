@@ -8,15 +8,14 @@ public class CacheRefreshHostedService(
     IConcurrentCache<string, DateTime> cache,
     ILogger<KubernetesHostedService> logger) : BackgroundService
 {
-    private DateTime lastExecution { get; set; } = DateTime.UtcNow;
+    private readonly DateTime lastExecution = DateTime.UtcNow;
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         logger.LogInformation("Cache Refresh Hosted Service running.");
-
         while (!stoppingToken.IsCancellationRequested)
         {
-            await Task.Delay(60000);
+            await Task.Delay(60000, stoppingToken);
 
             IEnumerable<DateTime> lastMoments = cache.Where(x => x.Key.StartsWith("vulenrabilityreportcr."))
                 .Where(x => x.Value > lastExecution)
