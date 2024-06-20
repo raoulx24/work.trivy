@@ -36,6 +36,8 @@ public class CacheRefreshHostedService(
                     await handler.Handle(k8sNamespace);
                 }
             }
+
+            lastExecution = newLastExecution;
         }
     }
 
