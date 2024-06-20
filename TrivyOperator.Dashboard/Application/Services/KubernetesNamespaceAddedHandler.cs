@@ -9,8 +9,7 @@ namespace TrivyOperator.Dashboard.Application.Services;
 public class KubernetesNamespaceAddedHandler(
     IConcurrentCache<string, List<VulnerabilityReportCR>> cache,
     IVulnerabilityReportDomainService domainService,
-    ILogger<KubernetesHostedService> logger)
-    : IKubernetesNamespaceAddedHandler
+    ILogger<KubernetesHostedService> logger) : IKubernetesNamespaceAddedHandler
 {
     public async Task Handle(string k8sNamespace)
     {
@@ -20,6 +19,5 @@ public class KubernetesNamespaceAddedHandler(
         cache[k8sNamespace] = vulnerabilityReportCrList;
 
         logger.LogInformation("VulnerabilityReport Cache updated for namespace {k8sNamespace}", k8sNamespace);
-
     }
 }
