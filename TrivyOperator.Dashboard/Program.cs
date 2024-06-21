@@ -19,7 +19,9 @@ const string applicationName = "TrivyOperator.Dashboard";
 WebApplicationBuilder builder = WebApplication.CreateBuilder(
     new WebApplicationOptions
     {
-        ApplicationName = applicationName, ContentRootPath = Directory.GetCurrentDirectory(),
+        ApplicationName = applicationName,
+        ContentRootPath = Directory.GetCurrentDirectory(),
+        WebRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"),
     });
 
 IConfiguration configuration = CreateConfiguration();
@@ -109,6 +111,8 @@ else
 }
 
 //app.UseHttpsRedirection();
+app.UseDefaultFiles();
+app.UseStaticFiles();
 app.UseRouting();
 app.UseCors();
 app.UseSerilogRequestLogging();
