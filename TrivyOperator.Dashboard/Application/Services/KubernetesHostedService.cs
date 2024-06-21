@@ -123,7 +123,7 @@ public class KubernetesHostedService(
                 await foreach ((WatchEventType type, V1Namespace item) in listNamespaceResp
                                    .WatchAsync<V1Namespace, V1NamespaceList>(
                                        ex => logger.LogError(
-                                           $"{nameof(WatchNamespaces)} - WatchAsync- {ex.Message}",
+                                           $"{nameof(WatchNamespaces)} - WatchAsync - {ex.Message}",
                                            ex),
                                        stoppingToken))
                 {
