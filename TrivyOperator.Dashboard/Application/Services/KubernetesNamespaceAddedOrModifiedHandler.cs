@@ -1,4 +1,6 @@
-﻿using TrivyOperator.Dashboard.Application.Services.Abstractions;
+﻿using System.Net;
+using k8s.Autorest;
+using TrivyOperator.Dashboard.Application.Services.Abstractions;
 using TrivyOperator.Dashboard.Domain.Services.Abstractions;
 using TrivyOperator.Dashboard.Domain.Trivy.VulnerabilityReport;
 using TrivyOperator.Dashboard.Infrastructure.Abstractions;
@@ -12,11 +14,16 @@ public class KubernetesNamespaceAddedOrModifiedHandler(
 {
     public async Task Handle(string k8sNamespace)
     {
-        List<VulnerabilityReportCR> vulnerabilityReportCrList =
-            await domainService.GetTrivyVulnerabilities(k8sNamespace);
-        cache[k8sNamespace] = vulnerabilityReportCrList;
-        logger.LogInformation(
-            "VulnerabilityReport Cache item added/updated for namespace {k8sNamespace}",
-            k8sNamespace);
+        try
+        {
+            cache[k8sNamespace] = await domainService.GetTrivyVulnerabilities(k8sNamespace);
+            logger.LogInformation(
+                "VulnerabilityReport Cache item added/updated for namespace {k8sNamespace}",
+                k8sNamespace);
+        }
+        catch (HttpOperationException hoe) when (hoe.Response.StatusCode == HttpStatusCode.NotFound)
+        {
+            // Ignore
+        }
     }
 }

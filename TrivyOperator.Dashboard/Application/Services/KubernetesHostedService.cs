@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using System.Net;
 using k8s;
 using k8s.Autorest;
 using k8s.Models;
@@ -83,6 +84,10 @@ public class KubernetesHostedService(
                         await handler.Handle(type, item);
                     }
                 }
+            }
+            catch (HttpOperationException hoe) when (hoe.Response.StatusCode == HttpStatusCode.NotFound)
+            {
+                // Ignore
             }
             catch (Exception ex)
             {
