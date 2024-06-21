@@ -1,6 +1,6 @@
 <header>
   <nav
-    class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3"
+    class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3"
   >
     <div class="container">
       <a [routerLink]="['/']" class="navbar-brand">TrivyOperator.Dashboard</a>
@@ -25,15 +25,15 @@
             [routerLinkActive]="['link-active']"
             class="nav-item"
           >
-            <a [routerLink]="['/']" class="nav-link text-dark">Home</a>
+            <a [routerLink]="['/']" class="nav-link text-white">Home</a>
           </li>
           <li [routerLinkActive]="['link-active']" class="nav-item">
-            <a [routerLink]="['/counter']" class="nav-link text-dark"
+            <a [routerLink]="['/counter']" class="nav-link text-white"
             >Counter</a
             >
           </li>
           <li [routerLinkActive]="['link-active']" class="nav-item">
-            <a [routerLink]="['/fetch-data']" class="nav-link text-dark"
+            <a [routerLink]="['/fetch-data']" class="nav-link text-white"
             >Fetch data</a
             >
           </li>
