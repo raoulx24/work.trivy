@@ -2,10 +2,10 @@
 
 <p>This component demonstrates fetching data from the server.</p>
 
-<p *ngIf="!vulnerabilities?.length"><em>Loading...</em></p>
+<p *ngIf="!vulnerabilities"><em>Loading...</em></p>
 
 <ag-grid-angular
-  *ngIf="vulnerabilities.length"
+  *ngIf="vulnerabilities"
   [columnDefs]="columnDefs"
   [defaultColDef]="defaultColDef"
   [rowData]="vulnerabilities"

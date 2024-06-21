@@ -25,7 +25,7 @@ export class FetchDataComponent {
   private gridExportParams: CsvExportParams = { columnSeparator: ",", onlySelected: true };
   private gridApi!: GridApi;
 
-  public vulnerabilities: VulnerabilityDto[] = [];
+  public vulnerabilities?: VulnerabilityDto[] | null | undefined;
 
   public columnDefs: ColDef[] = [
     { headerName: 'Namespace', field: "namespace", filter: true, flex: 3 },
