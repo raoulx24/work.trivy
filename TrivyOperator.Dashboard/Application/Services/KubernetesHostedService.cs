@@ -71,7 +71,10 @@ public class KubernetesHostedService(
                             cancellationToken: cancellationToken);
                 await foreach ((WatchEventType type, VulnerabilityReportCR item) in listNamespacedCustomObjectResp
                                    .WatchAsync<VulnerabilityReportCR, CustomResourceList<VulnerabilityReportCR>>(
-                                       cancellationToken: cancellationToken))
+                                       ex => logger.LogError(
+                                           $"{nameof(WatchVulnerabilityReportCrs)} - WatchAsync - {ex.Message}",
+                                           ex),
+                                       cancellationToken))
                 {
                     using IServiceScope scope = services.CreateScope();
                     foreach (IKubernetesVulnerabilityReportCrWatchEventHandler handler in scope.ServiceProvider
@@ -83,7 +86,7 @@ public class KubernetesHostedService(
             }
             catch (Exception ex)
             {
-                logger.LogError(ex.Message, ex);
+                logger.LogError($"{nameof(WatchVulnerabilityReportCrs)} - {ex.Message}", ex);
             }
         }
     }
@@ -109,7 +112,7 @@ public class KubernetesHostedService(
     {
         while (!stoppingToken.IsCancellationRequested)
         {
-            //TODO: poly etc
+            //TODO: poly, etc
             try
             {
                 Task<HttpOperationResponse<V1NamespaceList>> listNamespaceResp =
@@ -118,7 +121,11 @@ public class KubernetesHostedService(
                         timeoutSeconds: int.MaxValue,
                         cancellationToken: stoppingToken);
                 await foreach ((WatchEventType type, V1Namespace item) in listNamespaceResp
-                                   .WatchAsync<V1Namespace, V1NamespaceList>(cancellationToken: stoppingToken))
+                                   .WatchAsync<V1Namespace, V1NamespaceList>(
+                                       ex => logger.LogError(
+                                           $"{nameof(WatchNamespaces)} - WatchAsync- {ex.Message}",
+                                           ex),
+                                       stoppingToken))
                 {
                     string k8sNamespace = item.Name();
                     switch (type)
@@ -163,7 +170,7 @@ public class KubernetesHostedService(
             }
             catch (Exception ex)
             {
-                logger.LogError(ex.Message, ex);
+                logger.LogError($"{nameof(WatchNamespaces)} - {ex.Message}", ex);
             }
         }
     }
