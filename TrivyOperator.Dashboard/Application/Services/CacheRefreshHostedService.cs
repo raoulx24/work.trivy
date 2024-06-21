@@ -18,15 +18,16 @@ public class CacheRefreshHostedService(
         {
             await Task.Delay(60000, stoppingToken);
 
-            IEnumerable<DateTime> lastMoments = cache.Where(x => x.Key.StartsWith("vulenrabilityreportcr."))
+            DateTime[] lastMoments = cache.Where(x => x.Key.StartsWith("vulenrabilityreportcr."))
                 .Where(x => x.Value > lastExecution)
-                .Select(x => x.Value);
+                .Select(x => x.Value)
+                .ToArray();
+            DateTime newLastExecution = lastMoments.Length != 0 ? lastMoments.Max(x => x) : lastExecution;
 
-            DateTime newLastExecution = lastMoments.Any() ? lastMoments.Max(x => x) : lastExecution;
-
-            IEnumerable<string> k8sNamespaces = cache.Where(x => x.Key.StartsWith("vulenrabilityreportcr."))
-                .Where(x => x.Value > lastExecution)
-                .Select(x => x.Key.Replace("vulenrabilityreportcr.", ""));
+            IEnumerable<string> k8sNamespaces = cache
+                .Where(x => x.Key.StartsWith("vulenrabilityreportcr.") && x.Value > lastExecution)
+                .Select(x => x.Key.Replace("vulenrabilityreportcr.", ""))
+                .Distinct();
             foreach (string k8sNamespace in k8sNamespaces)
             {
                 using IServiceScope scope = services.CreateScope();
