@@ -1,18 +1,14 @@
 import { Component } from '@angular/core';
 import {
   ColDef,
-  ColGroupDef,
-  DataTypeDefinition,
   GridApi,
-  GridOptions,
   GridReadyEvent,
-  createGrid,
   ValueGetterParams,
   CsvExportParams,
 } from "ag-grid-community";
 import { VulnerabilityReportsService } from "../../api/services/vulnerability-reports.service";
 import { VulnerabilityDto } from "../../api/models/vulnerability-dto";
-import { VulnerabilitSeverityRenderer } from "./vulnerabilit-severity-renderer.component";
+import { VulnerabilitySeverityRenderer } from "./vulnerability-severity-renderer.component";
 
 @Component({
   selector: 'app-fetch-data',
@@ -35,7 +31,7 @@ export class FetchDataComponent {
       valueGetter: (params: ValueGetterParams) =>
         params.data.imageName + ":" + params.data.imageTag,
     },
-    { headerName: 'S', field: "severity", filter: true, flex: 1, minWidth: 60, cellRenderer: VulnerabilitSeverityRenderer },
+    { headerName: 'S', field: "severity", filter: true, flex: 1, minWidth: 60, cellRenderer: VulnerabilitySeverityRenderer },
     { headerName: 'Title', field: "title", filter: true, flex: 15, wrapText: true, autoHeight: true },
     {
       headerName: 'CVE', field: "vulnerabilityId", filter: true, flex: 6,
