@@ -1,7 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 @import "../node_modules/ag-grid-community/styles/ag-grid.css";
 @import "../node_modules/ag-grid-community/styles/ag-theme-quartz.css";
-@import "../node_modules/primeng/resources/themes/lara-dark-blue/theme.css";
 @import "../node_modules/primeng/resources/primeng.css";
 
 /* Provide sufficient contrast against white background */
