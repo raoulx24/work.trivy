@@ -12,7 +12,7 @@
 <app-root>Loading...</app-root>
 <script>
   (function () {
-    const htmlElement = document.querySelector("html")
+    const htmlElement = document.querySelector("html");
     if (htmlElement.getAttribute("data-bs-theme") === "auto") {
       function updateTheme() {
         const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
