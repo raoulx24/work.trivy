@@ -117,7 +117,6 @@ public class KubernetesHostedService(
     {
         while (!stoppingToken.IsCancellationRequested)
         {
-            //TODO: poly, etc
             try
             {
                 Task<HttpOperationResponse<V1NamespaceList>> listNamespaceResp =
