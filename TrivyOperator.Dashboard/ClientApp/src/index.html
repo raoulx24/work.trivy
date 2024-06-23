@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
+<html data-bs-theme="auto" lang="en">
 <head>
   <meta charset="utf-8"/>
   <title>TrivyOperator.Dashboard</title>
@@ -10,5 +10,19 @@
 </head>
 <body>
 <app-root>Loading...</app-root>
+<script>
+  (function () {
+    const htmlElement = document.querySelector("html")
+    if (htmlElement.getAttribute("data-bs-theme") === 'auto') {
+      function updateTheme() {
+        document.querySelector("html").setAttribute("data-bs-theme",
+          window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
+      }
+
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateTheme)
+      updateTheme()
+    }
+  })();
+</script>
 </body>
 </html>

@@ -11,6 +11,7 @@ import {FetchDataComponent} from './fetch-data/fetch-data.component';
 import {AgGridModule} from "ag-grid-angular";
 import {ApiModule} from "../api/api.module";
 import {environment} from "../environments/environment";
+import {Button} from "primeng/button";
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import {environment} from "../environments/environment";
       {path: 'fetch-data', component: FetchDataComponent},
     ]),
     AgGridModule,
-    ApiModule.forRoot({rootUrl: environment.baseUrl})
+    ApiModule.forRoot({rootUrl: environment.baseUrl}),
+    Button
   ],
   providers: [],
   bootstrap: [AppComponent]
