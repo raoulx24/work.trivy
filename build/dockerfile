@@ -1,4 +1,6 @@
-FROM mcr.microsoft.com/dotnet/aspnet:8.0-jammy as build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 as build
+
+
 
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 
