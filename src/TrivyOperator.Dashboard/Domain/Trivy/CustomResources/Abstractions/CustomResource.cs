@@ -1,6 +1,6 @@
-﻿using System.Text.Json.Serialization;
-using k8s;
+﻿using k8s;
 using k8s.Models;
+using System.Text.Json.Serialization;
 
 namespace TrivyOperator.Dashboard.Domain.Trivy.CustomResources.Abstractions;
 

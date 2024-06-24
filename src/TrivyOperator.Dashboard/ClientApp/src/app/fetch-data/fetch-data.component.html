@@ -3,6 +3,7 @@
 <p *ngIf="!vulnerabilities"><em>Loading...</em></p>
 
 <ag-grid-angular
+  (gridReady)="onGridReady($event)"
   *ngIf="vulnerabilities"
   [columnDefs]="columnDefs"
   [defaultColDef]="defaultColDef"
@@ -10,7 +11,6 @@
   [rowSelection]="rowSelection"
   class="ag-theme-quartz-auto-dark"
   style="height: 500px;"
-  (gridReady)="onGridReady($event)"
 >
 </ag-grid-angular>
 

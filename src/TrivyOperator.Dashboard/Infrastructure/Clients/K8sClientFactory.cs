@@ -1,9 +1,9 @@
-﻿using System.Net;
-using k8s;
+﻿using k8s;
 using Microsoft.Extensions.Http;
 using Polly;
 using Polly.Extensions.Http;
 using Polly.Retry;
+using System.Net;
 using TrivyOperator.Dashboard.Infrastructure.Abstractions;
 
 namespace TrivyOperator.Dashboard.Infrastructure.Clients;

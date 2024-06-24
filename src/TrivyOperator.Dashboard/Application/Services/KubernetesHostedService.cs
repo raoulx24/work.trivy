@@ -1,8 +1,8 @@
-﻿using System.Collections.Concurrent;
-using System.Net;
-using k8s;
+﻿using k8s;
 using k8s.Autorest;
 using k8s.Models;
+using System.Collections.Concurrent;
+using System.Net;
 using TrivyOperator.Dashboard.Application.Services.Abstractions;
 using TrivyOperator.Dashboard.Domain.Trivy.CustomResources.Abstractions;
 using TrivyOperator.Dashboard.Domain.Trivy.VulnerabilityReport;

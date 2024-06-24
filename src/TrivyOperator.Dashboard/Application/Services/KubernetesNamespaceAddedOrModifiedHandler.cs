@@ -1,5 +1,5 @@
-﻿using System.Net;
-using k8s.Autorest;
+﻿using k8s.Autorest;
+using System.Net;
 using TrivyOperator.Dashboard.Application.Services.Abstractions;
 using TrivyOperator.Dashboard.Domain.Services.Abstractions;
 using TrivyOperator.Dashboard.Domain.Trivy.VulnerabilityReport;

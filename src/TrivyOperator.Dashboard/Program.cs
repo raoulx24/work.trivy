@@ -1,8 +1,8 @@
-﻿using System.Runtime.InteropServices;
-using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.HttpOverrides;
+﻿using Microsoft.AspNetCore.HttpOverrides;
 using Serilog;
 using Serilog.Extensions.Logging;
+using System.Runtime.InteropServices;
+using System.Text.Json.Serialization;
 using TrivyOperator.Dashboard.Application.Services;
 using TrivyOperator.Dashboard.Application.Services.Abstractions;
 using TrivyOperator.Dashboard.Domain.Services;
