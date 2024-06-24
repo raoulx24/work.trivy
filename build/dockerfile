@@ -4,7 +4,8 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 as build
 
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 
-RUN nvm install 20
+RUN . ~/.nvm/nvm.sh && source ~/.bashrc && nvm install 20
+# RUN nvm install 20
 
 COPY ./src /src
 
