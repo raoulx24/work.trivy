@@ -1,0 +1,1 @@
+# TrivyOperator.Dashboard
