@@ -1,0 +1,17 @@
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-jammy as build
+
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+
+nvm install 20
+
+copy ./src /src
+
+dotnet publish /src/TrivyOperator.Dashboard/TrivyOperator.Dashboard.csproj --configuration Release -o /build --runtime linux-x64 --self-contained
+
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-jammy as final
+
+COPY --from=build /build /opt/trivy.dashboard
+
+WORKDIR /opt/trivy.dashboard
+
+ENTRYPOINT ["dotnet", "TrivyOperator.Dashboard.dll"]
