@@ -29,7 +29,8 @@ public class ConcurrentCache<TKey, TValue> : IConcurrentCache<TKey, TValue> wher
     public bool TryUpdate(TKey key, TValue newValue, TValue comparisonValue) =>
         dictionary.TryUpdate(key, newValue, comparisonValue);
 
-    public bool TryRemove(TKey key, [MaybeNullWhen(false)] out TValue value) => dictionary.TryRemove(key, out value);
+    public bool TryRemove(TKey key, [MaybeNullWhen(false)] out TValue value) =>
+        dictionary.TryRemove(key, out value);
 
     public bool ContainsKey(TKey key) => dictionary.ContainsKey(key);
 

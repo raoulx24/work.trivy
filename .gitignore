@@ -233,3 +233,6 @@ _Pvt_Extensions
 # JetBrains Rider
 .idea/
 *.sln.iml
+
+# allow .NET build folder
+!/build
