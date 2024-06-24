@@ -2,12 +2,10 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 as build
 
 # apt update && apt install curl -y
 
-RUN touch ~/.bashrc && chmod +x ~/.bashrc
-
+SHELL ["/bin/bash", "--login", "-i", "-c"]
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-
-RUN . ~/.nvm/nvm.sh && source ~/.bashrc && nvm install 20
-# RUN nvm install 20
+RUN source /root/.bashrc && nvm install 20
+SHELL ["/bin/bash", "--login", "-c"]
 
 COPY ./src /src
 
