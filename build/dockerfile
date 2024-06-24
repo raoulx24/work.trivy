@@ -1,14 +1,14 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 as build
 
-apt update && apt install curl -y
+# apt update && apt install curl -y
 
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 
-nvm install 20
+RUN nvm install 20
 
-copy ./src /src
+COPY ./src /src
 
-dotnet publish /src/TrivyOperator.Dashboard/TrivyOperator.Dashboard.csproj --configuration Release -o /build --runtime linux-x64 --self-contained
+RUN dotnet publish /src/TrivyOperator.Dashboard/TrivyOperator.Dashboard.csproj --configuration Release -o /build --runtime linux-x64 --self-contained
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0-jammy as final
 
