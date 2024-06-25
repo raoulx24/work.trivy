@@ -1,49 +1,55 @@
 ﻿using TrivyOperator.Dashboard.Application.Services.Abstractions;
 using TrivyOperator.Dashboard.Infrastructure.Abstractions;
+using YamlDotNet.Core.Tokens;
 
 namespace TrivyOperator.Dashboard.Application.Services;
 
 public class CacheRefreshHostedService(
     IServiceProvider services,
     IConcurrentCache<string, DateTime> cache,
-    ILogger<KubernetesHostedService> logger) : BackgroundService
+    ILogger<KubernetesHostedService> logger) : IHostedService, IDisposable
 {
     private DateTime lastExecution = DateTime.UtcNow;
+    private Timer? timer = null;
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    public Task StartAsync(CancellationToken stoppingTokenn)
     {
         logger.LogInformation("Cache Refresh Hosted Service running.");
 
-        while (!stoppingToken.IsCancellationRequested)
-        {
-            await Task.Delay(60000, stoppingToken);
+        timer = new Timer(DoWork, null, TimeSpan.Zero, TimeSpan.FromSeconds(60));
 
-            DateTime[] lastMoments = cache
-                .Where(x => x.Key.StartsWith("vulenrabilityreportcr.") && x.Value > lastExecution)
-                .Select(x => x.Value)
-                .ToArray();
-            DateTime newLastExecution = lastMoments.Length != 0 ? lastMoments.Max(x => x) : lastExecution;
-
-            IEnumerable<string> k8sNamespaces = cache
-                .Where(x => x.Key.StartsWith("vulenrabilityreportcr.") && x.Value > lastExecution)
-                .Select(x => x.Key.Replace("vulenrabilityreportcr.", ""));
-            foreach (string k8sNamespace in k8sNamespaces)
-            {
-                using IServiceScope scope = services.CreateScope();
-                foreach (IKubernetesNamespaceAddedOrModifiedHandler handler in scope.ServiceProvider
-                             .GetServices<IKubernetesNamespaceAddedOrModifiedHandler>())
-                {
-                    await handler.Handle(k8sNamespace);
-                }
-            }
-
-            lastExecution = newLastExecution;
-        }
+        return Task.CompletedTask;
     }
 
-    public override async Task StopAsync(CancellationToken stoppingToken)
+    private async void DoWork(object? state)
+    {
+        IDictionary<string, DateTime> workingEvents = cache
+            .Where(x => x.Key.StartsWith("vulenrabilityreportcr.") && x.Value > lastExecution)
+            .ToDictionary<string, DateTime>();
+
+        DateTime newLastExecution = workingEvents.Values.Any() ? workingEvents.Values.Max(x => x) : lastExecution;
+
+        foreach (string key in workingEvents.Keys)
+        {
+            using IServiceScope scope = services.CreateScope();
+            foreach (IKubernetesNamespaceAddedOrModifiedHandler handler in scope.ServiceProvider
+                         .GetServices<IKubernetesNamespaceAddedOrModifiedHandler>())
+            {
+                await handler.Handle(key.Replace("vulenrabilityreportcr.", ""));
+            }
+        }
+
+        lastExecution = newLastExecution;
+    }
+
+    public async Task StopAsync(CancellationToken stoppingToken)
     {
         logger.LogInformation("Cache Refresh Hosted Service is stopping.");
-        await base.StopAsync(stoppingToken);
+        timer?.Change(Timeout.Infinite, 0);
+    }
+
+    public void Dispose()
+    {
+        timer?.Dispose();
     }
 }
