@@ -71,23 +71,26 @@ builder.Services.AddCors(
     options => options.AddDefaultPolicy(
         configurePolicy => configurePolicy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
 
-
 builder.Services.AddSingleton<IK8sClientFactory, K8sClientFactory>();
 
-builder.Services
-    .AddSingleton<IConcurrentCache<string, List<VulnerabilityReportCR>>,
+builder.Services.AddSingleton<IConcurrentCache<string, List<VulnerabilityReportCR>>,
         ConcurrentCache<string, List<VulnerabilityReportCR>>>();
-builder.Services.AddSingleton<IConcurrentCache<string, DateTime>, ConcurrentCache<string, DateTime>>();
+builder.Services.AddSingleton<IConcurrentCache<string, DateTime>, 
+        ConcurrentCache<string, DateTime>>();
+
 builder.Services.AddScoped<IVulnerabilityReportService, VulnerabilityReportService>();
 builder.Services.AddScoped<IVulnerabilityReportDomainService, VulnerabilityReportDomainService>();
 
 builder.Services.AddScoped<IKubernetesNamespaceService, KubernetesNamespaceService>();
-builder.Services.AddScoped<IKubernetesNamespaceDomainService, KubernetesNamespaceDomainService>();
+if (string.IsNullOrWhiteSpace(configuration.GetSection("Kubernetes").GetValue<string>("NamespaceList")))
+    builder.Services.AddScoped<IKubernetesNamespaceDomainService, KubernetesNamespaceDomainService>();
+else
+    builder.Services.AddScoped<IKubernetesNamespaceDomainService, StaticKubernetesNamespaceDomainService>();
 
 builder.Services.AddScoped<IKubernetesNamespaceAddedOrModifiedHandler, KubernetesNamespaceAddedOrModifiedHandler>();
 builder.Services.AddScoped<IKubernetesNamespaceDeletedHandler, KubernetesNamespaceDeletedHandler>();
-builder.Services
-    .AddScoped<IKubernetesVulnerabilityReportCrWatchEventHandler, KubernetesVulnerabilityReportCrWatchEventHandler>();
+builder.Services.AddScoped<IKubernetesVulnerabilityReportCrWatchEventHandler, KubernetesVulnerabilityReportCrWatchEventHandler>();
+
 builder.Services.AddHostedService<KubernetesHostedService>();
 builder.Services.AddHostedService<CacheRefreshHostedService>();
 

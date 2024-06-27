@@ -4,6 +4,7 @@ using k8s.Models;
 using System.Collections.Concurrent;
 using System.Net;
 using TrivyOperator.Dashboard.Application.Services.Abstractions;
+using TrivyOperator.Dashboard.Domain.Services.Abstractions;
 using TrivyOperator.Dashboard.Domain.Trivy.CustomResources.Abstractions;
 using TrivyOperator.Dashboard.Domain.Trivy.VulnerabilityReport;
 using TrivyOperator.Dashboard.Infrastructure.Abstractions;
@@ -22,26 +23,30 @@ public class KubernetesHostedService(
     ILogger<KubernetesHostedService> logger) : BackgroundService
 {
     private readonly ConcurrentDictionary<string, TaskWithCts> watchVulnerabilityReportCrsTaskDict = new();
+    private Kubernetes k8sClient = k8sClientFactory.GetClient();
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         logger.LogInformation("Kubernetes Hosted Service running.");
-        Kubernetes k8sClient = k8sClientFactory.GetClient();
-        V1NamespaceList nsList = await k8sClient.CoreV1.ListNamespaceAsync(cancellationToken: stoppingToken);
-        foreach (V1Namespace item in nsList.Items)
+
+        using IServiceScope scope = services.CreateScope();
+        IKubernetesNamespaceDomainService kubernetesNamespaceDomainService = scope.ServiceProvider.GetServices<IKubernetesNamespaceDomainService>().First();
+        List<string> k8sNamespaces = await kubernetesNamespaceDomainService.GetKubernetesNamespaces();
+        foreach (string k8sNamespace in k8sNamespaces)
         {
-            string k8sNamespace = item.Name();
-            using IServiceScope scope = services.CreateScope();
             foreach (IKubernetesNamespaceAddedOrModifiedHandler handler in scope.ServiceProvider
                          .GetServices<IKubernetesNamespaceAddedOrModifiedHandler>())
             {
                 await handler.Handle(k8sNamespace);
             }
 
-            CreateWatchVulnerabilityReportCrsTask(k8sClient, k8sNamespace, stoppingToken);
+            CreateWatchVulnerabilityReportCrsTask(k8sNamespace, stoppingToken);
         }
 
-        await WatchNamespaces(k8sClient, stoppingToken);
+        if (!kubernetesNamespaceDomainService.IsStaticList)
+        {
+            await WatchNamespaces(stoppingToken);
+        }
     }
 
     public override async Task StopAsync(CancellationToken stoppingToken)
@@ -97,7 +102,6 @@ public class KubernetesHostedService(
     }
 
     private void CreateWatchVulnerabilityReportCrsTask(
-        Kubernetes k8sClient,
         string k8sNamespace,
         CancellationToken stoppingToken)
     {
@@ -113,7 +117,7 @@ public class KubernetesHostedService(
         watchVulnerabilityReportCrsTaskDict[k8sNamespace] = taskWithCts;
     }
 
-    private async Task WatchNamespaces(Kubernetes k8sClient, CancellationToken stoppingToken)
+    private async Task WatchNamespaces(CancellationToken stoppingToken)
     {
         while (!stoppingToken.IsCancellationRequested)
         {
@@ -144,7 +148,7 @@ public class KubernetesHostedService(
                                     await handler.Handle(k8sNamespace);
                                 }
 
-                                CreateWatchVulnerabilityReportCrsTask(k8sClient, k8sNamespace, stoppingToken);
+                                CreateWatchVulnerabilityReportCrsTask(k8sNamespace, stoppingToken);
                             }
 
                             break;
