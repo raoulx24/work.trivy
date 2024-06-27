@@ -31,19 +31,21 @@ public class KubernetesHostedService(
 
         using IServiceScope scope = services.CreateScope();
         IKubernetesNamespaceDomainService kubernetesNamespaceDomainService = scope.ServiceProvider.GetServices<IKubernetesNamespaceDomainService>().First();
-        List<string> k8sNamespaces = await kubernetesNamespaceDomainService.GetKubernetesNamespaces();
-        foreach (string k8sNamespace in k8sNamespaces)
+        if (kubernetesNamespaceDomainService.IsStaticList)
         {
-            foreach (IKubernetesNamespaceAddedOrModifiedHandler handler in scope.ServiceProvider
-                         .GetServices<IKubernetesNamespaceAddedOrModifiedHandler>())
+            List<string> k8sNamespaces = await kubernetesNamespaceDomainService.GetKubernetesNamespaces();
+            foreach (string k8sNamespace in k8sNamespaces)
             {
-                await handler.Handle(k8sNamespace);
+                foreach (IKubernetesNamespaceAddedOrModifiedHandler handler in scope.ServiceProvider
+                             .GetServices<IKubernetesNamespaceAddedOrModifiedHandler>())
+                {
+                    await handler.Handle(k8sNamespace);
+                }
+
+                CreateWatchVulnerabilityReportCrsTask(k8sNamespace, stoppingToken);
             }
-
-            CreateWatchVulnerabilityReportCrsTask(k8sNamespace, stoppingToken);
         }
-
-        if (!kubernetesNamespaceDomainService.IsStaticList)
+        else
         {
             await WatchNamespaces(stoppingToken);
         }
