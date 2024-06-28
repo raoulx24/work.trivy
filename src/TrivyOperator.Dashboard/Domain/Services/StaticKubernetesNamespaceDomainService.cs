@@ -13,6 +13,7 @@ public class StaticKubernetesNamespaceDomainService(IConfiguration configuration
 
     public async Task<List<string>> GetKubernetesNamespaces()
     {
+        // TODO: change from IConfiguration to IOptions
         string configK8sNamespaces = configuration.GetSection("Kubernetes").GetValue<string>("NamespaceList");
 
         if (string.IsNullOrWhiteSpace(configK8sNamespaces))

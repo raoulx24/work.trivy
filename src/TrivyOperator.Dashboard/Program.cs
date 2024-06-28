@@ -73,8 +73,8 @@ builder.Services.AddCors(
 
 builder.Services.AddSingleton<IK8sClientFactory, K8sClientFactory>();
 
-builder.Services.AddSingleton<IConcurrentCache<string, List<VulnerabilityReportCR>>,
-        ConcurrentCache<string, List<VulnerabilityReportCR>>>();
+builder.Services.AddSingleton<IConcurrentCache<string, IList<VulnerabilityReportCR>>,
+        ConcurrentCache<string, IList<VulnerabilityReportCR>>>();
 builder.Services.AddSingleton<IConcurrentCache<string, DateTime>, 
         ConcurrentCache<string, DateTime>>();
 

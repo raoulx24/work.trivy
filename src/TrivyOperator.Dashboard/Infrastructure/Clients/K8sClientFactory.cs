@@ -21,6 +21,7 @@ public class K8sClientFactory: IK8sClientFactory
         this.configuration = configuration;
         this.logger = logger;
 
+        // TODO: change from IConfiguration to IOptions
         string kubeconfigFileName = configuration.GetSection("Kubernetes").GetValue<string>("KubeConfigFileName");
 
         if (!string.IsNullOrEmpty(kubeconfigFileName))
@@ -30,7 +31,6 @@ public class K8sClientFactory: IK8sClientFactory
                 if (File.Exists(kubeconfigFileName))
                 {
                     KubernetesClientConfiguration config = KubernetesClientConfiguration.BuildConfigFromConfigFile(kubeconfigPath: kubeconfigFileName);
-
                     k8sClient = new Kubernetes(config, new PolicyHttpMessageHandler(GetRetryPolicy()));
                 }
                 else
