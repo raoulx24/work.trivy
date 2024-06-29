@@ -10,6 +10,7 @@ COPY ./src/TrivyOperator.Dashboard/ClientApp /src
 
 WORKDIR /src
 
+RUN npm install
 RUN npm run build -- --configuration production
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0-jammy as final
