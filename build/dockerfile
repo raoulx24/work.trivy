@@ -1,19 +1,21 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0 as build
-
-# apt update && apt install curl -y
-
-SHELL ["/bin/bash", "--login", "-i", "-c"]
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-RUN source /root/.bashrc && nvm install 20
-SHELL ["/bin/bash", "--login", "-c"]
+FROM mcr.microsoft.com/dotnet/sdk:8.0 as build-dotnet
 
 COPY ./src /src
 
 RUN dotnet publish /src/TrivyOperator.Dashboard/TrivyOperator.Dashboard.csproj --configuration Release -o /build --runtime linux-x64 --self-contained
 
+FROM FROM node:20 as build-node
+
+COPY ./src/TrivyOperator.Dashboard/ClientApp /src
+
+WORKDIR /src
+
+npm run build -- --configuration production
+
 FROM mcr.microsoft.com/dotnet/aspnet:8.0-jammy as final
 
-COPY --from=build /build /opt/trivy.dashboard
+COPY --from=build-dotnet /build /opt/trivy.dashboard
+COPY --from=build-node /src/dist /opt/trivy.dashboard/wwwroot
 
 WORKDIR /opt/trivy.dashboard
 
