@@ -25,13 +25,11 @@ public class KubernetesNamespaceDomainService(IK8sClientFactory k8sClientFactory
         catch (HttpOperationException ex) when (ex.Response.StatusCode == System.Net.HttpStatusCode.Forbidden)
         {
             logger.LogWarning($"Cannot get Kubernetes Namespaces. Forbidden (403). Error: {ex.Response.Content}");
-
             return new List<string> { "" };
         }
         catch (Exception ex)
         {
             logger.LogCritical($"Cannot get Kubernetes Namespaces. Error {ex.Message}");
-
             throw;
         }
     }
