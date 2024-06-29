@@ -9,14 +9,17 @@
     },
     "WriteTo": [
       {
-        "Name": "Console"
+        "Name": "Console",
+        "Args": {
+          "outputTemplate": "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] ({SourceContext:l}) {Message:lj} {Properties:j}{NewLine}{Exception}"
+        }
       },
       {
-        "Name": "cucu",
+        "Name": "[disabled]File",
         "Args": {
           "path": "App_Data/Logs/trivy-operator-dashboard-log.log",
           "rollingInterval": "Day",
-          "outputTemplate": "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level}] {Message} {Properties:j}{NewLine}{Exception}",
+          "outputTemplate": "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] ({SourceContext:l}) {Message:lj} {Properties:j}{NewLine}{Exception}",
           "formatter": "Serilog.Formatting.Compact.CompactJsonFormatter, Serilog.Formatting.Compact",
           "fileSizeLimitBytes": 104857600
         }
