@@ -16,7 +16,7 @@ public class K8sClientFactory: IK8sClientFactory
     private IConfiguration configuration;
     private ILogger logger;
 
-    public K8sClientFactory(IConfiguration configuration, ILogger<KubernetesHostedService> logger)
+    public K8sClientFactory(IConfiguration configuration, ILogger<K8sClientFactory> logger)
     {
         this.configuration = configuration;
         this.logger = logger;
@@ -24,7 +24,7 @@ public class K8sClientFactory: IK8sClientFactory
         // TODO: change from IConfiguration to IOptions
         string kubeconfigFileName = configuration.GetSection("Kubernetes").GetValue<string>("KubeConfigFileName");
 
-        if (!string.IsNullOrEmpty(kubeconfigFileName))
+        if (!string.IsNullOrWhiteSpace(kubeconfigFileName))
         {
             try
             {
@@ -46,10 +46,13 @@ public class K8sClientFactory: IK8sClientFactory
             }
         }
 
-        KubernetesClientConfiguration? defaultConfig = KubernetesClientConfiguration.IsInCluster()
-                ? KubernetesClientConfiguration.InClusterConfig()
-                : KubernetesClientConfiguration.BuildConfigFromConfigFile();
-        k8sClient = new Kubernetes(defaultConfig, new PolicyHttpMessageHandler(GetRetryPolicy()));
+        if (k8sClient is null) // kubeconfigFileName is not IsNullOrWhiteSpace OR something bad happened
+        {
+            KubernetesClientConfiguration? defaultConfig = KubernetesClientConfiguration.IsInCluster()
+                    ? KubernetesClientConfiguration.InClusterConfig()
+                    : KubernetesClientConfiguration.BuildConfigFromConfigFile();
+            k8sClient = new Kubernetes(defaultConfig, new PolicyHttpMessageHandler(GetRetryPolicy()));
+        }
     }
 
     public Kubernetes GetClient() => k8sClient;
