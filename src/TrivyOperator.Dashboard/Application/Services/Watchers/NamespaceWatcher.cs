@@ -1,27 +1,24 @@
 ﻿using k8s;
 using k8s.Autorest;
 using k8s.Models;
-using TrivyOperator.Dashboard.Application.Services.Abstractions;
+using TrivyOperator.Dashboard.Application.Services.WatcherParams;
+using TrivyOperator.Dashboard.Application.Services.Watchers.Abstractions;
+using TrivyOperator.Dashboard.Infrastructure.Abstractions;
 
 namespace TrivyOperator.Dashboard.Application.Services.Watchers;
 
-public class NamespaceWatcher : KubernetesWatcher<V1NamespaceList, V1Namespace>
+public class NamespaceWatcher : KubernetesClusterScopedWatcher<V1NamespaceList, V1Namespace, KubernetesClusterScopedWatcherParams>
 {
-    public NamespaceWatcher(ILogger<NamespaceWatcher> logger)
+    public NamespaceWatcher(IK8sClientFactory k8SClientFactory, ILogger<NamespaceWatcher> logger) :
+        base(k8SClientFactory, logger)
     {
-        this.logger = logger;
     }
 
-    protected override async Task<HttpOperationResponse<V1NamespaceList>> GetKubernetesObjectWatchList(Kubernetes k8sClient, string? k8sNamespace, CancellationToken cancellationToken)
+    protected override async Task<HttpOperationResponse<V1NamespaceList>> GetKubernetesObjectWatchList(KubernetesClusterScopedWatcherParams watcherParams, CancellationToken cancellationToken)
     {
-        return await k8sClient.CoreV1.ListNamespaceWithHttpMessagesAsync(
+        return await kubernetesClient.CoreV1.ListNamespaceWithHttpMessagesAsync(
                         watch: true,
                         timeoutSeconds: int.MaxValue,
                         cancellationToken: cancellationToken);
-    }
-
-    protected override Task ProcessWatchEvent(WatchEventType type, V1Namespace item, string? k8sNamespace, CancellationToken cancellationToken)
-    {
-        return Task.CompletedTask;
     }
 }
