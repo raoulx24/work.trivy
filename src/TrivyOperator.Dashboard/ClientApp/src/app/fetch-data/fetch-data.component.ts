@@ -22,7 +22,7 @@ export class FetchDataComponent {
         params.data.imageName + ":" + params.data.imageTag,
     },
     {
-      headerName: 'S',
+      headerName: '',
       field: "severity",
       filter: true,
       flex: 1,
