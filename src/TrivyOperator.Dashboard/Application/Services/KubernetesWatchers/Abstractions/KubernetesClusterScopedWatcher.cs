@@ -2,7 +2,7 @@
 using TrivyOperator.Dashboard.Application.Services.WatcherParams.Abstractions;
 using TrivyOperator.Dashboard.Infrastructure.Abstractions;
 
-namespace TrivyOperator.Dashboard.Application.Services.Watchers.Abstractions;
+namespace TrivyOperator.Dashboard.Application.Services.KubernetesWatchers.Abstractions;
 
 public abstract class KubernetesClusterScopedWatcher<TKubernetesObjectList, TKubernetesObject, TWatcherParams> :
     KubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TWatcherParams>,
@@ -11,8 +11,8 @@ public abstract class KubernetesClusterScopedWatcher<TKubernetesObjectList, TKub
         where TKubernetesObjectList : IKubernetesObject, IItems<TKubernetesObject>
         where TWatcherParams : IKubernetesClusterScopedWatcherParams
 {
-    public KubernetesClusterScopedWatcher(IK8sClientFactory k8SClientFactory, ILogger<KubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TWatcherParams>> logger)
-        : base(k8SClientFactory, logger)
+    public KubernetesClusterScopedWatcher(IKubernetesClientFactory kubernetesClientFactory, ILogger<KubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TWatcherParams>> logger)
+        : base(kubernetesClientFactory, logger)
     {
     }
 

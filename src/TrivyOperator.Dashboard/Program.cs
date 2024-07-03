@@ -71,7 +71,7 @@ builder.Services.AddCors(
     options => options.AddDefaultPolicy(
         configurePolicy => configurePolicy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
 
-builder.Services.AddSingleton<IK8sClientFactory, K8sClientFactory>();
+builder.Services.AddSingleton<IKubernetesClientFactory, KubernetesClientFactory>();
 
 builder.Services.AddSingleton<IConcurrentCache<string, IList<VulnerabilityReportCR>>,
         ConcurrentCache<string, IList<VulnerabilityReportCR>>>();

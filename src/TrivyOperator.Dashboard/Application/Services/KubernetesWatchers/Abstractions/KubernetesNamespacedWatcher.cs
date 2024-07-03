@@ -3,7 +3,7 @@ using k8s.Autorest;
 using TrivyOperator.Dashboard.Application.Services.WatcherParams.Abstractions;
 using TrivyOperator.Dashboard.Infrastructure.Abstractions;
 
-namespace TrivyOperator.Dashboard.Application.Services.Watchers.Abstractions;
+namespace TrivyOperator.Dashboard.Application.Services.KubernetesWatchers.Abstractions;
 
 public abstract class KubernetesNamespacedWatcher<TKubernetesObjectList, TKubernetesObject, TWatcherParams> :
     KubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TWatcherParams>,
@@ -12,8 +12,8 @@ public abstract class KubernetesNamespacedWatcher<TKubernetesObjectList, TKubern
         where TKubernetesObjectList : IKubernetesObject, IItems<TKubernetesObject>
         where TWatcherParams : IKubernetesNamespacedWatcherParams
 {
-    public KubernetesNamespacedWatcher(IK8sClientFactory k8SClientFactory, ILogger<KubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TWatcherParams>> logger)
-        : base(k8SClientFactory, logger)
+    public KubernetesNamespacedWatcher(IKubernetesClientFactory kubernetesClientFactory, ILogger<KubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TWatcherParams>> logger)
+        : base(kubernetesClientFactory, logger)
     {
     }
 

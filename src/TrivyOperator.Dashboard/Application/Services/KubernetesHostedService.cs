@@ -19,7 +19,7 @@ public readonly struct TaskWithCts
 
 public class KubernetesHostedService(
     IServiceProvider services,
-    IK8sClientFactory k8sClientFactory,
+    IKubernetesClientFactory k8sClientFactory,
     ILogger<KubernetesHostedService> logger) : BackgroundService
 {
     private readonly ConcurrentDictionary<string, TaskWithCts> watchVulnerabilityReportCrsTaskDict = new();

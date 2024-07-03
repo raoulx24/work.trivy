@@ -7,7 +7,7 @@ using TrivyOperator.Dashboard.Domain.Trivy.CustomResources.Abstractions;
 using TrivyOperator.Dashboard.Domain.Trivy.VulnerabilityReport;
 using TrivyOperator.Dashboard.Infrastructure.Abstractions;
 
-namespace TrivyOperator.Dashboard.Application.Services.Watchers.Abstractions;
+namespace TrivyOperator.Dashboard.Application.Services.KubernetesWatchers.Abstractions;
 
 public abstract class KubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TWatcherParams> :
     IKubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TWatcherParams>
@@ -19,10 +19,10 @@ public abstract class KubernetesWatcher<TKubernetesObjectList, TKubernetesObject
     protected Dictionary<string, TaskWithCts> watchers = [];
     protected Kubernetes kubernetesClient;
 
-    public KubernetesWatcher(IK8sClientFactory k8SClientFactory,
+    public KubernetesWatcher(IKubernetesClientFactory kubernetesClientFactory,
         ILogger<KubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TWatcherParams>> logger)
     {
-        this.kubernetesClient = k8SClientFactory.GetClient();
+        kubernetesClient = kubernetesClientFactory.GetClient();
         this.logger = logger;
     }
 

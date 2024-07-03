@@ -1,4 +1,4 @@
-﻿namespace TrivyOperator.Dashboard.Application.Services.Watchers;
+﻿namespace TrivyOperator.Dashboard.Application.Services.KubernetesWatchers;
 
 public readonly struct TaskWithCts
 {

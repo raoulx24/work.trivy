@@ -14,15 +14,15 @@ public class StaticKubernetesNamespaceDomainService(IConfiguration configuration
     public async Task<List<string>> GetKubernetesNamespaces()
     {
         // TODO: change from IConfiguration to IOptions
-        string configK8sNamespaces = configuration.GetSection("Kubernetes").GetValue<string>("NamespaceList");
+        string configKubernetesNamespaces = configuration.GetSection("Kubernetes").GetValue<string>("NamespaceList");
 
-        if (string.IsNullOrWhiteSpace(configK8sNamespaces))
+        if (string.IsNullOrWhiteSpace(configKubernetesNamespaces))
         {
             throw new ArgumentNullException("Provided parameter Kubernetes.NamespaceList is null or whitespace.");
         }
 
-        List<string> k8sNamespaces = configK8sNamespaces.Split(',').Select(x => x.Trim()).ToList();
+        List<string> kubernetesNamespaces = configKubernetesNamespaces.Split(',').Select(x => x.Trim()).ToList();
 
-        return k8sNamespaces;
+        return kubernetesNamespaces;
     }
 }

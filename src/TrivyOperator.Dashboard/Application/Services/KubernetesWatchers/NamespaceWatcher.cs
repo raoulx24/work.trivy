@@ -1,16 +1,16 @@
 ﻿using k8s;
 using k8s.Autorest;
 using k8s.Models;
+using TrivyOperator.Dashboard.Application.Services.KubernetesWatchers.Abstractions;
 using TrivyOperator.Dashboard.Application.Services.WatcherParams;
-using TrivyOperator.Dashboard.Application.Services.Watchers.Abstractions;
 using TrivyOperator.Dashboard.Infrastructure.Abstractions;
 
-namespace TrivyOperator.Dashboard.Application.Services.Watchers;
+namespace TrivyOperator.Dashboard.Application.Services.KubernetesWatchers;
 
 public class NamespaceWatcher : KubernetesClusterScopedWatcher<V1NamespaceList, V1Namespace, KubernetesClusterScopedWatcherParams>
 {
-    public NamespaceWatcher(IK8sClientFactory k8SClientFactory, ILogger<NamespaceWatcher> logger) :
-        base(k8SClientFactory, logger)
+    public NamespaceWatcher(IKubernetesClientFactory kubernetesClientFactory, ILogger<NamespaceWatcher> logger) :
+        base(kubernetesClientFactory, logger)
     {
     }
 

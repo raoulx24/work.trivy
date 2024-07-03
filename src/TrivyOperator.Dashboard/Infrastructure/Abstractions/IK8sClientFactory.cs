@@ -2,7 +2,7 @@
 
 namespace TrivyOperator.Dashboard.Infrastructure.Abstractions;
 
-public interface IK8sClientFactory
+public interface IKubernetesClientFactory
 {
     Kubernetes GetClient();
 }

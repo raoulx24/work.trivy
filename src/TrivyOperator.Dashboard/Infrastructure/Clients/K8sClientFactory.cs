@@ -10,13 +10,13 @@ using TrivyOperator.Dashboard.Infrastructure.Abstractions;
 
 namespace TrivyOperator.Dashboard.Infrastructure.Clients;
 
-public class K8sClientFactory: IK8sClientFactory
+public class KubernetesClientFactory : IKubernetesClientFactory
 {
-    private readonly Kubernetes k8sClient;
+    private readonly Kubernetes kubernetesClient;
     private IConfiguration configuration;
     private ILogger logger;
 
-    public K8sClientFactory(IConfiguration configuration, ILogger<K8sClientFactory> logger)
+    public KubernetesClientFactory(IConfiguration configuration, ILogger<KubernetesClientFactory> logger)
     {
         this.configuration = configuration;
         this.logger = logger;
@@ -31,7 +31,7 @@ public class K8sClientFactory: IK8sClientFactory
                 if (File.Exists(kubeconfigFileName))
                 {
                     KubernetesClientConfiguration config = KubernetesClientConfiguration.BuildConfigFromConfigFile(kubeconfigPath: kubeconfigFileName);
-                    k8sClient = new Kubernetes(config, new PolicyHttpMessageHandler(GetRetryPolicy()));
+                    kubernetesClient = new Kubernetes(config, new PolicyHttpMessageHandler(GetRetryPolicy()));
                 }
                 else
                 {
@@ -46,16 +46,16 @@ public class K8sClientFactory: IK8sClientFactory
             }
         }
 
-        if (k8sClient is null) // kubeconfigFileName is not IsNullOrWhiteSpace OR something bad happened
+        if (kubernetesClient is null) // kubeconfigFileName is not IsNullOrWhiteSpace OR something bad happened
         {
             KubernetesClientConfiguration? defaultConfig = KubernetesClientConfiguration.IsInCluster()
                     ? KubernetesClientConfiguration.InClusterConfig()
                     : KubernetesClientConfiguration.BuildConfigFromConfigFile();
-            k8sClient = new Kubernetes(defaultConfig, new PolicyHttpMessageHandler(GetRetryPolicy()));
+            kubernetesClient = new Kubernetes(defaultConfig, new PolicyHttpMessageHandler(GetRetryPolicy()));
         }
     }
 
-    public Kubernetes GetClient() => k8sClient;
+    public Kubernetes GetClient() => kubernetesClient;
 
     private static AsyncRetryPolicy<HttpResponseMessage> GetRetryPolicy() => HttpPolicyExtensions
         .HandleTransientHttpError()

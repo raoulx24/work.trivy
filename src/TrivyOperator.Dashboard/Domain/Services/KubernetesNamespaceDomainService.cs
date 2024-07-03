@@ -4,12 +4,13 @@ using k8s.Models;
 using TrivyOperator.Dashboard.Application.Services;
 using TrivyOperator.Dashboard.Domain.Services.Abstractions;
 using TrivyOperator.Dashboard.Infrastructure.Abstractions;
+using TrivyOperator.Dashboard.Infrastructure.Clients;
 
 namespace TrivyOperator.Dashboard.Domain.Services;
 
-public class KubernetesNamespaceDomainService(IK8sClientFactory k8sClientFactory, ILogger<KubernetesHostedService> logger) : IKubernetesNamespaceDomainService
+public class KubernetesNamespaceDomainService(IKubernetesClientFactory kubernetesClientFactory, ILogger<KubernetesHostedService> logger) : IKubernetesNamespaceDomainService
 {
-    private readonly Kubernetes k8sClient = k8sClientFactory.GetClient();
+    private readonly Kubernetes kubernetesClient = kubernetesClientFactory.GetClient();
 
     public bool IsStaticList => false;
 
@@ -17,7 +18,7 @@ public class KubernetesNamespaceDomainService(IK8sClientFactory k8sClientFactory
     {
         try
         {
-            V1NamespaceList namespaceList = await k8sClient.CoreV1.ListNamespaceAsync();
+            V1NamespaceList namespaceList = await kubernetesClient.CoreV1.ListNamespaceAsync();
             List<string> namespaceNames = [];
             namespaceNames.AddRange(namespaceList.Items.Select(item => item.Name()));
             return namespaceNames;

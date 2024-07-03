@@ -1,7 +1,7 @@
 ﻿using k8s;
 using TrivyOperator.Dashboard.Application.Services.WatcherParams.Abstractions;
 
-namespace TrivyOperator.Dashboard.Application.Services.Watchers.Abstractions;
+namespace TrivyOperator.Dashboard.Application.Services.KubernetesWatchers.Abstractions;
 
 public interface IKubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TWatcherParams>
     where TKubernetesObject : IKubernetesObject
