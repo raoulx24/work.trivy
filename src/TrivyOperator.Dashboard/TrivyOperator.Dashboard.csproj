@@ -33,16 +33,16 @@
 
   <ItemGroup>
     <!-- Don't publish the SPA source files, but do show them in the project files list -->
+    <Compile Remove="Application\Services\Watchers\**" />
     <Content Remove="$(SpaRoot)**" />
+    <Content Remove="Application\Services\Watchers\**" />
+    <EmbeddedResource Remove="Application\Services\Watchers\**" />
     <None Remove="$(SpaRoot)**" />
+    <None Remove="Application\Services\Watchers\**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
     <Content Update="wwwroot\favicon.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Application\Services\Watchers\Abstractions\" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

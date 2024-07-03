@@ -1,12 +1,11 @@
 ﻿using k8s;
 using System.Threading.Channels;
-using TrivyOperator.Dashboard.Application.Services.BackgroundQueues.Abstractions;
 using TrivyOperator.Dashboard.Application.Services.WatcherEvents.Abstractions;
 
-namespace TrivyOperator.Dashboard.Application.Services.BackgroundQueues;
+namespace TrivyOperator.Dashboard.Application.Services.BackgroundQueues.Abstractions;
 
 public class BackgroundQueue<TKubernetesWatcherEvent, TKubernetesObject> :
-    IBackgroundQueue<TKubernetesWatcherEvent, TKubernetesObject> 
+    IBackgroundQueue<TKubernetesWatcherEvent, TKubernetesObject>
         where TKubernetesObject : IKubernetesObject
         where TKubernetesWatcherEvent : IKubernetesWatcherEvent<TKubernetesObject>
 {

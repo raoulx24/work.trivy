@@ -6,5 +6,5 @@ public class KubernetesWatcherEvent<TKubernetesObject> : IKubernetesWatcherEvent
     where TKubernetesObject : IKubernetesObject
 {
     public WatchEventType WatcherEvent { get; init; }
-    public TKubernetesObject KubernetesObject { get; init; }
+    public TKubernetesObject? KubernetesObject { get; init; }
 }
