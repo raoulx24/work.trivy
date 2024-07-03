@@ -5,5 +5,5 @@ public interface IKubernetesWatcherEvent<TKubernetesObject>
     where TKubernetesObject : IKubernetesObject
 {
     WatchEventType WatcherEvent { get; init; }
-    TKubernetesObject? KubernetesObject { get; init; }
+    TKubernetesObject KubernetesObject { get; init; }
 }
