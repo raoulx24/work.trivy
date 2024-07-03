@@ -19,27 +19,27 @@ public class BackgroundQueue<TKubernetesWatcherEvent, TKubernetesObject> :
         // BoundedChannelFullMode.Wait will cause calls to WriteAsync() to return a task,
         // which completes only when space became available. This leads to backpressure,
         // in case too many publishers/calls start accumulating.
-        var options = new BoundedChannelOptions(capacity)
+        BoundedChannelOptions options = new(capacity)
         {
             FullMode = BoundedChannelFullMode.Wait
         };
         queue = Channel.CreateBounded<TKubernetesWatcherEvent>(options);
     }
 
-    public async ValueTask QueueBackgroundWorkItemAsync(TKubernetesWatcherEvent workItem)
+    public async ValueTask QueueBackgroundWorkItemAsync(TKubernetesWatcherEvent watcherEvent)
     {
-        if (workItem == null)
+        if (watcherEvent == null)
         {
-            throw new ArgumentNullException(nameof(workItem));
+            throw new ArgumentNullException(nameof(watcherEvent));
         }
 
-        await queue.Writer.WriteAsync(workItem);
+        await queue.Writer.WriteAsync(watcherEvent);
     }
 
     public async ValueTask<TKubernetesWatcherEvent> DequeueAsync(CancellationToken cancellationToken)
     {
-        var workItem = await queue.Reader.ReadAsync(cancellationToken);
+        var watcherEvent = await queue.Reader.ReadAsync(cancellationToken);
 
-        return workItem;
+        return watcherEvent;
     }
 }
