@@ -7,18 +7,18 @@ using TrivyOperator.Dashboard.Infrastructure.Abstractions;
 
 namespace TrivyOperator.Dashboard.Application.Services.KubernetesWatchers.Abstractions;
 
-public abstract class KubernetesNamespacedWatcher<TKubernetesObjectList, TKubernetesObject, TWatcherParams, TBackgoundQueue, TKubernetesWatcherEvent> :
-    KubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TWatcherParams, TBackgoundQueue, TKubernetesWatcherEvent>,
-    IKubernetesNamespacedWatcher<TKubernetesObjectList, TKubernetesObject, TWatcherParams, TBackgoundQueue, TKubernetesWatcherEvent>
+public abstract class KubernetesNamespacedWatcher<TKubernetesObjectList, TKubernetesObject, TWatcherParams, TBackgroundQueue, TKubernetesWatcherEvent> :
+    KubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TWatcherParams, TBackgroundQueue, TKubernetesWatcherEvent>,
+    IKubernetesNamespacedWatcher<TKubernetesObjectList, TKubernetesObject, TWatcherParams, TBackgroundQueue, TKubernetesWatcherEvent>
         where TKubernetesObject : IKubernetesObject
         where TKubernetesObjectList : IKubernetesObject, IItems<TKubernetesObject>
         where TWatcherParams : IKubernetesNamespacedWatcherParams
         where TKubernetesWatcherEvent : IKubernetesWatcherEvent<TKubernetesObject>, new()
-        where TBackgoundQueue : IBackgroundQueue<TKubernetesWatcherEvent, TKubernetesObject>
+        where TBackgroundQueue : IBackgroundQueue<TKubernetesWatcherEvent, TKubernetesObject>
 {
     public KubernetesNamespacedWatcher(IKubernetesClientFactory kubernetesClientFactory,
-        IBackgroundQueue<IKubernetesWatcherEvent<TKubernetesObject>, TKubernetesObject> backgroundQueue,
-        ILogger<KubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TWatcherParams, TBackgoundQueue, TKubernetesWatcherEvent>> logger)
+        TBackgroundQueue backgroundQueue,
+        ILogger<KubernetesNamespacedWatcher<TKubernetesObjectList, TKubernetesObject, TWatcherParams, TBackgroundQueue, TKubernetesWatcherEvent>> logger)
         : base(kubernetesClientFactory, backgroundQueue, logger)
     {
     }

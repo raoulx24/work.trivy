@@ -5,12 +5,13 @@ using TrivyOperator.Dashboard.Application.Services.BackgroundQueues;
 using TrivyOperator.Dashboard.Application.Services.BackgroundQueues.Abstractions;
 using TrivyOperator.Dashboard.Application.Services.KubernetesWatchers.Abstractions;
 using TrivyOperator.Dashboard.Application.Services.WatcherEvents;
+using TrivyOperator.Dashboard.Application.Services.WatcherEvents.Abstractions;
 using TrivyOperator.Dashboard.Application.Services.WatcherParams;
 using TrivyOperator.Dashboard.Infrastructure.Abstractions;
 
 namespace TrivyOperator.Dashboard.Application.Services.KubernetesWatchers;
 
-public class NamespaceWatcher : KubernetesClusterScopedWatcher<V1NamespaceList, V1Namespace, KubernetesClusterScopedWatcherParams, KubernetesNamespaceBackgroundQueue, KubernetesNamespaceWatcherEvent>
+public class NamespaceWatcher : KubernetesClusterScopedWatcher<V1NamespaceList, V1Namespace, KubernetesClusterScopedWatcherParams, IKubernetesNamespaceBackgroundQueue, KubernetesNamespaceWatcherEvent>
 {
     public NamespaceWatcher(IKubernetesClientFactory kubernetesClientFactory,
         IKubernetesNamespaceBackgroundQueue backgroundQueue,

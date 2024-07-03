@@ -5,12 +5,12 @@ using TrivyOperator.Dashboard.Application.Services.WatcherParams.Abstractions;
 
 namespace TrivyOperator.Dashboard.Application.Services.KubernetesWatchers.Abstractions;
 
-public interface IKubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TWatcherParams, TBackgoundQueue, TKubernetesWatcherEvent>
+public interface IKubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TWatcherParams, TBackgroundQueue, TKubernetesWatcherEvent>
     where TKubernetesObject : IKubernetesObject
     where TKubernetesObjectList : IKubernetesObject, IItems<TKubernetesObject>
     where TWatcherParams : IKubernetesWatcherParams
     where TKubernetesWatcherEvent : IKubernetesWatcherEvent<TKubernetesObject>, new()
-    where TBackgoundQueue : IBackgroundQueue<TKubernetesWatcherEvent, TKubernetesObject>
+    where TBackgroundQueue : IBackgroundQueue<TKubernetesWatcherEvent, TKubernetesObject>
 
 {
     void Add(TWatcherParams watcherParams);
