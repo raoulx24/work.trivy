@@ -36,12 +36,16 @@ public abstract class CacheRefresh<TKubernetesObject, TKubernetesWatcherEvent, T
             case WatchEventType.Deleted:
                 ProcessDeleteEvent(watcherEvent);
                 break;
-            //default:
-            //    break;
+            case WatchEventType.Error:
+                ProcessDeleteEvent(watcherEvent);
+                break;
+                //default:
+                //    break;
         }
 
     }
 
     protected abstract void ProcessAddEvent(TKubernetesWatcherEvent watcherEvent, CancellationToken cancellationToken);
     protected abstract void ProcessDeleteEvent(TKubernetesWatcherEvent watcherEvent);
+    protected abstract void ProcessErrorEvent(TKubernetesWatcherEvent watcherEvent);
 }

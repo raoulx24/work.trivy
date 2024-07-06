@@ -55,4 +55,10 @@ public class KubernetesNamespaceCacheRefresh : CacheRefresh<V1Namespace, Kuberne
         //KubernetesNamespacedWatcherParams watcherParams = new()
         //{ CancellationToken = new(), kubernetesNamespace = eventNamespaceName };
     }
+
+    protected override void ProcessErrorEvent(KubernetesNamespaceWatcherEvent watcherEvent)
+    {
+        cache.TryRemove("genericKey", out _);
+        cache.TryAdd("genericKey", new());
+    }
 }
