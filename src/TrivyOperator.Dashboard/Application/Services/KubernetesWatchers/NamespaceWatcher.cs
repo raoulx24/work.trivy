@@ -1,26 +1,23 @@
 ﻿using k8s;
 using k8s.Autorest;
 using k8s.Models;
-using TrivyOperator.Dashboard.Application.Services.BackgroundQueues;
 using TrivyOperator.Dashboard.Application.Services.BackgroundQueues.Abstractions;
 using TrivyOperator.Dashboard.Application.Services.KubernetesWatchers.Abstractions;
 using TrivyOperator.Dashboard.Application.Services.WatcherEvents;
 using TrivyOperator.Dashboard.Application.Services.WatcherEvents.Abstractions;
-using TrivyOperator.Dashboard.Application.Services.WatcherParams;
 using TrivyOperator.Dashboard.Infrastructure.Abstractions;
 
 namespace TrivyOperator.Dashboard.Application.Services.KubernetesWatchers;
 
-public class NamespaceWatcher : KubernetesClusterScopedWatcher<V1NamespaceList, V1Namespace, KubernetesClusterScopedWatcherParams, IKubernetesNamespaceBackgroundQueue, KubernetesNamespaceWatcherEvent>
+public class NamespaceWatcher : KubernetesWatcher<V1NamespaceList, V1Namespace, IKubernetesObject<V1ObjectMeta>, BackgroundQueue<KubernetesWatcherEvent<V1Namespace>, V1Namespace>, KubernetesWatcherEvent<V1Namespace>>
 {
     public NamespaceWatcher(IKubernetesClientFactory kubernetesClientFactory,
-        IKubernetesNamespaceBackgroundQueue backgroundQueue,
+        BackgroundQueue<KubernetesWatcherEvent<V1Namespace>, V1Namespace> backgroundQueue,
         ILogger<NamespaceWatcher> logger) :
         base(kubernetesClientFactory, backgroundQueue, logger)
-    {
-    }
+    { }
 
-    protected override async Task<HttpOperationResponse<V1NamespaceList>> GetKubernetesObjectWatchList(KubernetesClusterScopedWatcherParams watcherParams, CancellationToken cancellationToken)
+    protected override async Task<HttpOperationResponse<V1NamespaceList>> GetKubernetesObjectWatchList(IKubernetesObject<V1ObjectMeta>? sourceKubernetesObject, CancellationToken cancellationToken)
     {
         return await kubernetesClient.CoreV1.ListNamespaceWithHttpMessagesAsync(
                         watch: true,
@@ -28,12 +25,10 @@ public class NamespaceWatcher : KubernetesClusterScopedWatcher<V1NamespaceList, 
                         cancellationToken: cancellationToken);
     }
 
-    protected override KubernetesNamespaceWatcherEvent GetKubernetesWatcherEventWithError(KubernetesClusterScopedWatcherParams watcherParams)
+    protected override async Task EnqueueWatcherEventWithError(IKubernetesObject<V1ObjectMeta>? sourceKubernetesObject)
     {
-        //throw new NotImplementedException();
-
         V1Namespace v1Namespace = new();
 
-        return new KubernetesNamespaceWatcherEvent() { KubernetesObject = v1Namespace, WatcherEvent = WatchEventType.Error };
+        await backgroundQueue.QueueBackgroundWorkItemAsync(new() { KubernetesObject = v1Namespace, WatcherEvent = WatchEventType.Error });
     }
 }

@@ -1,69 +1,71 @@
 ﻿using k8s;
 using k8s.Autorest;
+using k8s.Models;
 using System.Net;
 using TrivyOperator.Dashboard.Application.Services.BackgroundQueues.Abstractions;
 using TrivyOperator.Dashboard.Application.Services.WatcherEvents.Abstractions;
-using TrivyOperator.Dashboard.Application.Services.WatcherParams.Abstractions;
 using TrivyOperator.Dashboard.Infrastructure.Abstractions;
+using TrivyOperator.Dashboard.Utils;
 
 namespace TrivyOperator.Dashboard.Application.Services.KubernetesWatchers.Abstractions;
 
-public abstract class KubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TWatcherParams, TBackgroundQueue, TKubernetesWatcherEvent> :
-    IKubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TWatcherParams, TBackgroundQueue, TKubernetesWatcherEvent>
-        where TKubernetesObject : IKubernetesObject
+public abstract class KubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TSourceKubernetesObject, TBackgroundQueue, TKubernetesWatcherEvent> :
+    IKubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TSourceKubernetesObject, TBackgroundQueue, TKubernetesWatcherEvent>
+        where TKubernetesObject : class, IKubernetesObject<V1ObjectMeta>, new()
         where TKubernetesObjectList : IKubernetesObject, IItems<TKubernetesObject>
-        where TWatcherParams : IKubernetesWatcherParams
+        where TSourceKubernetesObject: class, IKubernetesObject<V1ObjectMeta>
         where TKubernetesWatcherEvent : IKubernetesWatcherEvent<TKubernetesObject>, new()
         where TBackgroundQueue : IBackgroundQueue<TKubernetesWatcherEvent, TKubernetesObject>
         
 {
     protected Kubernetes kubernetesClient;
     protected TBackgroundQueue backgroundQueue;
-    protected ILogger<KubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TWatcherParams, TBackgroundQueue, TKubernetesWatcherEvent>> logger;
+    protected ILogger<KubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TSourceKubernetesObject, TBackgroundQueue, TKubernetesWatcherEvent>> logger;
     protected Dictionary<string, TaskWithCts> watchers = [];
 
     public KubernetesWatcher(IKubernetesClientFactory kubernetesClientFactory,
         TBackgroundQueue backgroundQueue,
-        ILogger<KubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TWatcherParams, TBackgroundQueue, TKubernetesWatcherEvent>> logger)
+        ILogger<KubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TSourceKubernetesObject, TBackgroundQueue, TKubernetesWatcherEvent>> logger)
     {
         kubernetesClient = kubernetesClientFactory.GetClient();
         this.backgroundQueue = backgroundQueue;
         this.logger = logger;
     }
 
-    public void Add(TWatcherParams watcherParams)
+    public void Add(CancellationToken cancellationToken, TSourceKubernetesObject? sourceKubernetesObject = null)
     {
         CancellationTokenSource cts = new();
-        TaskWithCts taskWithCts = new()
+        TaskWithCts watcherWithCts = new()
         {
             Task = CreateWatch(
-                        watcherParams,
-                        CancellationTokenSource.CreateLinkedTokenSource(watcherParams.CancellationToken, cts.Token).Token),
+                        sourceKubernetesObject,
+                        CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, cts.Token).Token),
             Cts = cts,
         };
-        TaskWithCts watcherWithCts = taskWithCts;
 
-        AddWatcherWithCtsToWatchers(watcherWithCts, watcherParams);
+        watchers.Add(VarUtils.GetWatchersKey(sourceKubernetesObject), watcherWithCts);
     }
 
-    protected async Task CreateWatch(TWatcherParams watcherParams, CancellationToken cancellationToken)
+    protected async Task CreateWatch(TSourceKubernetesObject? sourceKubernetesObject, CancellationToken cancellationToken)
     {
         while (!cancellationToken.IsCancellationRequested)
         {
-            TKubernetesWatcherEvent kubernetesWatcherEvent = GetKubernetesWatcherEventWithError(watcherParams);
-            await backgroundQueue.QueueBackgroundWorkItemAsync(kubernetesWatcherEvent);
+            await EnqueueWatcherEventWithError(sourceKubernetesObject);
+
+            //TKubernetesWatcherEvent kubernetesWatcherEvent = GetKubernetesWatcherEventWithError(sourceKubernetesObject);
+            //await backgroundQueue.QueueBackgroundWorkItemAsync(kubernetesWatcherEvent);
 
             try
             {
-                Task<HttpOperationResponse<TKubernetesObjectList>> listNamespaceResp = GetKubernetesObjectWatchList(watcherParams, cancellationToken);
+                Task<HttpOperationResponse<TKubernetesObjectList>> listNamespaceResp = GetKubernetesObjectWatchList(sourceKubernetesObject, cancellationToken);
                 await foreach ((WatchEventType type, TKubernetesObject item) in listNamespaceResp
                                    .WatchAsync<TKubernetesObject, TKubernetesObjectList>(
                                        ex => logger.LogError(
-                                           $"{nameof(KubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TWatcherParams, TBackgroundQueue, TKubernetesWatcherEvent>)} - WatchAsync - {ex.Message}",
+                                           $"{nameof(KubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TSourceKubernetesObject, TBackgroundQueue, TKubernetesWatcherEvent>)} - WatchAsync - {ex.Message}",
                                            ex),
                                        cancellationToken))
                 {
-                    kubernetesWatcherEvent = new() { KubernetesObject = item, WatcherEvent = type };
+                    TKubernetesWatcherEvent kubernetesWatcherEvent = new() { KubernetesObject = item, WatcherEvent = type };
                     await backgroundQueue.QueueBackgroundWorkItemAsync(kubernetesWatcherEvent);
                 }
             }
@@ -77,12 +79,11 @@ public abstract class KubernetesWatcher<TKubernetesObjectList, TKubernetesObject
             }
             catch (Exception ex)
             {
-                logger.LogError($"{nameof(KubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TWatcherParams, TBackgroundQueue, TKubernetesWatcherEvent>)} - {ex.Message}", ex);
+                logger.LogError($"{nameof(KubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TSourceKubernetesObject, TBackgroundQueue, TKubernetesWatcherEvent>)} - {ex.Message}", ex);
             }
         }
     }
 
-    protected abstract Task<HttpOperationResponse<TKubernetesObjectList>> GetKubernetesObjectWatchList(TWatcherParams watcherParams, CancellationToken cancellationToken);
-    protected abstract void AddWatcherWithCtsToWatchers(TaskWithCts watcher, TWatcherParams watcherParams);
-    protected abstract TKubernetesWatcherEvent GetKubernetesWatcherEventWithError(TWatcherParams watcherParams);
+    protected abstract Task<HttpOperationResponse<TKubernetesObjectList>> GetKubernetesObjectWatchList(TSourceKubernetesObject? sourceKubernetesObject, CancellationToken cancellationToken);
+    protected abstract Task EnqueueWatcherEventWithError(TSourceKubernetesObject? sourceKubernetesObject);
 }

@@ -1,6 +1,6 @@
-﻿namespace TrivyOperator.Dashboard.Application.Services.WatcherParams.Abstractions;
+﻿//namespace TrivyOperator.Dashboard.Application.Services.WatcherParams.Abstractions;
 
-public class KubernetesWatcherParams : IKubernetesWatcherParams
-{
-    public CancellationToken CancellationToken { get; init; }
-}
+//public class KubernetesWatcherParams : IKubernetesWatcherParams
+//{
+//    public CancellationToken CancellationToken { get; init; }
+//}

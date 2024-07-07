@@ -1,15 +1,16 @@
 ﻿using k8s;
-using System.Linq.Expressions;
+using k8s.Models;
 using TrivyOperator.Dashboard.Application.Services.BackgroundQueues.Abstractions;
 using TrivyOperator.Dashboard.Application.Services.WatcherEvents.Abstractions;
 using TrivyOperator.Dashboard.Infrastructure.Abstractions;
-using TrivyOperator.Dashboard.Infrastructure.Services;
+using TrivyOperator.Dashboard.Utils;
 
 namespace TrivyOperator.Dashboard.Application.Services.CacherRefresh.Abstractions;
 
-public abstract class CacheRefresh<TKubernetesObject, TKubernetesWatcherEvent, TBackgroundQueue>
+public class CacheRefresh<TKubernetesObject, TKubernetesWatcherEvent, TBackgroundQueue> : 
+    BackgroundService, ICacheRefresh<TKubernetesObject, TKubernetesWatcherEvent, TBackgroundQueue>
         where TKubernetesWatcherEvent : IKubernetesWatcherEvent<TKubernetesObject>
-        where TKubernetesObject : IKubernetesObject
+        where TKubernetesObject : IKubernetesObject<V1ObjectMeta>
         where TBackgroundQueue : IBackgroundQueue<TKubernetesWatcherEvent, TKubernetesObject>
 {
     protected TBackgroundQueue backgroundQueue { get; init; }
@@ -25,7 +26,23 @@ public abstract class CacheRefresh<TKubernetesObject, TKubernetesWatcherEvent, T
         this.logger = logger;
     }
 
-    public async Task ProcessChannelMessage(CancellationToken cancellationToken)
+    protected override async Task ExecuteAsync(CancellationToken cancellationToken)
+    {
+        logger.LogInformation($"Cache Refresh {nameof(CacheRefresh<TKubernetesObject, TKubernetesWatcherEvent, TBackgroundQueue>)} service running.");
+
+        while (!cancellationToken.IsCancellationRequested)
+        {
+            await ProcessChannelMessage(cancellationToken);
+        }
+    }
+
+    public override async Task StopAsync(CancellationToken stoppingToken)
+    {
+        logger.LogInformation("Kubernetes Hosted Service is stopping.");
+        await base.StopAsync(stoppingToken);
+    }
+
+    protected async Task ProcessChannelMessage(CancellationToken cancellationToken)
     {
         TKubernetesWatcherEvent watcherEvent = await backgroundQueue.DequeueAsync(cancellationToken);
         switch (watcherEvent.WatcherEvent)
@@ -37,7 +54,7 @@ public abstract class CacheRefresh<TKubernetesObject, TKubernetesWatcherEvent, T
                 ProcessDeleteEvent(watcherEvent);
                 break;
             case WatchEventType.Error:
-                ProcessDeleteEvent(watcherEvent);
+                ProcessErrorEvent(watcherEvent);
                 break;
                 //default:
                 //    break;
@@ -45,7 +62,53 @@ public abstract class CacheRefresh<TKubernetesObject, TKubernetesWatcherEvent, T
 
     }
 
-    protected abstract void ProcessAddEvent(TKubernetesWatcherEvent watcherEvent, CancellationToken cancellationToken);
-    protected abstract void ProcessDeleteEvent(TKubernetesWatcherEvent watcherEvent);
-    protected abstract void ProcessErrorEvent(TKubernetesWatcherEvent watcherEvent);
+    protected void ProcessAddEvent(TKubernetesWatcherEvent watcherEvent, CancellationToken cancellationToken)
+    {
+        string eventNamespaceName = VarUtils.GetWatchersKey(watcherEvent.KubernetesObject);
+        string eventKubernetesObjectName = watcherEvent.KubernetesObject.Metadata.Name;
+
+        if (cache.TryGetValue(eventNamespaceName, value: out List<TKubernetesObject>? kubernetesObjects))
+        {
+            // TODO try catch - clear duplicates
+            TKubernetesObject? potentialExistingKubernetesObject = kubernetesObjects.SingleOrDefault(x => x.Metadata.Name == eventKubernetesObjectName);
+            if (potentialExistingKubernetesObject is not null)
+            {
+                kubernetesObjects.Remove(potentialExistingKubernetesObject);
+            }
+            kubernetesObjects.Add(watcherEvent.KubernetesObject);
+            // TODO Clarify cache[key] vs cache.Remove and cache.Add
+            cache[eventNamespaceName] = kubernetesObjects;
+        }
+        else // first time, the cache is really empty
+        {
+            cache.TryAdd(eventNamespaceName, new() { watcherEvent.KubernetesObject });
+        }
+    }
+
+    protected void ProcessDeleteEvent(TKubernetesWatcherEvent watcherEvent)
+    {
+        string eventNamespaceName = VarUtils.GetWatchersKey(watcherEvent.KubernetesObject);
+        string eventKubernetesObjectName = watcherEvent.KubernetesObject.Metadata.Name;
+
+        if (cache.TryGetValue(eventNamespaceName, value: out List<TKubernetesObject>? kubernetesObjects))
+        {
+            // TODO try catch - clear duplicates
+            TKubernetesObject? toBedeletedKubernetesObject = kubernetesObjects.SingleOrDefault(x => x.Metadata.Name == eventKubernetesObjectName);
+            if (toBedeletedKubernetesObject is not null)
+            {
+                kubernetesObjects.Remove(toBedeletedKubernetesObject);
+            }
+            // TODO Clarify cache[key] vs cache.Remove and cache.Add
+            cache.TryRemove(eventNamespaceName, out _);
+            cache.TryAdd(eventNamespaceName, kubernetesObjects);
+        }
+    }
+
+    protected void ProcessErrorEvent(TKubernetesWatcherEvent watcherEvent)
+    {
+        string eventNamespaceName = VarUtils.GetWatchersKey(watcherEvent.KubernetesObject);
+        // TODO Clarify cache[key] vs cache.Remove and cache.Add
+        cache.TryRemove(eventNamespaceName, out _);
+        cache.TryAdd(eventNamespaceName, new());
+    }
 }

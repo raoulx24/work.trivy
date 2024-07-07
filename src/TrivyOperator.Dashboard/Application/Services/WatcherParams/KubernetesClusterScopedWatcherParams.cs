@@ -1,7 +1,7 @@
-﻿using TrivyOperator.Dashboard.Application.Services.WatcherParams.Abstractions;
+﻿//using TrivyOperator.Dashboard.Application.Services.WatcherParams.Abstractions;
 
-namespace TrivyOperator.Dashboard.Application.Services.WatcherParams;
+//namespace TrivyOperator.Dashboard.Application.Services.WatcherParams;
 
-public class KubernetesClusterScopedWatcherParams : KubernetesWatcherParams, IKubernetesClusterScopedWatcherParams
-{
-}
+//public class KubernetesClusterScopedWatcherParams : KubernetesWatcherParams, IKubernetesClusterScopedWatcherParams
+//{
+//}

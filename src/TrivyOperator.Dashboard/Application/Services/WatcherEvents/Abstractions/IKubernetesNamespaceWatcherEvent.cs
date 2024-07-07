@@ -1,7 +1,7 @@
-﻿using k8s.Models;
+﻿//using k8s.Models;
 
-namespace TrivyOperator.Dashboard.Application.Services.WatcherEvents.Abstractions;
+//namespace TrivyOperator.Dashboard.Application.Services.WatcherEvents.Abstractions;
 
-public interface IKubernetesNamespaceWatcherEvent : IKubernetesWatcherEvent<V1Namespace>
-{
-}
+//public interface IKubernetesNamespaceWatcherEvent : IKubernetesWatcherEvent<V1Namespace>
+//{
+//}

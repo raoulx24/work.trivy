@@ -71,6 +71,12 @@ builder.Services.AddCors(
     options => options.AddDefaultPolicy(
         configurePolicy => configurePolicy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
 
+# region New Services
+
+# endregion
+
+
+# region Old Services
 builder.Services.AddSingleton<IKubernetesClientFactory, KubernetesClientFactory>();
 
 builder.Services.AddSingleton<IConcurrentCache<string, IList<VulnerabilityReportCR>>,
@@ -93,6 +99,7 @@ builder.Services.AddScoped<IKubernetesVulnerabilityReportCrWatchEventHandler, Ku
 
 builder.Services.AddHostedService<KubernetesHostedService>();
 builder.Services.AddHostedService<CacheRefreshHostedService>();
+# endregion
 
 WebApplication app = builder.Build();
 

@@ -1,5 +1,5 @@
-﻿namespace TrivyOperator.Dashboard.Application.Services.WatcherParams.Abstractions;
+﻿//namespace TrivyOperator.Dashboard.Application.Services.WatcherParams.Abstractions;
 
-public interface IKubernetesClusterScopedWatcherParams : IKubernetesWatcherParams
-{
-}
+//public interface IKubernetesClusterScopedWatcherParams : IKubernetesWatcherParams
+//{
+//}
