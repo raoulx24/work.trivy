@@ -1,10 +1,18 @@
-﻿using Microsoft.AspNetCore.HttpOverrides;
+﻿using k8s;
+using k8s.Models;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Serilog.Extensions.Logging;
 using System.Runtime.InteropServices;
 using System.Text.Json.Serialization;
 using TrivyOperator.Dashboard.Application.Services;
 using TrivyOperator.Dashboard.Application.Services.Abstractions;
+using TrivyOperator.Dashboard.Application.Services.BackgroundQueues.Abstractions;
+using TrivyOperator.Dashboard.Application.Services.CacherRefresh.Abstractions;
+using TrivyOperator.Dashboard.Application.Services.KubernetesWatchers;
+using TrivyOperator.Dashboard.Application.Services.KubernetesWatchers.Abstractions;
+using TrivyOperator.Dashboard.Application.Services.WatcherEvents.Abstractions;
 using TrivyOperator.Dashboard.Domain.Services;
 using TrivyOperator.Dashboard.Domain.Services.Abstractions;
 using TrivyOperator.Dashboard.Domain.Trivy.VulnerabilityReport;
@@ -72,11 +80,18 @@ builder.Services.AddCors(
         configurePolicy => configurePolicy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
 
 # region New Services
+builder.Services.AddSingleton<IConcurrentCache<string, IList<V1Namespace>>,
+        ConcurrentCache<string, IList<V1Namespace>>>();
+builder.Services.AddSingleton<IBackgroundQueue<KubernetesWatcherEvent<V1Namespace>, V1Namespace>>
+        (x => new BackgroundQueue<KubernetesWatcherEvent<V1Namespace>, V1Namespace>(100));
+builder.Services.AddSingleton<IKubernetesWatcher<V1NamespaceList, V1Namespace, IKubernetesObject<V1ObjectMeta>, BackgroundQueue<KubernetesWatcherEvent<V1Namespace>, V1Namespace>, KubernetesWatcherEvent<V1Namespace>>,
+        NamespaceWatcher>();
+builder.Services.AddHostedService<CacheRefresh<V1Namespace, KubernetesWatcherEvent<V1Namespace>, BackgroundQueue<KubernetesWatcherEvent<V1Namespace>, V1Namespace>>>();
+//builder.Services.AddHostedService<CacheRefresh<VulnerabilityReportCR, KubernetesWatcherEvent<VulnerabilityReportCR>, BackgroundQueue<KubernetesWatcherEvent<VulnerabilityReportCR>, VulnerabilityReportCR>>>();
+#endregion
 
-# endregion
 
-
-# region Old Services
+#region Old Services
 builder.Services.AddSingleton<IKubernetesClientFactory, KubernetesClientFactory>();
 
 builder.Services.AddSingleton<IConcurrentCache<string, IList<VulnerabilityReportCR>>,
