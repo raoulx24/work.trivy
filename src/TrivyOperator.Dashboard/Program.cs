@@ -1,7 +1,6 @@
 ﻿using k8s;
 using k8s.Models;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Serilog.Extensions.Logging;
 using System.Runtime.InteropServices;
@@ -80,40 +79,54 @@ builder.Services.AddCors(
         configurePolicy => configurePolicy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
 
 # region New Services
-builder.Services.AddSingleton<IConcurrentCache<string, IList<V1Namespace>>,
-        ConcurrentCache<string, IList<V1Namespace>>>();
-builder.Services.AddSingleton<IBackgroundQueue<KubernetesWatcherEvent<V1Namespace>, V1Namespace>>
-        (x => new BackgroundQueue<KubernetesWatcherEvent<V1Namespace>, V1Namespace>(100));
-builder.Services.AddSingleton<IKubernetesWatcher<V1NamespaceList, V1Namespace, IKubernetesObject<V1ObjectMeta>, BackgroundQueue<KubernetesWatcherEvent<V1Namespace>, V1Namespace>, KubernetesWatcherEvent<V1Namespace>>,
+
+builder.Services
+    .AddSingleton<IConcurrentCache<string, IList<V1Namespace>>, ConcurrentCache<string, IList<V1Namespace>>>();
+builder.Services.AddSingleton<IBackgroundQueue<KubernetesWatcherEvent<V1Namespace>, V1Namespace>>(
+    x => new BackgroundQueue<KubernetesWatcherEvent<V1Namespace>, V1Namespace>(100));
+builder.Services
+    .AddSingleton<
+        IKubernetesWatcher<V1NamespaceList, V1Namespace, IKubernetesObject<V1ObjectMeta>,
+            IBackgroundQueue<KubernetesWatcherEvent<V1Namespace>, V1Namespace>, KubernetesWatcherEvent<V1Namespace>>,
         NamespaceWatcher>();
-builder.Services.AddHostedService<CacheRefresh<V1Namespace, KubernetesWatcherEvent<V1Namespace>, BackgroundQueue<KubernetesWatcherEvent<V1Namespace>, V1Namespace>>>();
+builder.Services
+    .AddHostedService<CacheRefresh<V1Namespace, KubernetesWatcherEvent<V1Namespace>,
+        IBackgroundQueue<KubernetesWatcherEvent<V1Namespace>, V1Namespace>>>();
 //builder.Services.AddHostedService<CacheRefresh<VulnerabilityReportCR, KubernetesWatcherEvent<VulnerabilityReportCR>, BackgroundQueue<KubernetesWatcherEvent<VulnerabilityReportCR>, VulnerabilityReportCR>>>();
+
 #endregion
 
 
 #region Old Services
+
 builder.Services.AddSingleton<IKubernetesClientFactory, KubernetesClientFactory>();
 
-builder.Services.AddSingleton<IConcurrentCache<string, IList<VulnerabilityReportCR>>,
+builder.Services
+    .AddSingleton<IConcurrentCache<string, IList<VulnerabilityReportCR>>,
         ConcurrentCache<string, IList<VulnerabilityReportCR>>>();
-builder.Services.AddSingleton<IConcurrentCache<string, DateTime>, 
-        ConcurrentCache<string, DateTime>>();
+builder.Services.AddSingleton<IConcurrentCache<string, DateTime>, ConcurrentCache<string, DateTime>>();
 
 builder.Services.AddScoped<IVulnerabilityReportService, VulnerabilityReportService>();
 builder.Services.AddScoped<IVulnerabilityReportDomainService, VulnerabilityReportDomainService>();
 
 builder.Services.AddScoped<IKubernetesNamespaceService, KubernetesNamespaceService>();
 if (string.IsNullOrWhiteSpace(configuration.GetSection("Kubernetes").GetValue<string>("NamespaceList")))
+{
     builder.Services.AddScoped<IKubernetesNamespaceDomainService, KubernetesNamespaceDomainService>();
+}
 else
+{
     builder.Services.AddScoped<IKubernetesNamespaceDomainService, StaticKubernetesNamespaceDomainService>();
+}
 
 builder.Services.AddScoped<IKubernetesNamespaceAddedOrModifiedHandler, KubernetesNamespaceAddedOrModifiedHandler>();
 builder.Services.AddScoped<IKubernetesNamespaceDeletedHandler, KubernetesNamespaceDeletedHandler>();
-builder.Services.AddScoped<IKubernetesVulnerabilityReportCrWatchEventHandler, KubernetesVulnerabilityReportCrWatchEventHandler>();
+builder.Services
+    .AddScoped<IKubernetesVulnerabilityReportCrWatchEventHandler, KubernetesVulnerabilityReportCrWatchEventHandler>();
 
 builder.Services.AddHostedService<KubernetesHostedService>();
 builder.Services.AddHostedService<CacheRefreshHostedService>();
+
 # endregion
 
 WebApplication app = builder.Build();

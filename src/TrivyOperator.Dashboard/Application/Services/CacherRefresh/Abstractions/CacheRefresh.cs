@@ -14,11 +14,11 @@ public class CacheRefresh<TKubernetesObject, TKubernetesWatcherEvent, TBackgroun
         where TBackgroundQueue : IBackgroundQueue<TKubernetesWatcherEvent, TKubernetesObject>
 {
     protected TBackgroundQueue backgroundQueue { get; init; }
-    protected IConcurrentCache<string, List<TKubernetesObject>> cache { get; init; }
+    protected IConcurrentCache<string, IList<TKubernetesObject>> cache { get; init; }
     protected ILogger<CacheRefresh<TKubernetesObject, TKubernetesWatcherEvent, TBackgroundQueue>> logger { get; init; }
 
     public CacheRefresh(TBackgroundQueue backgroundQueue,
-        IConcurrentCache<string, List<TKubernetesObject>> cache,
+        IConcurrentCache<string, IList<TKubernetesObject>> cache,
         ILogger<CacheRefresh<TKubernetesObject, TKubernetesWatcherEvent, TBackgroundQueue>> logger)
     {
         this.backgroundQueue = backgroundQueue;
@@ -67,7 +67,7 @@ public class CacheRefresh<TKubernetesObject, TKubernetesWatcherEvent, TBackgroun
         string eventNamespaceName = VarUtils.GetWatchersKey(watcherEvent.KubernetesObject);
         string eventKubernetesObjectName = watcherEvent.KubernetesObject.Metadata.Name;
 
-        if (cache.TryGetValue(eventNamespaceName, value: out List<TKubernetesObject>? kubernetesObjects))
+        if (cache.TryGetValue(eventNamespaceName, value: out IList<TKubernetesObject>? kubernetesObjects))
         {
             // TODO try catch - clear duplicates
             TKubernetesObject? potentialExistingKubernetesObject = kubernetesObjects.SingleOrDefault(x => x.Metadata.Name == eventKubernetesObjectName);
@@ -81,7 +81,7 @@ public class CacheRefresh<TKubernetesObject, TKubernetesWatcherEvent, TBackgroun
         }
         else // first time, the cache is really empty
         {
-            cache.TryAdd(eventNamespaceName, new() { watcherEvent.KubernetesObject });
+            cache.TryAdd(eventNamespaceName, new List<TKubernetesObject>() { watcherEvent.KubernetesObject });
         }
     }
 
@@ -90,7 +90,7 @@ public class CacheRefresh<TKubernetesObject, TKubernetesWatcherEvent, TBackgroun
         string eventNamespaceName = VarUtils.GetWatchersKey(watcherEvent.KubernetesObject);
         string eventKubernetesObjectName = watcherEvent.KubernetesObject.Metadata.Name;
 
-        if (cache.TryGetValue(eventNamespaceName, value: out List<TKubernetesObject>? kubernetesObjects))
+        if (cache.TryGetValue(eventNamespaceName, value: out IList<TKubernetesObject>? kubernetesObjects))
         {
             // TODO try catch - clear duplicates
             TKubernetesObject? toBedeletedKubernetesObject = kubernetesObjects.SingleOrDefault(x => x.Metadata.Name == eventKubernetesObjectName);
@@ -109,6 +109,6 @@ public class CacheRefresh<TKubernetesObject, TKubernetesWatcherEvent, TBackgroun
         string eventNamespaceName = VarUtils.GetWatchersKey(watcherEvent.KubernetesObject);
         // TODO Clarify cache[key] vs cache.Remove and cache.Add
         cache.TryRemove(eventNamespaceName, out _);
-        cache.TryAdd(eventNamespaceName, new());
+        cache.TryAdd(eventNamespaceName, new List<TKubernetesObject>());
     }
 }
