@@ -11,5 +11,6 @@ public interface ICacheRefresh<TKubernetesObject, TKubernetesWatcherEvent, TBack
     where TKubernetesObject : IKubernetesObject<V1ObjectMeta>
     where TBackgroundQueue : IBackgroundQueue<TKubernetesWatcherEvent, TKubernetesObject>
 {
-
+    void StartEventsProcessing(CancellationToken cancellationToken);
+    bool IsQueueProcessingStarted();
 }

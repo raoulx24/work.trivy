@@ -10,7 +10,7 @@ namespace TrivyOperator.Dashboard.Application.Services.KubernetesWatchers.Abstra
 
 public abstract class KubernetesNamespacedWatcher<TKubernetesObjectList, TKubernetesObject, TSourceKubernetesObject, TBackgroundQueue, TKubernetesWatcherEvent> :
     KubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TSourceKubernetesObject, TBackgroundQueue, TKubernetesWatcherEvent>,
-    IKubernetesNamespacedWatcher<TKubernetesObjectList, TKubernetesObject, TSourceKubernetesObject, TBackgroundQueue, TKubernetesWatcherEvent>
+    IKubernetesNamespacedWatcher
         where TKubernetesObject : class, IKubernetesObject<V1ObjectMeta>, new()
         where TKubernetesObjectList : IKubernetesObject, IItems<TKubernetesObject>
         where TSourceKubernetesObject : class, IKubernetesObject<V1ObjectMeta>

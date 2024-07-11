@@ -7,7 +7,7 @@ namespace TrivyOperator.Dashboard.Application.Services.KubernetesWatchers.Abstra
 
 public interface IKubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TSourceKubernetesObject, TBackgroundQueue, TKubernetesWatcherEvent>
     where TKubernetesObject : class, IKubernetesObject<V1ObjectMeta>
-    where TKubernetesObjectList : IKubernetesObject, IItems<TKubernetesObject>
+    where TKubernetesObjectList : IItems<TKubernetesObject>
     where TSourceKubernetesObject : class, IKubernetesObject<V1ObjectMeta>
     where TKubernetesWatcherEvent : IKubernetesWatcherEvent<TKubernetesObject>, new()
     where TBackgroundQueue : IBackgroundQueue<TKubernetesWatcherEvent, TKubernetesObject>

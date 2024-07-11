@@ -3,7 +3,7 @@
 //using TrivyOperator.Dashboard.Application.Services.WatcherEvents.Abstractions;
 //using TrivyOperator.Dashboard.Application.Services.WatcherParams.Abstractions;
 
-//namespace TrivyOperator.Dashboard.Application.Services.KubernetesWatchers.Abstractions;
+namespace TrivyOperator.Dashboard.Application.Services.KubernetesWatchers.Abstractions;
 
 //public interface IKubernetesClusterScopedWatcher<TKubernetesObjectList, TKubernetesObject, TWatcherParams, TBackgroundQueue, TKubernetesWatcherEvent>
 //    : IKubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TWatcherParams, TBackgroundQueue, TKubernetesWatcherEvent>
@@ -14,3 +14,5 @@
 //        where TBackgroundQueue : IBackgroundQueue<TKubernetesWatcherEvent, TKubernetesObject>
 //{
 //}
+public interface IKubernetesClusterScopedWatcher
+{ }

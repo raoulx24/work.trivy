@@ -8,7 +8,7 @@ using TrivyOperator.Dashboard.Utils;
 namespace TrivyOperator.Dashboard.Application.Services.CacherRefresh.Abstractions;
 
 public class CacheRefresh<TKubernetesObject, TKubernetesWatcherEvent, TBackgroundQueue> : 
-    BackgroundService, ICacheRefresh<TKubernetesObject, TKubernetesWatcherEvent, TBackgroundQueue>
+    ICacheRefresh<TKubernetesObject, TKubernetesWatcherEvent, TBackgroundQueue>
         where TKubernetesWatcherEvent : IKubernetesWatcherEvent<TKubernetesObject>
         where TKubernetesObject : IKubernetesObject<V1ObjectMeta>
         where TBackgroundQueue : IBackgroundQueue<TKubernetesWatcherEvent, TKubernetesObject>
@@ -16,6 +16,7 @@ public class CacheRefresh<TKubernetesObject, TKubernetesWatcherEvent, TBackgroun
     protected TBackgroundQueue backgroundQueue { get; init; }
     protected IConcurrentCache<string, IList<TKubernetesObject>> cache { get; init; }
     protected ILogger<CacheRefresh<TKubernetesObject, TKubernetesWatcherEvent, TBackgroundQueue>> logger { get; init; }
+    protected Task cacheRefreshTask { get; set; }
 
     public CacheRefresh(TBackgroundQueue backgroundQueue,
         IConcurrentCache<string, IList<TKubernetesObject>> cache,
@@ -26,40 +27,37 @@ public class CacheRefresh<TKubernetesObject, TKubernetesWatcherEvent, TBackgroun
         this.logger = logger;
     }
 
-    protected override async Task ExecuteAsync(CancellationToken cancellationToken)
+    public void StartEventsProcessing(CancellationToken cancellationToken)
     {
-        logger.LogInformation($"Cache Refresh {nameof(CacheRefresh<TKubernetesObject, TKubernetesWatcherEvent, TBackgroundQueue>)} service running.");
+        if (cacheRefreshTask is not null)
+        {
+            logger.LogWarning("Processing already started. Ignoring...");
+            return;
+        }
+        
+        cacheRefreshTask = ProcessChannelMessages(cancellationToken);
+    }
 
+    protected async Task ProcessChannelMessages(CancellationToken cancellationToken)
+    {
         while (!cancellationToken.IsCancellationRequested)
         {
-            await ProcessChannelMessage(cancellationToken);
+            TKubernetesWatcherEvent watcherEvent = await backgroundQueue.DequeueAsync(cancellationToken);
+            switch (watcherEvent.WatcherEvent)
+            {
+                case WatchEventType.Added:
+                    ProcessAddEvent(watcherEvent, cancellationToken);
+                    break;
+                case WatchEventType.Deleted:
+                    ProcessDeleteEvent(watcherEvent);
+                    break;
+                case WatchEventType.Error:
+                    ProcessErrorEvent(watcherEvent);
+                    break;
+                    //default:
+                    //    break;
+            }
         }
-    }
-
-    public override async Task StopAsync(CancellationToken stoppingToken)
-    {
-        logger.LogInformation("Kubernetes Hosted Service is stopping.");
-        await base.StopAsync(stoppingToken);
-    }
-
-    protected async Task ProcessChannelMessage(CancellationToken cancellationToken)
-    {
-        TKubernetesWatcherEvent watcherEvent = await backgroundQueue.DequeueAsync(cancellationToken);
-        switch (watcherEvent.WatcherEvent)
-        {
-            case WatchEventType.Added:
-                ProcessAddEvent(watcherEvent, cancellationToken);
-                break;
-            case WatchEventType.Deleted:
-                ProcessDeleteEvent(watcherEvent);
-                break;
-            case WatchEventType.Error:
-                ProcessErrorEvent(watcherEvent);
-                break;
-                //default:
-                //    break;
-        }
-
     }
 
     protected void ProcessAddEvent(TKubernetesWatcherEvent watcherEvent, CancellationToken cancellationToken)
@@ -110,5 +108,11 @@ public class CacheRefresh<TKubernetesObject, TKubernetesWatcherEvent, TBackgroun
         // TODO Clarify cache[key] vs cache.Remove and cache.Add
         cache.TryRemove(eventNamespaceName, out _);
         cache.TryAdd(eventNamespaceName, new List<TKubernetesObject>());
+    }
+
+    public bool IsQueueProcessingStarted()
+    {
+        // TODO: check for other task states
+        return (cacheRefreshTask is not null);
     }
 }
