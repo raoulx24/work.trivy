@@ -90,8 +90,7 @@ builder.Services.AddSingleton<
     IBackgroundQueue<KubernetesWatcherEvent<V1Namespace>,
     V1Namespace>>(x => new BackgroundQueue<KubernetesWatcherEvent<V1Namespace>, V1Namespace>(100));
 builder.Services.AddSingleton<
-    IKubernetesWatcher<V1NamespaceList, V1Namespace, IKubernetesObject<V1ObjectMeta>, 
-        IBackgroundQueue<KubernetesWatcherEvent<V1Namespace>, V1Namespace>, KubernetesWatcherEvent<V1Namespace>>,
+    IKubernetesClusterScopedWatcher<V1Namespace>,
     NamespaceWatcher>();
 builder.Services.AddSingleton<
     ICacheRefresh<V1Namespace, KubernetesWatcherEvent<V1Namespace>, IBackgroundQueue<KubernetesWatcherEvent<V1Namespace>, V1Namespace>>,

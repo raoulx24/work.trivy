@@ -12,13 +12,13 @@ public class NamespaceWatcherCacheSomething : KubernetesClusterScopedWatcherCach
     IBackgroundQueue<KubernetesWatcherEvent<V1Namespace>, V1Namespace>,
     ICacheRefresh<V1Namespace, KubernetesWatcherEvent<V1Namespace>, IBackgroundQueue<KubernetesWatcherEvent<V1Namespace>, V1Namespace>>,
     KubernetesWatcherEvent<V1Namespace>,
-    IKubernetesWatcher<V1NamespaceList, V1Namespace, IKubernetesObject<V1ObjectMeta>, IBackgroundQueue<KubernetesWatcherEvent<V1Namespace>, V1Namespace>, KubernetesWatcherEvent<V1Namespace>>,
+    IKubernetesClusterScopedWatcher<V1Namespace>,
     V1Namespace,
     V1NamespaceList>
 {
     public NamespaceWatcherCacheSomething(
         ICacheRefresh<V1Namespace, KubernetesWatcherEvent<V1Namespace>, IBackgroundQueue<KubernetesWatcherEvent<V1Namespace>, V1Namespace>> cacheRefresh,
-        IKubernetesWatcher<V1NamespaceList, V1Namespace, IKubernetesObject<V1ObjectMeta>, IBackgroundQueue<KubernetesWatcherEvent<V1Namespace>, V1Namespace>, KubernetesWatcherEvent<V1Namespace>> kubernetesWatcher,
+        IKubernetesClusterScopedWatcher<V1Namespace> kubernetesWatcher,
         ILogger<NamespaceWatcherCacheSomething> logger) : base(cacheRefresh, kubernetesWatcher, logger)
     {
     }

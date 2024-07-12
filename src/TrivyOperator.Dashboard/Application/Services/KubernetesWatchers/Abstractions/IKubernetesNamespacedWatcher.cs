@@ -14,5 +14,8 @@ namespace TrivyOperator.Dashboard.Application.Services.KubernetesWatchers.Abstra
 //{
 //    void Delete(TSourceKubernetesObject sourceKubernetesObject);
 //}
-public interface IKubernetesNamespacedWatcher
-{ }
+public interface IKubernetesNamespacedWatcher<TKubernetesObject> : IKubernetesWatcher<TKubernetesObject>
+    where TKubernetesObject : IKubernetesObject<V1ObjectMeta>
+{
+    public void Delete(IKubernetesObject<V1ObjectMeta>? sourceKubernetesObject);
+}

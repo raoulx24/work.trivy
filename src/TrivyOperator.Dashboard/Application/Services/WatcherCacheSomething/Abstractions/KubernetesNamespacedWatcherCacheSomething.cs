@@ -14,7 +14,7 @@ public class KubernetesNamespacedWatcherCacheSomething<TBackgroundQueue, TCacheR
         where TBackgroundQueue : IBackgroundQueue<TKubernetesWatcherEvent, TKubernetesObject>
         where TCacheRefresh : ICacheRefresh<TKubernetesObject, TKubernetesWatcherEvent, TBackgroundQueue>
         where TKubernetesWatcherEvent : class, IKubernetesWatcherEvent<TKubernetesObject>, new()
-        where TKubernetesWatcher : IKubernetesNamespacedWatcher<TKubernetesObjectList, TKubernetesObject, IKubernetesObject<V1ObjectMeta>, TBackgroundQueue, TKubernetesWatcherEvent>
+        where TKubernetesWatcher : IKubernetesNamespacedWatcher<TKubernetesObject>
         where TKubernetesObject : class, IKubernetesObject<V1ObjectMeta>
         where TKubernetesObjectList : IItems<TKubernetesObject>
 {
@@ -24,7 +24,7 @@ public class KubernetesNamespacedWatcherCacheSomething<TBackgroundQueue, TCacheR
 
     public void StopSomething(CancellationToken cancellationToken, IKubernetesObject<V1ObjectMeta>? sourceKubernetesObject = null)
     {
-        kubernetesWatcher.Delete(cancellationToken, sourceKubernetesObject);
+        kubernetesWatcher.Delete(sourceKubernetesObject);
         if (!cacheRefresh.IsQueueProcessingStarted())
         {
             cacheRefresh.StartEventsProcessing(cancellationToken);

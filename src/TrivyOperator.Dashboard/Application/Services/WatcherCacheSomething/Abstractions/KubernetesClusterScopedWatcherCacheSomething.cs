@@ -13,7 +13,7 @@ public class KubernetesClusterScopedWatcherCacheSomething<TBackgroundQueue, TCac
         where TBackgroundQueue : IBackgroundQueue<TKubernetesWatcherEvent, TKubernetesObject>
         where TCacheRefresh : ICacheRefresh<TKubernetesObject, TKubernetesWatcherEvent, TBackgroundQueue>
         where TKubernetesWatcherEvent : class, IKubernetesWatcherEvent<TKubernetesObject>, new()
-        where TKubernetesWatcher : IKubernetesWatcher<TKubernetesObjectList, TKubernetesObject, IKubernetesObject<V1ObjectMeta>, TBackgroundQueue, TKubernetesWatcherEvent>
+        where TKubernetesWatcher : IKubernetesClusterScopedWatcher<TKubernetesObject>
         where TKubernetesObject : class, IKubernetesObject<V1ObjectMeta>
         where TKubernetesObjectList : IItems<TKubernetesObject>
 {

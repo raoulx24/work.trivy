@@ -8,23 +8,22 @@ using TrivyOperator.Dashboard.Utils;
 
 namespace TrivyOperator.Dashboard.Application.Services.KubernetesWatchers.Abstractions;
 
-public abstract class KubernetesNamespacedWatcher<TKubernetesObjectList, TKubernetesObject, TSourceKubernetesObject, TBackgroundQueue, TKubernetesWatcherEvent> :
-    KubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TSourceKubernetesObject, TBackgroundQueue, TKubernetesWatcherEvent>,
-    IKubernetesNamespacedWatcher
+public abstract class KubernetesNamespacedWatcher<TKubernetesObjectList, TKubernetesObject, TBackgroundQueue, TKubernetesWatcherEvent> :
+    KubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TBackgroundQueue, TKubernetesWatcherEvent>,
+    IKubernetesNamespacedWatcher<TKubernetesObject>
         where TKubernetesObject : class, IKubernetesObject<V1ObjectMeta>, new()
         where TKubernetesObjectList : IKubernetesObject, IItems<TKubernetesObject>
-        where TSourceKubernetesObject : class, IKubernetesObject<V1ObjectMeta>
         where TKubernetesWatcherEvent : IKubernetesWatcherEvent<TKubernetesObject>, new()
         where TBackgroundQueue : IBackgroundQueue<TKubernetesWatcherEvent, TKubernetesObject>
 {
     public KubernetesNamespacedWatcher(IKubernetesClientFactory kubernetesClientFactory,
         TBackgroundQueue backgroundQueue,
-        ILogger<KubernetesNamespacedWatcher<TKubernetesObjectList, TKubernetesObject, TSourceKubernetesObject, TBackgroundQueue, TKubernetesWatcherEvent>> logger)
+        ILogger<KubernetesNamespacedWatcher<TKubernetesObjectList, TKubernetesObject, TBackgroundQueue, TKubernetesWatcherEvent>> logger)
         : base(kubernetesClientFactory, backgroundQueue, logger)
     {
     }
 
-    public void Delete(TSourceKubernetesObject? sourceKubernetesObject)
+    public void Delete(IKubernetesObject<V1ObjectMeta>? sourceKubernetesObject)
     {
         string sourceNamespace = VarUtils.GetWatchersKey(sourceKubernetesObject);
         if (watchers.TryGetValue(sourceNamespace, value: out TaskWithCts taskWithCts))
@@ -35,7 +34,7 @@ public abstract class KubernetesNamespacedWatcher<TKubernetesObjectList, TKubern
         }
     }
 
-    protected override async Task EnqueueWatcherEventWithError(TSourceKubernetesObject? sourceKubernetesObject)
+    protected override async Task EnqueueWatcherEventWithError(IKubernetesObject<V1ObjectMeta>? sourceKubernetesObject)
     {
         TKubernetesObject kubernetesObject = new() { Metadata = new() { Name = "fakeObject", NamespaceProperty = VarUtils.GetWatchersKey(sourceKubernetesObject) } };
 

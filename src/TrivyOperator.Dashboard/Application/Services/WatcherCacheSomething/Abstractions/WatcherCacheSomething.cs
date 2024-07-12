@@ -12,13 +12,13 @@ public class WatcherCacheSomething<TBackgroundQueue, TCacheRefresh, TKubernetesW
     where TBackgroundQueue : IBackgroundQueue<TKubernetesWatcherEvent, TKubernetesObject>
     where TCacheRefresh : ICacheRefresh<TKubernetesObject, TKubernetesWatcherEvent, TBackgroundQueue>
     where TKubernetesWatcherEvent : class, IKubernetesWatcherEvent<TKubernetesObject>, new()
-    where TKubernetesWatcher : IKubernetesWatcher<TKubernetesObjectList, TKubernetesObject, IKubernetesObject<V1ObjectMeta>, TBackgroundQueue, TKubernetesWatcherEvent>
+    where TKubernetesWatcher : IKubernetesWatcher<TKubernetesObject>
     where TKubernetesObject : class, IKubernetesObject<V1ObjectMeta>
     where TKubernetesObjectList : IItems<TKubernetesObject>
 
 {
-    protected TCacheRefresh cacheRefresh { get; init; };
-    protected TKubernetesWatcher kubernetesWatcher { get; init }
+    protected TCacheRefresh cacheRefresh { get; init; }
+    protected TKubernetesWatcher kubernetesWatcher { get; init; }
     protected ILogger<WatcherCacheSomething<TBackgroundQueue, TCacheRefresh, TKubernetesWatcherEvent, TKubernetesWatcher, TKubernetesObject, TKubernetesObjectList>> logger { get; init; }
 
     public WatcherCacheSomething(TCacheRefresh cacheRefresh,
