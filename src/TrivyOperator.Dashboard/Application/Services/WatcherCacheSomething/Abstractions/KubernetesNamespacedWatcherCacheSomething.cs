@@ -22,12 +22,12 @@ public class KubernetesNamespacedWatcherCacheSomething<TBackgroundQueue, TCacheR
     {
     }
 
-    public void StopSomething(CancellationToken cancellationToken, IKubernetesObject<V1ObjectMeta>? sourceKubernetesObject = null)
+    public void StopSomething(IKubernetesObject<V1ObjectMeta>? sourceKubernetesObject = null)
     {
         kubernetesWatcher.Delete(sourceKubernetesObject);
-        if (!cacheRefresh.IsQueueProcessingStarted())
-        {
-            cacheRefresh.StartEventsProcessing(cancellationToken);
-        }
+        //if (!cacheRefresh.IsQueueProcessingStarted())
+        //{
+        //    cacheRefresh.StartEventsProcessing(cancellationToken);
+        //}
     }
 }

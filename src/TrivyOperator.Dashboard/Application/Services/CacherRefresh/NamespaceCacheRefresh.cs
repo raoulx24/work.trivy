@@ -1,7 +1,9 @@
 ﻿using k8s.Models;
+using System.Threading;
 using TrivyOperator.Dashboard.Application.Services.BackgroundQueues;
 using TrivyOperator.Dashboard.Application.Services.BackgroundQueues.Abstractions;
 using TrivyOperator.Dashboard.Application.Services.CacherRefresh.Abstractions;
+using TrivyOperator.Dashboard.Application.Services.WatcherCacheSomething.Abstractions;
 using TrivyOperator.Dashboard.Application.Services.WatcherEvents;
 using TrivyOperator.Dashboard.Application.Services.WatcherEvents.Abstractions;
 using TrivyOperator.Dashboard.Infrastructure.Abstractions;
@@ -24,16 +26,18 @@ public class NamespaceCacheRefresh : CacheRefresh<V1Namespace, KubernetesWatcher
     protected override void ProcessAddEvent(KubernetesWatcherEvent<V1Namespace> watcherEvent, CancellationToken cancellationToken)
     {
         base.ProcessAddEvent(watcherEvent, cancellationToken);
-        // TODO foreach singletons of type IKubernetesNamespacedWatcher, call Add
-        //KubernetesNamespacedWatcherParams watcherParams = new() 
-        //    { CancellationToken = cancellationToken, kubernetesNamespace = eventNamespaceName };
+        foreach (IKubernetesNamespacedWatcherCacheSomething knwcs in serviceProvider.GetServices<IKubernetesNamespacedWatcherCacheSomething>())
+        {
+            knwcs.StartSomething(cancellationToken, watcherEvent.KubernetesObject);
+        }
     }
 
     protected override void ProcessDeleteEvent(KubernetesWatcherEvent<V1Namespace> watcherEvent)
     {
         base.ProcessDeleteEvent(watcherEvent);
-        // TODO foreach singletons of type IKubernetesNamespacedWatcher, call Delete
-        //KubernetesNamespacedWatcherParams watcherParams = new()
-        //{ CancellationToken = new(), kubernetesNamespace = eventNamespaceName };
+        foreach (IKubernetesNamespacedWatcherCacheSomething knwcs in serviceProvider.GetServices<IKubernetesNamespacedWatcherCacheSomething>())
+        {
+            knwcs.StopSomething(watcherEvent.KubernetesObject);
+        }
     }
 }

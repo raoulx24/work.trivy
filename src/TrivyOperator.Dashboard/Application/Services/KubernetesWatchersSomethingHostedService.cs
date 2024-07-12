@@ -13,7 +13,7 @@ public class KubernetesWatchersSomethingHostedService(
     {
         logger.LogInformation("Kubernetes Watcher Hosted Service started.");
 
-        IEnumerable<IKubernetesClusterScopedWatcherCacheSomething> singletons = serviceProvider.GetServices<IKubernetesClusterScopedWatcherCacheSomething>();
+        //IEnumerable<IKubernetesNamespacedWatcherCacheSomething> singletons = serviceProvider.GetServices<IKubernetesNamespacedWatcherCacheSomething>();
         
         //IServiceCollection serviceCollection = serviceProvider.GetRequiredService<IServiceCollection>();
         //List<object> singletons = serviceCollection
