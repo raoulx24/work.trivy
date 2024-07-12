@@ -8,9 +8,12 @@ using System.Text.Json.Serialization;
 using TrivyOperator.Dashboard.Application.Services;
 using TrivyOperator.Dashboard.Application.Services.Abstractions;
 using TrivyOperator.Dashboard.Application.Services.BackgroundQueues.Abstractions;
+using TrivyOperator.Dashboard.Application.Services.CacherRefresh;
 using TrivyOperator.Dashboard.Application.Services.CacherRefresh.Abstractions;
 using TrivyOperator.Dashboard.Application.Services.KubernetesWatchers;
 using TrivyOperator.Dashboard.Application.Services.KubernetesWatchers.Abstractions;
+using TrivyOperator.Dashboard.Application.Services.WatcherCacheSomething;
+using TrivyOperator.Dashboard.Application.Services.WatcherCacheSomething.Abstractions;
 using TrivyOperator.Dashboard.Application.Services.WatcherEvents.Abstractions;
 using TrivyOperator.Dashboard.Domain.Services;
 using TrivyOperator.Dashboard.Domain.Services.Abstractions;
@@ -80,21 +83,24 @@ builder.Services.AddCors(
 
 # region New Services
 
-//builder.Services
-//    .AddSingleton<IConcurrentCache<string, IList<V1Namespace>>, ConcurrentCache<string, IList<V1Namespace>>>();
-//builder.Services.AddSingleton<IBackgroundQueue<KubernetesWatcherEvent<V1Namespace>, V1Namespace>>(
-//    x => new BackgroundQueue<KubernetesWatcherEvent<V1Namespace>, V1Namespace>(100));
-//builder.Services
-//    .AddSingleton<
-//        IKubernetesWatcher<V1NamespaceList, V1Namespace, IKubernetesObject<V1ObjectMeta>,
-//            IBackgroundQueue<KubernetesWatcherEvent<V1Namespace>, V1Namespace>, KubernetesWatcherEvent<V1Namespace>>,
-//        NamespaceWatcher>();
-//builder.Services
-//    .AddSingleton<
-//        ICacheRefresh<V1Namespace, KubernetesWatcherEvent<V1Namespace>, IBackgroundQueue<KubernetesWatcherEvent<V1Namespace>, V1Namespace>>,
-//        CacheRefresh<V1Namespace, KubernetesWatcherEvent<V1Namespace>, IBackgroundQueue<KubernetesWatcherEvent<V1Namespace>, V1Namespace>>>();
-//builder.Services.AddHostedService<CacheRefresh<VulnerabilityReportCR, KubernetesWatcherEvent<VulnerabilityReportCR>, BackgroundQueue<KubernetesWatcherEvent<VulnerabilityReportCR>, VulnerabilityReportCR>>>();
-
+builder.Services.AddSingleton<
+    IConcurrentCache<string, IList<V1Namespace>>,
+    ConcurrentCache<string, IList<V1Namespace>>>();
+builder.Services.AddSingleton<
+    IBackgroundQueue<KubernetesWatcherEvent<V1Namespace>,
+    V1Namespace>>(x => new BackgroundQueue<KubernetesWatcherEvent<V1Namespace>, V1Namespace>(100));
+builder.Services.AddSingleton<
+    IKubernetesWatcher<V1NamespaceList, V1Namespace, IKubernetesObject<V1ObjectMeta>, 
+        IBackgroundQueue<KubernetesWatcherEvent<V1Namespace>, V1Namespace>, KubernetesWatcherEvent<V1Namespace>>,
+    NamespaceWatcher>();
+builder.Services.AddSingleton<
+    ICacheRefresh<V1Namespace, KubernetesWatcherEvent<V1Namespace>, IBackgroundQueue<KubernetesWatcherEvent<V1Namespace>, V1Namespace>>,
+    NamespaceCacheRefresh>();
+    //CacheRefresh<V1Namespace, KubernetesWatcherEvent<V1Namespace>, IBackgroundQueue<KubernetesWatcherEvent<V1Namespace>, V1Namespace>>>();
+builder.Services.AddSingleton<
+    IKubernetesClusterScopedWatcherCacheSomething,
+    NamespaceWatcherCacheSomething>();
+builder.Services.AddHostedService<KubernetesWatchersSomethingHostedService>();
 #endregion
 
 

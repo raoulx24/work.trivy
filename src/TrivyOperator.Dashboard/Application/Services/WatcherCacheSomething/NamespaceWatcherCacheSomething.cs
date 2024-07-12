@@ -8,7 +8,7 @@ using TrivyOperator.Dashboard.Application.Services.WatcherEvents.Abstractions;
 
 namespace TrivyOperator.Dashboard.Application.Services.WatcherCacheSomething;
 
-public class KubernetesNamespaceWatcherCacheSomething : KubernetesClusterScopedWatcherCacheSomething<
+public class NamespaceWatcherCacheSomething : KubernetesClusterScopedWatcherCacheSomething<
     IBackgroundQueue<KubernetesWatcherEvent<V1Namespace>, V1Namespace>,
     ICacheRefresh<V1Namespace, KubernetesWatcherEvent<V1Namespace>, IBackgroundQueue<KubernetesWatcherEvent<V1Namespace>, V1Namespace>>,
     KubernetesWatcherEvent<V1Namespace>,
@@ -16,10 +16,10 @@ public class KubernetesNamespaceWatcherCacheSomething : KubernetesClusterScopedW
     V1Namespace,
     V1NamespaceList>
 {
-    public KubernetesNamespaceWatcherCacheSomething(
+    public NamespaceWatcherCacheSomething(
         ICacheRefresh<V1Namespace, KubernetesWatcherEvent<V1Namespace>, IBackgroundQueue<KubernetesWatcherEvent<V1Namespace>, V1Namespace>> cacheRefresh,
         IKubernetesWatcher<V1NamespaceList, V1Namespace, IKubernetesObject<V1ObjectMeta>, IBackgroundQueue<KubernetesWatcherEvent<V1Namespace>, V1Namespace>, KubernetesWatcherEvent<V1Namespace>> kubernetesWatcher,
-        ILogger<KubernetesNamespaceWatcherCacheSomething> logger) : base(cacheRefresh, kubernetesWatcher, logger)
+        ILogger<NamespaceWatcherCacheSomething> logger) : base(cacheRefresh, kubernetesWatcher, logger)
     {
     }
 }

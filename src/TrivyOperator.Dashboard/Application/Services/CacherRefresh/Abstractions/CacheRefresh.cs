@@ -38,7 +38,7 @@ public class CacheRefresh<TKubernetesObject, TKubernetesWatcherEvent, TBackgroun
         cacheRefreshTask = ProcessChannelMessages(cancellationToken);
     }
 
-    protected async Task ProcessChannelMessages(CancellationToken cancellationToken)
+    protected virtual async Task ProcessChannelMessages(CancellationToken cancellationToken)
     {
         while (!cancellationToken.IsCancellationRequested)
         {
@@ -60,7 +60,7 @@ public class CacheRefresh<TKubernetesObject, TKubernetesWatcherEvent, TBackgroun
         }
     }
 
-    protected void ProcessAddEvent(TKubernetesWatcherEvent watcherEvent, CancellationToken cancellationToken)
+    protected virtual void ProcessAddEvent(TKubernetesWatcherEvent watcherEvent, CancellationToken cancellationToken)
     {
         string eventNamespaceName = VarUtils.GetWatchersKey(watcherEvent.KubernetesObject);
         string eventKubernetesObjectName = watcherEvent.KubernetesObject.Metadata.Name;
@@ -83,7 +83,7 @@ public class CacheRefresh<TKubernetesObject, TKubernetesWatcherEvent, TBackgroun
         }
     }
 
-    protected void ProcessDeleteEvent(TKubernetesWatcherEvent watcherEvent)
+    protected virtual void ProcessDeleteEvent(TKubernetesWatcherEvent watcherEvent)
     {
         string eventNamespaceName = VarUtils.GetWatchersKey(watcherEvent.KubernetesObject);
         string eventKubernetesObjectName = watcherEvent.KubernetesObject.Metadata.Name;
@@ -102,7 +102,7 @@ public class CacheRefresh<TKubernetesObject, TKubernetesWatcherEvent, TBackgroun
         }
     }
 
-    protected void ProcessErrorEvent(TKubernetesWatcherEvent watcherEvent)
+    protected virtual void ProcessErrorEvent(TKubernetesWatcherEvent watcherEvent)
     {
         string eventNamespaceName = VarUtils.GetWatchersKey(watcherEvent.KubernetesObject);
         // TODO Clarify cache[key] vs cache.Remove and cache.Add
