@@ -8,7 +8,8 @@ using TrivyOperator.Dashboard.Application.Services.WatcherEvents.Abstractions;
 namespace TrivyOperator.Dashboard.Application.Services.WatcherCacheSomething.Abstractions;
 
 public class KubernetesClusterScopedWatcherCacheSomething<TBackgroundQueue, TCacheRefresh, TKubernetesWatcherEvent, TKubernetesWatcher, TKubernetesObject, TKubernetesObjectList>
-    : WatcherCacheSomething<TBackgroundQueue, TCacheRefresh, TKubernetesWatcherEvent, TKubernetesWatcher, TKubernetesObject, TKubernetesObjectList>, IKubernetesClusterScopedWatcherCacheSomething
+    : WatcherCacheSomething<TBackgroundQueue, TCacheRefresh, TKubernetesWatcherEvent, TKubernetesWatcher, TKubernetesObject, TKubernetesObjectList>,
+      IKubernetesClusterScopedWatcherCacheSomething
         where TBackgroundQueue : IBackgroundQueue<TKubernetesWatcherEvent, TKubernetesObject>
         where TCacheRefresh : ICacheRefresh<TKubernetesObject, TKubernetesWatcherEvent, TBackgroundQueue>
         where TKubernetesWatcherEvent : class, IKubernetesWatcherEvent<TKubernetesObject>, new()

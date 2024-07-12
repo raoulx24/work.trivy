@@ -7,10 +7,7 @@ using TrivyOperator.Dashboard.Application.Services.WatcherEvents.Abstractions;
 
 namespace TrivyOperator.Dashboard.Application.Services.WatcherCacheSomething.Abstractions;
 
-public class WatcherCacheSomething<TBackgroundQueue, TCacheRefresh, TKubernetesWatcherEvent, TKubernetesWatcher, TKubernetesObject, TKubernetesObjectList>(
-    TCacheRefresh cacheRefresh,
-    TKubernetesWatcher kubernetesWatcher,
-    ILogger<WatcherCacheSomething<TBackgroundQueue, TCacheRefresh, TKubernetesWatcherEvent, TKubernetesWatcher, TKubernetesObject, TKubernetesObjectList>> logger)
+public class WatcherCacheSomething<TBackgroundQueue, TCacheRefresh, TKubernetesWatcherEvent, TKubernetesWatcher, TKubernetesObject, TKubernetesObjectList>
     : IWatcherCacheSomething
     where TBackgroundQueue : IBackgroundQueue<TKubernetesWatcherEvent, TKubernetesObject>
     where TCacheRefresh : ICacheRefresh<TKubernetesObject, TKubernetesWatcherEvent, TBackgroundQueue>
@@ -20,6 +17,20 @@ public class WatcherCacheSomething<TBackgroundQueue, TCacheRefresh, TKubernetesW
     where TKubernetesObjectList : IItems<TKubernetesObject>
 
 {
+    protected TCacheRefresh cacheRefresh { get; init; };
+    protected TKubernetesWatcher kubernetesWatcher { get; init }
+    protected ILogger<WatcherCacheSomething<TBackgroundQueue, TCacheRefresh, TKubernetesWatcherEvent, TKubernetesWatcher, TKubernetesObject, TKubernetesObjectList>> logger { get; init; }
+
+    public WatcherCacheSomething(TCacheRefresh cacheRefresh,
+        TKubernetesWatcher kubernetesWatcher,
+        ILogger<WatcherCacheSomething<TBackgroundQueue, TCacheRefresh, TKubernetesWatcherEvent, TKubernetesWatcher, TKubernetesObject, TKubernetesObjectList>> logger)
+    {
+        this.cacheRefresh = cacheRefresh;
+        this.kubernetesWatcher = kubernetesWatcher;
+        this.logger = logger;
+    }
+
+
     public void StartSomething(CancellationToken cancellationToken, IKubernetesObject<V1ObjectMeta>? sourceKubernetesObject = null)
     {
         kubernetesWatcher.Add(cancellationToken, sourceKubernetesObject);
