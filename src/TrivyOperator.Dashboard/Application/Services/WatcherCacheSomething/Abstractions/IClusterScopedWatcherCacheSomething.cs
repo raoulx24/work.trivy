@@ -2,6 +2,6 @@
 using k8s.Models;
 
 namespace TrivyOperator.Dashboard.Application.Services.WatcherCacheSomething.Abstractions;
-public interface IKubernetesClusterScopedWatcherCacheSomething : IWatcherCacheSomething
+public interface IClusterScopedWatcherCacheSomething : IWatcherCacheSomething
 {
 }

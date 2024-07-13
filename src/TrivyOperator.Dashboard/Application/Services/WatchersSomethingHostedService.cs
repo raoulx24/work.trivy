@@ -2,14 +2,14 @@
 
 namespace TrivyOperator.Dashboard.Application.Services;
 
-public class KubernetesWatchersSomethingHostedService(
+public class WatchersSomethingHostedService(
     IServiceProvider serviceProvider,
-    ILogger<KubernetesWatchersSomethingHostedService> logger) : BackgroundService, IHostedService
+    ILogger<WatchersSomethingHostedService> logger) : BackgroundService, IHostedService
 {
     protected override Task ExecuteAsync(CancellationToken cancellationToken)
     {
         logger.LogInformation("Kubernetes Watcher Hosted Service started.");
-        foreach (IKubernetesClusterScopedWatcherCacheSomething kcswcs in serviceProvider.GetServices<IKubernetesClusterScopedWatcherCacheSomething>())
+        foreach (IClusterScopedWatcherCacheSomething kcswcs in serviceProvider.GetServices<IClusterScopedWatcherCacheSomething>())
         {
             kcswcs.StartSomething(cancellationToken);
         }

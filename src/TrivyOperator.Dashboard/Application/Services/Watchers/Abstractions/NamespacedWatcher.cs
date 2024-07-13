@@ -6,19 +6,19 @@ using TrivyOperator.Dashboard.Application.Services.WatcherEvents.Abstractions;
 using TrivyOperator.Dashboard.Infrastructure.Abstractions;
 using TrivyOperator.Dashboard.Utils;
 
-namespace TrivyOperator.Dashboard.Application.Services.KubernetesWatchers.Abstractions;
+namespace TrivyOperator.Dashboard.Application.Services.Watchers.Abstractions;
 
-public abstract class KubernetesNamespacedWatcher<TKubernetesObjectList, TKubernetesObject, TBackgroundQueue, TKubernetesWatcherEvent> :
+public abstract class NamespacedWatcher<TKubernetesObjectList, TKubernetesObject, TBackgroundQueue, TKubernetesWatcherEvent> :
     KubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TBackgroundQueue, TKubernetesWatcherEvent>,
-    IKubernetesNamespacedWatcher<TKubernetesObject>
+    INamespacedWatcher<TKubernetesObject>
         where TKubernetesObject : class, IKubernetesObject<V1ObjectMeta>, new()
         where TKubernetesObjectList : IKubernetesObject, IItems<TKubernetesObject>
-        where TKubernetesWatcherEvent : IKubernetesWatcherEvent<TKubernetesObject>, new()
+        where TKubernetesWatcherEvent : IWatcherEvent<TKubernetesObject>, new()
         where TBackgroundQueue : IBackgroundQueue<TKubernetesObject>
 {
-    public KubernetesNamespacedWatcher(IKubernetesClientFactory kubernetesClientFactory,
+    public NamespacedWatcher(IKubernetesClientFactory kubernetesClientFactory,
         TBackgroundQueue backgroundQueue,
-        ILogger<KubernetesNamespacedWatcher<TKubernetesObjectList, TKubernetesObject, TBackgroundQueue, TKubernetesWatcherEvent>> logger)
+        ILogger<NamespacedWatcher<TKubernetesObjectList, TKubernetesObject, TBackgroundQueue, TKubernetesWatcherEvent>> logger)
         : base(kubernetesClientFactory, backgroundQueue, logger)
     {
     }
@@ -38,7 +38,7 @@ public abstract class KubernetesNamespacedWatcher<TKubernetesObjectList, TKubern
     protected override async Task EnqueueWatcherEventWithError(IKubernetesObject<V1ObjectMeta>? sourceKubernetesObject)
     {
         TKubernetesObject kubernetesObject = new() { Metadata = new() { Name = "fakeObject", NamespaceProperty = GetNamespaceFromSourceEvent(sourceKubernetesObject) } };
-        TKubernetesWatcherEvent watcherEvent = new() { KubernetesObject = kubernetesObject, WatcherEvent = WatchEventType.Error };
+        TKubernetesWatcherEvent watcherEvent = new() { KubernetesObject = kubernetesObject, WatcherEventType = WatchEventType.Error };
         
         await backgroundQueue.QueueBackgroundWorkItemAsync(watcherEvent);
     }

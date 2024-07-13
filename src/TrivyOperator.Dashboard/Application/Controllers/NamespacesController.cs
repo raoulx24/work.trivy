@@ -5,8 +5,8 @@ namespace TrivyOperator.Dashboard.Application.Controllers;
 
 [ApiController]
 [Route("api/kubernetes-namespaces")]
-public class KubernetesNamespacesController(
-    IKubernetesNamespaceService kubernetesNamespaceService,
+public class NamespacesController(
+    INamespaceService kubernetesNamespaceService,
     ILogger<VulnerabilityReportsController> logger) : ControllerBase
 {
     [HttpGet(Name = "getAllNamespaces")]

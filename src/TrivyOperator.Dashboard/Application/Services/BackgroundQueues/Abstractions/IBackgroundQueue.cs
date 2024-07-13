@@ -6,6 +6,6 @@ namespace TrivyOperator.Dashboard.Application.Services.BackgroundQueues.Abstract
 public interface IBackgroundQueue<TKubernetesObject>
     where TKubernetesObject : IKubernetesObject<V1ObjectMeta>
 {
-    ValueTask<IKubernetesWatcherEvent<TKubernetesObject>> DequeueAsync(CancellationToken cancellationToken);
-    ValueTask QueueBackgroundWorkItemAsync(IKubernetesWatcherEvent<TKubernetesObject> workItem);
+    ValueTask<IWatcherEvent<TKubernetesObject>> DequeueAsync(CancellationToken cancellationToken);
+    ValueTask QueueBackgroundWorkItemAsync(IWatcherEvent<TKubernetesObject> workItem);
 }

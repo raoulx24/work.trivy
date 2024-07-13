@@ -10,7 +10,7 @@ namespace TrivyOperator.Dashboard.Application.Services.BackgroundQueues.Abstract
 public class BackgroundQueue<TKubernetesWatcherEvent, TKubernetesObject> :
     IBackgroundQueue<TKubernetesObject>
         where TKubernetesObject : IKubernetesObject<V1ObjectMeta>
-        where TKubernetesWatcherEvent : IKubernetesWatcherEvent<TKubernetesObject>
+        where TKubernetesWatcherEvent : IWatcherEvent<TKubernetesObject>
 {
     private readonly Channel<TKubernetesWatcherEvent> queue;
     protected ILogger<BackgroundQueue<TKubernetesWatcherEvent, TKubernetesObject>> logger { get; init; }
@@ -28,7 +28,7 @@ public class BackgroundQueue<TKubernetesWatcherEvent, TKubernetesObject> :
         logger.LogDebug("Started BackgoundQueue for {kubernetesObjectType}.", typeof(TKubernetesObject).Name);
     }
 
-    public async ValueTask QueueBackgroundWorkItemAsync(IKubernetesWatcherEvent<TKubernetesObject> watcherEvent)
+    public async ValueTask QueueBackgroundWorkItemAsync(IWatcherEvent<TKubernetesObject> watcherEvent)
     {
         if (watcherEvent == null)
         {
@@ -42,15 +42,15 @@ public class BackgroundQueue<TKubernetesWatcherEvent, TKubernetesObject> :
             throw new ArgumentException(nameof(watcherEvent));
         }
         logger.LogDebug("Queueing Event {watcherEventType} - {kubernetesObjectType} - {kubernetesObjectName}",
-            watcherEvent.WatcherEvent, typeof(TKubernetesObject).Name, watcherEvent.KubernetesObject?.Metadata?.Name);
+            watcherEvent.WatcherEventType, typeof(TKubernetesObject).Name, watcherEvent.KubernetesObject?.Metadata?.Name);
         await queue.Writer.WriteAsync(kubernetesWatcherEvent);
     }
 
-    public async ValueTask<IKubernetesWatcherEvent<TKubernetesObject>> DequeueAsync(CancellationToken cancellationToken)
+    public async ValueTask<IWatcherEvent<TKubernetesObject>> DequeueAsync(CancellationToken cancellationToken)
     {
         var watcherEvent = await queue.Reader.ReadAsync(cancellationToken);
         logger.LogDebug("Dequeued Event {watcherEventType} - {kubernetesObjectType} - {kubernetesObjectName}",
-            watcherEvent.WatcherEvent, typeof(TKubernetesObject).Name, watcherEvent.KubernetesObject?.Metadata?.Name);
+            watcherEvent.WatcherEventType, typeof(TKubernetesObject).Name, watcherEvent.KubernetesObject?.Metadata?.Name);
 
         return watcherEvent;
     }

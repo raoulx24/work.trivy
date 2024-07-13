@@ -4,19 +4,19 @@ using TrivyOperator.Dashboard.Application.Services.BackgroundQueues.Abstractions
 using TrivyOperator.Dashboard.Application.Services.WatcherEvents.Abstractions;
 using TrivyOperator.Dashboard.Infrastructure.Abstractions;
 
-namespace TrivyOperator.Dashboard.Application.Services.KubernetesWatchers.Abstractions;
+namespace TrivyOperator.Dashboard.Application.Services.Watchers.Abstractions;
 
-public abstract class KubernetesClusterScopedWatcher<TKubernetesObjectList, TKubernetesObject, TBackgroundQueue, TKubernetesWatcherEvent> :
+public abstract class ClusterScopedWatcher<TKubernetesObjectList, TKubernetesObject, TBackgroundQueue, TKubernetesWatcherEvent> :
     KubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TBackgroundQueue, TKubernetesWatcherEvent>,
-    IKubernetesClusterScopedWatcher<TKubernetesObject>
+    IClusterScopedWatcher<TKubernetesObject>
         where TKubernetesObject : class, IKubernetesObject<V1ObjectMeta>, new()
         where TKubernetesObjectList : IKubernetesObject, IItems<TKubernetesObject>
-        where TKubernetesWatcherEvent : IKubernetesWatcherEvent<TKubernetesObject>, new()
+        where TKubernetesWatcherEvent : IWatcherEvent<TKubernetesObject>, new()
         where TBackgroundQueue : IBackgroundQueue<TKubernetesObject>
 {
-    public KubernetesClusterScopedWatcher(IKubernetesClientFactory kubernetesClientFactory,
+    public ClusterScopedWatcher(IKubernetesClientFactory kubernetesClientFactory,
         TBackgroundQueue backgroundQueue,
-        ILogger<KubernetesClusterScopedWatcher<TKubernetesObjectList, TKubernetesObject, TBackgroundQueue, TKubernetesWatcherEvent>> logger)
+        ILogger<ClusterScopedWatcher<TKubernetesObjectList, TKubernetesObject, TBackgroundQueue, TKubernetesWatcherEvent>> logger)
         : base(kubernetesClientFactory, backgroundQueue, logger)
     {
     }

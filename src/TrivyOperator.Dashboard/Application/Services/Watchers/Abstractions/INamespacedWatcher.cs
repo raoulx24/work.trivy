@@ -3,7 +3,7 @@ using k8s.Models;
 using TrivyOperator.Dashboard.Application.Services.BackgroundQueues.Abstractions;
 using TrivyOperator.Dashboard.Application.Services.WatcherEvents.Abstractions;
 
-namespace TrivyOperator.Dashboard.Application.Services.KubernetesWatchers.Abstractions;
+namespace TrivyOperator.Dashboard.Application.Services.Watchers.Abstractions;
 //public interface IKubernetesNamespacedWatcher<TKubernetesObjectList, TKubernetesObject, TSourceKubernetesObject, TBackgroundQueue, TKubernetesWatcherEvent> :
 //    IKubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TSourceKubernetesObject, TBackgroundQueue, TKubernetesWatcherEvent>
 //        where TKubernetesObject : class, IKubernetesObject<V1ObjectMeta>
@@ -14,7 +14,7 @@ namespace TrivyOperator.Dashboard.Application.Services.KubernetesWatchers.Abstra
 //{
 //    void Delete(TSourceKubernetesObject sourceKubernetesObject);
 //}
-public interface IKubernetesNamespacedWatcher<TKubernetesObject> : IKubernetesWatcher<TKubernetesObject>
+public interface INamespacedWatcher<TKubernetesObject> : IKubernetesWatcher<TKubernetesObject>
     where TKubernetesObject : IKubernetesObject<V1ObjectMeta>
 {
     public void Delete(IKubernetesObject<V1ObjectMeta>? sourceKubernetesObject);

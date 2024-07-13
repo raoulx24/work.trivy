@@ -1,9 +1,9 @@
 ﻿using k8s;
 
 namespace TrivyOperator.Dashboard.Application.Services.WatcherEvents.Abstractions;
-public interface IKubernetesWatcherEvent<TKubernetesObject>
+public interface IWatcherEvent<TKubernetesObject>
     where TKubernetesObject : IKubernetesObject
 {
-    WatchEventType WatcherEvent { get; init; }
+    WatchEventType WatcherEventType { get; init; }
     TKubernetesObject KubernetesObject { get; init; }
 }

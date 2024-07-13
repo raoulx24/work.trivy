@@ -42,8 +42,8 @@ public class CacheRefresh<TKubernetesObject, TBackgroundQueue> :
     {
         while (!cancellationToken.IsCancellationRequested)
         {
-            IKubernetesWatcherEvent<TKubernetesObject> watcherEvent = await backgroundQueue.DequeueAsync(cancellationToken);
-            switch (watcherEvent.WatcherEvent)
+            IWatcherEvent<TKubernetesObject> watcherEvent = await backgroundQueue.DequeueAsync(cancellationToken);
+            switch (watcherEvent.WatcherEventType)
             {
                 case WatchEventType.Added:
                     ProcessAddEvent(watcherEvent, cancellationToken);
@@ -60,7 +60,7 @@ public class CacheRefresh<TKubernetesObject, TBackgroundQueue> :
         }
     }
 
-    protected virtual void ProcessAddEvent(IKubernetesWatcherEvent<TKubernetesObject> watcherEvent, CancellationToken cancellationToken)
+    protected virtual void ProcessAddEvent(IWatcherEvent<TKubernetesObject> watcherEvent, CancellationToken cancellationToken)
     {
         string watcherKey = VarUtils.GetCacherRefreshKey(watcherEvent.KubernetesObject);
         string eventKubernetesObjectName = watcherEvent.KubernetesObject.Metadata.Name;
@@ -86,7 +86,7 @@ public class CacheRefresh<TKubernetesObject, TBackgroundQueue> :
         }
     }
 
-    protected virtual void ProcessDeleteEvent(IKubernetesWatcherEvent<TKubernetesObject> watcherEvent)
+    protected virtual void ProcessDeleteEvent(IWatcherEvent<TKubernetesObject> watcherEvent)
     {
         string watcherKey = VarUtils.GetCacherRefreshKey(watcherEvent.KubernetesObject);
         string eventKubernetesObjectName = watcherEvent.KubernetesObject.Metadata.Name;
@@ -108,7 +108,7 @@ public class CacheRefresh<TKubernetesObject, TBackgroundQueue> :
         }
     }
 
-    protected virtual void ProcessErrorEvent(IKubernetesWatcherEvent<TKubernetesObject> watcherEvent)
+    protected virtual void ProcessErrorEvent(IWatcherEvent<TKubernetesObject> watcherEvent)
     {
         string watcherKey = VarUtils.GetCacherRefreshKey(watcherEvent.KubernetesObject);
         logger.LogDebug("ProcessAddEvent - {kubernetesObjectType} - {watcherKey}",

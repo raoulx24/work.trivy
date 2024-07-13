@@ -2,7 +2,7 @@
 using k8s.Models;
 using TrivyOperator.Dashboard.Application.Services.BackgroundQueues.Abstractions;
 using TrivyOperator.Dashboard.Application.Services.CacherRefresh.Abstractions;
-using TrivyOperator.Dashboard.Application.Services.KubernetesWatchers.Abstractions;
+using TrivyOperator.Dashboard.Application.Services.Watchers.Abstractions;
 using TrivyOperator.Dashboard.Application.Services.WatcherEvents.Abstractions;
 
 namespace TrivyOperator.Dashboard.Application.Services.WatcherCacheSomething.Abstractions;
@@ -11,7 +11,7 @@ public class WatcherCacheSomething<TBackgroundQueue, TCacheRefresh, TKubernetesW
     : IWatcherCacheSomething
     where TBackgroundQueue : IBackgroundQueue<TKubernetesObject>
     where TCacheRefresh : ICacheRefresh<TKubernetesObject, TBackgroundQueue>
-    where TKubernetesWatcherEvent : class, IKubernetesWatcherEvent<TKubernetesObject>, new()
+    where TKubernetesWatcherEvent : class, IWatcherEvent<TKubernetesObject>, new()
     where TKubernetesWatcher : IKubernetesWatcher<TKubernetesObject>
     where TKubernetesObject : class, IKubernetesObject<V1ObjectMeta>
     where TKubernetesObjectList : IItems<TKubernetesObject>

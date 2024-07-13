@@ -1,6 +1,6 @@
 ﻿namespace TrivyOperator.Dashboard.Application.Services.Abstractions;
 
-public interface IKubernetesNamespaceService
+public interface INamespaceService
 {
     Task<List<string>> GetKubernetesNamespaces();
 }
