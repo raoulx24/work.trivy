@@ -42,7 +42,7 @@ public abstract class KubernetesWatcher<TKubernetesObjectList, TKubernetesObject
             Cts = cts,
         };
 
-        watchers.Add(VarUtils.GetCacherRefreshKey(sourceKubernetesObject), watcherWithCts);
+        watchers.Add(GetNamespaceFromSourceEvent(sourceKubernetesObject), watcherWithCts);
     }
 
     protected async Task CreateWatch(IKubernetesObject<V1ObjectMeta>? sourceKubernetesObject, CancellationToken cancellationToken)
@@ -81,6 +81,16 @@ public abstract class KubernetesWatcher<TKubernetesObjectList, TKubernetesObject
                 logger.LogError($"{nameof(KubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TBackgroundQueue, TKubernetesWatcherEvent>)} - {ex.Message}", ex);
             }
         }
+    }
+
+    protected string GetNamespaceFromSourceEvent(IKubernetesObject<V1ObjectMeta>? sourceKubernetesObject)
+    {
+        if (sourceKubernetesObject != null && sourceKubernetesObject is V1Namespace)
+        {
+            return sourceKubernetesObject.Metadata.Name;
+        }
+        
+        return VarUtils.GetCacherRefreshKey(sourceKubernetesObject);
     }
 
     protected abstract Task<HttpOperationResponse<TKubernetesObjectList>> GetKubernetesObjectWatchList(IKubernetesObject<V1ObjectMeta>? sourceKubernetesObject, CancellationToken cancellationToken);
