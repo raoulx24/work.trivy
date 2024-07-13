@@ -6,10 +6,9 @@ using TrivyOperator.Dashboard.Application.Services.WatcherEvents.Abstractions;
 
 namespace TrivyOperator.Dashboard.Application.Services.CacherRefresh.Abstractions;
 
-public interface ICacheRefresh<TKubernetesObject, TKubernetesWatcherEvent, TBackgroundQueue>
-    where TKubernetesWatcherEvent : IKubernetesWatcherEvent<TKubernetesObject>
+public interface ICacheRefresh<TKubernetesObject, TBackgroundQueue>
     where TKubernetesObject : IKubernetesObject<V1ObjectMeta>
-    where TBackgroundQueue : IBackgroundQueue<TKubernetesWatcherEvent, TKubernetesObject>
+    where TBackgroundQueue : IBackgroundQueue<TKubernetesObject>
 {
     void StartEventsProcessing(CancellationToken cancellationToken);
     bool IsQueueProcessingStarted();

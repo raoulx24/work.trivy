@@ -8,11 +8,11 @@ using TrivyOperator.Dashboard.Infrastructure.Abstractions;
 
 namespace TrivyOperator.Dashboard.Application.Services.KubernetesWatchers;
 
-public class NamespaceWatcher : KubernetesWatcher<V1NamespaceList, V1Namespace, IBackgroundQueue<KubernetesWatcherEvent<V1Namespace>, V1Namespace>, KubernetesWatcherEvent<V1Namespace>>,
+public class NamespaceWatcher : KubernetesWatcher<V1NamespaceList, V1Namespace, IBackgroundQueue<V1Namespace>, KubernetesWatcherEvent<V1Namespace>>,
     IKubernetesClusterScopedWatcher<V1Namespace>
 {
     public NamespaceWatcher(IKubernetesClientFactory kubernetesClientFactory,
-        IBackgroundQueue<KubernetesWatcherEvent<V1Namespace>, V1Namespace> backgroundQueue,
+        IBackgroundQueue<V1Namespace> backgroundQueue,
         ILogger<NamespaceWatcher> logger) :
         base(kubernetesClientFactory, backgroundQueue, logger)
     { }
@@ -28,7 +28,8 @@ public class NamespaceWatcher : KubernetesWatcher<V1NamespaceList, V1Namespace, 
     protected override async Task EnqueueWatcherEventWithError(IKubernetesObject<V1ObjectMeta>? sourceKubernetesObject)
     {
         V1Namespace v1Namespace = new();
+        KubernetesWatcherEvent<V1Namespace> watcherEvent = new() { KubernetesObject = v1Namespace, WatcherEvent = WatchEventType.Error };
 
-        await backgroundQueue.QueueBackgroundWorkItemAsync(new() { KubernetesObject = v1Namespace, WatcherEvent = WatchEventType.Error });
+        await backgroundQueue.QueueBackgroundWorkItemAsync(watcherEvent);
     }
 }

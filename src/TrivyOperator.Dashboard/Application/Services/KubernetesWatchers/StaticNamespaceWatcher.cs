@@ -30,7 +30,9 @@ public class StaticNamespaceWatcher : IKubernetesClusterScopedWatcher<V1Namespac
         foreach (string kubernetesNamespace in kubernetesNamespaces)
         {
             V1Namespace v1Namespace = new() { Metadata = new() { NamespaceProperty = kubernetesNamespace } };
-            await backgroundQueue.QueueBackgroundWorkItemAsync(new() { KubernetesObject = v1Namespace, WatcherEvent = WatchEventType.Added }); 
+            KubernetesWatcherEvent<V1Namespace> watcherEvent = new() { KubernetesObject = v1Namespace, WatcherEvent = WatchEventType.Error };
+
+            await backgroundQueue.QueueBackgroundWorkItemAsync(watcherEvent); 
         }
     }
 }

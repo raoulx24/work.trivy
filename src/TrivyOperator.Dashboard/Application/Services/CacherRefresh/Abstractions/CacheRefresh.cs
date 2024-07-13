@@ -7,20 +7,19 @@ using TrivyOperator.Dashboard.Utils;
 
 namespace TrivyOperator.Dashboard.Application.Services.CacherRefresh.Abstractions;
 
-public class CacheRefresh<TKubernetesObject, TKubernetesWatcherEvent, TBackgroundQueue> : 
-    ICacheRefresh<TKubernetesObject, TKubernetesWatcherEvent, TBackgroundQueue>
-        where TKubernetesWatcherEvent : IKubernetesWatcherEvent<TKubernetesObject>
+public class CacheRefresh<TKubernetesObject, TBackgroundQueue> : 
+    ICacheRefresh<TKubernetesObject, TBackgroundQueue>
         where TKubernetesObject : IKubernetesObject<V1ObjectMeta>
-        where TBackgroundQueue : IBackgroundQueue<TKubernetesWatcherEvent, TKubernetesObject>
+        where TBackgroundQueue : IBackgroundQueue<TKubernetesObject>
 {
     protected TBackgroundQueue backgroundQueue { get; init; }
     protected IConcurrentCache<string, IList<TKubernetesObject>> cache { get; init; }
-    protected ILogger<CacheRefresh<TKubernetesObject, TKubernetesWatcherEvent, TBackgroundQueue>> logger { get; init; }
-    protected Task cacheRefreshTask { get; set; }
+    protected ILogger<CacheRefresh<TKubernetesObject, TBackgroundQueue>> logger { get; init; }
+    protected Task? cacheRefreshTask { get; set; }
 
     public CacheRefresh(TBackgroundQueue backgroundQueue,
         IConcurrentCache<string, IList<TKubernetesObject>> cache,
-        ILogger<CacheRefresh<TKubernetesObject, TKubernetesWatcherEvent, TBackgroundQueue>> logger)
+        ILogger<CacheRefresh<TKubernetesObject, TBackgroundQueue>> logger)
     {
         this.backgroundQueue = backgroundQueue;
         this.cache = cache;
@@ -42,7 +41,7 @@ public class CacheRefresh<TKubernetesObject, TKubernetesWatcherEvent, TBackgroun
     {
         while (!cancellationToken.IsCancellationRequested)
         {
-            TKubernetesWatcherEvent watcherEvent = await backgroundQueue.DequeueAsync(cancellationToken);
+            IKubernetesWatcherEvent<TKubernetesObject> watcherEvent = await backgroundQueue.DequeueAsync(cancellationToken);
             switch (watcherEvent.WatcherEvent)
             {
                 case WatchEventType.Added:
@@ -60,7 +59,7 @@ public class CacheRefresh<TKubernetesObject, TKubernetesWatcherEvent, TBackgroun
         }
     }
 
-    protected virtual void ProcessAddEvent(TKubernetesWatcherEvent watcherEvent, CancellationToken cancellationToken)
+    protected virtual void ProcessAddEvent(IKubernetesWatcherEvent<TKubernetesObject> watcherEvent, CancellationToken cancellationToken)
     {
         string eventNamespaceName = VarUtils.GetWatchersKey(watcherEvent.KubernetesObject);
         string eventKubernetesObjectName = watcherEvent.KubernetesObject.Metadata.Name;
@@ -83,7 +82,7 @@ public class CacheRefresh<TKubernetesObject, TKubernetesWatcherEvent, TBackgroun
         }
     }
 
-    protected virtual void ProcessDeleteEvent(TKubernetesWatcherEvent watcherEvent)
+    protected virtual void ProcessDeleteEvent(IKubernetesWatcherEvent<TKubernetesObject> watcherEvent)
     {
         string eventNamespaceName = VarUtils.GetWatchersKey(watcherEvent.KubernetesObject);
         string eventKubernetesObjectName = watcherEvent.KubernetesObject.Metadata.Name;
@@ -102,7 +101,7 @@ public class CacheRefresh<TKubernetesObject, TKubernetesWatcherEvent, TBackgroun
         }
     }
 
-    protected virtual void ProcessErrorEvent(TKubernetesWatcherEvent watcherEvent)
+    protected virtual void ProcessErrorEvent(IKubernetesWatcherEvent<TKubernetesObject> watcherEvent)
     {
         string eventNamespaceName = VarUtils.GetWatchersKey(watcherEvent.KubernetesObject);
         // TODO Clarify cache[key] vs cache.Remove and cache.Add

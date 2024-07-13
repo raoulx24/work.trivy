@@ -14,7 +14,7 @@ public abstract class KubernetesNamespacedWatcher<TKubernetesObjectList, TKubern
         where TKubernetesObject : class, IKubernetesObject<V1ObjectMeta>, new()
         where TKubernetesObjectList : IKubernetesObject, IItems<TKubernetesObject>
         where TKubernetesWatcherEvent : IKubernetesWatcherEvent<TKubernetesObject>, new()
-        where TBackgroundQueue : IBackgroundQueue<TKubernetesWatcherEvent, TKubernetesObject>
+        where TBackgroundQueue : IBackgroundQueue<TKubernetesObject>
 {
     public KubernetesNamespacedWatcher(IKubernetesClientFactory kubernetesClientFactory,
         TBackgroundQueue backgroundQueue,
@@ -37,7 +37,8 @@ public abstract class KubernetesNamespacedWatcher<TKubernetesObjectList, TKubern
     protected override async Task EnqueueWatcherEventWithError(IKubernetesObject<V1ObjectMeta>? sourceKubernetesObject)
     {
         TKubernetesObject kubernetesObject = new() { Metadata = new() { Name = "fakeObject", NamespaceProperty = VarUtils.GetWatchersKey(sourceKubernetesObject) } };
-
-        await backgroundQueue.QueueBackgroundWorkItemAsync(new() { KubernetesObject = kubernetesObject, WatcherEvent = WatchEventType.Error });
+        TKubernetesWatcherEvent watcherEvent = new() { KubernetesObject = kubernetesObject, WatcherEvent = WatchEventType.Error };
+        
+        await backgroundQueue.QueueBackgroundWorkItemAsync(watcherEvent);
     }
 }

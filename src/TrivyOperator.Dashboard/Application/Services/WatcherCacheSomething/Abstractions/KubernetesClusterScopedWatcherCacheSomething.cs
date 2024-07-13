@@ -10,8 +10,8 @@ namespace TrivyOperator.Dashboard.Application.Services.WatcherCacheSomething.Abs
 public class KubernetesClusterScopedWatcherCacheSomething<TBackgroundQueue, TCacheRefresh, TKubernetesWatcherEvent, TKubernetesWatcher, TKubernetesObject, TKubernetesObjectList>
     : WatcherCacheSomething<TBackgroundQueue, TCacheRefresh, TKubernetesWatcherEvent, TKubernetesWatcher, TKubernetesObject, TKubernetesObjectList>,
       IKubernetesClusterScopedWatcherCacheSomething
-        where TBackgroundQueue : IBackgroundQueue<TKubernetesWatcherEvent, TKubernetesObject>
-        where TCacheRefresh : ICacheRefresh<TKubernetesObject, TKubernetesWatcherEvent, TBackgroundQueue>
+        where TBackgroundQueue : IBackgroundQueue<TKubernetesObject>
+        where TCacheRefresh : ICacheRefresh<TKubernetesObject, TBackgroundQueue>
         where TKubernetesWatcherEvent : class, IKubernetesWatcherEvent<TKubernetesObject>, new()
         where TKubernetesWatcher : IKubernetesClusterScopedWatcher<TKubernetesObject>
         where TKubernetesObject : class, IKubernetesObject<V1ObjectMeta>

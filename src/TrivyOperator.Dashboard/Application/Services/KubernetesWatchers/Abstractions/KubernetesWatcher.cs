@@ -14,7 +14,7 @@ public abstract class KubernetesWatcher<TKubernetesObjectList, TKubernetesObject
         where TKubernetesObject : IKubernetesObject<V1ObjectMeta>
         where TKubernetesObjectList : IItems<TKubernetesObject>
         where TKubernetesWatcherEvent : IKubernetesWatcherEvent<TKubernetesObject>, new()
-        where TBackgroundQueue : IBackgroundQueue<TKubernetesWatcherEvent, TKubernetesObject>
+        where TBackgroundQueue : IBackgroundQueue<TKubernetesObject>
         
 {
     protected Kubernetes kubernetesClient;

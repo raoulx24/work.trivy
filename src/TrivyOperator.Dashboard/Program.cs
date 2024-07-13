@@ -87,13 +87,12 @@ builder.Services.AddSingleton<
     IConcurrentCache<string, IList<V1Namespace>>,
     ConcurrentCache<string, IList<V1Namespace>>>();
 builder.Services.AddSingleton<
-    IBackgroundQueue<KubernetesWatcherEvent<V1Namespace>,
-    V1Namespace>>(x => new BackgroundQueue<KubernetesWatcherEvent<V1Namespace>, V1Namespace>(100));
+    IBackgroundQueue<V1Namespace>>(x => new BackgroundQueue<KubernetesWatcherEvent<V1Namespace>, V1Namespace>(100));
 builder.Services.AddSingleton<
     IKubernetesClusterScopedWatcher<V1Namespace>,
     NamespaceWatcher>();
 builder.Services.AddSingleton<
-    ICacheRefresh<V1Namespace, KubernetesWatcherEvent<V1Namespace>, IBackgroundQueue<KubernetesWatcherEvent<V1Namespace>, V1Namespace>>,
+    ICacheRefresh<V1Namespace, IBackgroundQueue<V1Namespace>>,
     NamespaceCacheRefresh>();
     //CacheRefresh<V1Namespace, KubernetesWatcherEvent<V1Namespace>, IBackgroundQueue<KubernetesWatcherEvent<V1Namespace>, V1Namespace>>>();
 builder.Services.AddSingleton<
