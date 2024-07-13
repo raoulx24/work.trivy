@@ -33,6 +33,8 @@ public abstract class KubernetesWatcher<TKubernetesObjectList, TKubernetesObject
 
     public void Add(CancellationToken cancellationToken, IKubernetesObject<V1ObjectMeta>? sourceKubernetesObject = null)
     {
+        string watcherKey = GetNamespaceFromSourceEvent(sourceKubernetesObject);
+        logger.LogInformation("Adding Watcher for {kubernetesObjectType} and key {watcherKey}.", typeof(TKubernetesObject), watcherKey);
         CancellationTokenSource cts = new();
         TaskWithCts watcherWithCts = new()
         {
@@ -42,22 +44,18 @@ public abstract class KubernetesWatcher<TKubernetesObjectList, TKubernetesObject
             Cts = cts,
         };
 
-        watchers.Add(GetNamespaceFromSourceEvent(sourceKubernetesObject), watcherWithCts);
+        watchers.Add(watcherKey, watcherWithCts);
     }
 
     protected async Task CreateWatch(IKubernetesObject<V1ObjectMeta>? sourceKubernetesObject, CancellationToken cancellationToken)
     {
         while (!cancellationToken.IsCancellationRequested)
         {
-            await EnqueueWatcherEventWithError(sourceKubernetesObject);
-
-            //TKubernetesWatcherEvent kubernetesWatcherEvent = GetKubernetesWatcherEventWithError(sourceKubernetesObject);
-            //await backgroundQueue.QueueBackgroundWorkItemAsync(kubernetesWatcherEvent);
-
+            string watcherKey = GetNamespaceFromSourceEvent(sourceKubernetesObject);
             try
             {
-                Task<HttpOperationResponse<TKubernetesObjectList>> listNamespaceResp = GetKubernetesObjectWatchList(sourceKubernetesObject, cancellationToken);
-                await foreach ((WatchEventType type, TKubernetesObject item) in listNamespaceResp
+                Task<HttpOperationResponse<TKubernetesObjectList>> kubernetesObjectsResp = GetKubernetesObjectWatchList(sourceKubernetesObject, cancellationToken);
+                await foreach ((WatchEventType type, TKubernetesObject item) in kubernetesObjectsResp
                                    .WatchAsync<TKubernetesObject, TKubernetesObjectList>(
                                        ex => logger.LogError(
                                            $"{nameof(KubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TBackgroundQueue, TKubernetesWatcherEvent>)} - WatchAsync - {ex.Message}",
@@ -70,15 +68,22 @@ public abstract class KubernetesWatcher<TKubernetesObjectList, TKubernetesObject
             }
             catch (HttpOperationException hoe) when (hoe.Response.StatusCode == HttpStatusCode.NotFound)
             {
+                logger.LogError("Watcher for {kubernetesObjectType} and key {watcherKey} crashed with 404.", typeof(TKubernetesObject), watcherKey);
                 // TODO: something something
             }
             catch (HttpOperationException hoe) when (hoe.Response.StatusCode == HttpStatusCode.Forbidden)
             {
+                logger.LogError("Watcher for {kubernetesObjectType} and key {watcherKey} crashed with 403.", typeof(TKubernetesObject), watcherKey);
                 // TODO: something something
             }
             catch (Exception ex)
             {
-                logger.LogError($"{nameof(KubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TBackgroundQueue, TKubernetesWatcherEvent>)} - {ex.Message}", ex);
+                logger.LogError(ex, "Watcher for {kubernetesObjectType} and key {watcherKey} crashed - {ex.Message}", typeof(TKubernetesObject), watcherKey, ex.Message);
+            }
+            
+            if (!cancellationToken.IsCancellationRequested)
+            {
+                await EnqueueWatcherEventWithError(sourceKubernetesObject);
             }
         }
     }

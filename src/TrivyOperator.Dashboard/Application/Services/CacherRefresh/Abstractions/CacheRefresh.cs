@@ -30,10 +30,11 @@ public class CacheRefresh<TKubernetesObject, TBackgroundQueue> :
     {
         if (cacheRefreshTask is not null)
         {
-            logger.LogWarning("Processing already started. Ignoring...");
+            logger.LogWarning("Processing for {kubernetesObjectType} already started. Ignoring...", typeof(TKubernetesObject).Name);
             return;
         }
-        
+
+        logger.LogInformation("CacheRefresh for {kubernetesObjectType} is starting.", typeof(TKubernetesObject).Name);
         cacheRefreshTask = ProcessChannelMessages(cancellationToken);
     }
 
@@ -61,10 +62,13 @@ public class CacheRefresh<TKubernetesObject, TBackgroundQueue> :
 
     protected virtual void ProcessAddEvent(IKubernetesWatcherEvent<TKubernetesObject> watcherEvent, CancellationToken cancellationToken)
     {
-        string eventNamespaceName = VarUtils.GetCacherRefreshKey(watcherEvent.KubernetesObject);
+        string watcherKey = VarUtils.GetCacherRefreshKey(watcherEvent.KubernetesObject);
         string eventKubernetesObjectName = watcherEvent.KubernetesObject.Metadata.Name;
 
-        if (cache.TryGetValue(eventNamespaceName, value: out IList<TKubernetesObject>? kubernetesObjects))
+        logger.LogDebug("ProcessAddEvent - {kubernetesObjectType} - {watcherKey} - {kubernetesObjectName}",
+            typeof(TKubernetesObject).Name, watcherKey, eventKubernetesObjectName);
+
+        if (cache.TryGetValue(watcherKey, value: out IList<TKubernetesObject>? kubernetesObjects))
         {
             // TODO try catch - clear duplicates
             TKubernetesObject? potentialExistingKubernetesObject = kubernetesObjects.SingleOrDefault(x => x.Metadata.Name == eventKubernetesObjectName);
@@ -74,20 +78,23 @@ public class CacheRefresh<TKubernetesObject, TBackgroundQueue> :
             }
             kubernetesObjects.Add(watcherEvent.KubernetesObject);
             // TODO Clarify cache[key] vs cache.Remove and cache.Add
-            cache[eventNamespaceName] = kubernetesObjects;
+            cache[watcherKey] = kubernetesObjects;
         }
         else // first time, the cache is really empty
         {
-            cache.TryAdd(eventNamespaceName, new List<TKubernetesObject>() { watcherEvent.KubernetesObject });
+            cache.TryAdd(watcherKey, new List<TKubernetesObject>() { watcherEvent.KubernetesObject });
         }
     }
 
     protected virtual void ProcessDeleteEvent(IKubernetesWatcherEvent<TKubernetesObject> watcherEvent)
     {
-        string eventNamespaceName = VarUtils.GetCacherRefreshKey(watcherEvent.KubernetesObject);
+        string watcherKey = VarUtils.GetCacherRefreshKey(watcherEvent.KubernetesObject);
         string eventKubernetesObjectName = watcherEvent.KubernetesObject.Metadata.Name;
 
-        if (cache.TryGetValue(eventNamespaceName, value: out IList<TKubernetesObject>? kubernetesObjects))
+        logger.LogDebug("ProcessAddEvent - {kubernetesObjectType} - {watcherKey} - {kubernetesObjectName}",
+            typeof(TKubernetesObject).Name, watcherKey, eventKubernetesObjectName);
+
+        if (cache.TryGetValue(watcherKey, value: out IList<TKubernetesObject>? kubernetesObjects))
         {
             // TODO try catch - clear duplicates
             TKubernetesObject? toBedeletedKubernetesObject = kubernetesObjects.SingleOrDefault(x => x.Metadata.Name == eventKubernetesObjectName);
@@ -96,17 +103,19 @@ public class CacheRefresh<TKubernetesObject, TBackgroundQueue> :
                 kubernetesObjects.Remove(toBedeletedKubernetesObject);
             }
             // TODO Clarify cache[key] vs cache.Remove and cache.Add
-            cache.TryRemove(eventNamespaceName, out _);
-            cache.TryAdd(eventNamespaceName, kubernetesObjects);
+            cache.TryRemove(watcherKey, out _);
+            cache.TryAdd(watcherKey, kubernetesObjects);
         }
     }
 
     protected virtual void ProcessErrorEvent(IKubernetesWatcherEvent<TKubernetesObject> watcherEvent)
     {
-        string eventNamespaceName = VarUtils.GetCacherRefreshKey(watcherEvent.KubernetesObject);
+        string watcherKey = VarUtils.GetCacherRefreshKey(watcherEvent.KubernetesObject);
+        logger.LogDebug("ProcessAddEvent - {kubernetesObjectType} - {watcherKey}",
+            typeof(TKubernetesObject).Name, watcherKey);
         // TODO Clarify cache[key] vs cache.Remove and cache.Add
-        cache.TryRemove(eventNamespaceName, out _);
-        cache.TryAdd(eventNamespaceName, new List<TKubernetesObject>());
+        cache.TryRemove(watcherKey, out _);
+        cache.TryAdd(watcherKey, new List<TKubernetesObject>());
     }
 
     public bool IsQueueProcessingStarted()

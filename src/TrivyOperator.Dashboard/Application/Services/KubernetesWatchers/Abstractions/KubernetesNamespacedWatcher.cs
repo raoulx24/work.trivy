@@ -26,6 +26,7 @@ public abstract class KubernetesNamespacedWatcher<TKubernetesObjectList, TKubern
     public void Delete(IKubernetesObject<V1ObjectMeta>? sourceKubernetesObject)
     {
         string sourceNamespace = GetNamespaceFromSourceEvent(sourceKubernetesObject);
+        logger.LogInformation("Deleting Watcher for {kubernetesObjectType} and key {watcherKey}.", typeof(TKubernetesObject), sourceNamespace);
         if (watchers.TryGetValue(sourceNamespace, value: out TaskWithCts taskWithCts))
         {
             taskWithCts.Cts.Cancel();

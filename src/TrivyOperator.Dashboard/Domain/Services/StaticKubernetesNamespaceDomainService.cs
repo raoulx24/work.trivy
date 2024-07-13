@@ -1,20 +1,22 @@
 ﻿using k8s;
 using k8s.Autorest;
 using k8s.Models;
+using Microsoft.Extensions.Options;
 using TrivyOperator.Dashboard.Application.Services;
+using TrivyOperator.Dashboard.Application.Services.Options;
 using TrivyOperator.Dashboard.Domain.Services.Abstractions;
 using TrivyOperator.Dashboard.Infrastructure.Abstractions;
 
 namespace TrivyOperator.Dashboard.Domain.Services;
 
-public class StaticKubernetesNamespaceDomainService(IConfiguration configuration, ILogger<KubernetesHostedService> logger) : IKubernetesNamespaceDomainService
+public class StaticKubernetesNamespaceDomainService(IOptions<KubernetesOptions> kubernetesOptions, ILogger<StaticKubernetesNamespaceDomainService> logger) : IKubernetesNamespaceDomainService
 {
     public bool IsStaticList => true;
 
-    public async Task<List<string>> GetKubernetesNamespaces()
+    public Task<List<string>> GetKubernetesNamespaces()
     {
         // TODO: change from IConfiguration to IOptions
-        string configKubernetesNamespaces = configuration.GetSection("Kubernetes").GetValue<string>("NamespaceList");
+        string? configKubernetesNamespaces = kubernetesOptions.Value.NamespaceList;
 
         if (string.IsNullOrWhiteSpace(configKubernetesNamespaces))
         {
@@ -22,7 +24,8 @@ public class StaticKubernetesNamespaceDomainService(IConfiguration configuration
         }
 
         List<string> kubernetesNamespaces = configKubernetesNamespaces.Split(',').Select(x => x.Trim()).ToList();
+        logger.LogDebug("Found {listCount} kubernetes namespace names.", kubernetesNamespaces.Count);
 
-        return kubernetesNamespaces;
+        return Task.FromResult(kubernetesNamespaces);
     }
 }

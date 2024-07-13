@@ -8,7 +8,7 @@ using TrivyOperator.Dashboard.Infrastructure.Clients;
 
 namespace TrivyOperator.Dashboard.Domain.Services;
 
-public class KubernetesNamespaceDomainService(IKubernetesClientFactory kubernetesClientFactory, ILogger<KubernetesHostedService> logger) : IKubernetesNamespaceDomainService
+public class KubernetesNamespaceDomainService(IKubernetesClientFactory kubernetesClientFactory, ILogger<KubernetesNamespaceDomainService> logger) : IKubernetesNamespaceDomainService
 {
     private readonly Kubernetes kubernetesClient = kubernetesClientFactory.GetClient();
 
@@ -25,12 +25,12 @@ public class KubernetesNamespaceDomainService(IKubernetesClientFactory kubernete
         }
         catch (HttpOperationException ex) when (ex.Response.StatusCode == System.Net.HttpStatusCode.Forbidden)
         {
-            logger.LogWarning($"Cannot get Kubernetes Namespaces. Forbidden (403). Error: {ex.Response.Content}");
+            logger.LogWarning(ex, "Cannot get Kubernetes Namespaces. Forbidden (403). Error: {responseContent}", ex.Response.Content);
             return new List<string> { "" };
         }
         catch (Exception ex)
         {
-            logger.LogCritical($"Cannot get Kubernetes Namespaces. Error {ex.Message}");
+            logger.LogCritical(ex, "Cannot get Kubernetes Namespaces. Error {exceptionMessage}", ex.Message);
             throw;
         }
     }

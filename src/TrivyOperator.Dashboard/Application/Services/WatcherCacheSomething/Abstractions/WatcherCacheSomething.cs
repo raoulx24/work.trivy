@@ -33,9 +33,11 @@ public class WatcherCacheSomething<TBackgroundQueue, TCacheRefresh, TKubernetesW
 
     public void StartSomething(CancellationToken cancellationToken, IKubernetesObject<V1ObjectMeta>? sourceKubernetesObject = null)
     {
+        logger.LogDebug("Adding Watcher for {kubernetesObjectType}.", typeof(TKubernetesObject).Name);
         kubernetesWatcher.Add(cancellationToken, sourceKubernetesObject);
         if (!cacheRefresh.IsQueueProcessingStarted())
         {
+            logger.LogDebug("Adding CacheRefresher for {kubernetesObjectType}.", typeof(TKubernetesObject).Name);
             cacheRefresh.StartEventsProcessing(cancellationToken);
         }
     }
