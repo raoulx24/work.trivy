@@ -13,11 +13,11 @@
   },
   "private": true,
   "dependencies": {
-    "@ag-grid-community/angular": "^31.3.2",
-    "@ag-grid-community/client-side-row-model": "^31.3.2",
-    "@ag-grid-community/core": "^31.3.2",
-    "@ag-grid-community/infinite-row-model": "^31.3.2",
-    "@ag-grid-community/styles": "^31.3.2",
+    "@ag-grid-community/angular": "^32.0.2",
+    "@ag-grid-community/client-side-row-model": "^32.0.2",
+    "@ag-grid-community/core": "^32.0.2",
+    "@ag-grid-community/infinite-row-model": "^32.0.2",
+    "@ag-grid-community/styles": "^32.0.2",
     "@angular/animations": "^18.0.1",
     "@angular/common": "^18.0.1",
     "@angular/compiler": "^18.0.1",
@@ -27,8 +27,8 @@
     "@angular/platform-browser-dynamic": "^18.0.1",
     "@angular/platform-server": "^18.0.1",
     "@angular/router": "^18.0.1",
-    "ag-grid-angular": "^31.3.2",
-    "ag-grid-community": "^31.3.2",
+    "ag-grid-angular": "^32.0.2",
+    "ag-grid-community": "^32.0.2",
     "bootstrap": "^5.3.3",
     "jquery": "^3.7.1",
     "oidc-client": "^1.11.5",
@@ -53,7 +53,7 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "^2.1.0",
     "ng-openapi-gen": "^0.51.0",
-    "typescript": "~5.4.5"
+    "typescript": "^5.5.3"
   },
   "overrides": {
     "autoprefixer": "10.4.5",
