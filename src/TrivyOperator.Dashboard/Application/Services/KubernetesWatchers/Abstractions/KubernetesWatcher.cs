@@ -42,7 +42,7 @@ public abstract class KubernetesWatcher<TKubernetesObjectList, TKubernetesObject
             Cts = cts,
         };
 
-        watchers.Add(VarUtils.GetWatchersKey(sourceKubernetesObject), watcherWithCts);
+        watchers.Add(VarUtils.GetCacherRefreshKey(sourceKubernetesObject), watcherWithCts);
     }
 
     protected async Task CreateWatch(IKubernetesObject<V1ObjectMeta>? sourceKubernetesObject, CancellationToken cancellationToken)

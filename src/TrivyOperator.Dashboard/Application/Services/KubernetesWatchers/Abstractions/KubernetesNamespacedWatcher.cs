@@ -25,7 +25,7 @@ public abstract class KubernetesNamespacedWatcher<TKubernetesObjectList, TKubern
 
     public void Delete(IKubernetesObject<V1ObjectMeta>? sourceKubernetesObject)
     {
-        string sourceNamespace = VarUtils.GetWatchersKey(sourceKubernetesObject);
+        string sourceNamespace = VarUtils.GetCacherRefreshKey(sourceKubernetesObject);
         if (watchers.TryGetValue(sourceNamespace, value: out TaskWithCts taskWithCts))
         {
             taskWithCts.Cts.Cancel();
@@ -36,7 +36,7 @@ public abstract class KubernetesNamespacedWatcher<TKubernetesObjectList, TKubern
 
     protected override async Task EnqueueWatcherEventWithError(IKubernetesObject<V1ObjectMeta>? sourceKubernetesObject)
     {
-        TKubernetesObject kubernetesObject = new() { Metadata = new() { Name = "fakeObject", NamespaceProperty = VarUtils.GetWatchersKey(sourceKubernetesObject) } };
+        TKubernetesObject kubernetesObject = new() { Metadata = new() { Name = "fakeObject", NamespaceProperty = VarUtils.GetCacherRefreshKey(sourceKubernetesObject) } };
         TKubernetesWatcherEvent watcherEvent = new() { KubernetesObject = kubernetesObject, WatcherEvent = WatchEventType.Error };
         
         await backgroundQueue.QueueBackgroundWorkItemAsync(watcherEvent);

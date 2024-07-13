@@ -61,7 +61,7 @@ public class CacheRefresh<TKubernetesObject, TBackgroundQueue> :
 
     protected virtual void ProcessAddEvent(IKubernetesWatcherEvent<TKubernetesObject> watcherEvent, CancellationToken cancellationToken)
     {
-        string eventNamespaceName = VarUtils.GetWatchersKey(watcherEvent.KubernetesObject);
+        string eventNamespaceName = VarUtils.GetCacherRefreshKey(watcherEvent.KubernetesObject);
         string eventKubernetesObjectName = watcherEvent.KubernetesObject.Metadata.Name;
 
         if (cache.TryGetValue(eventNamespaceName, value: out IList<TKubernetesObject>? kubernetesObjects))
@@ -84,7 +84,7 @@ public class CacheRefresh<TKubernetesObject, TBackgroundQueue> :
 
     protected virtual void ProcessDeleteEvent(IKubernetesWatcherEvent<TKubernetesObject> watcherEvent)
     {
-        string eventNamespaceName = VarUtils.GetWatchersKey(watcherEvent.KubernetesObject);
+        string eventNamespaceName = VarUtils.GetCacherRefreshKey(watcherEvent.KubernetesObject);
         string eventKubernetesObjectName = watcherEvent.KubernetesObject.Metadata.Name;
 
         if (cache.TryGetValue(eventNamespaceName, value: out IList<TKubernetesObject>? kubernetesObjects))
@@ -103,7 +103,7 @@ public class CacheRefresh<TKubernetesObject, TBackgroundQueue> :
 
     protected virtual void ProcessErrorEvent(IKubernetesWatcherEvent<TKubernetesObject> watcherEvent)
     {
-        string eventNamespaceName = VarUtils.GetWatchersKey(watcherEvent.KubernetesObject);
+        string eventNamespaceName = VarUtils.GetCacherRefreshKey(watcherEvent.KubernetesObject);
         // TODO Clarify cache[key] vs cache.Remove and cache.Add
         cache.TryRemove(eventNamespaceName, out _);
         cache.TryAdd(eventNamespaceName, new List<TKubernetesObject>());

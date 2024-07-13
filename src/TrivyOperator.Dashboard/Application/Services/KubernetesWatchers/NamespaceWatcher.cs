@@ -8,8 +8,7 @@ using TrivyOperator.Dashboard.Infrastructure.Abstractions;
 
 namespace TrivyOperator.Dashboard.Application.Services.KubernetesWatchers;
 
-public class NamespaceWatcher : KubernetesWatcher<V1NamespaceList, V1Namespace, IBackgroundQueue<V1Namespace>, KubernetesWatcherEvent<V1Namespace>>,
-    IKubernetesClusterScopedWatcher<V1Namespace>
+public class NamespaceWatcher : KubernetesClusterScopedWatcher<V1NamespaceList, V1Namespace, IBackgroundQueue<V1Namespace>, KubernetesWatcherEvent<V1Namespace>>
 {
     public NamespaceWatcher(IKubernetesClientFactory kubernetesClientFactory,
         IBackgroundQueue<V1Namespace> backgroundQueue,
