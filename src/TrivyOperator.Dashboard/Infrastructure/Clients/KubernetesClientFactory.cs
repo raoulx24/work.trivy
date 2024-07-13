@@ -1,11 +1,11 @@
 ﻿using k8s;
 using Microsoft.Extensions.Http;
+using Microsoft.Extensions.Options;
 using Polly;
 using Polly.Extensions.Http;
 using Polly.Retry;
 using System.Net;
-using System.Xml.Linq;
-using TrivyOperator.Dashboard.Application.Services;
+using TrivyOperator.Dashboard.Application.Services.Options;
 using TrivyOperator.Dashboard.Infrastructure.Abstractions;
 
 namespace TrivyOperator.Dashboard.Infrastructure.Clients;
@@ -13,17 +13,13 @@ namespace TrivyOperator.Dashboard.Infrastructure.Clients;
 public class KubernetesClientFactory : IKubernetesClientFactory
 {
     private readonly Kubernetes kubernetesClient;
-    private IConfiguration configuration;
     private ILogger logger;
 
-    public KubernetesClientFactory(IConfiguration configuration, ILogger<KubernetesClientFactory> logger)
+    public KubernetesClientFactory(IOptions<KubernetesOptions> options, ILogger<KubernetesClientFactory> logger)
     {
-        this.configuration = configuration;
         this.logger = logger;
 
-        // TODO: change from IConfiguration to IOptions
-        string kubeconfigFileName = configuration.GetSection("Kubernetes").GetValue<string>("KubeConfigFileName");
-
+        string? kubeconfigFileName = options.Value.KubeConfigFileName;
         if (!string.IsNullOrWhiteSpace(kubeconfigFileName))
         {
             try
@@ -35,13 +31,13 @@ public class KubernetesClientFactory : IKubernetesClientFactory
                 }
                 else
                 {
-                    logger.LogWarning($"Provided kubeconfig file does not exist: {kubeconfigFileName}");
+                    logger.LogWarning("Provided kubeconfig file does not exist: {kubeconfigFileName}", kubeconfigFileName);
                 }
             }
             catch (Exception ex)
             {
-                logger.LogWarning($"Could not use the provided kubeconfig file: {kubeconfigFileName}");
-                logger.LogWarning($"Source: {ex.Source}. Error message: {ex.Message}");
+                logger.LogWarning("Could not use the provided kubeconfig file: {kubeconfigFileName}", kubeconfigFileName);
+                logger.LogWarning(ex, "Source: {exceptionSource}. Error message: {exceptionMessage}", ex.Source, ex.Message);
                 logger.LogWarning("Falling back to standard creation of Kubernetes Client.");
             }
         }
