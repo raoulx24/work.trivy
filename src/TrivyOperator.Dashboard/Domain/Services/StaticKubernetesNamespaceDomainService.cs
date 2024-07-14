@@ -1,15 +1,12 @@
-﻿using k8s;
-using k8s.Autorest;
-using k8s.Models;
-using Microsoft.Extensions.Options;
-using TrivyOperator.Dashboard.Application.Services;
+﻿using Microsoft.Extensions.Options;
 using TrivyOperator.Dashboard.Application.Services.Options;
 using TrivyOperator.Dashboard.Domain.Services.Abstractions;
-using TrivyOperator.Dashboard.Infrastructure.Abstractions;
 
 namespace TrivyOperator.Dashboard.Domain.Services;
 
-public class StaticKubernetesNamespaceDomainService(IOptions<KubernetesOptions> kubernetesOptions, ILogger<StaticKubernetesNamespaceDomainService> logger) : IKubernetesNamespaceDomainService
+public class StaticKubernetesNamespaceDomainService(
+    IOptions<KubernetesOptions> kubernetesOptions,
+    ILogger<StaticKubernetesNamespaceDomainService> logger) : IKubernetesNamespaceDomainService
 {
     public bool IsStaticList => true;
 

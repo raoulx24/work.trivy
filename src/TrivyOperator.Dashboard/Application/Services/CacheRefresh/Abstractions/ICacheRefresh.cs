@@ -1,9 +1,8 @@
-﻿
+﻿using k8s;
 using k8s.Models;
-using k8s;
 using TrivyOperator.Dashboard.Application.Services.BackgroundQueues.Abstractions;
 
-namespace TrivyOperator.Dashboard.Application.Services.CacherRefresh.Abstractions;
+namespace TrivyOperator.Dashboard.Application.Services.CacheRefresh.Abstractions;
 
 public interface ICacheRefresh<TKubernetesObject, TBackgroundQueue>
     where TKubernetesObject : IKubernetesObject<V1ObjectMeta>

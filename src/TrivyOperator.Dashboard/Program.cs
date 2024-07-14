@@ -7,14 +7,14 @@ using System.Text.Json.Serialization;
 using TrivyOperator.Dashboard.Application.Services;
 using TrivyOperator.Dashboard.Application.Services.Abstractions;
 using TrivyOperator.Dashboard.Application.Services.BackgroundQueues.Abstractions;
-using TrivyOperator.Dashboard.Application.Services.CacherRefresh;
-using TrivyOperator.Dashboard.Application.Services.CacherRefresh.Abstractions;
-using TrivyOperator.Dashboard.Application.Services.Watchers;
-using TrivyOperator.Dashboard.Application.Services.Watchers.Abstractions;
+using TrivyOperator.Dashboard.Application.Services.CacheRefresh;
+using TrivyOperator.Dashboard.Application.Services.CacheRefresh.Abstractions;
 using TrivyOperator.Dashboard.Application.Services.Options;
 using TrivyOperator.Dashboard.Application.Services.WatcherCacheSomething;
 using TrivyOperator.Dashboard.Application.Services.WatcherCacheSomething.Abstractions;
 using TrivyOperator.Dashboard.Application.Services.WatcherEvents.Abstractions;
+using TrivyOperator.Dashboard.Application.Services.Watchers;
+using TrivyOperator.Dashboard.Application.Services.Watchers.Abstractions;
 using TrivyOperator.Dashboard.Domain.Trivy.VulnerabilityReport;
 using TrivyOperator.Dashboard.Infrastructure.Abstractions;
 using TrivyOperator.Dashboard.Infrastructure.Clients;
@@ -80,45 +80,34 @@ builder.Services.AddCors(
         configurePolicy => configurePolicy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
 
 #region Kubernetes Related Services
-builder.Services.Configure<BackgroudQueueOptions>(configuration.GetSection("Queues"));
+
+builder.Services.Configure<BackgroundQueueOptions>(configuration.GetSection("Queues"));
 builder.Services.Configure<KubernetesOptions>(configuration.GetSection("Kubernetes"));
 
 builder.Services.AddHostedService<WatchersSomethingHostedService>();
 
 builder.Services.AddSingleton<IKubernetesClientFactory, KubernetesClientFactory>();
-builder.Services.AddSingleton<
-    IConcurrentCache<string, IList<V1Namespace>>,
-    ConcurrentCache<string, IList<V1Namespace>> > ();
-builder.Services.AddSingleton<
-    IBackgroundQueue<V1Namespace>,
-    BackgroundQueue<WatcherEvent<V1Namespace>, V1Namespace>>();
-builder.Services.AddSingleton<
-    IClusterScopedWatcher<V1Namespace>,
-    NamespaceWatcher>();
-builder.Services.AddSingleton<
-    ICacheRefresh<V1Namespace, IBackgroundQueue<V1Namespace>>,
-    NamespaceCacheRefresh>();
-builder.Services.AddSingleton<
-    IClusterScopedWatcherCacheSomething,
-    NamespaceWatcherCacheSomething>();
-builder.Services.AddSingleton<
-    IConcurrentCache<string, IList<VulnerabilityReportCR>>,
-    ConcurrentCache<string, IList<VulnerabilityReportCR>>>();
-builder.Services.AddSingleton<
-    IBackgroundQueue<VulnerabilityReportCR>,
-    BackgroundQueue<WatcherEvent<VulnerabilityReportCR>, VulnerabilityReportCR>>();
-builder.Services.AddSingleton<
-    INamespacedWatcher<VulnerabilityReportCR>,
-    VulnerabilityReportWatcher>();
-builder.Services.AddSingleton<
-    ICacheRefresh<VulnerabilityReportCR, IBackgroundQueue<VulnerabilityReportCR>>,
-    CacheRefresh<VulnerabilityReportCR, IBackgroundQueue<VulnerabilityReportCR>>>();
-builder.Services.AddSingleton<
-    INamespacedWatcherCacheSomething,
-    VulnerabilityReportWatcherCacheSomething>();
+builder.Services
+    .AddSingleton<IConcurrentCache<string, IList<V1Namespace>>, ConcurrentCache<string, IList<V1Namespace>>>();
+builder.Services.AddSingleton<IBackgroundQueue<V1Namespace>, BackgroundQueue<WatcherEvent<V1Namespace>, V1Namespace>>();
+builder.Services.AddSingleton<IClusterScopedWatcher<V1Namespace>, NamespaceWatcher>();
+builder.Services.AddSingleton<ICacheRefresh<V1Namespace, IBackgroundQueue<V1Namespace>>, NamespaceCacheRefresh>();
+builder.Services.AddSingleton<IClusterScopedWatcherCacheSomething, NamespaceWatcherCacheSomething>();
+builder.Services
+    .AddSingleton<IConcurrentCache<string, IList<VulnerabilityReportCR>>,
+        ConcurrentCache<string, IList<VulnerabilityReportCR>>>();
+builder.Services
+    .AddSingleton<IBackgroundQueue<VulnerabilityReportCR>,
+        BackgroundQueue<WatcherEvent<VulnerabilityReportCR>, VulnerabilityReportCR>>();
+builder.Services.AddSingleton<INamespacedWatcher<VulnerabilityReportCR>, VulnerabilityReportWatcher>();
+builder.Services
+    .AddSingleton<ICacheRefresh<VulnerabilityReportCR, IBackgroundQueue<VulnerabilityReportCR>>,
+        CacheRefresh<VulnerabilityReportCR, IBackgroundQueue<VulnerabilityReportCR>>>();
+builder.Services.AddSingleton<INamespacedWatcherCacheSomething, VulnerabilityReportWatcherCacheSomething>();
 
 builder.Services.AddScoped<IVulnerabilityReportService, VulnerabilityReportService>();
 builder.Services.AddScoped<INamespaceService, NamespaceService>();
+
 #endregion
 
 WebApplication app = builder.Build();

@@ -7,25 +7,26 @@ using TrivyOperator.Dashboard.Application.Services.WatcherEvents.Abstractions;
 
 namespace TrivyOperator.Dashboard.Application.Services.BackgroundQueues.Abstractions;
 
-public class BackgroundQueue<TKubernetesWatcherEvent, TKubernetesObject> :
-    IBackgroundQueue<TKubernetesObject>
-        where TKubernetesObject : IKubernetesObject<V1ObjectMeta>
-        where TKubernetesWatcherEvent : IWatcherEvent<TKubernetesObject>
+public class BackgroundQueue<TKubernetesWatcherEvent, TKubernetesObject> : IBackgroundQueue<TKubernetesObject>
+    where TKubernetesObject : IKubernetesObject<V1ObjectMeta>
+    where TKubernetesWatcherEvent : IWatcherEvent<TKubernetesObject>
 {
+    private readonly ILogger<BackgroundQueue<TKubernetesWatcherEvent, TKubernetesObject>> logger;
+    private readonly IOptions<BackgroundQueueOptions> options;
     private readonly Channel<TKubernetesWatcherEvent> queue;
-    protected ILogger<BackgroundQueue<TKubernetesWatcherEvent, TKubernetesObject>> logger { get; init; }
-    private IOptions<BackgroudQueueOptions> options { get; init; }
 
-    public BackgroundQueue(IOptions<BackgroudQueueOptions> options, ILogger<BackgroundQueue<TKubernetesWatcherEvent, TKubernetesObject>> logger)
+    public BackgroundQueue(
+        IOptions<BackgroundQueueOptions> options,
+        ILogger<BackgroundQueue<TKubernetesWatcherEvent, TKubernetesObject>> logger)
     {
         this.options = options;
         this.logger = logger;
         BoundedChannelOptions boundedChannelOptions = new(options.Value.Capacity)
         {
-            FullMode = BoundedChannelFullMode.Wait
+            FullMode = BoundedChannelFullMode.Wait,
         };
         queue = Channel.CreateBounded<TKubernetesWatcherEvent>(boundedChannelOptions);
-        logger.LogDebug("Started BackgoundQueue for {kubernetesObjectType}.", typeof(TKubernetesObject).Name);
+        logger.LogDebug("Started BackgroundQueue for {kubernetesObjectType}.", typeof(TKubernetesObject).Name);
     }
 
     public async ValueTask QueueBackgroundWorkItemAsync(IWatcherEvent<TKubernetesObject> watcherEvent)
@@ -41,16 +42,23 @@ public class BackgroundQueue<TKubernetesWatcherEvent, TKubernetesObject> :
         {
             throw new ArgumentException(nameof(watcherEvent));
         }
-        logger.LogDebug("Queueing Event {watcherEventType} - {kubernetesObjectType} - {kubernetesObjectName}",
-            watcherEvent.WatcherEventType, typeof(TKubernetesObject).Name, watcherEvent.KubernetesObject?.Metadata?.Name);
+
+        logger.LogDebug(
+            "Queueing Event {watcherEventType} - {kubernetesObjectType} - {kubernetesObjectName}",
+            watcherEvent.WatcherEventType,
+            typeof(TKubernetesObject).Name,
+            watcherEvent.KubernetesObject?.Metadata?.Name);
         await queue.Writer.WriteAsync(kubernetesWatcherEvent);
     }
 
     public async ValueTask<IWatcherEvent<TKubernetesObject>> DequeueAsync(CancellationToken cancellationToken)
     {
-        var watcherEvent = await queue.Reader.ReadAsync(cancellationToken);
-        logger.LogDebug("Dequeued Event {watcherEventType} - {kubernetesObjectType} - {kubernetesObjectName}",
-            watcherEvent.WatcherEventType, typeof(TKubernetesObject).Name, watcherEvent.KubernetesObject?.Metadata?.Name);
+        TKubernetesWatcherEvent watcherEvent = await queue.Reader.ReadAsync(cancellationToken);
+        logger.LogDebug(
+            "Dequeued Event {watcherEventType} - {kubernetesObjectType} - {kubernetesObjectName}",
+            watcherEvent.WatcherEventType,
+            typeof(TKubernetesObject).Name,
+            watcherEvent.KubernetesObject?.Metadata?.Name);
 
         return watcherEvent;
     }

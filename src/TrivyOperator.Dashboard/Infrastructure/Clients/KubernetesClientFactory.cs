@@ -19,34 +19,43 @@ public class KubernetesClientFactory : IKubernetesClientFactory
     {
         this.logger = logger;
 
-        string? kubeconfigFileName = options.Value.KubeConfigFileName;
-        if (!string.IsNullOrWhiteSpace(kubeconfigFileName))
+        string? kubeConfigFileName = options.Value.KubeConfigFileName;
+        if (!string.IsNullOrWhiteSpace(kubeConfigFileName))
         {
             try
             {
-                if (File.Exists(kubeconfigFileName))
+                if (File.Exists(kubeConfigFileName))
                 {
-                    KubernetesClientConfiguration config = KubernetesClientConfiguration.BuildConfigFromConfigFile(kubeconfigPath: kubeconfigFileName);
+                    KubernetesClientConfiguration config =
+                        KubernetesClientConfiguration.BuildConfigFromConfigFile(kubeConfigFileName);
                     kubernetesClient = new Kubernetes(config, new PolicyHttpMessageHandler(GetRetryPolicy()));
                 }
                 else
                 {
-                    logger.LogWarning("Provided kubeconfig file does not exist: {kubeconfigFileName}", kubeconfigFileName);
+                    logger.LogWarning(
+                        "Provided kubeConfig file does not exist: {kubeConfigFileName}",
+                        kubeConfigFileName);
                 }
             }
             catch (Exception ex)
             {
-                logger.LogWarning("Could not use the provided kubeconfig file: {kubeconfigFileName}", kubeconfigFileName);
-                logger.LogWarning(ex, "Source: {exceptionSource}. Error message: {exceptionMessage}", ex.Source, ex.Message);
+                logger.LogWarning(
+                    "Could not use the provided kubeConfig file: {kubeConfigFileName}",
+                    kubeConfigFileName);
+                logger.LogWarning(
+                    ex,
+                    "Source: {exceptionSource}. Error message: {exceptionMessage}",
+                    ex.Source,
+                    ex.Message);
                 logger.LogWarning("Falling back to standard creation of Kubernetes Client.");
             }
         }
 
-        if (kubernetesClient is null) // kubeconfigFileName is not IsNullOrWhiteSpace OR something bad happened
+        if (kubernetesClient is null) // kubeConfigFileName is not IsNullOrWhiteSpace OR something bad happened
         {
             KubernetesClientConfiguration? defaultConfig = KubernetesClientConfiguration.IsInCluster()
-                    ? KubernetesClientConfiguration.InClusterConfig()
-                    : KubernetesClientConfiguration.BuildConfigFromConfigFile();
+                ? KubernetesClientConfiguration.InClusterConfig()
+                : KubernetesClientConfiguration.BuildConfigFromConfigFile();
             kubernetesClient = new Kubernetes(defaultConfig, new PolicyHttpMessageHandler(GetRetryPolicy()));
         }
     }

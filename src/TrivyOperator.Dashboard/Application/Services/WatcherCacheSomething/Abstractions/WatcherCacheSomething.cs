@@ -1,15 +1,20 @@
 ﻿using k8s;
 using k8s.Models;
 using TrivyOperator.Dashboard.Application.Services.BackgroundQueues.Abstractions;
-using TrivyOperator.Dashboard.Application.Services.CacherRefresh.Abstractions;
-using TrivyOperator.Dashboard.Application.Services.Watchers.Abstractions;
+using TrivyOperator.Dashboard.Application.Services.CacheRefresh.Abstractions;
 using TrivyOperator.Dashboard.Application.Services.WatcherEvents.Abstractions;
+using TrivyOperator.Dashboard.Application.Services.Watchers.Abstractions;
 
 namespace TrivyOperator.Dashboard.Application.Services.WatcherCacheSomething.Abstractions;
 
-public class WatcherCacheSomething<TBackgroundQueue, TCacheRefresh, TKubernetesWatcherEvent, TKubernetesWatcher, TKubernetesObject, TKubernetesObjectList>
-    : IWatcherCacheSomething
-    where TBackgroundQueue : IBackgroundQueue<TKubernetesObject>
+public class
+    WatcherCacheSomething<TBackgroundQueue, TCacheRefresh, TKubernetesWatcherEvent, TKubernetesWatcher,
+        TKubernetesObject, TKubernetesObjectList>(
+        TCacheRefresh cacheRefresh,
+        TKubernetesWatcher kubernetesWatcher,
+        ILogger<WatcherCacheSomething<TBackgroundQueue, TCacheRefresh, TKubernetesWatcherEvent, TKubernetesWatcher,
+            TKubernetesObject, TKubernetesObjectList>> logger)
+    : IWatcherCacheSomething where TBackgroundQueue : IBackgroundQueue<TKubernetesObject>
     where TCacheRefresh : ICacheRefresh<TKubernetesObject, TBackgroundQueue>
     where TKubernetesWatcherEvent : class, IWatcherEvent<TKubernetesObject>, new()
     where TKubernetesWatcher : IKubernetesWatcher<TKubernetesObject>
@@ -17,28 +22,24 @@ public class WatcherCacheSomething<TBackgroundQueue, TCacheRefresh, TKubernetesW
     where TKubernetesObjectList : IItems<TKubernetesObject>
 
 {
-    protected TCacheRefresh cacheRefresh { get; init; }
-    protected TKubernetesWatcher kubernetesWatcher { get; init; }
-    protected ILogger<WatcherCacheSomething<TBackgroundQueue, TCacheRefresh, TKubernetesWatcherEvent, TKubernetesWatcher, TKubernetesObject, TKubernetesObjectList>> logger { get; init; }
+    protected readonly TCacheRefresh CacheRefresh = cacheRefresh;
+    protected readonly TKubernetesWatcher KubernetesWatcher = kubernetesWatcher;
 
-    public WatcherCacheSomething(TCacheRefresh cacheRefresh,
-        TKubernetesWatcher kubernetesWatcher,
-        ILogger<WatcherCacheSomething<TBackgroundQueue, TCacheRefresh, TKubernetesWatcherEvent, TKubernetesWatcher, TKubernetesObject, TKubernetesObjectList>> logger)
+    protected readonly
+        ILogger<WatcherCacheSomething<TBackgroundQueue, TCacheRefresh, TKubernetesWatcherEvent, TKubernetesWatcher,
+            TKubernetesObject, TKubernetesObjectList>> Logger = logger;
+
+
+    public void StartSomething(
+        CancellationToken cancellationToken,
+        IKubernetesObject<V1ObjectMeta>? sourceKubernetesObject = null)
     {
-        this.cacheRefresh = cacheRefresh;
-        this.kubernetesWatcher = kubernetesWatcher;
-        this.logger = logger;
-    }
-
-
-    public void StartSomething(CancellationToken cancellationToken, IKubernetesObject<V1ObjectMeta>? sourceKubernetesObject = null)
-    {
-        logger.LogDebug("Adding Watcher for {kubernetesObjectType}.", typeof(TKubernetesObject).Name);
-        kubernetesWatcher.Add(cancellationToken, sourceKubernetesObject);
-        if (!cacheRefresh.IsQueueProcessingStarted())
+        Logger.LogDebug("Adding Watcher for {kubernetesObjectType}.", typeof(TKubernetesObject).Name);
+        KubernetesWatcher.Add(cancellationToken, sourceKubernetesObject);
+        if (!CacheRefresh.IsQueueProcessingStarted())
         {
-            logger.LogDebug("Adding CacheRefresher for {kubernetesObjectType}.", typeof(TKubernetesObject).Name);
-            cacheRefresh.StartEventsProcessing(cancellationToken);
+            Logger.LogDebug("Adding CacheRefresher for {kubernetesObjectType}.", typeof(TKubernetesObject).Name);
+            CacheRefresh.StartEventsProcessing(cancellationToken);
         }
     }
 }

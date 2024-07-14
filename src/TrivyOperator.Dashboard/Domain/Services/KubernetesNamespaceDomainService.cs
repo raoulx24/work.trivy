@@ -1,14 +1,15 @@
 ﻿using k8s;
 using k8s.Autorest;
 using k8s.Models;
-using TrivyOperator.Dashboard.Application.Services;
+using System.Net;
 using TrivyOperator.Dashboard.Domain.Services.Abstractions;
 using TrivyOperator.Dashboard.Infrastructure.Abstractions;
-using TrivyOperator.Dashboard.Infrastructure.Clients;
 
 namespace TrivyOperator.Dashboard.Domain.Services;
 
-public class KubernetesNamespaceDomainService(IKubernetesClientFactory kubernetesClientFactory, ILogger<KubernetesNamespaceDomainService> logger) : IKubernetesNamespaceDomainService
+public class KubernetesNamespaceDomainService(
+    IKubernetesClientFactory kubernetesClientFactory,
+    ILogger<KubernetesNamespaceDomainService> logger) : IKubernetesNamespaceDomainService
 {
     private readonly Kubernetes kubernetesClient = kubernetesClientFactory.GetClient();
 
@@ -23,10 +24,13 @@ public class KubernetesNamespaceDomainService(IKubernetesClientFactory kubernete
             namespaceNames.AddRange(namespaceList.Items.Select(item => item.Name()));
             return namespaceNames;
         }
-        catch (HttpOperationException ex) when (ex.Response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+        catch (HttpOperationException ex) when (ex.Response.StatusCode == HttpStatusCode.Forbidden)
         {
-            logger.LogWarning(ex, "Cannot get Kubernetes Namespaces. Forbidden (403). Error: {responseContent}", ex.Response.Content);
-            return new List<string> { "" };
+            logger.LogWarning(
+                ex,
+                "Cannot get Kubernetes Namespaces. Forbidden (403). Error: {responseContent}",
+                ex.Response.Content);
+            return [""];
         }
         catch (Exception ex)
         {

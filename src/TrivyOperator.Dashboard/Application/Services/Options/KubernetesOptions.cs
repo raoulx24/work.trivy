@@ -1,7 +1,7 @@
 ﻿namespace TrivyOperator.Dashboard.Application.Services.Options;
 
-public class KubernetesOptions
+public record KubernetesOptions
 {
-     public string? KubeConfigFileName { get; set; }
-     public string? NamespaceList { get; set; }
+    public string? KubeConfigFileName { get; init; }
+    public string? NamespaceList { get; init; }
 }

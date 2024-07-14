@@ -1,11 +1,12 @@
-﻿using k8s.Models;
-using k8s;
+﻿using k8s;
+using k8s.Models;
 
 namespace TrivyOperator.Dashboard.Utils;
 
 public class VarUtils
 {
-    public static readonly string defaultCacherRefreshKey = "generic.Key";
+    public const string DefaultCacheRefreshKey = "generic.Key";
 
-    public static string GetCacherRefreshKey(IKubernetesObject<V1ObjectMeta>? kubernetesObject) => kubernetesObject?.Namespace() ?? defaultCacherRefreshKey;
+    public static string GetCacheRefreshKey(IKubernetesObject<V1ObjectMeta>? kubernetesObject) =>
+        kubernetesObject?.Namespace() ?? DefaultCacheRefreshKey;
 }
