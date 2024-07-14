@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Text.Json.Serialization;
 using TrivyOperator.Dashboard.Application.Services;
 using TrivyOperator.Dashboard.Application.Services.Abstractions;
+using TrivyOperator.Dashboard.Application.Services.BackgroundQueues;
 using TrivyOperator.Dashboard.Application.Services.BackgroundQueues.Abstractions;
 using TrivyOperator.Dashboard.Application.Services.CacheRefresh;
 using TrivyOperator.Dashboard.Application.Services.CacheRefresh.Abstractions;
@@ -89,7 +90,7 @@ builder.Services.AddHostedService<WatchersSomethingHostedService>();
 builder.Services.AddSingleton<IKubernetesClientFactory, KubernetesClientFactory>();
 builder.Services
     .AddSingleton<IConcurrentCache<string, IList<V1Namespace>>, ConcurrentCache<string, IList<V1Namespace>>>();
-builder.Services.AddSingleton<IBackgroundQueue<V1Namespace>, BackgroundQueue<WatcherEvent<V1Namespace>, V1Namespace>>();
+builder.Services.AddSingleton<IBackgroundQueue<V1Namespace>, BackgroundQueue<V1Namespace>>();
 builder.Services.AddSingleton<IClusterScopedWatcher<V1Namespace>, NamespaceWatcher>();
 builder.Services.AddSingleton<ICacheRefresh<V1Namespace, IBackgroundQueue<V1Namespace>>, NamespaceCacheRefresh>();
 builder.Services.AddSingleton<IClusterScopedWatcherCacheSomething, NamespaceWatcherCacheSomething>();
@@ -98,7 +99,7 @@ builder.Services
         ConcurrentCache<string, IList<VulnerabilityReportCR>>>();
 builder.Services
     .AddSingleton<IBackgroundQueue<VulnerabilityReportCR>,
-        BackgroundQueue<WatcherEvent<VulnerabilityReportCR>, VulnerabilityReportCR>>();
+        BackgroundQueue<VulnerabilityReportCR>>();
 builder.Services.AddSingleton<INamespacedWatcher<VulnerabilityReportCR>, VulnerabilityReportWatcher>();
 builder.Services
     .AddSingleton<ICacheRefresh<VulnerabilityReportCR, IBackgroundQueue<VulnerabilityReportCR>>,

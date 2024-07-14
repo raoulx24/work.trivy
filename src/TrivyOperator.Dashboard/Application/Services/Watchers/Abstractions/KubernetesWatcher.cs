@@ -86,6 +86,12 @@ public abstract class
                     watcherKey);
                 // TODO: something something
             }
+            catch (TaskCanceledException)
+            {
+                Logger.LogInformation("Watcher for {kubernetesObjectType} and key {watcherKey} was canceled.",
+                    typeof(TKubernetesObject),
+                    watcherKey);
+            }
             catch (Exception ex)
             {
                 Logger.LogError(

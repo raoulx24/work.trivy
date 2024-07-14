@@ -1,6 +1,6 @@
 ﻿using k8s;
 using k8s.Models;
-using TrivyOperator.Dashboard.Application.Services.BackgroundQueues.Abstractions;
+using TrivyOperator.Dashboard.Application.Services.BackgroundQueues;
 using TrivyOperator.Dashboard.Application.Services.WatcherEvents.Abstractions;
 using TrivyOperator.Dashboard.Application.Services.Watchers.Abstractions;
 using TrivyOperator.Dashboard.Domain.Services.Abstractions;
@@ -8,7 +8,7 @@ using TrivyOperator.Dashboard.Domain.Services.Abstractions;
 namespace TrivyOperator.Dashboard.Application.Services.Watchers;
 
 public class StaticNamespaceWatcher(
-    BackgroundQueue<WatcherEvent<V1Namespace>, V1Namespace> backgroundQueue,
+    BackgroundQueue<V1Namespace> backgroundQueue,
     IKubernetesNamespaceDomainService kubernetesNamespaceDomainService,
     ILogger<StaticNamespaceWatcher> logger) : IClusterScopedWatcher<V1Namespace>
 {

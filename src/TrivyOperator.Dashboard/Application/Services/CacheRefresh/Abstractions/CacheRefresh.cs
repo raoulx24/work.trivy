@@ -93,7 +93,7 @@ public class CacheRefresh<TKubernetesObject, TBackgroundQueue>(
         string eventKubernetesObjectName = watcherEvent.KubernetesObject.Metadata.Name;
 
         logger.LogDebug(
-            "ProcessAddEvent - {kubernetesObjectType} - {watcherKey} - {kubernetesObjectName}",
+            "ProcessDeleteEvent - {kubernetesObjectType} - {watcherKey} - {kubernetesObjectName}",
             typeof(TKubernetesObject).Name,
             watcherKey,
             eventKubernetesObjectName);
@@ -118,7 +118,7 @@ public class CacheRefresh<TKubernetesObject, TBackgroundQueue>(
     {
         string watcherKey = VarUtils.GetCacheRefreshKey(watcherEvent.KubernetesObject);
         logger.LogDebug(
-            "ProcessAddEvent - {kubernetesObjectType} - {watcherKey}",
+            "ProcessErrorEvent - {kubernetesObjectType} - {watcherKey}",
             typeof(TKubernetesObject).Name,
             watcherKey);
         // TODO Clarify cache[key] vs cache.Remove and cache.Add
