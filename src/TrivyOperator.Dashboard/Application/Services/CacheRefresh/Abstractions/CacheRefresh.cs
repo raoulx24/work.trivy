@@ -48,15 +48,16 @@ public class CacheRefresh<TKubernetesObject, TBackgroundQueue>(
                 case WatchEventType.Error:
                     ProcessErrorEvent(watcherEvent);
                     break;
+                case WatchEventType.Modified:
+                    ProcessModifiedEvent(watcherEvent, cancellationToken);
+                    break;
                 //default:
                 //    break;
             }
         }
     }
 
-    protected virtual void ProcessAddEvent(
-        IWatcherEvent<TKubernetesObject> watcherEvent,
-        CancellationToken cancellationToken)
+    protected virtual void ProcessAddEvent(IWatcherEvent<TKubernetesObject> watcherEvent, CancellationToken cancellationToken)
     {
         string watcherKey = VarUtils.GetCacheRefreshKey(watcherEvent.KubernetesObject);
         string eventKubernetesObjectName = watcherEvent.KubernetesObject.Metadata.Name;
@@ -124,5 +125,11 @@ public class CacheRefresh<TKubernetesObject, TBackgroundQueue>(
         // TODO Clarify cache[key] vs cache.Remove and cache.Add
         cache.TryRemove(watcherKey, out _);
         cache.TryAdd(watcherKey, new List<TKubernetesObject>());
+    }
+
+    protected virtual void ProcessModifiedEvent(IWatcherEvent<TKubernetesObject> watcherEvent, CancellationToken cancellationToken)
+    {
+        logger.LogDebug("ProcessModifiedEvent - redirecting to ProcessAddEvent.");
+        ProcessAddEvent(watcherEvent, cancellationToken);
     }
 }

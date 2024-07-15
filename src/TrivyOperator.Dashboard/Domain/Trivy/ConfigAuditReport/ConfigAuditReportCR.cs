@@ -3,9 +3,9 @@ using k8s.Models;
 using System.Text.Json.Serialization;
 using TrivyOperator.Dashboard.Domain.Trivy.CustomResources.Abstractions;
 
-namespace TrivyOperator.Dashboard.Domain.Trivy.VulnerabilityReport;
+namespace TrivyOperator.Dashboard.Domain.Trivy.ConfigAuditReport;
 
-public class VulnerabilityReportCR : CustomResource, IKubernetesObject<V1ObjectMeta>
+public class ConfigAuditReportCR : CustomResource, IKubernetesObject<V1ObjectMeta>
 {
     [JsonPropertyName("report")]
     public Report? Report { get; set; }
