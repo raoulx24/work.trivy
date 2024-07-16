@@ -1,10 +1,10 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0 as build-dotnet
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-dotnet
 
 COPY ./src /src
 
 RUN dotnet publish /src/TrivyOperator.Dashboard/TrivyOperator.Dashboard.csproj --configuration Release -o /build --runtime linux-x64 --self-contained
 
-FROM node:20 as build-node
+FROM node:20 AS build-node
 
 COPY ./src/TrivyOperator.Dashboard/ClientApp /src
 
@@ -13,7 +13,21 @@ WORKDIR /src
 RUN npm install
 RUN npm run build -- --configuration production
 
-FROM mcr.microsoft.com/dotnet/aspnet:8.0-jammy as final
+RUN apt-get update && apt-get install -y brotli gzip
+
+WORKDIR /src/dist
+
+RUN find . -type f -name "*.js" -exec gzip -k -1 {} \;
+RUN find . -type f -name "*.css" -exec gzip -k -1 {} \;
+RUN find . -type f -name "*.html" -exec gzip -k -1 {} \;
+RUN find . -type f -name "*.svg" -exec gzip -k -1 {} \;
+
+RUN find . -type f -name "*.js" -exec brotli -k -4 {} \;
+RUN find . -type f -name "*.css" -exec brotli -k -4 {} \;
+RUN find . -type f -name "*.html" -exec brotli -k -4 {} \;
+RUN find . -type f -name "*.svg" -exec brotli -k -4 {} \;
+
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-jammy AS final
 
 COPY --from=build-dotnet /build /opt/trivy.dashboard
 COPY --from=build-node /src/dist /opt/trivy.dashboard/wwwroot
