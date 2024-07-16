@@ -23,13 +23,4 @@ public class NamespaceWatcher(
         watch: true,
         timeoutSeconds: int.MaxValue,
         cancellationToken: cancellationToken);
-
-    protected override async Task EnqueueWatcherEventWithError(IKubernetesObject<V1ObjectMeta>? sourceKubernetesObject)
-    {
-        V1Namespace v1Namespace = new();
-        WatcherEvent<V1Namespace> watcherEvent =
-            new() { KubernetesObject = v1Namespace, WatcherEventType = WatchEventType.Error };
-
-        await BackgroundQueue.QueueBackgroundWorkItemAsync(watcherEvent);
-    }
 }

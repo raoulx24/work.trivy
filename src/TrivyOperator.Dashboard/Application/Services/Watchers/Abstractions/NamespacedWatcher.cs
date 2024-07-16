@@ -26,7 +26,7 @@ public abstract class
         string sourceNamespace = GetNamespaceFromSourceEvent(sourceKubernetesObject);
         Logger.LogInformation(
             "Deleting Watcher for {kubernetesObjectType} and key {watcherKey}.",
-            typeof(TKubernetesObject),
+            typeof(TKubernetesObject).Name,
             sourceNamespace);
         if (Watchers.TryGetValue(sourceNamespace, out TaskWithCts taskWithCts))
         {

@@ -33,7 +33,7 @@ public abstract class
         string watcherKey = GetNamespaceFromSourceEvent(sourceKubernetesObject);
         Logger.LogInformation(
             "Adding Watcher for {kubernetesObjectType} and key {watcherKey}.",
-            typeof(TKubernetesObject),
+            typeof(TKubernetesObject).Name,
             watcherKey);
         CancellationTokenSource cts = new();
         TaskWithCts watcherWithCts = new()
@@ -74,7 +74,7 @@ public abstract class
             {
                 Logger.LogError(
                     "Watcher for {kubernetesObjectType} and key {watcherKey} crashed with 404.",
-                    typeof(TKubernetesObject),
+                    typeof(TKubernetesObject).Name,
                     watcherKey);
                 // TODO: something something
             }
@@ -82,14 +82,14 @@ public abstract class
             {
                 Logger.LogError(
                     "Watcher for {kubernetesObjectType} and key {watcherKey} crashed with 403.",
-                    typeof(TKubernetesObject),
+                    typeof(TKubernetesObject).Name,
                     watcherKey);
                 // TODO: something something
             }
             catch (TaskCanceledException)
             {
                 Logger.LogInformation("Watcher for {kubernetesObjectType} and key {watcherKey} was canceled.",
-                    typeof(TKubernetesObject),
+                    typeof(TKubernetesObject).Name,
                     watcherKey);
             }
             catch (Exception ex)
@@ -97,7 +97,7 @@ public abstract class
                 Logger.LogError(
                     ex,
                     "Watcher for {kubernetesObjectType} and key {watcherKey} crashed - {ex.Message}",
-                    typeof(TKubernetesObject),
+                    typeof(TKubernetesObject).Name,
                     watcherKey,
                     ex.Message);
             }

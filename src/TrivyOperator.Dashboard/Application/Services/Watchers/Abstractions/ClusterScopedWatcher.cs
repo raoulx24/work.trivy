@@ -19,4 +19,14 @@ public abstract class
     where TKubernetesObject : class, IKubernetesObject<V1ObjectMeta>, new()
     where TKubernetesObjectList : IKubernetesObject, IItems<TKubernetesObject>
     where TKubernetesWatcherEvent : IWatcherEvent<TKubernetesObject>, new()
-    where TBackgroundQueue : IBackgroundQueue<TKubernetesObject>;
+    where TBackgroundQueue : IBackgroundQueue<TKubernetesObject>
+{
+    protected override async Task EnqueueWatcherEventWithError(IKubernetesObject<V1ObjectMeta>? sourceKubernetesObject)
+    {
+        TKubernetesObject kubernetesObject = new();
+        WatcherEvent<TKubernetesObject> watcherEvent =
+            new() { KubernetesObject = kubernetesObject, WatcherEventType = WatchEventType.Error };
+
+        await BackgroundQueue.QueueBackgroundWorkItemAsync(watcherEvent);
+    }
+}
