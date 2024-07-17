@@ -12,23 +12,23 @@ namespace TrivyOperator.Dashboard.Application.Services.Watchers;
 
 public class ConfigAuditReportWatcher(
     IKubernetesClientFactory kubernetesClientFactory,
-    IBackgroundQueue<ConfigAuditReportCR> backgroundQueue,
+    IBackgroundQueue<ConfigAuditReportCr> backgroundQueue,
     ILogger<ConfigAuditReportWatcher> logger)
-    : NamespacedWatcher<CustomResourceList<ConfigAuditReportCR>, ConfigAuditReportCR,
-        IBackgroundQueue<ConfigAuditReportCR>, WatcherEvent<ConfigAuditReportCR>>(
+    : NamespacedWatcher<CustomResourceList<ConfigAuditReportCr>, ConfigAuditReportCr,
+        IBackgroundQueue<ConfigAuditReportCr>, WatcherEvent<ConfigAuditReportCr>>(
         kubernetesClientFactory,
         backgroundQueue,
         logger)
 {
-    protected override async Task<HttpOperationResponse<CustomResourceList<ConfigAuditReportCR>>>
+    protected override async Task<HttpOperationResponse<CustomResourceList<ConfigAuditReportCr>>>
         GetKubernetesObjectWatchList(
             IKubernetesObject<V1ObjectMeta>? sourceKubernetesObject,
             CancellationToken cancellationToken)
     {
-        ConfigAuditReportCRD myCrd = new();
+        ConfigAuditReportCrd myCrd = new();
 
         return await KubernetesClient.CustomObjects
-            .ListNamespacedCustomObjectWithHttpMessagesAsync<CustomResourceList<ConfigAuditReportCR>>(
+            .ListNamespacedCustomObjectWithHttpMessagesAsync<CustomResourceList<ConfigAuditReportCr>>(
                 myCrd.Group,
                 myCrd.Version,
                 GetNamespaceFromSourceEvent(sourceKubernetesObject),

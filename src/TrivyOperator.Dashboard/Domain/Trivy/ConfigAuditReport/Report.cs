@@ -6,7 +6,7 @@ namespace TrivyOperator.Dashboard.Domain.Trivy.ConfigAuditReport;
 public class Report
 {
     [JsonPropertyName("checks")]
-    public Check[] Checks { get; set; } = new Check[0];
+    public Check[] Checks { get; set; } = [];
 
     [JsonPropertyName("scanner")]
     public Scanner? Scanner { get; set; }

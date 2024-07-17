@@ -5,7 +5,7 @@ using TrivyOperator.Dashboard.Domain.Trivy.CustomResources.Abstractions;
 
 namespace TrivyOperator.Dashboard.Domain.Trivy.ConfigAuditReport;
 
-public class ConfigAuditReportCR : CustomResource, IKubernetesObject<V1ObjectMeta>
+public class ConfigAuditReportCr : CustomResource, IKubernetesObject<V1ObjectMeta>
 {
     [JsonPropertyName("report")]
     public Report? Report { get; set; }

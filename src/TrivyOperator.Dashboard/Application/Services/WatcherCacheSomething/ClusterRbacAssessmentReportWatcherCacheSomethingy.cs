@@ -9,9 +9,9 @@ using TrivyOperator.Dashboard.Domain.Trivy.CustomResources.Abstractions;
 
 namespace TrivyOperator.Dashboard.Application.Services.WatcherCacheSomething;
 public class ClusterRbacAssessmentReportWatcherCacheSomething(
-    ICacheRefresh<ClusterRbacAssessmentReportCR, IBackgroundQueue<ClusterRbacAssessmentReportCR>> cacheRefresh,
-    IClusterScopedWatcher<ClusterRbacAssessmentReportCR> kubernetesWatcher,
+    ICacheRefresh<ClusterRbacAssessmentReportCr, IBackgroundQueue<ClusterRbacAssessmentReportCr>> cacheRefresh,
+    IClusterScopedWatcher<ClusterRbacAssessmentReportCr> kubernetesWatcher,
     ILogger<ClusterRbacAssessmentReportWatcherCacheSomething> logger)
-    : ClusterScopedWatcherCacheSomething<IBackgroundQueue<ClusterRbacAssessmentReportCR>,
-        ICacheRefresh<ClusterRbacAssessmentReportCR, IBackgroundQueue<ClusterRbacAssessmentReportCR>>, WatcherEvent<ClusterRbacAssessmentReportCR>,
-        IClusterScopedWatcher<ClusterRbacAssessmentReportCR>, ClusterRbacAssessmentReportCR, CustomResourceList<ClusterRbacAssessmentReportCR>>(cacheRefresh, kubernetesWatcher, logger);
+    : ClusterScopedWatcherCacheSomething<IBackgroundQueue<ClusterRbacAssessmentReportCr>,
+        ICacheRefresh<ClusterRbacAssessmentReportCr, IBackgroundQueue<ClusterRbacAssessmentReportCr>>, WatcherEvent<ClusterRbacAssessmentReportCr>,
+        IClusterScopedWatcher<ClusterRbacAssessmentReportCr>, ClusterRbacAssessmentReportCr, CustomResourceList<ClusterRbacAssessmentReportCr>>(cacheRefresh, kubernetesWatcher, logger);

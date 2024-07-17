@@ -2,7 +2,7 @@
 
 namespace TrivyOperator.Dashboard.Domain.Trivy.ClusterRbacAssessmentReport;
 
-public class ClusterRbacAssessmentReportCRD : CustomResourceDefinition
+public class ClusterRbacAssessmentReportCrd : CustomResourceDefinition
 {
     public override string Version { get; } = "v1alpha1";
     public override string Group { get; } = "aquasecurity.github.io";

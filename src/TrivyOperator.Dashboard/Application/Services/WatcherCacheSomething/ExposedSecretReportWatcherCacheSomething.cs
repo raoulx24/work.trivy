@@ -9,10 +9,10 @@ using TrivyOperator.Dashboard.Domain.Trivy.ExposedSecretReport;
 namespace TrivyOperator.Dashboard.Application.Services.WatcherCacheSomething;
 
 public class ExposedSecretReportWatcherCacheSomething(
-    ICacheRefresh<ExposedSecretReportCR, IBackgroundQueue<ExposedSecretReportCR>> cacheRefresh,
-    INamespacedWatcher<ExposedSecretReportCR> kubernetesWatcher,
+    ICacheRefresh<ExposedSecretReportCr, IBackgroundQueue<ExposedSecretReportCr>> cacheRefresh,
+    INamespacedWatcher<ExposedSecretReportCr> kubernetesWatcher,
     ILogger<ExposedSecretReportWatcherCacheSomething> logger)
-    : NamespacedWatcherCacheSomething<IBackgroundQueue<ExposedSecretReportCR>,
-        ICacheRefresh<ExposedSecretReportCR, IBackgroundQueue<ExposedSecretReportCR>>,
-        WatcherEvent<ExposedSecretReportCR>, INamespacedWatcher<ExposedSecretReportCR>, ExposedSecretReportCR,
-        CustomResourceList<ExposedSecretReportCR>>(cacheRefresh, kubernetesWatcher, logger);
+    : NamespacedWatcherCacheSomething<IBackgroundQueue<ExposedSecretReportCr>,
+        ICacheRefresh<ExposedSecretReportCr, IBackgroundQueue<ExposedSecretReportCr>>,
+        WatcherEvent<ExposedSecretReportCr>, INamespacedWatcher<ExposedSecretReportCr>, ExposedSecretReportCr,
+        CustomResourceList<ExposedSecretReportCr>>(cacheRefresh, kubernetesWatcher, logger);

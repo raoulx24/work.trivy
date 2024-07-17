@@ -5,7 +5,7 @@ using TrivyOperator.Dashboard.Domain.Trivy.CustomResources.Abstractions;
 
 namespace TrivyOperator.Dashboard.Domain.Trivy.ExposedSecretReport;
 
-public class ExposedSecretReportCR : CustomResource, IKubernetesObject<V1ObjectMeta>
+public class ExposedSecretReportCr : CustomResource, IKubernetesObject<V1ObjectMeta>
 {
     [JsonPropertyName("report")]
     public Report? Report { get; set; }

@@ -1,57 +1,56 @@
-﻿using System.Text.Json.Serialization;
-using TrivyOperator.Dashboard.Domain.Trivy.ClusterRbacAssessmentReport;
+﻿using TrivyOperator.Dashboard.Domain.Trivy.ClusterRbacAssessmentReport;
 
 namespace TrivyOperator.Dashboard.Application.Models;
 
 public class ClusterRbacAssessmentReportDto
 {
-    public Guid Uid { get; set; }
-    public string? ResourceName { get; set; }
-    public long CriticalCount { get; set; }
-    public long HighCount { get; set; }
-    public long MediumCount { get; set; }
-    public long LowCount { get; set; }
-    public ClusterRbacAssessmentReportDetailDto[]? Checks { get; set; }
+    public Guid Uid { get; init; }
+    public string? ResourceName { get; init; }
+    public long CriticalCount { get; init; }
+    public long HighCount { get; init; }
+    public long MediumCount { get; init; }
+    public long LowCount { get; init; }
+    public ClusterRbacAssessmentReportDetailDto[]? Checks { get; init; }
 
 }
 
 public class ClusterRbacAssessmentReportDetailDto
 {
-    public string? Category { get; set; }
-    public string? CheckId { get; set; }
-    public string? Description { get; set; }
-    public string[]? Messages { get; set; }
-    public string? Remediation { get; set; }
-    public string? Severity { get; set; }
-    public bool Success { get; set; }
-    public string? Title { get; set; }
+    public string? Category { get; init; }
+    public string? CheckId { get; init; }
+    public string? Description { get; init; }
+    public string[]? Messages { get; init; }
+    public string? Remediation { get; init; }
+    public string? Severity { get; init; }
+    public bool Success { get; init; }
+    public string? Title { get; init; }
 }
 
 public class ClusterRbacAssessmentReportDenormalizedDto
 {
-    public Guid Uid { get; set; }
-    public string? ResourceName { get; set; }
-    public long CriticalCount { get; set; }
-    public long HighCount { get; set; }
-    public long MediumCount { get; set; }
-    public long LowCount { get; set; }
+    public Guid Uid { get; init; }
+    public string? ResourceName { get; init; }
+    public long CriticalCount { get; init; }
+    public long HighCount { get; init; }
+    public long MediumCount { get; init; }
+    public long LowCount { get; init; }
 
-    public string? Category { get; set; }
-    public string? CheckId { get; set; }
-    public string? Description { get; set; }
-    public string[]? Messages { get; set; }
-    public string? Remediation { get; set; }
-    public string? Severity { get; set; }
-    public bool Success { get; set; }
-    public string? Title { get; set; }
+    public string? Category { get; init; }
+    public string? CheckId { get; init; }
+    public string? Description { get; init; }
+    public string[]? Messages { get; init; }
+    public string? Remediation { get; init; }
+    public string? Severity { get; init; }
+    public bool Success { get; init; }
+    public string? Title { get; init; }
 }
 
-public static class ClusterRbacAssessmentReportCRExtensions
+public static class ClusterRbacAssessmentReportCrExtensions
 {
-    public static ClusterRbacAssessmentReportDto ToClusterRbacAssessmentReportDto(this ClusterRbacAssessmentReportCR clusterRbacAssessmentReportCR)
+    public static ClusterRbacAssessmentReportDto ToClusterRbacAssessmentReportDto(this ClusterRbacAssessmentReportCr clusterRbacAssessmentReportCr)
     {
         List<ClusterRbacAssessmentReportDetailDto> clusterRbacAssessmentReportDetailDtos = new();
-        foreach(Check check in clusterRbacAssessmentReportCR.Report.Checks)
+        foreach(Check check in clusterRbacAssessmentReportCr.Report.Checks)
         {
             ClusterRbacAssessmentReportDetailDto clusterRbacAssessmentReportDetailDto = new()
             {
@@ -68,24 +67,24 @@ public static class ClusterRbacAssessmentReportCRExtensions
         }
         ClusterRbacAssessmentReportDto clusterRbacAssessmentReportDto = new()
         {
-            Uid = new Guid(clusterRbacAssessmentReportCR.Metadata.Uid),
-            ResourceName = clusterRbacAssessmentReportCR.Metadata.Annotations.ContainsKey("trivy-operator.resource.name")
-                ? clusterRbacAssessmentReportCR.Metadata.Annotations["trivy-operator.resource.name"]
+            Uid = new Guid(clusterRbacAssessmentReportCr.Metadata.Uid),
+            ResourceName = clusterRbacAssessmentReportCr.Metadata.Annotations.ContainsKey("trivy-operator.resource.name")
+                ? clusterRbacAssessmentReportCr.Metadata.Annotations["trivy-operator.resource.name"]
                 : string.Empty,
-            CriticalCount = clusterRbacAssessmentReportCR.Report.Summary.CriticalCount,
-            HighCount = clusterRbacAssessmentReportCR.Report.Summary.HighCount,
-            MediumCount = clusterRbacAssessmentReportCR.Report.Summary.MediumCount,
-            LowCount = clusterRbacAssessmentReportCR.Report.Summary.LowCount,
+            CriticalCount = clusterRbacAssessmentReportCr.Report?.Summary?.CriticalCount ?? 0,
+            HighCount = clusterRbacAssessmentReportCr.Report?.Summary?.HighCount ?? 0,
+            MediumCount = clusterRbacAssessmentReportCr.Report?.Summary?.MediumCount ?? 0,
+            LowCount = clusterRbacAssessmentReportCr.Report?.Summary?.LowCount ?? 0,
             Checks = clusterRbacAssessmentReportDetailDtos.ToArray(),
         };
 
         return clusterRbacAssessmentReportDto;
     }
 
-    public static IList<ClusterRbacAssessmentReportDenormalizedDto> ToClusterRbacAssessmentReportDenormalizedDto(this ClusterRbacAssessmentReportCR clusterRbacAssessmentReportCR)
+    public static IList<ClusterRbacAssessmentReportDenormalizedDto> ToClusterRbacAssessmentReportDenormalizedDtos(this ClusterRbacAssessmentReportCr clusterRbacAssessmentReportCr)
     {
         List<ClusterRbacAssessmentReportDenormalizedDto> clusterRbacAssessmentReportDetailDtos = new();
-        foreach (Check check in clusterRbacAssessmentReportCR.Report.Checks)
+        foreach (Check check in clusterRbacAssessmentReportCr.Report.Checks)
         {
             ClusterRbacAssessmentReportDenormalizedDto clusterRbacAssessmentReportDenormalizedDto = new()
             {
@@ -98,14 +97,14 @@ public static class ClusterRbacAssessmentReportCRExtensions
                 Success = check.Success,
                 Title = check.Title,
 
-                Uid = new Guid(clusterRbacAssessmentReportCR.Metadata.Uid),
-                ResourceName = clusterRbacAssessmentReportCR.Metadata.Annotations.ContainsKey("trivy-operator.resource.name")
-                    ? clusterRbacAssessmentReportCR.Metadata.Annotations["trivy-operator.resource.name"]
+                Uid = new Guid(clusterRbacAssessmentReportCr.Metadata.Uid),
+                ResourceName = clusterRbacAssessmentReportCr.Metadata.Annotations.ContainsKey("trivy-operator.resource.name")
+                    ? clusterRbacAssessmentReportCr.Metadata.Annotations["trivy-operator.resource.name"]
                     : string.Empty,
-                CriticalCount = clusterRbacAssessmentReportCR.Report.Summary.CriticalCount,
-                HighCount = clusterRbacAssessmentReportCR.Report.Summary.HighCount,
-                MediumCount = clusterRbacAssessmentReportCR.Report.Summary.MediumCount,
-                LowCount = clusterRbacAssessmentReportCR.Report.Summary.LowCount,
+                CriticalCount = clusterRbacAssessmentReportCr.Report?.Summary?.CriticalCount ?? 0,
+                HighCount = clusterRbacAssessmentReportCr.Report?.Summary?.HighCount ?? 0,
+                MediumCount = clusterRbacAssessmentReportCr.Report?.Summary?.MediumCount ?? 0,
+                LowCount = clusterRbacAssessmentReportCr.Report?.Summary?.LowCount ?? 0,
             };
             clusterRbacAssessmentReportDetailDtos.Add(clusterRbacAssessmentReportDenormalizedDto);
         }

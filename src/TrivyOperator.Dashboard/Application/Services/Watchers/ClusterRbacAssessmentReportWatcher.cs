@@ -12,23 +12,23 @@ namespace TrivyOperator.Dashboard.Application.Services.Watchers;
 
 public class ClusterRbacAssessmentReportWatcher(
     IKubernetesClientFactory kubernetesClientFactory,
-    IBackgroundQueue<ClusterRbacAssessmentReportCR> backgroundQueue,
+    IBackgroundQueue<ClusterRbacAssessmentReportCr> backgroundQueue,
     ILogger<ClusterRbacAssessmentReportWatcher> logger)
-    : ClusterScopedWatcher<CustomResourceList<ClusterRbacAssessmentReportCR>, ClusterRbacAssessmentReportCR,
-        IBackgroundQueue<ClusterRbacAssessmentReportCR>, WatcherEvent<ClusterRbacAssessmentReportCR>>(
+    : ClusterScopedWatcher<CustomResourceList<ClusterRbacAssessmentReportCr>, ClusterRbacAssessmentReportCr,
+        IBackgroundQueue<ClusterRbacAssessmentReportCr>, WatcherEvent<ClusterRbacAssessmentReportCr>>(
         kubernetesClientFactory,
         backgroundQueue,
         logger)
 {
-    protected override async Task<HttpOperationResponse<CustomResourceList<ClusterRbacAssessmentReportCR>>>
+    protected override async Task<HttpOperationResponse<CustomResourceList<ClusterRbacAssessmentReportCr>>>
         GetKubernetesObjectWatchList(
             IKubernetesObject<V1ObjectMeta>? sourceKubernetesObject,
             CancellationToken cancellationToken)
     {
-        ClusterRbacAssessmentReportCRD myCrd = new();
+        ClusterRbacAssessmentReportCrd myCrd = new();
 
         return await KubernetesClient.CustomObjects
-            .ListClusterCustomObjectWithHttpMessagesAsync<CustomResourceList<ClusterRbacAssessmentReportCR>>(
+            .ListClusterCustomObjectWithHttpMessagesAsync<CustomResourceList<ClusterRbacAssessmentReportCr>>(
                 myCrd.Group,
                 myCrd.Version,
                 myCrd.PluralName,

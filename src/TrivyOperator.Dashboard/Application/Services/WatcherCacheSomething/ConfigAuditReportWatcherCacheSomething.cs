@@ -8,10 +8,10 @@ using TrivyOperator.Dashboard.Domain.Trivy.CustomResources.Abstractions;
 
 namespace TrivyOperator.Dashboard.Application.Services.WatcherCacheSomething;
 public class ConfigAuditReportWatcherCacheSomething(
-    ICacheRefresh<ConfigAuditReportCR, IBackgroundQueue<ConfigAuditReportCR>> cacheRefresh,
-    INamespacedWatcher<ConfigAuditReportCR> kubernetesWatcher,
+    ICacheRefresh<ConfigAuditReportCr, IBackgroundQueue<ConfigAuditReportCr>> cacheRefresh,
+    INamespacedWatcher<ConfigAuditReportCr> kubernetesWatcher,
     ILogger<ConfigAuditReportWatcherCacheSomething> logger)
-    : NamespacedWatcherCacheSomething<IBackgroundQueue<ConfigAuditReportCR>,
-        ICacheRefresh<ConfigAuditReportCR, IBackgroundQueue<ConfigAuditReportCR>>,
-        WatcherEvent<ConfigAuditReportCR>, INamespacedWatcher<ConfigAuditReportCR>, ConfigAuditReportCR,
-        CustomResourceList<ConfigAuditReportCR>>(cacheRefresh, kubernetesWatcher, logger);
+    : NamespacedWatcherCacheSomething<IBackgroundQueue<ConfigAuditReportCr>,
+        ICacheRefresh<ConfigAuditReportCr, IBackgroundQueue<ConfigAuditReportCr>>,
+        WatcherEvent<ConfigAuditReportCr>, INamespacedWatcher<ConfigAuditReportCr>, ConfigAuditReportCr,
+        CustomResourceList<ConfigAuditReportCr>>(cacheRefresh, kubernetesWatcher, logger);

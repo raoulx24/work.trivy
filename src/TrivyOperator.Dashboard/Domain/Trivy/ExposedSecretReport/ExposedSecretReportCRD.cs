@@ -2,7 +2,7 @@
 
 namespace TrivyOperator.Dashboard.Domain.Trivy.ExposedSecretReport;
 
-public class ExposedSecretReportCRD : CustomResourceDefinition
+public class ExposedSecretReportCrd : CustomResourceDefinition
 {
     public override string Version { get; } = "v1alpha1";
     public override string Group { get; } = "aquasecurity.github.io";

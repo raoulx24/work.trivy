@@ -12,23 +12,23 @@ namespace TrivyOperator.Dashboard.Application.Services.Watchers;
 
 public class ExposedSecretReportWatcher(
     IKubernetesClientFactory kubernetesClientFactory,
-    IBackgroundQueue<ExposedSecretReportCR> backgroundQueue,
+    IBackgroundQueue<ExposedSecretReportCr> backgroundQueue,
     ILogger<ExposedSecretReportWatcher> logger)
-    : NamespacedWatcher<CustomResourceList<ExposedSecretReportCR>, ExposedSecretReportCR,
-        IBackgroundQueue<ExposedSecretReportCR>, WatcherEvent<ExposedSecretReportCR>>(
+    : NamespacedWatcher<CustomResourceList<ExposedSecretReportCr>, ExposedSecretReportCr,
+        IBackgroundQueue<ExposedSecretReportCr>, WatcherEvent<ExposedSecretReportCr>>(
         kubernetesClientFactory,
         backgroundQueue,
         logger)
 {
-    protected override async Task<HttpOperationResponse<CustomResourceList<ExposedSecretReportCR>>>
+    protected override async Task<HttpOperationResponse<CustomResourceList<ExposedSecretReportCr>>>
         GetKubernetesObjectWatchList(
             IKubernetesObject<V1ObjectMeta>? sourceKubernetesObject,
             CancellationToken cancellationToken)
     {
-        ExposedSecretReportCRD myCrd = new();
+        ExposedSecretReportCrd myCrd = new();
 
         return await KubernetesClient.CustomObjects
-            .ListNamespacedCustomObjectWithHttpMessagesAsync<CustomResourceList<ExposedSecretReportCR>>(
+            .ListNamespacedCustomObjectWithHttpMessagesAsync<CustomResourceList<ExposedSecretReportCr>>(
                 myCrd.Group,
                 myCrd.Version,
                 GetNamespaceFromSourceEvent(sourceKubernetesObject),
