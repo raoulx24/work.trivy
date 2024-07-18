@@ -1,3 +1,0 @@
-﻿namespace TrivyOperator.Dashboard.Application.Services.WatcherCacheSomething.Abstractions;
-
-public interface IClusterScopedWatcherCacheSomething : IWatcherCacheSomething;

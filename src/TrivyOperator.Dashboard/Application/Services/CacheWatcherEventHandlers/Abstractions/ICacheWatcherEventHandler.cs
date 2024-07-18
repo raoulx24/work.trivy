@@ -1,11 +1,11 @@
 ﻿using k8s;
 using k8s.Models;
 
-namespace TrivyOperator.Dashboard.Application.Services.WatcherCacheSomething.Abstractions;
+namespace TrivyOperator.Dashboard.Application.Services.CacheWatcherEventHandlers.Abstractions;
 
-public interface IWatcherCacheSomething
+public interface ICacheWatcherEventHandler
 {
-    void StartSomething(
+    void Start(
         CancellationToken cancellationToken,
         IKubernetesObject<V1ObjectMeta>? sourceKubernetesObject = null);
 }

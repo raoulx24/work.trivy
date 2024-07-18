@@ -1,7 +1,7 @@
 ﻿using k8s.Models;
 using TrivyOperator.Dashboard.Application.Services.BackgroundQueues.Abstractions;
 using TrivyOperator.Dashboard.Application.Services.CacheRefresh.Abstractions;
-using TrivyOperator.Dashboard.Application.Services.WatcherCacheSomething.Abstractions;
+using TrivyOperator.Dashboard.Application.Services.CacheWatcherEventHandlers.Abstractions;
 using TrivyOperator.Dashboard.Application.Services.WatcherEvents.Abstractions;
 using TrivyOperator.Dashboard.Infrastructure.Abstractions;
 
@@ -21,20 +21,20 @@ public class NamespaceCacheRefresh(
         CancellationToken cancellationToken)
     {
         base.ProcessAddEvent(watcherEvent, cancellationToken);
-        foreach (INamespacedWatcherCacheSomething knwcs in
-                 ServiceProvider.GetServices<INamespacedWatcherCacheSomething>())
+        foreach (INamespacedCacheWatcherEventHandler knwcs in
+                 ServiceProvider.GetServices<INamespacedCacheWatcherEventHandler>())
         {
-            knwcs.StartSomething(cancellationToken, watcherEvent.KubernetesObject);
+            knwcs.Start(cancellationToken, watcherEvent.KubernetesObject);
         }
     }
 
     protected override void ProcessDeleteEvent(IWatcherEvent<V1Namespace> watcherEvent)
     {
         base.ProcessDeleteEvent(watcherEvent);
-        foreach (INamespacedWatcherCacheSomething knwcs in
-                 ServiceProvider.GetServices<INamespacedWatcherCacheSomething>())
+        foreach (INamespacedCacheWatcherEventHandler knwcs in
+                 ServiceProvider.GetServices<INamespacedCacheWatcherEventHandler>())
         {
-            knwcs.StopSomething(watcherEvent.KubernetesObject);
+            knwcs.Stop(watcherEvent.KubernetesObject);
         }
     }
 }
