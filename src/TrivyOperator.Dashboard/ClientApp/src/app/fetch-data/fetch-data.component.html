@@ -1,4 +1,4 @@
-<h1 id="tableLabel">Vulnerabilities</h1>
+<h1 id="tableLabel">Vulnerabilities New <span class="badge text-bg-secondary">New</span></h1>
 
 <p *ngIf="!vulnerabilities"><em>Loading...</em></p>
 
@@ -15,5 +15,5 @@
 </ag-grid-angular>
 
 <div style="margin: 10px 0;">
-  <p-button (click)="onBtnExport()">Download CSV export file</p-button>
+  <button type="button" class="btn btn-primary" (click)="onBtnExport()">Download CSV export file</button>
 </div>
