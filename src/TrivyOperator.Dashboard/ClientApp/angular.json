@@ -30,20 +30,8 @@
               "src/assets"
             ],
             "styles": [
-              "./node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
-              "./node_modules/bootstrap/dist/css/bootstrap.min.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "src/styles.css",
-              {
-                "input": "src/primeng-dark.css",
-                "bundleName": "primeng-dark",
-                "inject": false
-              },
-              {
-                "input": "src/primeng-light.css",
-                "bundleName": "primeng-light",
-                "inject": false
-              }
+              "src/styles.css"
             ],
             "scripts": [
               "node_modules/bootstrap/dist/js/bootstrap.min.js"

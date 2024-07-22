@@ -11,7 +11,6 @@ import {FetchDataComponent} from './fetch-data/fetch-data.component';
 import {AgGridModule} from "ag-grid-angular";
 import {ApiModule} from "../api/api.module";
 import {environment} from "../environments/environment";
-import {Button} from "primeng/button";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
@@ -31,7 +30,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     ]),
     AgGridModule,
     ApiModule.forRoot({rootUrl: environment.baseUrl}),
-    Button,
     BrowserAnimationsModule
   ],
   providers: [],
