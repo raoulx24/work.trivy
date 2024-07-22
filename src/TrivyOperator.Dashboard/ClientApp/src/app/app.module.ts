@@ -12,6 +12,7 @@ import {AgGridModule} from "ag-grid-angular";
 import {ApiModule} from "../api/api.module";
 import {environment} from "../environments/environment";
 import {Button} from "primeng/button";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import {Button} from "primeng/button";
     ]),
     AgGridModule,
     ApiModule.forRoot({rootUrl: environment.baseUrl}),
-    Button
+    Button,
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
