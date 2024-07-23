@@ -15,3 +15,11 @@ ncu
 ncu -u
 npm install
 ```
+
+### New Components
+
+```sh
+ng g component fetch-data-new --skip-tests --style=scss
+ng g class
+ng g service
+```
