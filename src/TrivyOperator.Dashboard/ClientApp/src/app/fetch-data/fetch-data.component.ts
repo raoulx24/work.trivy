@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {ColDef, CsvExportParams, GridApi, GridReadyEvent, ValueGetterParams,} from "ag-grid-community";
 import {VulnerabilityReportsService} from "../../api/services/vulnerability-reports.service";
-import {VulnerabilityDto} from "../../api/models/vulnerability-dto";
+import {VulnerabilityReportDenormalizedDto} from "../../api/models/vulnerability-report-denormalized-dto";
 import {VulnerabilitySeverityRenderer} from "./vulnerability-severity-renderer.component";
 
 @Component({
@@ -12,10 +12,10 @@ import {VulnerabilitySeverityRenderer} from "./vulnerability-severity-renderer.c
 
 export class FetchDataComponent {
   public rowSelection: "single" | "multiple" = "multiple";
-  public vulnerabilities?: VulnerabilityDto[] | null | undefined;
+  public vulnerabilities?: VulnerabilityReportDenormalizedDto[] | null | undefined;
   public columnDefs: ColDef[] = [
-    {headerName: 'Namespace', field: "namespace", filter: true, flex: 3},
-    {headerName: 'Container', field: "containerName", filter: true, flex: 3},
+    { headerName: 'Namespace', field: "resourceNamespace", filter: true, flex: 3},
+    { headerName: 'Container', field: "resourceContainerName", filter: true, flex: 3},
     {
       headerName: 'Image Name and Tag', field: "imageName", filter: true, flex: 9,
       valueGetter: (params: ValueGetterParams) =>
@@ -26,7 +26,7 @@ export class FetchDataComponent {
       field: "severity",
       filter: true,
       flex: 1,
-      minWidth: 60,
+      minWidth: 80,
       cellRenderer: VulnerabilitySeverityRenderer
     },
     {headerName: 'Title', field: "title", filter: true, flex: 15, wrapText: true, autoHeight: true},
@@ -43,7 +43,7 @@ export class FetchDataComponent {
   private gridApi!: GridApi;
 
   constructor(vulnerabilityReportsService: VulnerabilityReportsService) {
-    vulnerabilityReportsService.getAll$Json().subscribe(result => this.vulnerabilities = result, error => console.error(error))
+    vulnerabilityReportsService.getVulnerabilityReportDenormalizedDto$Json().subscribe(result => this.vulnerabilities = result, error => console.error(error))
   }
 
   onBtnExport() {
