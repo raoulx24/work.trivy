@@ -43,7 +43,7 @@ export class FetchDataComponent {
   private gridApi!: GridApi;
 
   constructor(vulnerabilityReportsService: VulnerabilityReportsService) {
-    vulnerabilityReportsService.getVulnerabilityReportDenormalizedDto$Json().subscribe(result => this.vulnerabilities = result, error => console.error(error))
+    vulnerabilityReportsService.getVulnerabilityReportDenormalizedDto().subscribe(result => this.vulnerabilities = result, error => console.error(error))
   }
 
   onBtnExport() {
