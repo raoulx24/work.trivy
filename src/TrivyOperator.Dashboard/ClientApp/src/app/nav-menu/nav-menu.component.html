@@ -1,39 +1,45 @@
-<header>
-  <nav
-    class="navbar navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3"
-  >
-    <div class="container">
-      <a [routerLink]="['/']" class="navbar-brand">TrivyOperator.Dashboard</a>
-      <button
-        (click)="toggle()"
-        [attr.aria-expanded]="isExpanded"
-        aria-label="Toggle navigation"
-        class="navbar-toggler"
-        data-target=".navbar-collapse"
-        data-toggle="collapse"
-        type="button"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div
-        [ngClass]="{ show: isExpanded }"
-        class="navbar-collapse collapse d-sm-inline-flex justify-content-end"
-      >
-        <ul class="navbar-nav flex-grow">
-          <li
-            [routerLinkActiveOptions]="{ exact: true }"
-            [routerLinkActive]="['link-active']"
-            class="nav-item"
-          >
-            <a [routerLink]="['/']" class="nav-link ">Home</a>
-          </li>
-          <li [routerLinkActive]="['link-active']" class="nav-item">
-            <a [routerLink]="['/fetch-data']" class="nav-link"
-            >Vulnerabilities</a
-            >
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-</header>
+<nav class="navbar navbar-expand-sm navbar-toggleable-sm sticky-top ">
+  <a class="navbar-brand" href="#">
+    <img src="https://cdn.icon-icons.com/icons2/2699/PNG/96/aquasec_logo_icon_170524.png" width="25" height="25" class="d-inline-block align-top" alt="">
+    <span class=""> Trivy Dashboard</span>
+  </a>
+  <button (click)="toggle()"
+          [attr.aria-expanded]="isExpanded"
+          aria-label="Toggle navigation"
+          class="navbar-toggler"
+          data-target=".navbar-collapse"
+          data-toggle="collapse"
+          type="button">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div [ngClass]="{ show: isExpanded }" class="navbar-collapse collapse d-sm-inline-flex justify-content-end">
+    <ul class="nav navbar-nav justify-content-end w-100">
+      <li [routerLinkActiveOptions]="{ exact: true }"
+          [routerLinkActive]="['link-active']"
+          class="nav-item">
+        <a [routerLink]="['/']" class="nav-link ">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16">
+            <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z" />
+          </svg> Home
+        </a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" data-toggle="dropdown" 
+           role="button" aria-haspopup="true" data-bs-toggle="dropdown" aria-expanded="true">Vulnerability Reports</a>
+        <div class="dropdown-menu">
+          <a [routerLink]="['/vulnerability-reports']" class="dropdown-item">Overview</a>
+          <a [routerLink]="['/vulnerability-reports-detailed']" class="dropdown-item">Detailed</a>
+        </div>
+      </li>
+      <li class="nav-item float-lg-right">
+        <button type="button" class="btn btn-primary btn-sm position-relative">
+          Messages
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+            99+
+            <span class="visually-hidden">unread messages</span>
+          </span>
+        </button>
+      </li>
+    </ul>
+  </div>
+</nav>

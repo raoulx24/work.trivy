@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-nav-menu',
+  selector: 'app-side-menu',
   //standalone: true,
-  templateUrl: './nav-menu.component.html',
-  styleUrls: ['./nav-menu.component.css']
+  templateUrl: './side-menu.component.html',
+  styleUrl: './side-menu.component.scss'
 })
-export class NavMenuComponent {
+export class SideMenuComponent {
   isExpanded = false;
 
   collapse() {
