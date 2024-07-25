@@ -32,13 +32,15 @@
         </div>
       </li>
       <li class="nav-item float-lg-right">
-        <button type="button" class="btn btn-primary btn-sm position-relative">
-          Messages
-          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-            99+
+        <a [routerLink]="['/alerts']" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell-fill" viewBox="0 0 16 16">
+            <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2m.995-14.901a1 1 0 1 0-1.99 0A5 5 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901" />
+          </svg>
+          <span class="badge rounded-pill bg-danger">
+            8
             <span class="visually-hidden">unread messages</span>
           </span>
-        </button>
+        </a>
       </li>
     </ul>
   </div>
