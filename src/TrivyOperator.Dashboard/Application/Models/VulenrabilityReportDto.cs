@@ -66,6 +66,23 @@ public class VulnerabilityReportDenormalizedDto
     public string? VulnerabilityId { get; set; }
 }
 
+public class VulnerabilityReportSummaryDto
+{
+    public string? NamespaceName { get; init; }
+    public long TotalCriticalCount { get; init; }
+    public long TotalHighCount { get; init; }
+    public long TotalMediumCount { get; init; }
+    public long TotalLowCount { get; init; }
+    public long TotalUnknownCount { get; init; }
+    public List<long>? Values
+    {
+        get
+        {
+            return [TotalCriticalCount, TotalHighCount, TotalMediumCount, TotalLowCount, TotalUnknownCount];
+        }
+    }
+}
+
 public static class VulenrabilityReportCrExtensions
 {
     public static VulnerabilityReportDto ToVulnerabilityReportDto(this VulnerabilityReportCr vulnerabilityReportCR)
