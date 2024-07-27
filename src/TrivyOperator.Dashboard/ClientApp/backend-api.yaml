@@ -167,6 +167,32 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
+  /api/vulnerability-reports/summary-by-namespace:
+    get:
+      tags:
+        - VulnerabilityReports
+      operationId: GetVulnerabilityReportSummaryDtos
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VulnerabilityReportSummaryDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
 components:
   schemas:
     ProblemDetails:
@@ -357,4 +383,33 @@ components:
           items:
             $ref: '#/components/schemas/VulnerabilityReportDetailDto'
           nullable: true
+      additionalProperties: false
+    VulnerabilityReportSummaryDto:
+      type: object
+      properties:
+        namespaceName:
+          type: string
+          nullable: true
+        totalCriticalCount:
+          type: integer
+          format: int64
+        totalHighCount:
+          type: integer
+          format: int64
+        totalMediumCount:
+          type: integer
+          format: int64
+        totalLowCount:
+          type: integer
+          format: int64
+        totalUnknownCount:
+          type: integer
+          format: int64
+        values:
+          type: array
+          items:
+            type: integer
+            format: int64
+          nullable: true
+          readOnly: true
       additionalProperties: false
