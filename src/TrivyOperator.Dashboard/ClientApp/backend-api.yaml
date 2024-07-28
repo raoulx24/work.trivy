@@ -385,6 +385,8 @@ components:
           nullable: true
       additionalProperties: false
     VulnerabilityReportSummaryDto:
+      required:
+        - values
       type: object
       properties:
         namespaceName:
@@ -410,6 +412,5 @@ components:
           items:
             type: integer
             format: int64
-          nullable: true
           readOnly: true
       additionalProperties: false

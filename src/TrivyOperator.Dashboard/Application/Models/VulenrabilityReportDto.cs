@@ -1,4 +1,5 @@
-﻿using TrivyOperator.Dashboard.Domain.Trivy.VulnerabilityReport;
+﻿using System.ComponentModel.DataAnnotations;
+using TrivyOperator.Dashboard.Domain.Trivy.VulnerabilityReport;
 
 namespace TrivyOperator.Dashboard.Application.Models;
 
@@ -74,7 +75,8 @@ public class VulnerabilityReportSummaryDto
     public long TotalMediumCount { get; init; }
     public long TotalLowCount { get; init; }
     public long TotalUnknownCount { get; init; }
-    public List<long>? Values
+    [Required]
+    public List<long> Values
     {
         get
         {

@@ -11,10 +11,14 @@ import { HomeComponent } from './home/home.component';
 import { VulnerabilityReportsComponent } from './vulnerability-reports/vulnerability-reports.component';
 import { VulnerabilityReportsDetailedComponent } from './vulnerability-reports-detailed/vulnerability-reports-detailed.component';
 import { AlertsComponent } from './alerts/alerts.component';
+
+
 import { AgGridModule } from "ag-grid-angular";
 import { ApiModule } from "../api/api.module";
+import { NgApexchartsModule } from "ng-apexcharts";
 import { environment } from "../environments/environment";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 
 @NgModule({
   declarations: [
@@ -38,7 +42,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     ]),
     AgGridModule,
     ApiModule.forRoot({rootUrl: environment.baseUrl}),
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    NgApexchartsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
