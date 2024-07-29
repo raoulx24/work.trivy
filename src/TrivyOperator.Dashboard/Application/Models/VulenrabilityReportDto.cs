@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks.Dataflow;
 using TrivyOperator.Dashboard.Domain.Trivy.VulnerabilityReport;
 
 namespace TrivyOperator.Dashboard.Application.Models;
@@ -10,6 +11,23 @@ public class VulnerabilityReportDto
     public string? ResourceNamespace { get; init; }
     public string? ResourceKind { get; init; }
     public string? ResourceContainerName { get; init; }
+    public string? ImageName { get; init; }
+    public string? ImageTag { get; init; }
+    public string? ImageRepository { get; init; }
+    public string? ImageOsFamily { get; init; }
+    public string? ImageOsName { get; init; }
+    public long CriticalCount { get; init; }
+    public long HighCount { get; init; }
+    public long MediumCount { get; init; }
+    public long LowCount { get; init; }
+    public VulnerabilityReportDetailDto[]? Vulnerabilities { get; init; }
+}
+
+public class VulnerabilityReportImageDto
+{
+    public Guid Uid { get; init; }
+    public List<string>? ResourceNames { get; init; }
+    public string? ResourceNamespace { get; init; }
     public string? ImageName { get; init; }
     public string? ImageTag { get; init; }
     public string? ImageRepository { get; init; }
@@ -138,10 +156,54 @@ public static class VulenrabilityReportCrExtensions
         return vulnerabilityReportDto;
     }
 
+    public static VulnerabilityReportImageDto ToVulnerabilityReportImageDto(this IGrouping<string?, VulnerabilityReportCr> groupedVulnerabilityReportCR)
+    {
+        VulnerabilityReportCr? latestVulnerabilityReportCr = groupedVulnerabilityReportCR?.OrderByDescending(x => x.Report?.UpdateTimestamp).FirstOrDefault();
+        List<VulnerabilityReportDetailDto> vulnerabilityReportDetailDtos = new();
+        foreach (Vulnerability? vulnerability in latestVulnerabilityReportCr?.Report?.Vulnerabilities)
+        {
+            VulnerabilityReportDetailDto vulnerabilityReportDetailDto = new()
+            {
+                FixedVersion = vulnerability.FixedVersion,
+                InstalledVersion = vulnerability.InstalledVersion,
+                LastModifiedDate = vulnerability.LastModifiedDate,
+                PrimaryLink = vulnerability.PrimaryLink,
+                PublishedDate = vulnerability.PublishedDate,
+                Resource = vulnerability.Resource,
+                Score = vulnerability.Score,
+                Severity = vulnerability.Severity,
+                Target = vulnerability.Target,
+                Title = vulnerability.Title,
+                VulnerabilityId = vulnerability.VulnerabilityId,
+            };
+            vulnerabilityReportDetailDtos.Add(vulnerabilityReportDetailDto);
+        }
+        VulnerabilityReportImageDto vulnerabilityReportImageDto = new()
+        {
+            Uid = new Guid(latestVulnerabilityReportCr.Metadata.Uid),
+            ResourceNames = groupedVulnerabilityReportCR?.Select(x => x.Metadata.Labels["trivy-operator.resource.name"]).ToList(),
+            ResourceNamespace = latestVulnerabilityReportCr.Metadata.Labels.ContainsKey("trivy-operator.resource.namespace")
+                ? latestVulnerabilityReportCr.Metadata.Labels["trivy-operator.resource.namespace"]
+                : string.Empty,
+            ImageName = latestVulnerabilityReportCr.Report?.Artifact?.Repository,
+            ImageTag = latestVulnerabilityReportCr.Report?.Artifact?.Tag,
+            ImageRepository = latestVulnerabilityReportCr.Report?.Registry?.Server,
+            ImageOsFamily = latestVulnerabilityReportCr.Report?.Os?.Family,
+            ImageOsName = latestVulnerabilityReportCr.Report?.Os?.Name,
+            CriticalCount = latestVulnerabilityReportCr.Report?.Summary?.CriticalCount ?? 0,
+            HighCount = latestVulnerabilityReportCr.Report?.Summary?.HighCount ?? 0,
+            MediumCount = latestVulnerabilityReportCr.Report?.Summary?.MediumCount ?? 0,
+            LowCount = latestVulnerabilityReportCr.Report?.Summary?.LowCount ?? 0,
+            Vulnerabilities = [.. vulnerabilityReportDetailDtos],
+        };
+
+        return vulnerabilityReportImageDto;
+    }
+
     public static IList<VulnerabilityReportDenormalizedDto> ToVulnerabilityReportDenormalizedDtos(this VulnerabilityReportCr vulnerabilityReportCR)
     {
         List<VulnerabilityReportDenormalizedDto> vulnerabilityReportDenormalizedDtos = [];
-        foreach (Vulnerability vulnerability in vulnerabilityReportCR.Report.Vulnerabilities)
+        foreach (Vulnerability? vulnerability in vulnerabilityReportCR?.Report?.Vulnerabilities)
         {
             VulnerabilityReportDenormalizedDto vulnerabilityReportDenormalizedDto = new()
             {
