@@ -198,6 +198,15 @@ paths:
       tags:
         - VulnerabilityReports
       operationId: GetVulnerabilityReportImageDtos
+      parameters:
+        - name: namespaceName
+          in: query
+          schema:
+            type: string
+        - name: excludedSeverities
+          in: query
+          schema:
+            type: string
       responses:
         '200':
           description: OK
@@ -284,6 +293,9 @@ components:
           type: integer
           format: int64
         lowCount:
+          type: integer
+          format: int64
+        unknownCount:
           type: integer
           format: int64
         fixedVersion:
@@ -404,6 +416,9 @@ components:
         lowCount:
           type: integer
           format: int64
+        unknownCount:
+          type: integer
+          format: int64
         vulnerabilities:
           type: array
           items:
@@ -451,6 +466,9 @@ components:
         lowCount:
           type: integer
           format: int64
+        unknownCount:
+          type: integer
+          format: int64
         vulnerabilities:
           type: array
           items:
@@ -462,6 +480,9 @@ components:
         - values
       type: object
       properties:
+        uid:
+          type: string
+          format: uuid
         namespaceName:
           type: string
           nullable: true

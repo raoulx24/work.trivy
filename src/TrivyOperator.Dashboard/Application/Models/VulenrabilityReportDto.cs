@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks.Dataflow;
 using TrivyOperator.Dashboard.Domain.Trivy.VulnerabilityReport;
 
 namespace TrivyOperator.Dashboard.Application.Models;
@@ -20,6 +19,7 @@ public class VulnerabilityReportDto
     public long HighCount { get; init; }
     public long MediumCount { get; init; }
     public long LowCount { get; init; }
+    public long UnknownCount { get; init; }
     public VulnerabilityReportDetailDto[]? Vulnerabilities { get; init; }
 }
 
@@ -37,6 +37,7 @@ public class VulnerabilityReportImageDto
     public long HighCount { get; init; }
     public long MediumCount { get; init; }
     public long LowCount { get; init; }
+    public long UnknownCount { get; init; }
     public VulnerabilityReportDetailDto[]? Vulnerabilities { get; init; }
 }
 
@@ -71,6 +72,7 @@ public class VulnerabilityReportDenormalizedDto
     public long HighCount { get; init; }
     public long MediumCount { get; init; }
     public long LowCount { get; init; }
+    public long UnknownCount { get; init; }
 
     public string? FixedVersion { get; init; }
     public string? InstalledVersion { get; init; }
@@ -87,6 +89,7 @@ public class VulnerabilityReportDenormalizedDto
 
 public class VulnerabilityReportSummaryDto
 {
+    public Guid Uid { get; init; }
     public string? NamespaceName { get; init; }
     public long TotalCriticalCount { get; init; }
     public long TotalHighCount { get; init; }
@@ -150,33 +153,39 @@ public static class VulenrabilityReportCrExtensions
             HighCount = vulnerabilityReportCR.Report?.Summary?.HighCount ?? 0,
             MediumCount = vulnerabilityReportCR.Report?.Summary?.MediumCount ?? 0,
             LowCount = vulnerabilityReportCR.Report?.Summary?.LowCount ?? 0,
+            UnknownCount = vulnerabilityReportCR.Report?.Summary?.UnknownCount ?? 0,
             Vulnerabilities = [.. vulenrabilityReportDetailDtos],
         };
 
         return vulnerabilityReportDto;
     }
 
-    public static VulnerabilityReportImageDto ToVulnerabilityReportImageDto(this IGrouping<string?, VulnerabilityReportCr> groupedVulnerabilityReportCR)
+    public static VulnerabilityReportImageDto ToVulnerabilityReportImageDto(
+        this IGrouping<string?, VulnerabilityReportCr> groupedVulnerabilityReportCR, IEnumerable<string>? excludedSeverities = null)
     {
+        excludedSeverities = excludedSeverities ?? [];
         VulnerabilityReportCr? latestVulnerabilityReportCr = groupedVulnerabilityReportCR?.OrderByDescending(x => x.Report?.UpdateTimestamp).FirstOrDefault();
         List<VulnerabilityReportDetailDto> vulnerabilityReportDetailDtos = new();
         foreach (Vulnerability? vulnerability in latestVulnerabilityReportCr?.Report?.Vulnerabilities)
         {
-            VulnerabilityReportDetailDto vulnerabilityReportDetailDto = new()
+            if (!string.IsNullOrWhiteSpace(vulnerability.Severity) && !excludedSeverities.Contains(vulnerability.Severity))
             {
-                FixedVersion = vulnerability.FixedVersion,
-                InstalledVersion = vulnerability.InstalledVersion,
-                LastModifiedDate = vulnerability.LastModifiedDate,
-                PrimaryLink = vulnerability.PrimaryLink,
-                PublishedDate = vulnerability.PublishedDate,
-                Resource = vulnerability.Resource,
-                Score = vulnerability.Score,
-                Severity = vulnerability.Severity,
-                Target = vulnerability.Target,
-                Title = vulnerability.Title,
-                VulnerabilityId = vulnerability.VulnerabilityId,
-            };
-            vulnerabilityReportDetailDtos.Add(vulnerabilityReportDetailDto);
+                VulnerabilityReportDetailDto vulnerabilityReportDetailDto = new()
+                {
+                    FixedVersion = vulnerability.FixedVersion,
+                    InstalledVersion = vulnerability.InstalledVersion,
+                    LastModifiedDate = vulnerability.LastModifiedDate,
+                    PrimaryLink = vulnerability.PrimaryLink,
+                    PublishedDate = vulnerability.PublishedDate,
+                    Resource = vulnerability.Resource,
+                    Score = vulnerability.Score,
+                    Severity = vulnerability.Severity,
+                    Target = vulnerability.Target,
+                    Title = vulnerability.Title,
+                    VulnerabilityId = vulnerability.VulnerabilityId,
+                };
+                vulnerabilityReportDetailDtos.Add(vulnerabilityReportDetailDto);
+            }
         }
         VulnerabilityReportImageDto vulnerabilityReportImageDto = new()
         {
@@ -194,6 +203,7 @@ public static class VulenrabilityReportCrExtensions
             HighCount = latestVulnerabilityReportCr.Report?.Summary?.HighCount ?? 0,
             MediumCount = latestVulnerabilityReportCr.Report?.Summary?.MediumCount ?? 0,
             LowCount = latestVulnerabilityReportCr.Report?.Summary?.LowCount ?? 0,
+            UnknownCount = latestVulnerabilityReportCr.Report?.Summary?.UnknownCount ?? 0,
             Vulnerabilities = [.. vulnerabilityReportDetailDtos],
         };
 
@@ -241,6 +251,7 @@ public static class VulenrabilityReportCrExtensions
                 HighCount = vulnerabilityReportCR.Report?.Summary?.HighCount ?? 0,
                 MediumCount = vulnerabilityReportCR.Report?.Summary?.MediumCount ?? 0,
                 LowCount = vulnerabilityReportCR.Report?.Summary?.LowCount ?? 0,
+                UnknownCount = vulnerabilityReportCR.Report?.Summary?.UnknownCount ?? 0,
             };
             vulnerabilityReportDenormalizedDtos.Add(vulnerabilityReportDenormalizedDto);
         }
