@@ -190,7 +190,7 @@ public static class VulenrabilityReportCrExtensions
         VulnerabilityReportImageDto vulnerabilityReportImageDto = new()
         {
             Uid = new Guid(latestVulnerabilityReportCr.Metadata.Uid),
-            ResourceNames = groupedVulnerabilityReportCR?.Select(x => x.Metadata.Labels["trivy-operator.resource.name"]).ToList(),
+            ResourceNames = groupedVulnerabilityReportCR?.Select(x => x.Metadata.Labels["trivy-operator.resource.name"]).OrderBy(x => x).ToList(),
             ResourceNamespace = latestVulnerabilityReportCr.Metadata.Labels.ContainsKey("trivy-operator.resource.namespace")
                 ? latestVulnerabilityReportCr.Metadata.Labels["trivy-operator.resource.namespace"]
                 : string.Empty,
