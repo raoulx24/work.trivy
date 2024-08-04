@@ -24,12 +24,22 @@
         </a>
       </li>
       <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" data-toggle="dropdown" 
+        <a class="nav-link dropdown-toggle" data-toggle="dropdown"
            role="button" aria-haspopup="true" data-bs-toggle="dropdown" aria-expanded="true">Vulnerability Reports</a>
         <div class="dropdown-menu">
           <a [routerLink]="['/vulnerability-reports']" class="dropdown-item">Overview</a>
           <a [routerLink]="['/vulnerability-reports-detailed']" class="dropdown-item">Detailed</a>
         </div>
+      </li>
+      <li class="nav-item">
+        <a [routerLink]="['/vulnerability-reports']" class="nav-link">
+          VR1
+        </a>
+      </li>
+      <li class="nav-item">
+        <a [routerLink]="['/vulnerability-reports-detailed']" class="nav-link">
+          VR2
+        </a>
       </li>
       <li class="nav-item float-lg-right">
         <a [routerLink]="['/alerts']" class="nav-link">

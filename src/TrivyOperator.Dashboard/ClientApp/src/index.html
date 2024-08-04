@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html data-bs-theme="auto" lang="en">
 <head>
-  <meta charset="utf-8"/>
+  <meta charset="utf-8" />
   <title>TrivyOperator.Dashboard</title>
-  <base href="/"/>
-  <meta content="width=device-width, initial-scale=1" name="viewport"/>
-  <link href="favicon.ico" rel="icon" type="image/x-icon"/>
+  <base href="/" />
+  <meta content="width=device-width, initial-scale=1" name="viewport" />
+  <link href="favicon.ico" rel="icon" type="image/x-icon" />
+  <link href="primeng-light.css" id="primeng-theme" rel="stylesheet" type="text/css" />
 </head>
 <body>
 <app-root>Loading...</app-root>
@@ -16,6 +17,8 @@
       function updateTheme() {
         const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
         document.querySelector("html").setAttribute("data-bs-theme", isDarkMode ? "dark" : "light");
+        const primengThemeLink = document.getElementById("primeng-theme");
+        primengThemeLink.href = isDarkMode ? "primeng-dark.css" : "primeng-light.css";
       }
 
       window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", updateTheme);

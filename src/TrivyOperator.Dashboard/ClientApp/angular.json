@@ -31,11 +31,21 @@
             ],
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "src/styles.css",
+              {
+                "input": "src/primeng-dark.css",
+                "bundleName": "primeng-dark",
+                "inject": false
+              },
+              {
+                "input": "src/primeng-light.css",
+                "bundleName": "primeng-light",
+                "inject": false
+              },
               "src/styles.css"
             ],
             "scripts": [
               "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
-              "node_modules/apexcharts/dist/apexcharts.min.js"
             ]
           },
           "configurations": {

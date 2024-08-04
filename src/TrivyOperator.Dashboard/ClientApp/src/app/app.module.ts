@@ -12,13 +12,14 @@ import { VulnerabilityReportsComponent } from './vulnerability-reports/vulnerabi
 import { VulnerabilityReportsDetailedComponent } from './vulnerability-reports-detailed/vulnerability-reports-detailed.component';
 import { AlertsComponent } from './alerts/alerts.component';
 
-
 import { AgGridModule } from "ag-grid-angular";
 import { ApiModule } from "../api/api.module";
-import { NgApexchartsModule } from "ng-apexcharts";
 import { environment } from "../environments/environment";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import { AccordionModule } from 'primeng/accordion';
+import { ChartModule } from 'primeng/chart';
+import { TableModule } from 'primeng/table';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     AgGridModule,
     ApiModule.forRoot({rootUrl: environment.baseUrl}),
     BrowserAnimationsModule,
-    NgApexchartsModule
+    AccordionModule,
+    ChartModule,
+    TableModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
