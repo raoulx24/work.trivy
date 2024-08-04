@@ -20,6 +20,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AccordionModule } from 'primeng/accordion';
 import { ChartModule } from 'primeng/chart';
 import { TableModule } from 'primeng/table';
+import { TagModule } from 'primeng/tag';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import { TableModule } from 'primeng/table';
     AccordionModule,
     ChartModule,
     TableModule,
+    TagModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

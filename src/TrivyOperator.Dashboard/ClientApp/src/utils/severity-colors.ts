@@ -10,55 +10,57 @@ export type PrimeNgChartData = {
   title: string;
 }
 
-export class ServerityColors {
-  public static Test(severityName: string): string {
+export class Severity {
+  public static GetCssColor(severityName: string): string {
     const documentStyle = getComputedStyle(document.documentElement);
-    let cssStyle: string = '';
+    const color: string = '--' + this.GetColor(severityName) + '-' + (this.ColorIntensity() + 100);
 
-    switch (severityName) {
-      case "CRITICAL":
-        cssStyle = documentStyle.getPropertyValue('--red-500');
-        break;
-      case "HIGH":
-        cssStyle = documentStyle.getPropertyValue('--orange-500');
-        break;
-      case "MEDIUM":
-        cssStyle = documentStyle.getPropertyValue('--yellow-500');
-        break;
-      case "LOW":
-        cssStyle = documentStyle.getPropertyValue('--cyan-500');
-        break;
-      case "UNKNOWN":
-        cssStyle = documentStyle.getPropertyValue('--blue-500');
-        break;
-    }
-
-    return cssStyle;
+    return documentStyle.getPropertyValue(color);
   }
 
-  public static TestHover(severityName: string): string {
+  public static GetCssColorHover(severityName: string): string {
     const documentStyle = getComputedStyle(document.documentElement);
-    let cssStyle: string = '';
+    const color: string = '--' + this.GetColor(severityName) + '-' + (this.ColorIntensity());
 
+    return documentStyle.getPropertyValue(color);
+  }
+
+  public static GetShortName(severityName: string): string {
     switch (severityName) {
       case "CRITICAL":
-        cssStyle = documentStyle.getPropertyValue('--red-400');
-        break;
+        return 'CRIT';
       case "HIGH":
-        cssStyle = documentStyle.getPropertyValue('--orange-400');
-        break;
+        return 'HIGH';
       case "MEDIUM":
-        cssStyle = documentStyle.getPropertyValue('--yellow-400');
-        break;
+        return 'MED';
       case "LOW":
-        cssStyle = documentStyle.getPropertyValue('--cyan-400');
-        break;
+        return 'LOW';
       case "UNKNOWN":
-        cssStyle = documentStyle.getPropertyValue('--blue-400');
-        break;
+        return 'UNKN';
+      default:
+        return '';
     }
+  }
 
-    return cssStyle;
+  public static GetColor(severityName: string): string {
+    switch (severityName) {
+      case "CRITICAL":
+        return 'red';
+      case "HIGH":
+        return 'orange';
+      case "MEDIUM":
+        return 'yellow';
+      case "LOW":
+        return 'cyan';
+      case "UNKNOWN":
+        return 'blue';
+      default:
+        return '';
+    }
+  }
+
+  public static ColorIntensity(): number {
+    return 400;
   }
 }
 
@@ -69,8 +71,8 @@ export class PrimeNgHelpers {
       datasets: [
         {
           data: values,
-          backgroundColor: [ServerityColors.Test("CRITICAL"), ServerityColors.Test("HIGH"), ServerityColors.Test("MEDIUM"), ServerityColors.Test("LOW"), ServerityColors.Test("UNKNOWN")],
-          hoverBackgroundColor: [ServerityColors.TestHover("CRITICAL"), ServerityColors.TestHover("HIGH"), ServerityColors.TestHover("MEDIUM"), ServerityColors.TestHover("LOW"), ServerityColors.TestHover("UNKNOWN")],
+          backgroundColor: [Severity.GetCssColor("CRITICAL"), Severity.GetCssColor("HIGH"), Severity.GetCssColor("MEDIUM"), Severity.GetCssColor("LOW"), Severity.GetCssColor("UNKNOWN")],
+          hoverBackgroundColor: [Severity.GetCssColorHover("CRITICAL"), Severity.GetCssColorHover("HIGH"), Severity.GetCssColorHover("MEDIUM"), Severity.GetCssColorHover("LOW"), Severity.GetCssColorHover("UNKNOWN")],
         }
       ],
       title: title,
