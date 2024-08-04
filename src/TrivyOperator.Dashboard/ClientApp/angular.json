@@ -30,8 +30,6 @@
               "src/assets"
             ],
             "styles": [
-              "node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "src/styles.css",
               {
                 "input": "src/primeng-dark.css",
                 "bundleName": "primeng-dark",
@@ -45,7 +43,7 @@
               "src/styles.css"
             ],
             "scripts": [
-              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
             ]
           },
           "configurations": {
