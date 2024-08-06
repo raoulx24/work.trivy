@@ -59,6 +59,23 @@ export class Severity {
     }
   }
 
+  public static GetSeverityIndex(severityName: string): number {
+    switch (severityName) {
+      case "CRITICAL":
+        return 0;
+      case "HIGH":
+        return 1;
+      case "MEDIUM":
+        return 2;
+      case "LOW":
+        return 3;
+      case "UNKNOWN":
+        return 4;
+      default:
+        return -1;
+    }
+  }
+
   public static ColorIntensity(): number {
     return 400;
   }
