@@ -1,3 +1,5 @@
+import { SeverityDto } from "../api/models/severity-dto";
+
 export type PrimeNgChartData = {
   labels: string[],
   datasets: [
@@ -11,55 +13,55 @@ export type PrimeNgChartData = {
 }
 
 export class Severity {
-  public static GetCssColor(severityName: string): string {
+  public static GetCssColor(severityId: number): string {
     const documentStyle = getComputedStyle(document.documentElement);
-    const color: string = '--' + this.GetColor(severityName) + '-' + (this.ColorIntensity() + 100);
+    const color: string = '--' + this.GetColor(severityId) + '-' + (this.ColorIntensity() + 100);
 
     return documentStyle.getPropertyValue(color);
   }
 
-  public static GetCssColorHover(severityName: string): string {
+  public static GetCssColorHover(severityId: number): string {
     const documentStyle = getComputedStyle(document.documentElement);
-    const color: string = '--' + this.GetColor(severityName) + '-' + (this.ColorIntensity());
+    const color: string = '--' + this.GetColor(severityId) + '-' + (this.ColorIntensity());
 
     return documentStyle.getPropertyValue(color);
   }
 
-  public static GetShortName(severityName: string): string {
-    switch (severityName) {
-      case "CRITICAL":
+  public static GetShortName(severityId: number): string {
+    switch (severityId) {
+      case 0:
         return 'CRIT';
-      case "HIGH":
+      case 1:
         return 'HIGH';
-      case "MEDIUM":
+      case 2:
         return 'MED';
-      case "LOW":
+      case 3:
         return 'LOW';
-      case "UNKNOWN":
+      case 4:
         return 'UNKN';
       default:
         return '';
     }
   }
 
-  public static GetColor(severityName: string): string {
-    switch (severityName) {
-      case "CRITICAL":
+  public static GetColor(severityId: number): string {
+    switch (severityId) {
+      case 0:
         return 'red';
-      case "HIGH":
+      case 1:
         return 'orange';
-      case "MEDIUM":
+      case 2:
         return 'yellow';
-      case "LOW":
+      case 3:
         return 'cyan';
-      case "UNKNOWN":
+      case 4:
         return 'blue';
       default:
         return '';
     }
   }
 
-  public static GetSeverityIndex(severityName: string): number {
+  public static GetSeverityIndex(severityName: string, severityDtos: SeverityDto[]): number {
     switch (severityName) {
       case "CRITICAL":
         return 0;
@@ -88,8 +90,8 @@ export class PrimeNgHelpers {
       datasets: [
         {
           data: values,
-          backgroundColor: [Severity.GetCssColor("CRITICAL"), Severity.GetCssColor("HIGH"), Severity.GetCssColor("MEDIUM"), Severity.GetCssColor("LOW"), Severity.GetCssColor("UNKNOWN")],
-          hoverBackgroundColor: [Severity.GetCssColorHover("CRITICAL"), Severity.GetCssColorHover("HIGH"), Severity.GetCssColorHover("MEDIUM"), Severity.GetCssColorHover("LOW"), Severity.GetCssColorHover("UNKNOWN")],
+          backgroundColor: [Severity.GetCssColor(0), Severity.GetCssColor(1), Severity.GetCssColor(2), Severity.GetCssColor(3), Severity.GetCssColor(4)],
+          hoverBackgroundColor: [Severity.GetCssColorHover(0), Severity.GetCssColorHover(1), Severity.GetCssColorHover(2), Severity.GetCssColorHover(3), Severity.GetCssColorHover(4)],
         }
       ],
       title: title,
