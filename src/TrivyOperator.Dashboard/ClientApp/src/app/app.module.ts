@@ -23,6 +23,9 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 
+// TODO: remove them
+import { ChipsModule } from 'primeng/chips';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -51,6 +54,7 @@ import { TagModule } from 'primeng/tag';
     MultiSelectModule,
     TableModule,
     TagModule,
+    ChipsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
