@@ -18,13 +18,15 @@ import { environment } from "../environments/environment";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AccordionModule } from 'primeng/accordion';
+import { ButtonModule } from 'primeng/button';
 import { ChartModule } from 'primeng/chart';
+import { FloatLabelModule } from 'primeng/floatlabel';
+import { InputTextModule } from 'primeng/inputtext';
+import { MenubarModule } from 'primeng/menubar';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { SplitButtonModule } from 'primeng/splitbutton';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
-
-// TODO: remove them
-import { ChipsModule } from 'primeng/chips';
 
 @NgModule({
   declarations: [
@@ -50,11 +52,15 @@ import { ChipsModule } from 'primeng/chips';
     ApiModule.forRoot({rootUrl: environment.baseUrl}),
     BrowserAnimationsModule,
     AccordionModule,
+    ButtonModule,
     ChartModule,
+    FloatLabelModule,
+    InputTextModule,
+    MenubarModule,
     MultiSelectModule,
+    SplitButtonModule,
     TableModule,
     TagModule,
-    ChipsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

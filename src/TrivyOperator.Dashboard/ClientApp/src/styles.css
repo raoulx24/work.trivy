@@ -5,6 +5,7 @@
 @import "../node_modules/ag-grid-community/styles/ag-grid.css";
 @import "../node_modules/ag-grid-community/styles/ag-theme-quartz.css";
 @import "../node_modules/primeng/resources/primeng.css";
+@import "../node_modules/primeicons/primeicons.css";
 
 @layer bootstrap-grid, primeng;
 
