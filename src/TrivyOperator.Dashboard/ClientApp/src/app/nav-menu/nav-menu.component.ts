@@ -10,11 +10,12 @@ import { MenuItem } from 'primeng/api';
 })
 
 export class NavMenuComponent {
-  isExpanded = false;
   items!: MenuItem[];
   alertsCount: number = 6;
+  isDarkMode!: boolean;
 
   constructor(private router: Router) {
+    this.isDarkMode = this.getDarkMode();
     this.items = [
       {
         label: 'Home',
@@ -44,17 +45,24 @@ export class NavMenuComponent {
         route: '/alerts',
         command: () => { this.router.navigate(['/alerts']); },
         badge: this.alertsCount.toString(),
-        badgeStyleClass: 'p-badge-danger',
       }
     ];
   }
 
-
-  collapse() {
-    this.isExpanded = false;
+  public switchLightDarkMode() {
+    this.isDarkMode = !this.isDarkMode;
+    const primengThemeLink = document.getElementById("primeng-theme") as HTMLLinkElement | null;
+    if (primengThemeLink == null) {
+      return;
+    }
+    primengThemeLink.href = this.isDarkMode ? "primeng-dark.css" : "primeng-light.css";
   }
 
-  toggle() {
-    this.isExpanded = !this.isExpanded;
+  public onAlertsClick() {
+    this.router.navigate(['/alerts']);
   }
+
+  private getDarkMode(): boolean {
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  } 
 }

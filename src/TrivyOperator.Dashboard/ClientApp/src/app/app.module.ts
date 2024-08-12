@@ -18,6 +18,7 @@ import { environment } from "../environments/environment";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AccordionModule } from 'primeng/accordion';
+import { BadgeModule } from 'primeng/badge';
 import { ButtonModule } from 'primeng/button';
 import { ChartModule } from 'primeng/chart';
 import { FloatLabelModule } from 'primeng/floatlabel';
@@ -52,6 +53,7 @@ import { TagModule } from 'primeng/tag';
     ApiModule.forRoot({rootUrl: environment.baseUrl}),
     BrowserAnimationsModule,
     AccordionModule,
+    BadgeModule,
     ButtonModule,
     ChartModule,
     FloatLabelModule,

@@ -448,11 +448,6 @@ components:
         uid:
           type: string
           format: uuid
-        resourceNames:
-          type: array
-          items:
-            type: string
-          nullable: true
         resourceNamespace:
           type: string
           nullable: true
@@ -470,6 +465,11 @@ components:
           nullable: true
         imageOsName:
           type: string
+          nullable: true
+        resources:
+          type: array
+          items:
+            $ref: '#/components/schemas/VulnerabilityReportImageResourceDto'
           nullable: true
         criticalCount:
           type: integer
@@ -490,6 +490,19 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/VulnerabilityReportDetailDto'
+          nullable: true
+      additionalProperties: false
+    VulnerabilityReportImageResourceDto:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+        kind:
+          type: string
+          nullable: true
+        containerName:
+          type: string
           nullable: true
       additionalProperties: false
     VulnerabilityReportSummaryDto:
