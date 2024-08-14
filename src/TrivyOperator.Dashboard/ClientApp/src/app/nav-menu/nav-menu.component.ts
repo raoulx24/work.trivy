@@ -39,13 +39,6 @@ export class NavMenuComponent {
           }
         ],
       },
-      {
-        label: 'Alerts',
-        icon: 'pi pi-home',
-        route: '/alerts',
-        command: () => { this.router.navigate(['/alerts']); },
-        badge: this.alertsCount.toString(),
-      }
     ];
   }
 
