@@ -25,6 +25,7 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { MenubarModule } from 'primeng/menubar';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
@@ -60,6 +61,7 @@ import { TagModule } from 'primeng/tag';
     InputTextModule,
     MenubarModule,
     MultiSelectModule,
+    OverlayPanelModule,
     SplitButtonModule,
     TableModule,
     TagModule,
