@@ -108,7 +108,7 @@ export class PrimeNgHelper {
     let severityLabels: string[] = [];
     let cssColors: string[] = [];
     let cssColorHovers: string[] = [];
-    severityDtos.forEach((x) => {
+    severityDtos.forEach(x => {
       severityLabels.push(x.name);
       cssColors.push(this.severityHelper.getCssColor(x.id));
       cssColorHovers.push(this.severityHelper.getCssColorHover(x.id));
