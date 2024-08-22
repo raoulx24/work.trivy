@@ -1,45 +1,30 @@
 import { Injectable } from "@angular/core";
+import { lastValueFrom } from "rxjs";
 import { SeverityDto } from "../../api/models/severity-dto";
 import { SeveritiesService } from "../../api/services/severities.service"
 
-@Injectable()
+@Injectable({ providedIn: 'root', })
 export class SeverityHelperService {
   private _severitiesService: SeveritiesService;
-
-  public get severityDtos(): SeverityDto[]
-  {
-    if (this._severityDtos == null) {
-      return [];
-    }
-    else {
-      return this._severityDtos;
-    }
-    
-  }
-  private _severityDtos?: SeverityDto[] | null | undefined;    ;
-
+  private _severityDtos?: SeverityDto[] | null | undefined;
   private get colorIntensity(): number { return 400; }
 
+  public async getSeverityDtos(): Promise<SeverityDto[]> {
+    if (this._severityDtos == null) {
+      console.log("SeverityHelperService - getSeverityDtos - _severityDtos is null");
+      const x = lastValueFrom(this._severitiesService.getSeverities());
+      x.then(result => { this._severityDtos = result; });
+      return x;
+    }
+    else {
+      return new Promise((resolve) => { resolve(this._severityDtos!); })
+    }
+  }
+
   constructor(severitiesService: SeveritiesService) {
+    console.log("SeverityHelperService - constructor");
     this._severitiesService = severitiesService;
   }
-
-  public async isServiceDirty(): Promise<boolean> {
-    if (this._severityDtos == null) {
-      let x = await this._severitiesService.getSeverities().toPromise();
-      if (x == null) {
-        console.log("isServiceDirty true");
-        return new Promise((resolve, reject) => { resolve(false); })
-      }
-      else {
-        this._severityDtos = x;
-        console.log("severities ", x.length);
-      }
-    }
-    console.log("isServiceDirty false");
-    return new Promise((resolve, reject) => { resolve(true); });
-  }
-
 
   public getCssColor(severityId: number): string {
     const documentStyle = getComputedStyle(document.documentElement);
@@ -54,23 +39,6 @@ export class SeverityHelperService {
 
     return documentStyle.getPropertyValue(color);
   }
-
-  //public getShortName(severityId: number): string {
-  //  switch (severityId) {
-  //    case 0:
-  //      return 'CRIT';
-  //    case 1:
-  //      return 'HIGH';
-  //    case 2:
-  //      return 'MED';
-  //    case 3:
-  //      return 'LOW';
-  //    case 4:
-  //      return 'UNKN';
-  //    default:
-  //      return '';
-  //  }
-  //}
 
   public getColor(severityId: number): string {
     switch (severityId) {
