@@ -2,7 +2,8 @@ export type TrivyTableOptions = {
   isClearSelectionVisible: boolean,
   isResetFiltersVisible: boolean,
   isExportCsvVisible: boolean,
-  tableSelectionMode: null | "single" | "multiple"
+  tableSelectionMode: null | "single" | "multiple",
+  tableHeight: string,
 }
 
 export interface Column {

@@ -1,44 +1,52 @@
-import { Component, Input, ViewChild } from '@angular/core';
-import { MenuItem } from 'primeng/api';
-import { Table } from 'primeng/table';
+import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { Table, TableModule } from 'primeng/table';
+import { TagModule } from 'primeng/tag';
 
 import { Column, ExportColumn, TrivyTableColumn, TrivyTableOptions } from "./trivy-table.types";
 import { SeverityHelperService } from "../services/severity-helper.service"
 import { SeverityDto } from "../../api/models/severity-dto"
 
+
 @Component({
   selector: 'app-trivy-table',
   standalone: true,
-  imports: [],
+  imports: [CommonModule, FormsModule, ButtonModule, InputTextModule, MultiSelectModule, OverlayPanelModule, TableModule, TagModule],
   templateUrl: './trivy-table.component.html',
   styleUrl: './trivy-table.component.scss'
 })
 export class TrivyTableComponent<TData> {
   @Input() dataDtos?: TData[] | null | undefined;
-  @Input() severityDtos?: SeverityDto[] | null | undefined;
   @Input() activeNamespaces?: string[] | null | undefined = [];
 
-  public filterSeverityOptions: number[] = []
-  public filterSelectedSeverityIds: number[] | null = [];
-  public filterActiveNamespaces: string[] | null = [];
-
-  public selectedDataDtos!: TData[];
-  public metaKey: boolean = false;
+  @Input() selectedDataDtos: TData[] = [];
+  @Output() selectedDataDtosChange = new EventEmitter<TData[]>();
+  @Input() metaKey: boolean = false;
   @Input() csvFileName: string = "Vulnerability.Reports";
 
-  public exportCoumns!: ExportColumn[];
-  public tableColumns!: Column[];
-  public saveCsvMenuItems!: MenuItem[];
+  @Input() exportColumns!: ExportColumn[];
+  @Input() tableColumns!: Column[];
   @ViewChild('trivyTable') trivyTable?: Table;
 
   @Input() trivyTableColumns: TrivyTableColumn[] = [];
   @Input() trivyTableOptions?: TrivyTableOptions;
 
+  public filterSeverityOptions: number[] = []
+  public filterSelectedSeverityIds: number[] | null = [];
+  public filterActiveNamespaces: string[] | null = [];
+
   public get trivyTableTotalRecords(): number {
     return this.dataDtos ? this.dataDtos.length : 0;
   }
   public get trivyTableSelectedRecords(): number {
-    return this.trivyTable?.selection ? this.trivyTable.selection.length : 0;
+    //return this.trivyTable?.selection ? this.trivyTable.selection.length : 0;
+    return this.selectedDataDtos ? this.selectedDataDtos.length : 0;
   }
   public get trivyTableFilteredRecords(): number {
     return this.trivyTable?.filteredValue ? this.trivyTable.filteredValue.length : 0;
@@ -47,11 +55,14 @@ export class TrivyTableComponent<TData> {
   public get severityHelper(): SeverityHelperService {
     return this._severityHelper;
   };
-  private set severityHelper(severityHelper: SeverityHelperService) {
+  @Input() set severityHelper(severityHelper: SeverityHelperService) {
     this._severityHelper = severityHelper;
     this._severityHelper.getSeverityDtos().then(result => this.onGetSeverities(result));
+    // more on input setter: https://stackoverflow.com/questions/36653678/angular2-input-to-a-property-with-get-set
   }
   private _severityHelper!: SeverityHelperService;
+
+  private severityDtos?: SeverityDto[] | null | undefined;
 
   onGetSeverities(severityDtos: SeverityDto[]) {
     console.log("trivyTable - onGetSeverities - severityDtos " + severityDtos);
@@ -67,3 +78,5 @@ export class TrivyTableComponent<TData> {
     return this.selectedDataDtos ? this.selectedDataDtos.length > 0 : false;
   }
 }
+
+// clear filters on reset table: https://stackoverflow.com/questions/51395624/reset-filter-value-on-primeng-table
