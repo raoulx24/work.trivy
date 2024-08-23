@@ -30,6 +30,8 @@ import { SplitButtonModule } from 'primeng/splitbutton';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 
+import { TrivyTableComponent } from './trivy-table/trivy-table.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -65,6 +67,8 @@ import { TagModule } from 'primeng/tag';
     SplitButtonModule,
     TableModule,
     TagModule,
+
+    TrivyTableComponent,
   ],
   providers: [],
   bootstrap: [AppComponent]
