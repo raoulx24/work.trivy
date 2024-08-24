@@ -1,4 +1,14 @@
 <h3 id="trivy-operator-overview">Overview</h3>
 
 <p-panel header="Vulnerability Reports" [toggleable]="true">
+    <div class="row row-cols-xl-6 row-cols-lg-4 row-cols-md-3 row-cols-sm-1" *ngIf="primeNgChartData">
+      <div class="col" *ngFor="let pieChartData of primeNgChartData;">
+        <div class="card" h-100>
+          <div class="card-body">
+            <h3 class="card-title" style="text-align: center;">{{pieChartData.title}}</h3>
+            <p-chart type="pie" [data]=pieChartData [options]="primeNgChartOptions" />
+          </div>
+        </div>
+      </div>
+    </div>
 </p-panel>
