@@ -5,6 +5,7 @@ export type TrivyTableOptions = {
   tableSelectionMode: null | "single" | "multiple",
   tableHeight: string,
   exposeSelectedRowsEvent: boolean,
+  ifFooterVisible: boolean,
 }
 
 export interface Column {

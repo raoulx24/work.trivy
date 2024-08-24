@@ -12,12 +12,10 @@ import { VulnerabilityReportsDetailedComponent } from './vulnerability-reports-d
 import { AlertsComponent } from './alerts/alerts.component';
 import { AboutComponent } from './about/about.component';
 
-import { AgGridModule } from "ag-grid-angular";
 import { ApiModule } from "../api/api.module";
 import { environment } from "../environments/environment";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { AccordionModule } from 'primeng/accordion';
 import { BadgeModule } from 'primeng/badge';
 import { ButtonModule } from 'primeng/button';
 import { ChartModule } from 'primeng/chart';
@@ -27,7 +25,6 @@ import { MenubarModule } from 'primeng/menubar';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { PanelModule } from 'primeng/panel';
-import { SplitButtonModule } from 'primeng/splitbutton';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 
@@ -54,10 +51,8 @@ import { TrivyTableComponent } from './trivy-table/trivy-table.component';
       { path: 'alerts', component: AlertsComponent, },
       { path: 'about', component: AboutComponent, },
     ]),
-    AgGridModule,
     ApiModule.forRoot({rootUrl: environment.baseUrl}),
     BrowserAnimationsModule,
-    AccordionModule,
     BadgeModule,
     ButtonModule,
     ChartModule,
@@ -67,7 +62,6 @@ import { TrivyTableComponent } from './trivy-table/trivy-table.component';
     MultiSelectModule,
     OverlayPanelModule,
     PanelModule,
-    SplitButtonModule,
     TableModule,
     TagModule,
 

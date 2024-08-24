@@ -2,8 +2,6 @@
 @import "../node_modules/bootstrap/dist/css/bootstrap-grid.css" layer(bootstrap-grid);
 /*@import "../node_modules/bootstrap/dist/css/bootstrap-utilities.css" layer(bootstrap-utilities);
 @import "../node_modules/bootstrap/dist/css/bootstrap.rtl.css" layer(bootstrap-rtl);*/
-@import "../node_modules/ag-grid-community/styles/ag-grid.css";
-@import "../node_modules/ag-grid-community/styles/ag-theme-quartz.css";
 @import "../node_modules/primeng/resources/primeng.css";
 @import "../node_modules/primeicons/primeicons.css";
 

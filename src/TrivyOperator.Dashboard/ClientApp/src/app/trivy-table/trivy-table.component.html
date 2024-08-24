@@ -2,7 +2,7 @@
          [columns]="trivyTableColumns"
          [value]="dataDtos!"
          [scrollable]="true"
-         scrollHeight="{{ trivyTableOptions!.tableHeight }}"
+         [scrollHeight]="trivyTableOptions!.tableHeight"
          [virtualScroll]="true"
          [virtualScrollItemSize]="46"
          [tableStyle]="{ 'font-size': '14px' }"
@@ -84,7 +84,7 @@
       </td>
     </tr>
   </ng-template>
-  <ng-template pTemplate="summary">
+  <ng-template *ngIf="trivyTableOptions!.ifFooterVisible" pTemplate="summary">
     <div>
       Total <p-tag value="{{ trivyTableTotalRecords }}" /> | Selected <p-tag value="{{ trivyTableSelectedRecords }}" /> | Filtered <p-tag value="{{ trivyTableFilteredRecords }}" />
     </div>
