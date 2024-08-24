@@ -74,6 +74,13 @@
         <a *ngIf="col.renderType=='imageNameTag'">{{ rowData[col.field] }}:{{ rowData[col.extraFields[0]] }}</a>
         <a *ngIf="col.renderType=='link'" href="{{ rowData[col.extraFields[0]] }}" target="_blank">{{ rowData[col.field] }}</a>
         <p-tag *ngIf="col.renderType=='severityBadge'" [value]="severityHelper.getName(rowData[col.field])" [style]="{ background: severityHelper.getCssColor(rowData[col.field]) }" />
+        <div *ngIf="col.renderType=='severityMultiTags'" style="display: flex; justify-content: space-between">
+          <p-tag [value]="rowData[col.field]" [style]="{ background: severityHelper.getCssColor(0) }" />
+          <p-tag [value]="rowData[col.extraFields[0]]" [style]="{ background: severityHelper.getCssColor(1) }" /> 
+          <p-tag [value]="rowData[col.extraFields[1]]" [style]="{ background: severityHelper.getCssColor(2) }" /> 
+          <p-tag [value]="rowData[col.extraFields[2]]" [style]="{ background: severityHelper.getCssColor(3) }" /> 
+          <p-tag [value]="rowData[col.extraFields[3]]" [style]="{ background: severityHelper.getCssColor(4) }" /> 
+        </div>
       </td>
     </tr>
   </ng-template>

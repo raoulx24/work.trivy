@@ -46,7 +46,12 @@ export class TrivyTableComponent<TData> {
     return this.dataDtos ? this.dataDtos.length : 0;
   }
   public get trivyTableSelectedRecords(): number {
-    return this.selectedDataDtos ? this.selectedDataDtos.length : 0;
+    if (this.trivyTableOptions?.tableSelectionMode === "single") {
+      return this.selectedDataDtos ? 1 : 0;
+    }
+    else {
+      return this.selectedDataDtos ? this.selectedDataDtos.length : 0;
+    }
   }
   public get trivyTableFilteredRecords(): number {
     return this.trivyTable?.filteredValue ? this.trivyTable.filteredValue.length : 0;
@@ -78,11 +83,18 @@ export class TrivyTableComponent<TData> {
     return this.selectedDataDtos ? this.selectedDataDtos.length > 0 : false;
   }
 
-  onSelectionChange(event: TData[]): void {
-    console.log('TrivyTable - onSelectionChange - Selected row:', event);
-    console.log('TrivyTable - onSelectionChange - Selected products:', this.selectedDataDtos);
+  onSelectionChange(event: any): void {
+    console.log('TrivyTable - onSelectionChange - Selected event:', event);
+    console.log('TrivyTable - onSelectionChange - Selected dataDtos:', this.selectedDataDtos);
     if (this.trivyTableOptions?.exposeSelectedRowsEvent) {
-      this.selectedRowsChanged.emit(event);
+      if (this.trivyTableOptions.tableSelectionMode === "single") {
+        let selectedRow: TData[] = [];
+        selectedRow.push(event as TData);
+        this.selectedRowsChanged.emit(selectedRow);
+      }
+      else {
+        this.selectedRowsChanged.emit(event);
+      }
     }
   }
 }

@@ -23,6 +23,6 @@ export interface TrivyTableColumn extends Column {
   isFiltrable: boolean;
   style: string;
   multiSelectType: "none" | "namespaces" | "severities";
-  renderType: "standard" | "severityBadge" | "imageNameTag" | "link";
+  renderType: "standard" | "severityBadge" | "severityMultiTags" | "imageNameTag" | "link";
   extraFields?: string[];
 }
