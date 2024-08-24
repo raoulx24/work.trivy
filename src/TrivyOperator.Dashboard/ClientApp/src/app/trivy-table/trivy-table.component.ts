@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { ButtonModule } from 'primeng/button';
@@ -21,13 +21,11 @@ import { SeverityDto } from "../../api/models/severity-dto"
   templateUrl: './trivy-table.component.html',
   styleUrl: './trivy-table.component.scss'
 })
+
 export class TrivyTableComponent<TData> {
   @Input() dataDtos?: TData[] | null | undefined;
   @Input() activeNamespaces?: string[] | null | undefined = [];
 
-  @Input() selectedDataDtos: TData[] = [];
-  @Output() selectedDataDtosChange = new EventEmitter<TData[]>();
-  @Input() metaKey: boolean = false;
   @Input() csvFileName: string = "Vulnerability.Reports";
 
   @Input() exportColumns!: ExportColumn[];
@@ -37,6 +35,9 @@ export class TrivyTableComponent<TData> {
   @Input() trivyTableColumns: TrivyTableColumn[] = [];
   @Input() trivyTableOptions?: TrivyTableOptions;
 
+  @Output() selectedRowsChanged = new EventEmitter<TData[]>();
+
+  public selectedDataDtos: TData[] = [];
   public filterSeverityOptions: number[] = []
   public filterSelectedSeverityIds: number[] | null = [];
   public filterActiveNamespaces: string[] | null = [];
@@ -45,7 +46,6 @@ export class TrivyTableComponent<TData> {
     return this.dataDtos ? this.dataDtos.length : 0;
   }
   public get trivyTableSelectedRecords(): number {
-    //return this.trivyTable?.selection ? this.trivyTable.selection.length : 0;
     return this.selectedDataDtos ? this.selectedDataDtos.length : 0;
   }
   public get trivyTableFilteredRecords(): number {
@@ -76,6 +76,14 @@ export class TrivyTableComponent<TData> {
 
   public isTableRowSelected(): boolean {
     return this.selectedDataDtos ? this.selectedDataDtos.length > 0 : false;
+  }
+
+  onSelectionChange(event: TData[]): void {
+    console.log('TrivyTable - onSelectionChange - Selected row:', event);
+    console.log('TrivyTable - onSelectionChange - Selected products:', this.selectedDataDtos);
+    if (this.trivyTableOptions?.exposeSelectedRowsEvent) {
+      this.selectedRowsChanged.emit(event);
+    }
   }
 }
 

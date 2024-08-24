@@ -4,6 +4,7 @@ export type TrivyTableOptions = {
   isExportCsvVisible: boolean,
   tableSelectionMode: null | "single" | "multiple",
   tableHeight: string,
+  exposeSelectedRowsEvent: boolean,
 }
 
 export interface Column {

@@ -14,7 +14,8 @@
          [autoLayout]="true"
          [selectionMode]="trivyTableOptions!.tableSelectionMode"
          [(selection)]="selectedDataDtos"
-         [exportFilename]="csvFileName">
+         [exportFilename]="csvFileName"
+         (selectionChange)="onSelectionChange($event)">
   <ng-template pTemplate="caption">
     <div>
       <p-button *ngIf="trivyTableOptions!.isExportCsvVisible" class="m-1 p-1" label="Export to CSV" size="small" (onClick)="csvExportOp.toggle($event)" />
