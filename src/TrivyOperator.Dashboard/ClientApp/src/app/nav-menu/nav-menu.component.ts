@@ -55,6 +55,10 @@ export class NavMenuComponent {
     this.router.navigate(['/alerts']);
   }
 
+  public onAboutClick() {
+    this.router.navigate(['/about']);
+  }
+
   private getDarkMode(): boolean {
     return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
   } 

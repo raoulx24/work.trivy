@@ -11,6 +11,7 @@
   <ng-template pTemplate="end">
     <div class="flex align-items-center gap-2">
       <p-button label=" " icon="pi pi-bell" [rounded]="true" [text]="true" [raised]="true" size="small" badge="{{ alertsCount }}" badgeClass="p-badge-danger" (click)="onAlertsClick()" />
+      <p-button icon="pi pi-info-circle" [rounded]="true" [text]="true" [raised]="true" size="small" (click)="onAboutClick()" />
       <p-button *ngIf="isDarkMode" icon="pi pi-sun" [rounded]="true" [text]="true" [raised]="true" size="small" (click)="switchLightDarkMode()"></p-button>
       <p-button *ngIf="!isDarkMode" icon="pi pi-moon" [rounded]="true" [text]="true" [raised]="true" size="small" (click)="switchLightDarkMode()"></p-button>
     </div>

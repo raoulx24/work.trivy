@@ -1,0 +1,65 @@
+<h3>About Trivy Dashboard</h3>
+
+<p-panel header="Trivy Dashboard" [toggleable]="true">
+  <p>
+    Lorem ipsum dolor sit amet...
+  </p>
+</p-panel>
+
+<p-panel header="Trivy Operator" [toggleable]="true">
+  <p>
+    The Trivy Operator leverages <a href="https://github.com/aquasecurity/trivy">Trivy</a> to continuously scan your
+    Kubernetes cluster for security issues. The scans are summarised in security reports as Kubernetes <a href="https://aquasecurity.github.io/trivy-operator/latest/docs/crds/">Custom Resource Definitions</a>, which become
+    accessible through the Kubernetes API. The Operator does this by watching Kubernetes for state changes and
+    automatically triggering security scans in response. For example, a vulnerability scan is initiated when a new Pod is
+    created.
+    This way, users can find and view the risks that relate to different resources in a <code>Kubernetes-native</code>
+    way.
+  </p>
+  <h2 id="in-cluster-security-scans">In-cluster Security Scans</h2>
+  <p>
+    The Trivy Operator automatically generates and updates security reports. These reports are generated in response to
+    new workload and other changes on a Kubernetes cluster, generating the following reports:
+  </p>
+  <ul>
+    <li>Vulnerability Scans: Automated vulnerability scanning for Kubernetes workloads.</li>
+    <li>
+      ConfigAudit Scans: Automated configuration audits for Kubernetes resources with predefined rules or custom Open
+      Policy Agent (OPA) policies.
+    </li>
+    <li>
+      Exposed Secret Scans: Automated secret scans which find and detail the location of exposed Secrets within your
+      cluster.
+    </li>
+    <li>
+      RBAC scans: Role Based Access Control scans provide detailed information on the access rights of the different
+      resources installed.
+    </li>
+    <li>
+      K8s core component infra assessment scan Kubernetes infra core components
+      (etcd,apiserver,scheduler,controller-manager and etc) setting and configuration.
+    </li>
+    <li>
+      k8s outdated api validation - a configaudit check will validate if the resource api has been deprecated and
+      planned for removal
+    </li>
+    <li>Compliance reports</li>
+    <li>NSA, CISA Kubernetes Hardening Guidance v1.1 cybersecurity technical report is produced.</li>
+    <li>CIS Kubernetes Benchmark v1.23 cybersecurity technical report is produced.</li>
+    <li>Kubernetes pss-baseline, Pod Security Standards</li>
+    <li>Kubernetes pss-restricted, Pod Security Standards</li>
+    <li>SBOM (Software Bill of Materials generations) for Kubernetes workloads.</li>
+  </ul>
+  <h5 id="usage">Usage</h5>
+  <p>
+    The official <a href="https://aquasecurity.github.io/trivy-operator/latest">Documentation</a> provides detailed
+    installation, configuration, troubleshooting, and quick start guides.
+  </p>
+  <p>
+    You can install the Trivy-operator Operator with <a href="https://aquasecurity.github.io/trivy-operator/latest/getting-started/installation/kubectl/">
+      Static YAML
+      Manifests
+    </a> and follow the <a href="https://aquasecurity.github.io/trivy-operator/latest/">Getting Started</a>
+    guide to see how vulnerability and configuration audit reports are generated automatically.
+  </p>
+</p-panel>
