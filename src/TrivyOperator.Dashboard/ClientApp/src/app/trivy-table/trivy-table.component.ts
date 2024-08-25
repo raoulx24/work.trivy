@@ -3,13 +3,15 @@ import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core
 import { FormsModule } from '@angular/forms';
 
 import { ButtonModule } from 'primeng/button';
+import { CheckboxModule } from 'primeng/checkbox';
+import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
-import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { Table, TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 
-import { Column, ExportColumn, TrivyTableColumn, TrivyTableOptions } from "./trivy-table.types";
+import { Column, ExportColumn, TrivyFilterData, TrivyTableColumn, TrivyTableOptions } from "./trivy-table.types";
 import { SeverityHelperService } from "../services/severity-helper.service"
 import { SeverityDto } from "../../api/models/severity-dto"
 
@@ -17,7 +19,16 @@ import { SeverityDto } from "../../api/models/severity-dto"
 @Component({
   selector: 'app-trivy-table',
   standalone: true,
-  imports: [CommonModule, FormsModule, ButtonModule, InputTextModule, MultiSelectModule, OverlayPanelModule, TableModule, TagModule],
+  imports: [CommonModule,
+    FormsModule,
+    ButtonModule,
+    CheckboxModule,
+    DropdownModule,
+    InputTextModule,
+    MultiSelectModule,
+    OverlayPanelModule,
+    TableModule,
+    TagModule, ],
   templateUrl: './trivy-table.component.html',
   styleUrl: './trivy-table.component.scss'
 })
@@ -31,16 +42,43 @@ export class TrivyTableComponent<TData> {
   @Input() exportColumns!: ExportColumn[];
   @Input() tableColumns!: Column[];
   @ViewChild('trivyTable') trivyTable?: Table;
+  @ViewChild('serverFilterDataOp') serverFilterDataOp?: OverlayPanel;
+
+  @Input() set tableHeight(tableHeight: string) {
+    console.log("TrivyTableComponent<TData> - set tableHeight - ", tableHeight);
+    this._tableHeight = tableHeight;
+    if (this.trivyTable) {
+      this.trivyTable.scrollHeight = tableHeight;
+      this.isTableVisible = false;
+      setTimeout(() => this.isTableVisible = true, 0);
+    }
+  }
+  public get tableHeight(): string {
+    return this._tableHeight;
+  }
+  private _tableHeight: string = "";
 
   @Input() trivyTableColumns: TrivyTableColumn[] = [];
-  @Input() trivyTableOptions?: TrivyTableOptions;
+  public get trivyTableOptions(): TrivyTableOptions { return this._trivyTableOptions!; }
+  @Input() set trivyTableOptions(trivyTableOptions: TrivyTableOptions) {
+    console.log("TrivyTableComponent<TData> - set trivyTableOptions");
+    if (trivyTableOptions != null && trivyTableOptions.tableHeight != "") {
+      this.tableHeight = trivyTableOptions.tableHeight;
+    }
+
+    this._trivyTableOptions = trivyTableOptions;
+  }
+  private _trivyTableOptions?: TrivyTableOptions;
 
   @Output() selectedRowsChanged = new EventEmitter<TData[]>();
+  @Output() refreshRequested = new EventEmitter<TrivyFilterData>();
 
   public selectedDataDtos: TData[] = [];
   public filterSeverityOptions: number[] = []
   public filterSelectedSeverityIds: number[] | null = [];
   public filterActiveNamespaces: string[] | null = [];
+  public filterRefreshActiveNamespace: string | null = "";
+  public filterRefreshSeverities: SeverityDto[] = [];
 
   public get trivyTableTotalRecords(): number {
     return this.dataDtos ? this.dataDtos.length : 0;
@@ -67,12 +105,17 @@ export class TrivyTableComponent<TData> {
   }
   private _severityHelper!: SeverityHelperService;
 
-  private severityDtos?: SeverityDto[] | null | undefined;
+  public isTableVisible: boolean = true;
+  public severityDtos?: SeverityDto[] | null | undefined;
 
   onGetSeverities(severityDtos: SeverityDto[]) {
-    console.log("trivyTable - onGetSeverities - severityDtos " + severityDtos);
     this.severityDtos = severityDtos;
-    severityDtos.forEach((x) => { this.filterSeverityOptions.push(x.id); })
+    severityDtos.forEach((x) => {
+      this.filterSeverityOptions.push(x.id);
+      if (this.trivyTableOptions.isRefreshFiltrable)
+        this.filterRefreshSeverities.push(x);
+    })
+
   }
 
   public onTableClearSelected() {
@@ -84,8 +127,6 @@ export class TrivyTableComponent<TData> {
   }
 
   onSelectionChange(event: any): void {
-    console.log('TrivyTable - onSelectionChange - Selected event:', event);
-    console.log('TrivyTable - onSelectionChange - Selected dataDtos:', this.selectedDataDtos);
     if (this.trivyTableOptions?.exposeSelectedRowsEvent) {
       if (this.trivyTableOptions.tableSelectionMode === "single") {
         let selectedRow: TData[] = [];
@@ -96,6 +137,25 @@ export class TrivyTableComponent<TData> {
         this.selectedRowsChanged.emit(event);
       }
     }
+  }
+
+  onFilterRefresh(event: MouseEvent) {
+    if (this.trivyTableOptions.isRefreshFiltrable) {
+      this.serverFilterDataOp?.toggle(event)
+    }
+    else {
+      this.onFilterData();
+    }
+  }
+
+  onFilterData() {
+    console.log("TrivyTableComponent<TData> - onFilterData - " + this.filterRefreshActiveNamespace);
+    console.log("TrivyTableComponent<TData> - onFilterData - " + this.filterRefreshSeverities);
+    let event: TrivyFilterData = {
+      namespaceName: this.filterRefreshActiveNamespace,
+      selectedSeverities: this.filterRefreshSeverities,
+    }
+    this.refreshRequested.emit(event);
   }
 }
 

@@ -1,7 +1,11 @@
-export type TrivyTableOptions = {
+import { SeverityDto } from '../../api/models/severity-dto';
+
+export interface TrivyTableOptions {
   isClearSelectionVisible: boolean,
   isResetFiltersVisible: boolean,
   isExportCsvVisible: boolean,
+  isRefreshVisible: boolean,
+  isRefreshFiltrable: boolean,
   tableSelectionMode: null | "single" | "multiple",
   tableHeight: string,
   exposeSelectedRowsEvent: boolean,
@@ -26,4 +30,9 @@ export interface TrivyTableColumn extends Column {
   multiSelectType: "none" | "namespaces" | "severities";
   renderType: "standard" | "severityBadge" | "severityMultiTags" | "imageNameTag" | "link";
   extraFields?: string[];
+}
+
+export interface TrivyFilterData {
+  namespaceName?: string | null;
+  selectedSeverities: SeverityDto[];
 }
