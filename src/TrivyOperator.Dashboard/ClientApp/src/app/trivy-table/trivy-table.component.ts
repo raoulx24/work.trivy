@@ -73,7 +73,7 @@ export class TrivyTableComponent<TData> {
   @Output() selectedRowsChanged = new EventEmitter<TData[]>();
   @Output() refreshRequested = new EventEmitter<TrivyFilterData>();
 
-  public selectedDataDtos: TData[] = [];
+  public selectedDataDtos?: TData[] | null;
   public filterSeverityOptions: number[] = []
   public filterSelectedSeverityIds: number[] | null = [];
   public filterActiveNamespaces: string[] | null = [];
@@ -129,9 +129,7 @@ export class TrivyTableComponent<TData> {
   onSelectionChange(event: any): void {
     if (this.trivyTableOptions?.exposeSelectedRowsEvent) {
       if (this.trivyTableOptions.tableSelectionMode === "single") {
-        let selectedRow: TData[] = [];
-        selectedRow.push(event as TData);
-        this.selectedRowsChanged.emit(selectedRow);
+        this.selectedRowsChanged.emit([event]);
       }
       else {
         this.selectedRowsChanged.emit(event);
