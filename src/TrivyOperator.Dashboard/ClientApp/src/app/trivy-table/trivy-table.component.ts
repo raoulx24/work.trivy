@@ -153,6 +153,7 @@ export class TrivyTableComponent<TData> {
       namespaceName: this.filterRefreshActiveNamespace,
       selectedSeverities: this.filterRefreshSeverities,
     }
+    this.serverFilterDataOp?.hide();
     this.refreshRequested.emit(event);
   }
 }

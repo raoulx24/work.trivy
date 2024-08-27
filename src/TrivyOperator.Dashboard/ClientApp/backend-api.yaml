@@ -300,6 +300,9 @@ components:
         imageOsName:
           type: string
           nullable: true
+        imageEosl:
+          type: boolean
+          nullable: true
         criticalCount:
           type: integer
           format: int64
@@ -421,6 +424,9 @@ components:
         imageOsName:
           type: string
           nullable: true
+        imageEosl:
+          type: boolean
+          nullable: true
         criticalCount:
           type: integer
           format: int64
@@ -465,6 +471,9 @@ components:
           nullable: true
         imageOsName:
           type: string
+          nullable: true
+        imageEosl:
+          type: boolean
           nullable: true
         resources:
           type: array

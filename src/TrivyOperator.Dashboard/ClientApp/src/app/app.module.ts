@@ -19,6 +19,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BadgeModule } from 'primeng/badge';
 import { ButtonModule } from 'primeng/button';
 import { ChartModule } from 'primeng/chart';
+import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
@@ -57,6 +58,7 @@ import { TrivyTableComponent } from './trivy-table/trivy-table.component';
     BadgeModule,
     ButtonModule,
     ChartModule,
+    DialogModule,
     DropdownModule,
     FloatLabelModule,
     InputTextModule,
