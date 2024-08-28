@@ -127,6 +127,9 @@ export class TrivyTableComponent<TData> {
   }
 
   onSelectionChange(event: any): void {
+    if (event == null) {
+      return;
+    }
     if (this.trivyTableOptions?.exposeSelectedRowsEvent) {
       if (this.trivyTableOptions.tableSelectionMode === "single") {
         this.selectedRowsChanged.emit([event]);
@@ -155,6 +158,19 @@ export class TrivyTableComponent<TData> {
     }
     this.serverFilterDataOp?.hide();
     this.refreshRequested.emit(event);
+  }
+
+  onRowUnselect(event: any) {
+    if (this.trivyTableOptions.tableSelectionMode === "single" && this.trivyTable != null) {
+      this.trivyTable.selection = event.data;
+    }
+  }
+
+  public selectRow(data: TData) {
+    if (data == null) {
+      return;
+    }
+    this.selectedDataDtos = [data];
   }
 }
 

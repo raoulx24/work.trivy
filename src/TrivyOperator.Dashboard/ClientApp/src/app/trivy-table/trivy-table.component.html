@@ -16,7 +16,8 @@
            [selectionMode]="trivyTableOptions!.tableSelectionMode"
            [(selection)]="selectedDataDtos"
            [exportFilename]="csvFileName"
-           (selectionChange)="onSelectionChange($event)">
+           (selectionChange)="onSelectionChange($event)"
+           (onRowUnselect)="onRowUnselect($event)">
     <ng-template pTemplate="caption">
       <div>
         <p-button *ngIf="trivyTableOptions!.isRefreshVisible" class="m-1 p-1" label="Refresh/Filter" icon="pi pi-refresh" size="small" [disabled]="!true" (onClick)="onFilterRefresh($event)" />
