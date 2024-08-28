@@ -27,6 +27,7 @@ import { MenubarModule } from 'primeng/menubar';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { PanelModule } from 'primeng/panel';
+import { SplitterModule } from 'primeng/splitter';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 
@@ -66,6 +67,7 @@ import { TrivyTableComponent } from './trivy-table/trivy-table.component';
     MultiSelectModule,
     OverlayPanelModule,
     PanelModule,
+    SplitterModule,
     TableModule,
     TagModule,
 
