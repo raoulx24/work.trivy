@@ -514,9 +514,17 @@ components:
           type: string
           nullable: true
       additionalProperties: false
+    VulnerabilityReportSummaryDetailDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        totalCount:
+          type: integer
+          format: int64
+      additionalProperties: false
     VulnerabilityReportSummaryDto:
-      required:
-        - values
       type: object
       properties:
         uid:
@@ -525,25 +533,9 @@ components:
         namespaceName:
           type: string
           nullable: true
-        totalCriticalCount:
-          type: integer
-          format: int64
-        totalHighCount:
-          type: integer
-          format: int64
-        totalMediumCount:
-          type: integer
-          format: int64
-        totalLowCount:
-          type: integer
-          format: int64
-        totalUnknownCount:
-          type: integer
-          format: int64
-        values:
+        details:
           type: array
           items:
-            type: integer
-            format: int64
-          readOnly: true
+            $ref: '#/components/schemas/VulnerabilityReportSummaryDetailDto'
+          nullable: true
       additionalProperties: false

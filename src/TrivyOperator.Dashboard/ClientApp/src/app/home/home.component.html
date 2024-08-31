@@ -1,14 +1,66 @@
 <h3 id="trivy-operator-overview">Overview</h3>
 
 <p-panel header="Vulnerability Reports" [toggleable]="true">
-    <div class="row row-cols-xl-6 row-cols-lg-4 row-cols-md-3 row-cols-sm-1" *ngIf="primeNgChartData">
-      <div class="col" *ngFor="let pieChartData of primeNgChartData;">
-        <div class="card" h-100>
-          <div class="card-body">
-            <h3 class="card-title" style="text-align: center;">{{pieChartData.title}}</h3>
-            <p-chart type="pie" [data]=pieChartData [options]="primeNgChartOptions" />
+  <p-carousel [value]="slides"
+              [numVisible]="1"
+              [numScroll]="1"
+              [circular]="true"
+              [autoplayInterval]="10000">
+    <ng-template let-slide pTemplate="item">
+      <div class="custom-slide">
+        <ng-container [ngSwitch]="slide">
+          <div *ngSwitchCase="'pieCharts'">
+            <div class="row row-cols-xl-6 row-cols-lg-4 row-cols-md-3 row-cols-sm-1" *ngIf="pieChartData">
+              <div class="col" *ngFor="let pieChartDataNs of pieChartData;">
+                <div class="card">
+                  <div class="card-body">
+                    <h3 class="card-title" style="text-align: center;">{{ pieChartDataNs.title }}</h3>
+                    <p-chart #pieChart
+                             type="pie"
+                             [data]=pieChartDataNs
+                             [options]="pieChartOptions"
+                             height="230px" />
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
+          <div *ngSwitchCase="'barChartNS'">
+            <div *ngIf="horizontalBarChartDataByNs">
+              <h4 style="text-align: center;">Vulnerabilities by Namespace</h4>
+              <p-chart *ngIf="createChart"
+                       #barChartByNs
+                       type="bar"
+                       [data]="horizontalBarChartDataByNs"
+                       [options]="horizontalBarChartOption"
+                       height="60vh" />
+            </div>
+          </div>
+          <div *ngSwitchCase="'barChartSeverity'">
+            <div *ngIf="horizontalBarChartDataByNs">
+              <h4 style="text-align: center;">Vulnerabilities by Severity</h4>
+              <p-chart *ngIf="createChart"
+                       #barChartBySeverity
+                       type="bar"
+                       [data]="horizontalBarChartDataBySeverity"
+                       [options]="horizontalBarChartOption"
+                       height="60vh" />
+            </div>
+          </div>
+        </ng-container>
       </div>
+    </ng-template>
+  </p-carousel>
+  <hr />
+  <div style="display: flex; gap: 10px;">
+    <a style="font-size:12px">Select/Unselsect</a>
+    <div class="flex align-items-center" *ngFor="let severityDto of severityDtos" style="font-size:10px">
+      <p-checkbox [(ngModel)]="filterRefreshSeverities"
+                  [label]="severityDto.name"
+                  name="group"
+                  [value]="severityDto" />
     </div>
+    <!--<p-button label="mama" size="small" (onClick)="onMamaClick($event)" />
+    <p>  {{ createChart }}</p>-->
+  </div>
 </p-panel>
