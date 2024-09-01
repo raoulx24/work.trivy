@@ -19,7 +19,7 @@
                              type="pie"
                              [data]=pieChartDataNs
                              [options]="pieChartOptions"
-                             height="230px" />
+                             height="200px" />
                   </div>
                 </div>
               </div>
@@ -33,7 +33,7 @@
                        type="bar"
                        [data]="horizontalBarChartDataByNs"
                        [options]="horizontalBarChartOption"
-                       height="60vh" />
+                       height="55vh" />
             </div>
           </div>
           <div *ngSwitchCase="'barChartSeverity'">
@@ -44,7 +44,7 @@
                        type="bar"
                        [data]="horizontalBarChartDataBySeverity"
                        [options]="horizontalBarChartOption"
-                       height="60vh" />
+                       height="55vh" />
             </div>
           </div>
         </ng-container>
@@ -52,15 +52,18 @@
     </ng-template>
   </p-carousel>
   <hr />
-  <div style="display: flex; gap: 10px;">
+  <div style="display: flex; gap: 10px; align-items: center;">
     <a style="font-size:12px">Select/Unselsect</a>
-    <div class="flex align-items-center" *ngFor="let severityDto of severityDtos" style="font-size:10px">
+    <div *ngFor="let severityDto of severityDtos; let i = index" style="font-size:10px">
       <p-checkbox [(ngModel)]="filterRefreshSeverities"
-                  [label]="severityDto.name"
+                  [inputId]="'chkbox' + i"
                   name="group"
                   [value]="severityDto" />
+      <label [for]="'chkbox' + i">
+        <p-tag [value]="severityDto.name"
+               [style]="{ 'font-size': '10px', 'margin-left': '4px', 'background': severityHelperService.getCssColor(severityDto.id) }">
+        </p-tag>
+      </label>
     </div>
-    <!--<p-button label="mama" size="small" (onClick)="onMamaClick($event)" />
-    <p>  {{ createChart }}</p>-->
   </div>
 </p-panel>

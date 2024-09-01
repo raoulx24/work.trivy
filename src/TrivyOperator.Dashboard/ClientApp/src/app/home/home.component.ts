@@ -14,6 +14,7 @@ import { timer } from 'rxjs';
 export class HomeComponent {
   public vulnerabilityReportSummaryDtos?: VulnerabilityReportSummaryDto[] | null | undefined;
 
+  public severityHelperService: SeverityHelperService;
   public get primeNgHelper(): PrimeNgHelper { return this._primeNgHelper; };
   private _primeNgHelper: PrimeNgHelper;
 
@@ -27,8 +28,9 @@ export class HomeComponent {
   public severityDtos: SeverityDto[] | null | undefined;
   public filterRefreshSeverities: SeverityDto[] = [];
 
-  constructor(vulnerabilityReportsService: VulnerabilityReportsService, private severityHelperService: SeverityHelperService) {
+  constructor(vulnerabilityReportsService: VulnerabilityReportsService, severityHelperService: SeverityHelperService) {
     vulnerabilityReportsService.getVulnerabilityReportSummaryDtos().subscribe(result => this.onVulnerabilityReportSummaryDtos(result), error => console.error(error));
+    this.severityHelperService = severityHelperService;
     this._primeNgHelper = new PrimeNgHelper(this.severityHelperService);
     severityHelperService.getSeverityDtos().then(result => {
       this.filterRefreshSeverities = result;
@@ -45,6 +47,7 @@ export class HomeComponent {
     this.pieChartOptions = {
       plugins: {
         legend: {
+          display: false,
           labels: {
             usePointStyle: true,
             color: textColor,
