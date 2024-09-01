@@ -11,7 +11,6 @@ export class SeverityHelperService {
 
   public async getSeverityDtos(): Promise<SeverityDto[]> {
     if (this._severityDtos == null) {
-      console.log("SeverityHelperService - getSeverityDtos - _severityDtos is null");
       const x = lastValueFrom(this._severitiesService.getSeverities());
       x.then(result => { this._severityDtos = result; });
       return x;

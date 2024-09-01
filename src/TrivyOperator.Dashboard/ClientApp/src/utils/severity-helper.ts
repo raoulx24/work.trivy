@@ -89,8 +89,6 @@ export class PrimeNgHelper {
       severitiesSummary.forEach(severitySummary => {
         totalVulnerabilities.push(severitySummary.details!.filter(x => x.id! == severity!.id!)[0].totalCount!);
       });
-      console.log(`PrimeNgHelper - getDataForHorizontalBarChartByNamespace - ${severity.name}`);
-      console.log(`PrimeNgHelper - getDataForHorizontalBarChartByNamespace - ${totalVulnerabilities}`);
       chartData.datasets.push({
         label: severity.name!,
         data: totalVulnerabilities,
@@ -119,7 +117,6 @@ export class PrimeNgHelper {
         totalVulnerabilities.push(severitySummary.details!.filter(x => x.id! == severity!.id!)[0].totalCount!);
       });
       let color: string = ColorHelper.rainbow(severitiesSummary.length, namespacesCounter);
-      console.log(`Picked color: ${color}`);
       chartData.datasets.push({
         label: severitySummary.namespaceName!,
         data: totalVulnerabilities,

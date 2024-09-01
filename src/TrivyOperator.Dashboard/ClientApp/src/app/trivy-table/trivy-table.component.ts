@@ -61,7 +61,6 @@ export class TrivyTableComponent<TData> {
   @Input() trivyTableColumns: TrivyTableColumn[] = [];
   public get trivyTableOptions(): TrivyTableOptions { return this._trivyTableOptions!; }
   @Input() set trivyTableOptions(trivyTableOptions: TrivyTableOptions) {
-    console.log("TrivyTableComponent<TData> - set trivyTableOptions");
     if (trivyTableOptions != null && trivyTableOptions.tableHeight != "") {
       this.tableHeight = trivyTableOptions.tableHeight;
     }
@@ -150,8 +149,6 @@ export class TrivyTableComponent<TData> {
   }
 
   onFilterData() {
-    console.log("TrivyTableComponent<TData> - onFilterData - " + this.filterRefreshActiveNamespace);
-    console.log("TrivyTableComponent<TData> - onFilterData - " + this.filterRefreshSeverities);
     let event: TrivyFilterData = {
       namespaceName: this.filterRefreshActiveNamespace,
       selectedSeverities: this.filterRefreshSeverities,
