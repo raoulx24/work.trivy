@@ -49,8 +49,8 @@ export class TrivyTableComponent<TData> {
     this._tableHeight = tableHeight;
     if (this.trivyTable) {
       this.trivyTable.scrollHeight = tableHeight;
-      this.isTableVisible = false;
-      setTimeout(() => this.isTableVisible = true, 0);
+      //this.isTableVisible = false;
+      //setTimeout(() => this.isTableVisible = true, 0);
     }
   }
   public get tableHeight(): string {
@@ -126,9 +126,10 @@ export class TrivyTableComponent<TData> {
   }
 
   onSelectionChange(event: any): void {
-    if (event == null) {
-      return;
-    }
+    // tests
+    //if (event == null) {
+    //  return;
+    //}
     if (this.trivyTableOptions?.exposeSelectedRowsEvent) {
       if (this.trivyTableOptions.tableSelectionMode === "single") {
         this.selectedRowsChanged.emit([event]);
@@ -158,9 +159,11 @@ export class TrivyTableComponent<TData> {
   }
 
   onRowUnselect(event: any) {
-    if (this.trivyTableOptions.tableSelectionMode === "single" && this.trivyTable != null) {
-      this.trivyTable.selection = event.data;
-    }
+    // tests
+    //if (this.trivyTableOptions.tableSelectionMode === "single" && this.trivyTable != null) {
+    //  this.trivyTable.selection = event.data;
+    //}
+    //this.trivyTable!.selection = null;
   }
 
   public selectRow(data: TData) {

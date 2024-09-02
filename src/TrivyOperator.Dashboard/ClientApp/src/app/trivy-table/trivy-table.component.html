@@ -1,9 +1,9 @@
-<div *ngIf="isTableVisible">
+<div *ngIf="isTableVisible" style="height:{{ tableHeight }}">
   <p-table #trivyTable
            [columns]="trivyTableColumns"
            [value]="dataDtos!"
            [scrollable]="true"
-           scrollHeight="{{ tableHeight }}"
+           scrollHeight="flex"
            [virtualScroll]="true"
            [virtualScrollItemSize]="46"
            [tableStyle]="{ 'font-size': '14px' }"
