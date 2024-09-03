@@ -44,19 +44,20 @@ export class TrivyTableComponent<TData> {
   @ViewChild('trivyTable') trivyTable?: Table;
   @ViewChild('serverFilterDataOp') serverFilterDataOp?: OverlayPanel;
 
-  @Input() set tableHeight(tableHeight: string) {
-    console.log("TrivyTableComponent<TData> - set tableHeight - ", tableHeight);
-    this._tableHeight = tableHeight;
-    if (this.trivyTable) {
-      this.trivyTable.scrollHeight = tableHeight;
-      //this.isTableVisible = false;
-      //setTimeout(() => this.isTableVisible = true, 0);
-    }
-  }
-  public get tableHeight(): string {
-    return this._tableHeight;
-  }
-  private _tableHeight: string = "";
+  //@Input() set tableHeight(tableHeight: string) {
+  //  console.log("TrivyTableComponent<TData> - set tableHeight - ", tableHeight);
+  //  this._tableHeight = tableHeight;
+  //  if (this.trivyTable) {
+  //    this.trivyTable.scrollHeight = tableHeight;
+  //    //this.isTableVisible = false;
+  //    //setTimeout(() => this.isTableVisible = true, 0);
+  //  }
+  //}
+  //public get tableHeight(): string {
+  //  return this._tableHeight;
+  //}
+  //private _tableHeight: string = "";
+  @Input() public tableHeight: string = "10vh";
 
   @Input() trivyTableColumns: TrivyTableColumn[] = [];
   public get trivyTableOptions(): TrivyTableOptions { return this._trivyTableOptions!; }
