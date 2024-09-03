@@ -73,7 +73,7 @@ export class TrivyTableComponent<TData> {
   @Output() selectedRowsChanged = new EventEmitter<TData[]>();
   @Output() refreshRequested = new EventEmitter<TrivyFilterData>();
 
-  public selectedDataDtos?: TData[] | null;
+  public selectedDataDtos?: any | null;
   public filterSeverityOptions: number[] = []
   public filterSelectedSeverityIds: number[] | null = [];
   public filterActiveNamespaces: string[] | null = [];
@@ -127,12 +127,13 @@ export class TrivyTableComponent<TData> {
   }
 
   onSelectionChange(event: any): void {
-    // tests
-    //if (event == null) {
-    //  return;
-    //}
+    console.log("Trivy - onSelectionChange");
+    // don't autoselect
+    if (event == null) {
+      return;
+    }
     if (this.trivyTableOptions?.exposeSelectedRowsEvent) {
-      if (this.trivyTableOptions.tableSelectionMode === "single") {
+      if (this.trivyTableOptions.tableSelectionMode === "single" && event) {
         this.selectedRowsChanged.emit([event]);
       }
       else {
@@ -160,18 +161,19 @@ export class TrivyTableComponent<TData> {
   }
 
   onRowUnselect(event: any) {
-    // tests
-    //if (this.trivyTableOptions.tableSelectionMode === "single" && this.trivyTable != null) {
-    //  this.trivyTable.selection = event.data;
-    //}
-    //this.trivyTable!.selection = null;
+    // don't autoselect
+    if (this.trivyTableOptions.tableSelectionMode === "single" && this.trivyTable != null) {
+      this.trivyTable.selection = event.data;
+      return;
+    }
   }
 
   public selectRow(data: TData) {
     if (data == null) {
       return;
     }
-    this.selectedDataDtos = [data];
+    this.selectedDataDtos = data;
+    this.onSelectionChange(data);
   }
 }
 
