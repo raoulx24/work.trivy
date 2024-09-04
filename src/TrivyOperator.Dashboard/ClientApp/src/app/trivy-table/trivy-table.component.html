@@ -74,7 +74,10 @@
       <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex" style="height:46px">
         <td *ngFor="let col of columns" style="{{ col.style }}">
           <a *ngIf="col.renderType=='standard'">{{ rowData[col.field] }}</a>
-          <a *ngIf="col.renderType=='imageNameTag'">{{ rowData[col.field] }}:{{ rowData[col.extraFields[0]] }}</a>
+          <div *ngIf="col.renderType=='imageNameTag'">
+            <a>{{ rowData[col.field] }}:{{ rowData[col.extraFields[0]] }}</a>
+            <p-tag *ngIf="rowData[col.extraFields[1]]" value="EOSL" [style]="{ background: severityHelper.getCssColor(0), 'margin-left':'10px' }" />
+          </div>
           <a *ngIf="col.renderType=='link'" href="{{ rowData[col.extraFields[0]] }}" target="_blank">{{ rowData[col.field] }}</a>
           <p-tag *ngIf="col.renderType=='severityBadge'" [value]="severityHelper.getName(rowData[col.field])" [style]="{ background: severityHelper.getCssColor(rowData[col.field]) }" />
           <div *ngIf="col.renderType=='severityMultiTags'" style="display: flex; justify-content: space-between">
