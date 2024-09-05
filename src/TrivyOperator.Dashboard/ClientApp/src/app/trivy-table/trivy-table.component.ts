@@ -175,6 +175,16 @@ export class TrivyTableComponent<TData> {
     this.selectedDataDtos = data;
     this.onSelectionChange(data);
   }
+
+  // custom back overlay
+  public overlayVisible: boolean = false;
+
+  public onOverlayToogle() {
+    this.overlayVisible = !this.overlayVisible;
+  }
+
 }
+
+
 
 // clear filters on reset table: https://stackoverflow.com/questions/51395624/reset-filter-value-on-primeng-table

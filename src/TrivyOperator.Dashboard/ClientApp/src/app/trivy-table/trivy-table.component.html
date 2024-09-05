@@ -97,8 +97,8 @@
     </ng-template>
   </p-table>
 
-  <p-overlayPanel #csvExportOp>
-    <div class="flex flex-column gap-3 w-25rem" style="width: 420px">
+  <p-overlayPanel #csvExportOp [dismissable]="true" (onShow)="onOverlayToogle()" (onHide)="onOverlayToogle()">
+    <div class="flex flex-column gap-3 w-25rem" style="width: 510px">
       <div class="row">
         <div>
           <span style="font-size: 12px; padding-left: 2px;">CSV File Name</span>
@@ -137,7 +137,12 @@
     </div>
   </p-overlayPanel>
 
-  <p-overlayPanel #serverFilterDataOp>
+  <p-overlayPanel #serverFilterDataOp
+                  [dismissable]="true"
+                  [showTransitionOptions]="'0.3s ease-in'"
+                  [hideTransitionOptions]="'0.3s ease-out'"
+                  (onShow)="onOverlayToogle()"
+                  (onHide)="onOverlayToogle()">
     <div class="flex flex-column gap-3 w-25rem">
       <div class="row">
         <p-dropdown [options]="activeNamespaces!"
@@ -175,3 +180,4 @@
     </div>
   </p-overlayPanel>
 </div>
+<div *ngIf="overlayVisible" class="custom-backdrop"></div>
