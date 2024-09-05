@@ -26,9 +26,11 @@ export interface SeveritiesSummary {
   namespaceName?: string | null;
   details?: Array<{
     id?: number;
-    totalCount?: number; 
+    totalCount?: number;
+    uniqueCount?: number;
   }>;
   uid?: string;
+  isTotal?: boolean;
 }
 
 export class PrimeNgHelper {
@@ -49,13 +51,13 @@ export class PrimeNgHelper {
         cssColors.push(this._severityHelperService.getCssColor(x.id));
         cssColorHovers.push(this._severityHelperService.getCssColorHover(x.id));
       });
-      severitiesSummary.forEach(severitySummary => {
+      severitiesSummary.filter(x => !x.isTotal).forEach(severitySummary => {
         let values: number[] = [];
         if (severitySummary.details != null) {
 
           severitySummary.details
             .sort((a, b) => a.id! - b.id!)
-            .forEach(x => { values.push(x.totalCount!); });
+            .forEach(x => { values.push(x.uniqueCount!); });
         }
         let chartData: PrimeNgPieChartData = {
           labels: severityLabels,
@@ -82,12 +84,12 @@ export class PrimeNgHelper {
       labels: [],
       title: 'a title',
     };
-    severitiesSummary.forEach(x => { chartData.labels.push(x.namespaceName!); });
+    severitiesSummary.filter(x => !x.isTotal).forEach(x => { chartData.labels.push(x.namespaceName!); });
     let severities = await this._severityHelperService.getSeverityDtos();
     severities.forEach(severity => {
       let totalVulnerabilities: number[] = [];
-      severitiesSummary.forEach(severitySummary => {
-        totalVulnerabilities.push(severitySummary.details!.filter(x => x.id! == severity!.id!)[0].totalCount!);
+      severitiesSummary.filter(x => !x.isTotal).forEach(severitySummary => {
+        totalVulnerabilities.push(severitySummary.details!.filter(x => x.id! == severity!.id!)[0].uniqueCount!);
       });
       chartData.datasets.push({
         label: severity.name!,
@@ -111,10 +113,10 @@ export class PrimeNgHelper {
     let severities = await this._severityHelperService.getSeverityDtos();
     let namespacesCounter: number = 0;
     severities.forEach(x => { chartData.labels.push(x.name); });
-    severitiesSummary.forEach(severitySummary => {
+    severitiesSummary.filter(x => !x.isTotal).forEach(severitySummary => {
       let totalVulnerabilities: number[] = [];
       severities.forEach(severity => {
-        totalVulnerabilities.push(severitySummary.details!.filter(x => x.id! == severity!.id!)[0].totalCount!);
+        totalVulnerabilities.push(severitySummary.details!.filter(x => x.id! == severity!.id!)[0].uniqueCount!);
       });
       let color: string = ColorHelper.rainbow(severitiesSummary.length, namespacesCounter);
       chartData.datasets.push({

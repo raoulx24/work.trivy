@@ -523,6 +523,9 @@ components:
         totalCount:
           type: integer
           format: int64
+        uniqueCount:
+          type: integer
+          format: int64
       additionalProperties: false
     VulnerabilityReportSummaryDto:
       type: object
@@ -533,6 +536,8 @@ components:
         namespaceName:
           type: string
           nullable: true
+        isTotal:
+          type: boolean
         details:
           type: array
           items:
