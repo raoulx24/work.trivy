@@ -6,7 +6,7 @@
   height: 100%;
   background-color: rgba(0, 0, 0, 0.4); /* Adjust the opacity as needed */
   z-index: 999; /* Ensure it is behind the overlay but above other content */
-  transition: opacity 0.3s ease-in-out;
+  transition: opacity 0.5s ease-in-out;
 }
 
 .custom-backdrop.animated-backdrop {
