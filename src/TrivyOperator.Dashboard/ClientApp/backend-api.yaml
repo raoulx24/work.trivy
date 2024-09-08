@@ -171,20 +171,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
-  /api/vulnerability-reports/summary-by-namespace:
+  /api/vulnerability-reports/summary:
     get:
       tags:
         - VulnerabilityReports
-      operationId: GetVulnerabilityReportSummaryDtos
+      operationId: GetVulnerabilityReportSumaryDto
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/VulnerabilityReportSummaryDto'
+                $ref: '#/components/schemas/VulnerabilityReportSumaryDto'
         '400':
           description: Bad Request
           content:
@@ -266,6 +264,101 @@ components:
         name:
           minLength: 1
           type: string
+      additionalProperties: false
+    VRImageEOSLByNsSummaryDto:
+      type: object
+      properties:
+        namespaceName:
+          type: string
+          nullable: true
+        totalCount:
+          type: integer
+          format: int32
+        uniqueCount:
+          type: integer
+          format: int32
+        isTotal:
+          type: boolean
+      additionalProperties: false
+    VRImageEOSLSummaryDto:
+      type: object
+      properties:
+        osFullName:
+          type: string
+          nullable: true
+        count:
+          type: integer
+          format: int32
+      additionalProperties: false
+    VRImageOSSummaryDto:
+      type: object
+      properties:
+        osFullName:
+          type: string
+          nullable: true
+        count:
+          type: integer
+          format: int32
+      additionalProperties: false
+    VRImageOSesByNSSummaryDto:
+      type: object
+      properties:
+        namespaceName:
+          type: string
+          nullable: true
+        totalCount:
+          type: integer
+          format: int32
+        uniqueCount:
+          type: integer
+          format: int32
+        isTotal:
+          type: boolean
+      additionalProperties: false
+    VRImagesByNSSummaryDto:
+      type: object
+      properties:
+        namespaceName:
+          type: string
+          nullable: true
+        totalCount:
+          type: integer
+          format: int32
+        uniqueCount:
+          type: integer
+          format: int32
+        isTotal:
+          type: boolean
+      additionalProperties: false
+    VRSeveritiesByNsSummaryDetailDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        totalCount:
+          type: integer
+          format: int32
+        uniqueCount:
+          type: integer
+          format: int32
+      additionalProperties: false
+    VRSeveritiesByNsSummaryDto:
+      type: object
+      properties:
+        uid:
+          type: string
+          format: uuid
+        namespaceName:
+          type: string
+          nullable: true
+        isTotal:
+          type: boolean
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/VRSeveritiesByNsSummaryDetailDto'
+          nullable: true
       additionalProperties: false
     VulnerabilityReportDenormalizedDto:
       type: object
@@ -514,33 +607,37 @@ components:
           type: string
           nullable: true
       additionalProperties: false
-    VulnerabilityReportSummaryDetailDto:
+    VulnerabilityReportSumaryDto:
       type: object
       properties:
-        id:
-          type: integer
-          format: int32
-        totalCount:
-          type: integer
-          format: int64
-        uniqueCount:
-          type: integer
-          format: int64
-      additionalProperties: false
-    VulnerabilityReportSummaryDto:
-      type: object
-      properties:
-        uid:
-          type: string
-          format: uuid
-        namespaceName:
-          type: string
-          nullable: true
-        isTotal:
-          type: boolean
-        details:
+        severitiesByNsSummaryDtos:
           type: array
           items:
-            $ref: '#/components/schemas/VulnerabilityReportSummaryDetailDto'
+            $ref: '#/components/schemas/VRSeveritiesByNsSummaryDto'
+          nullable: true
+        imagesByNSSummaryDtos:
+          type: array
+          items:
+            $ref: '#/components/schemas/VRImagesByNSSummaryDto'
+          nullable: true
+        imageOSesByNSSummaryDtos:
+          type: array
+          items:
+            $ref: '#/components/schemas/VRImageOSesByNSSummaryDto'
+          nullable: true
+        imageOSSummaryDtos:
+          type: array
+          items:
+            $ref: '#/components/schemas/VRImageOSSummaryDto'
+          nullable: true
+        imageEOSLByNsSummaryDtos:
+          type: array
+          items:
+            $ref: '#/components/schemas/VRImageEOSLByNsSummaryDto'
+          nullable: true
+        imageEOSLSummaryDtos:
+          type: array
+          items:
+            $ref: '#/components/schemas/VRImageEOSLSummaryDto'
           nullable: true
       additionalProperties: false

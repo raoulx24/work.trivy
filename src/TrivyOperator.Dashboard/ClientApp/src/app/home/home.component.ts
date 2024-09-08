@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { VulnerabilityReportsService } from "../../api/services/vulnerability-reports.service";
-import { VulnerabilityReportSummaryDto } from "../../api/models/vulnerability-report-summary-dto";
+import { VulnerabilityReportSumaryDto } from "../../api/models/vulnerability-report-sumary-dto";
 import { PrimeNgPieChartData, PrimeNgHorizontalBarChartData, PrimeNgHelper, SeveritiesSummary } from "../../utils/severity-helper";
 import { SeverityHelperService } from "../services/severity-helper.service"
 import { SeverityDto } from "../../api/models/severity-dto"
@@ -12,7 +12,7 @@ import { timer } from 'rxjs';
   templateUrl: './home.component.html',
 })
 export class HomeComponent {
-  public vulnerabilityReportSummaryDtos?: VulnerabilityReportSummaryDto[] | null | undefined;
+  public vulnerabilityReportSumaryDto?: VulnerabilityReportSumaryDto | null | undefined;
 
   public severityHelperService: SeverityHelperService;
   public get primeNgHelper(): PrimeNgHelper { return this._primeNgHelper; };
@@ -29,7 +29,7 @@ export class HomeComponent {
   public filterRefreshSeverities: SeverityDto[] = [];
 
   constructor(vulnerabilityReportsService: VulnerabilityReportsService, severityHelperService: SeverityHelperService) {
-    vulnerabilityReportsService.getVulnerabilityReportSummaryDtos().subscribe(result => this.onVulnerabilityReportSummaryDtos(result), error => console.error(error));
+    vulnerabilityReportsService.getVulnerabilityReportSumaryDto().subscribe(result => this.onVulnerabilityReportSummaryDtos(result), error => console.error(error));
     this.severityHelperService = severityHelperService;
     this._primeNgHelper = new PrimeNgHelper(this.severityHelperService);
     severityHelperService.getSeverityDtos().then(result => {
@@ -96,18 +96,18 @@ export class HomeComponent {
     };
   }
 
-  onVulnerabilityReportSummaryDtos(vulnerabilityReportSummaryDtos?: VulnerabilityReportSummaryDto[]) {
-    this.vulnerabilityReportSummaryDtos = vulnerabilityReportSummaryDtos;
+  onVulnerabilityReportSummaryDtos(vulnerabilityReportSumaryDto?: VulnerabilityReportSumaryDto) {
+    this.vulnerabilityReportSumaryDto = vulnerabilityReportSumaryDto;
 
-    if (vulnerabilityReportSummaryDtos == null) {
+    if (vulnerabilityReportSumaryDto == null) {
       return;
     }
     this.severityHelperService.getSeverityDtos().then(x => {
       this.severityDtos = x;
-      this.pieChartData = this._primeNgHelper.getDataForPieChart(vulnerabilityReportSummaryDtos as SeveritiesSummary[]);
-      this._primeNgHelper.getDataForHorizontalBarChartByNamespace(vulnerabilityReportSummaryDtos as SeveritiesSummary[])
+      this.pieChartData = this._primeNgHelper.getDataForPieChart(vulnerabilityReportSumaryDto.severitiesByNsSummaryDtos as SeveritiesSummary[]);
+      this._primeNgHelper.getDataForHorizontalBarChartByNamespace(vulnerabilityReportSumaryDto.severitiesByNsSummaryDtos as SeveritiesSummary[])
         .then(x => this.horizontalBarChartDataByNs = x);
-      this._primeNgHelper.getDataForHorizontalBarChartBySeverity(vulnerabilityReportSummaryDtos as SeveritiesSummary[])
+      this._primeNgHelper.getDataForHorizontalBarChartBySeverity(vulnerabilityReportSumaryDto.severitiesByNsSummaryDtos as SeveritiesSummary[])
         .then(x => this.horizontalBarChartDataBySeverity = x);
     });
   }
