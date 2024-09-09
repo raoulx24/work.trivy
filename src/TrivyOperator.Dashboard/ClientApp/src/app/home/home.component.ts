@@ -1,16 +1,41 @@
 import { Component, ViewChild } from '@angular/core';
 import { VulnerabilityReportsService } from "../../api/services/vulnerability-reports.service";
 import { VulnerabilityReportSumaryDto } from "../../api/models/vulnerability-report-sumary-dto";
+import { VrSeveritiesByNsSummaryDto } from '../../api/models/vr-severities-by-ns-summary-dto';
 import { PrimeNgPieChartData, PrimeNgHorizontalBarChartData, PrimeNgHelper, SeveritiesSummary } from "../../utils/severity-helper";
 import { SeverityHelperService } from "../services/severity-helper.service"
 import { SeverityDto } from "../../api/models/severity-dto"
 import { UIChart } from 'primeng/chart';
 import { timer } from 'rxjs';
 
+export interface SeveritiySummary {
+  severityName: string;
+  count: number;
+  fixable: number;
+}
+
+export interface OtherSummaryMainStatistics {
+  description: "Images" | "Images OSes" | "End of Service Life";
+  count: number;
+}
+
+export interface OthersSummaryDto {
+  name: string;
+  count: number;
+}
+
+export interface OthersByNsSummaryDto {
+  namespaceName: string,
+  totalCount: number,
+  uniqueCount: number,
+  isTotal: boolean,
+}
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
 })
+
 export class HomeComponent {
   public vulnerabilityReportSumaryDto?: VulnerabilityReportSumaryDto | null | undefined;
 
@@ -23,10 +48,20 @@ export class HomeComponent {
   public horizontalBarChartDataBySeverity: PrimeNgHorizontalBarChartData | null | undefined;
   public pieChartOptions: any;
   public horizontalBarChartOption: any;
-  public slides: string[] = ["barChartNS", "barChartSeverity", "pieCharts"];
+  public slides: string[] = ["barChartNS", "barChartSeverity", "mainOverview", "pieCharts"];
 
   public severityDtos: SeverityDto[] | null | undefined;
   public filterRefreshSeverities: SeverityDto[] = [];
+
+  public severitiesSummaryForTable: SeveritiySummary[] = [];
+  public othersSummaryForTable: OtherSummaryMainStatistics[] = [];
+
+  public moreOthersModalTitle: string = "";
+  public isMoreOthersModalVisible: boolean = false;
+  public othersSummaryDtos: OthersSummaryDto[] = [];
+  public othersByNsSummaryDtos: OthersByNsSummaryDto[] = [];
+
+  public showUniqueValues: boolean = true;
 
   constructor(vulnerabilityReportsService: VulnerabilityReportsService, severityHelperService: SeverityHelperService) {
     vulnerabilityReportsService.getVulnerabilityReportSumaryDto().subscribe(result => this.onVulnerabilityReportSummaryDtos(result), error => console.error(error));
@@ -109,7 +144,53 @@ export class HomeComponent {
         .then(x => this.horizontalBarChartDataByNs = x);
       this._primeNgHelper.getDataForHorizontalBarChartBySeverity(vulnerabilityReportSumaryDto.severitiesByNsSummaryDtos as SeveritiesSummary[])
         .then(x => this.horizontalBarChartDataBySeverity = x);
+      this.extractDataForTables();
     });
+  }
+
+  private extractDataForTables() {
+    if (this.vulnerabilityReportSumaryDto?.severitiesByNsSummaryDtos) {
+      let severitesTotal = this.vulnerabilityReportSumaryDto.severitiesByNsSummaryDtos.find(x => x.isTotal);
+      if (severitesTotal) {
+        let tableValues: SeveritiySummary[] = [];
+        severitesTotal.details?.sort((a, b) => a.id! - b.id!).forEach(x => {
+          tableValues.push({
+            severityName: this.severityHelperService.getName(x.id!),
+            count: this.showUniqueValues ? x.uniqueCount! : x.totalCount!,
+            fixable: this.showUniqueValues ? x.fixableUniqueCount! : x.fixableTotalCount!,
+          });
+        });
+        this.severitiesSummaryForTable = tableValues;
+      }
+    }
+    if (this.vulnerabilityReportSumaryDto?.imagesByNSSummaryDtos) {
+      let totalData = this.vulnerabilityReportSumaryDto.imagesByNSSummaryDtos.find(x => x.isTotal);
+      if (totalData) {
+        this.othersSummaryForTable.push({
+          description: "Images",
+          count: this.showUniqueValues ? totalData.uniqueCount! : totalData.totalCount!,
+        })
+      }
+    }
+    if (this.vulnerabilityReportSumaryDto?.imageOSesByNSSummaryDtos) {
+      let totalData = this.vulnerabilityReportSumaryDto.imageOSesByNSSummaryDtos.find(x => x.isTotal);
+      if (totalData) {
+        this.othersSummaryForTable.push({
+          description: "Images OSes",
+          count: this.showUniqueValues ? totalData.uniqueCount! : totalData.totalCount!,
+        })
+      }
+    }
+    if (this.vulnerabilityReportSumaryDto?.imageEOSLByNsSummaryDtos) {
+      let totalData = this.vulnerabilityReportSumaryDto.imageEOSLByNsSummaryDtos.find(x => x.isTotal);
+      if (totalData) {
+        this.othersSummaryForTable.push({
+          description: "End of Service Life",
+          count: this.showUniqueValues ? totalData.uniqueCount! : totalData.totalCount!,
+        })
+      }
+    }
+
   }
 
   public onMamaClick(event: Event) {
@@ -166,5 +247,38 @@ export class HomeComponent {
   @ViewChild('barChartByNs') barChartByNs?: UIChart;
   hideNoTwo: boolean = false;
   public createChart: boolean = true;
+
+  public onOthersMore(element: OtherSummaryMainStatistics) {
+    
+
+    this.moreOthersModalTitle = "More Info for " + element.description;
+    let tempByNsSummary: OthersByNsSummaryDto[] = [];
+    let tempSummary: OthersSummaryDto[] = [];
+    switch (element.description) {
+      case 'Images':
+        tempByNsSummary = this.vulnerabilityReportSumaryDto?.imagesByNSSummaryDtos! as OthersByNsSummaryDto[]
+        this.othersByNsSummaryDtos = tempByNsSummary.sort(this.sortOthersByNsSummary);
+        this.othersSummaryDtos = [];
+        break;
+      case 'Images OSes':
+        tempByNsSummary = this.vulnerabilityReportSumaryDto?.imageOSesByNSSummaryDtos! as OthersByNsSummaryDto[];
+        this.othersByNsSummaryDtos = tempByNsSummary.sort(this.sortOthersByNsSummary);
+        this.othersSummaryDtos = this.vulnerabilityReportSumaryDto?.imageOSSummaryDtos!.sort((a, b) => a.name! > b.name! ? 1 : -1) as OthersSummaryDto[];
+        break;
+      case 'End of Service Life':
+        tempByNsSummary = this.vulnerabilityReportSumaryDto?.imageEOSLByNsSummaryDtos! as OthersByNsSummaryDto[];
+        this.othersByNsSummaryDtos = tempByNsSummary.sort(this.sortOthersByNsSummary);
+        this.othersSummaryDtos = this.vulnerabilityReportSumaryDto?.imageEOSLSummaryDtos!.sort((a, b) => a.name! > b.name! ? 1 : -1) as OthersSummaryDto[];
+        break;
+    }
+    this.isMoreOthersModalVisible = true;
+  }
+
+  sortOthersByNsSummary = (a: OthersByNsSummaryDto, b: OthersByNsSummaryDto): number => {
+    if (a.isTotal === b.isTotal) {
+      return a.namespaceName > b.namespaceName ? 1 : -1;
+    }
+    return a.isTotal ? 1 : -1;
+  };
 
 }

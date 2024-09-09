@@ -283,7 +283,7 @@ components:
     VRImageEOSLSummaryDto:
       type: object
       properties:
-        osFullName:
+        name:
           type: string
           nullable: true
         count:
@@ -293,7 +293,7 @@ components:
     VRImageOSSummaryDto:
       type: object
       properties:
-        osFullName:
+        name:
           type: string
           nullable: true
         count:
@@ -340,6 +340,12 @@ components:
           type: integer
           format: int32
         uniqueCount:
+          type: integer
+          format: int32
+        fixableTotalCount:
+          type: integer
+          format: int32
+        fixableUniqueCount:
           type: integer
           format: int32
       additionalProperties: false

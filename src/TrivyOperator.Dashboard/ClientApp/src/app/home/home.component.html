@@ -4,11 +4,52 @@
               [numVisible]="1"
               [numScroll]="1"
               [circular]="true"
-              [autoplayInterval]="10000"
-              >
+              [autoplayInterval]="10000">
     <ng-template let-slide pTemplate="item">
       <div class="custom-slide">
         <ng-container [ngSwitch]="slide">
+          <div *ngSwitchCase="'mainOverview'">
+            <h4 style="text-align: center;">Main Overview</h4>
+            <div class="col-4">
+              <div class="row">
+                <p-table [value]="severitiesSummaryForTable" [tableStyle]="{ 'font-size': '14px' }" styleClass="p-datatable-sm">
+                  <ng-template pTemplate="header">
+                    <tr>
+                      <th style="width: 50%; max-width: 50%;">Severity</th>
+                      <th style="width: 25%; max-width: 25%; text-align: right;">Count</th>
+                      <th style="width: 25%; max-width: 25%; text-align: right;">Fixable</th>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-severity>
+                    <tr>
+                      <td style="width: 50%; max-width: 50%;">{{ severity.severityName }}</td>
+                      <td style="width: 25%; max-width: 25%; text-align: right;">{{ severity.count }}</td>
+                      <td style="width: 25%; max-width: 25%; text-align: right;">{{ severity.fixable }}</td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+                <p-button label="More on Severities..." [text]="true" size="small" [style]="{ 'font-size': '14px', 'float': 'right' }" />
+              </div>
+              <hr />
+              <div class="row">
+                <p-table [value]="othersSummaryForTable" [tableStyle]="{ 'font-size': '14px' }" styleClass="p-datatable-sm">
+                  <ng-template pTemplate="body" let-others>
+                    <tr>
+                      <td style="width: 50%; max-width: 50%;">Total for {{ others.description }}</td>
+                      <td style="width: 25%; max-width: 25%; text-align: right;">{{ others.count }}</td>
+                      <td style="width: 25%; max-width: 25%;">
+                        <p-button label="More..." [text]="true" size="small" (onClick)="onOthersMore(others)"
+                                  [style]="{ 'font-size': '14px', 'float': 'right', 'padding': '0' }" />
+                      </td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+              </div>
+            </div>
+            <div class="col-8">
+
+            </div>
+          </div>
           <div *ngSwitchCase="'pieCharts'">
             <div class="row row-cols-xl-6 row-cols-lg-4 row-cols-md-3 row-cols-sm-1" *ngIf="pieChartData"
                  style="height: 55vh; width: 85vw; overflow-y: auto; display: flex; justify-content: center; align-items: center">
@@ -17,10 +58,10 @@
                   <div class="card-body">
                     <h3 class="card-title" style="text-align: center;">{{ pieChartDataNs.title }}</h3>
                     <p-chart #pieChart
-                              type="pie"
-                              [data]=pieChartDataNs
-                              [options]="pieChartOptions"
-                              height="200px" />
+                             type="pie"
+                             [data]=pieChartDataNs
+                             [options]="pieChartOptions"
+                             height="200px" />
                   </div>
                 </div>
               </div>
@@ -30,24 +71,24 @@
             <div *ngIf="horizontalBarChartDataByNs">
               <h4 style="text-align: center;">Vulnerabilities by Namespace</h4>
               <p-chart *ngIf="createChart"
-                        #barChartByNs
-                        type="bar"
-                        [data]="horizontalBarChartDataByNs"
-                        [options]="horizontalBarChartOption"
-                        height="55vh"
-                        width="85vw"/>
+                       #barChartByNs
+                       type="bar"
+                       [data]="horizontalBarChartDataByNs"
+                       [options]="horizontalBarChartOption"
+                       height="55vh"
+                       width="85vw" />
             </div>
           </div>
           <div *ngSwitchCase="'barChartSeverity'">
             <div *ngIf="horizontalBarChartDataByNs">
               <h4 style="text-align: center;">Vulnerabilities by Severity</h4>
               <p-chart *ngIf="createChart"
-                        #barChartBySeverity
-                        type="bar"
-                        [data]="horizontalBarChartDataBySeverity"
-                        [options]="horizontalBarChartOption"
-                        height="55vh"
-                        width="85vw"/>
+                       #barChartBySeverity
+                       type="bar"
+                       [data]="horizontalBarChartDataBySeverity"
+                       [options]="horizontalBarChartOption"
+                       height="55vh"
+                       width="85vw" />
             </div>
           </div>
         </ng-container>
@@ -55,3 +96,55 @@
     </ng-template>
   </p-carousel>
 </p-panel>
+
+<p-dialog header="{{ moreOthersModalTitle }}"
+          [modal]="true"
+          [(visible)]="isMoreOthersModalVisible"
+          closable="true"
+          closeOnEscape="true"
+          dismissableMask="true"
+          resizable="true"
+          [contentStyle]="{ 'height': '60vh'}"
+          [style]="{ width: '70vw' }">
+
+  <div class="container">
+    <div class="row">
+      <div class="col-6">
+        <p-table [value]="othersByNsSummaryDtos" [tableStyle]="{ 'min-width': '10rem' }">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Namespace</th>
+              <th>TotalCount</th>
+              <th>UniqueCount</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-others>
+            <tr>
+              <td>{{ others.namespaceName }}</td>
+              <td>{{ others.totalCount }}</td>
+              <td>{{ others.uniqueCount }}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+
+      </div>
+      <div class="col-6">
+        <p-table [value]="othersSummaryDtos" [tableStyle]="{ 'min-width': '10rem' }">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Name</th>
+              <th>Count</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-others>
+            <tr>
+              <td>{{ others.name }}</td>
+              <td>{{ others.count }}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+
+      </div>
+    </div>
+    </div>
+</p-dialog>
