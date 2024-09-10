@@ -281,4 +281,8 @@ export class HomeComponent {
     return a.isTotal ? 1 : -1;
   };
 
+  getRowStyle(rowData: OthersByNsSummaryDto) {
+    return rowData.isTotal ? { 'font-weight' : 'bold' } : {};
+  }
+
 }

@@ -10,7 +10,7 @@
         <ng-container [ngSwitch]="slide">
           <div *ngSwitchCase="'mainOverview'">
             <h4 style="text-align: center;">Main Overview</h4>
-            <div class="col-4">
+            <div class="col-2">
               <div class="row">
                 <p-table [value]="severitiesSummaryForTable" [tableStyle]="{ 'font-size': '14px' }" styleClass="p-datatable-sm">
                   <ng-template pTemplate="header">
@@ -35,7 +35,7 @@
                 <p-table [value]="othersSummaryForTable" [tableStyle]="{ 'font-size': '14px' }" styleClass="p-datatable-sm">
                   <ng-template pTemplate="body" let-others>
                     <tr>
-                      <td style="width: 50%; max-width: 50%;">Total for {{ others.description }}</td>
+                      <td style="width: 50%; max-width: 50%;">{{ others.description }}</td>
                       <td style="width: 25%; max-width: 25%; text-align: right;">{{ others.count }}</td>
                       <td style="width: 25%; max-width: 25%;">
                         <p-button label="More..." [text]="true" size="small" (onClick)="onOthersMore(others)"
@@ -109,37 +109,39 @@
 
   <div class="container">
     <div class="row">
-      <div class="col-6">
-        <p-table [value]="othersByNsSummaryDtos" [tableStyle]="{ 'min-width': '10rem' }">
+      <div class="col-6" style="height: 55vh">
+        <p-table [value]="othersByNsSummaryDtos" [scrollable]="true" scrollHeight="flex"
+                 [tableStyle]="{ 'min-width': '10rem', 'font-size': '14px' }" styleClass="p-datatable-sm">
           <ng-template pTemplate="header">
             <tr>
-              <th>Namespace</th>
-              <th>TotalCount</th>
-              <th>UniqueCount</th>
+              <th style="width: 50%; max-width: 50%;">Namespace</th>
+              <th style="width: 25%; max-width: 25%; text-align: right;">TotalCount</th>
+              <th style="width: 25%; max-width: 25%; text-align: right;">UniqueCount</th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-others>
-            <tr>
-              <td>{{ others.namespaceName }}</td>
-              <td>{{ others.totalCount }}</td>
-              <td>{{ others.uniqueCount }}</td>
+            <tr [ngStyle]="getRowStyle(others)">
+              <td style="width: 50%; max-width: 50%;">{{ others.namespaceName }}</td>
+              <td style="width: 25%; max-width: 25%; text-align: right;">{{ others.totalCount }}</td>
+              <td style="width: 25%; max-width: 25%; text-align: right;">{{ others.uniqueCount }}</td>
             </tr>
           </ng-template>
         </p-table>
 
       </div>
-      <div class="col-6">
-        <p-table [value]="othersSummaryDtos" [tableStyle]="{ 'min-width': '10rem' }">
+      <div class="col-6" style="height: 55vh">
+        <p-table [value]="othersSummaryDtos" [scrollable]="true" scrollHeight="flex"
+                 [tableStyle]="{ 'min-width': '10rem', 'font-size': '14px' }" styleClass="p-datatable-sm">
           <ng-template pTemplate="header">
             <tr>
-              <th>Name</th>
-              <th>Count</th>
+              <th style="width: 70%; max-width: 70%;">Name</th>
+              <th style="width: 30%; max-width: 30%; text-align: right;">Count</th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-others>
             <tr>
-              <td>{{ others.name }}</td>
-              <td>{{ others.count }}</td>
+              <td style="width: 70%; max-width: 70%;">{{ others.name }}</td>
+              <td style="width: 30%; max-width: 30%; text-align: right;">{{ others.count }}</td>
             </tr>
           </ng-template>
         </p-table>
