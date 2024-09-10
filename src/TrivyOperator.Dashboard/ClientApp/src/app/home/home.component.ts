@@ -48,7 +48,7 @@ export class HomeComponent {
   public horizontalBarChartDataBySeverity: PrimeNgHorizontalBarChartData | null | undefined;
   public pieChartOptions: any;
   public horizontalBarChartOption: any;
-  public slides: string[] = ["barChartNS", "barChartSeverity", "mainOverview", "pieCharts"];
+  public slides: string[] = ["barChartNS", "barChartSeverity"];
 
   public severityDtos: SeverityDto[] | null | undefined;
   public filterRefreshSeverities: SeverityDto[] = [];
