@@ -232,6 +232,31 @@ paths:
                 $ref: '#/components/schemas/ProblemDetails'
 components:
   schemas:
+    GenericByNsSummaryDto:
+      type: object
+      properties:
+        namespaceName:
+          type: string
+          nullable: true
+        totalCount:
+          type: integer
+          format: int32
+        distinctCount:
+          type: integer
+          format: int32
+        isTotal:
+          type: boolean
+      additionalProperties: false
+    GenericSummaryDto:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+        count:
+          type: integer
+          format: int32
+      additionalProperties: false
     ProblemDetails:
       type: object
       properties:
@@ -265,71 +290,6 @@ components:
           minLength: 1
           type: string
       additionalProperties: false
-    VRImageEOSLByNsSummaryDto:
-      type: object
-      properties:
-        namespaceName:
-          type: string
-          nullable: true
-        totalCount:
-          type: integer
-          format: int32
-        uniqueCount:
-          type: integer
-          format: int32
-        isTotal:
-          type: boolean
-      additionalProperties: false
-    VRImageEOSLSummaryDto:
-      type: object
-      properties:
-        name:
-          type: string
-          nullable: true
-        count:
-          type: integer
-          format: int32
-      additionalProperties: false
-    VRImageOSSummaryDto:
-      type: object
-      properties:
-        name:
-          type: string
-          nullable: true
-        count:
-          type: integer
-          format: int32
-      additionalProperties: false
-    VRImageOSesByNSSummaryDto:
-      type: object
-      properties:
-        namespaceName:
-          type: string
-          nullable: true
-        totalCount:
-          type: integer
-          format: int32
-        uniqueCount:
-          type: integer
-          format: int32
-        isTotal:
-          type: boolean
-      additionalProperties: false
-    VRImagesByNSSummaryDto:
-      type: object
-      properties:
-        namespaceName:
-          type: string
-          nullable: true
-        totalCount:
-          type: integer
-          format: int32
-        uniqueCount:
-          type: integer
-          format: int32
-        isTotal:
-          type: boolean
-      additionalProperties: false
     VRSeveritiesByNsSummaryDetailDto:
       type: object
       properties:
@@ -339,13 +299,13 @@ components:
         totalCount:
           type: integer
           format: int32
-        uniqueCount:
+        distinctCount:
           type: integer
           format: int32
         fixableTotalCount:
           type: integer
           format: int32
-        fixableUniqueCount:
+        fixableDistinctCount:
           type: integer
           format: int32
       additionalProperties: false
@@ -624,26 +584,31 @@ components:
         imagesByNSSummaryDtos:
           type: array
           items:
-            $ref: '#/components/schemas/VRImagesByNSSummaryDto'
+            $ref: '#/components/schemas/GenericByNsSummaryDto'
+          nullable: true
+        imagesSummaryDtos:
+          type: array
+          items:
+            $ref: '#/components/schemas/GenericSummaryDto'
           nullable: true
         imageOSesByNSSummaryDtos:
           type: array
           items:
-            $ref: '#/components/schemas/VRImageOSesByNSSummaryDto'
+            $ref: '#/components/schemas/GenericByNsSummaryDto'
           nullable: true
         imageOSSummaryDtos:
           type: array
           items:
-            $ref: '#/components/schemas/VRImageOSSummaryDto'
+            $ref: '#/components/schemas/GenericSummaryDto'
           nullable: true
         imageEOSLByNsSummaryDtos:
           type: array
           items:
-            $ref: '#/components/schemas/VRImageEOSLByNsSummaryDto'
+            $ref: '#/components/schemas/GenericByNsSummaryDto'
           nullable: true
         imageEOSLSummaryDtos:
           type: array
           items:
-            $ref: '#/components/schemas/VRImageEOSLSummaryDto'
+            $ref: '#/components/schemas/GenericSummaryDto'
           nullable: true
       additionalProperties: false

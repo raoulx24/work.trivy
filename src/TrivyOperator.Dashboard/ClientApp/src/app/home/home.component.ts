@@ -156,8 +156,8 @@ export class HomeComponent {
         severitesTotal.details?.sort((a, b) => a.id! - b.id!).forEach(x => {
           tableValues.push({
             severityName: this.severityHelperService.getName(x.id!),
-            count: this.showUniqueValues ? x.uniqueCount! : x.totalCount!,
-            fixable: this.showUniqueValues ? x.fixableUniqueCount! : x.fixableTotalCount!,
+            count: this.showUniqueValues ? x.distinctCount! : x.totalCount!,
+            fixable: this.showUniqueValues ? x.fixableDistinctCount! : x.fixableTotalCount!,
           });
         });
         this.severitiesSummaryForTable = tableValues;
@@ -168,7 +168,7 @@ export class HomeComponent {
       if (totalData) {
         this.othersSummaryForTable.push({
           description: "Images",
-          count: this.showUniqueValues ? totalData.uniqueCount! : totalData.totalCount!,
+          count: this.showUniqueValues ? totalData.distinctCount! : totalData.totalCount!,
         })
       }
     }
@@ -177,7 +177,7 @@ export class HomeComponent {
       if (totalData) {
         this.othersSummaryForTable.push({
           description: "Images OSes",
-          count: this.showUniqueValues ? totalData.uniqueCount! : totalData.totalCount!,
+          count: this.showUniqueValues ? totalData.distinctCount! : totalData.totalCount!,
         })
       }
     }
@@ -186,7 +186,7 @@ export class HomeComponent {
       if (totalData) {
         this.othersSummaryForTable.push({
           description: "End of Service Life",
-          count: this.showUniqueValues ? totalData.uniqueCount! : totalData.totalCount!,
+          count: this.showUniqueValues ? totalData.distinctCount! : totalData.totalCount!,
         })
       }
     }
@@ -258,7 +258,7 @@ export class HomeComponent {
       case 'Images':
         tempByNsSummary = this.vulnerabilityReportSumaryDto?.imagesByNSSummaryDtos! as OthersByNsSummaryDto[]
         this.othersByNsSummaryDtos = tempByNsSummary.sort(this.sortOthersByNsSummary);
-        this.othersSummaryDtos = [];
+        this.othersSummaryDtos = this.vulnerabilityReportSumaryDto?.imagesSummaryDtos!.sort((a, b) => a.name! > b.name! ? 1 : -1) as OthersSummaryDto[];
         break;
       case 'Images OSes':
         tempByNsSummary = this.vulnerabilityReportSumaryDto?.imageOSesByNSSummaryDtos! as OthersByNsSummaryDto[];

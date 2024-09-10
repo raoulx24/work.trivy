@@ -27,7 +27,7 @@ export interface SeveritiesSummary {
   details?: Array<{
     id?: number;
     totalCount?: number;
-    uniqueCount?: number;
+    distinctCount?: number;
   }>;
   uid?: string;
   isTotal?: boolean;
@@ -57,7 +57,7 @@ export class PrimeNgHelper {
 
           severitySummary.details
             .sort((a, b) => a.id! - b.id!)
-            .forEach(x => { values.push(x.uniqueCount!); });
+            .forEach(x => { values.push(x.distinctCount!); });
         }
         let chartData: PrimeNgPieChartData = {
           labels: severityLabels,
@@ -89,7 +89,7 @@ export class PrimeNgHelper {
     severities.forEach(severity => {
       let totalVulnerabilities: number[] = [];
       severitiesSummary.filter(x => !x.isTotal).forEach(severitySummary => {
-        totalVulnerabilities.push(severitySummary.details!.filter(x => x.id! == severity!.id!)[0].uniqueCount!);
+        totalVulnerabilities.push(severitySummary.details!.filter(x => x.id! == severity!.id!)[0].distinctCount!);
       });
       chartData.datasets.push({
         label: severity.name!,
@@ -116,7 +116,7 @@ export class PrimeNgHelper {
     severitiesSummary.filter(x => !x.isTotal).forEach(severitySummary => {
       let totalVulnerabilities: number[] = [];
       severities.forEach(severity => {
-        totalVulnerabilities.push(severitySummary.details!.filter(x => x.id! == severity!.id!)[0].uniqueCount!);
+        totalVulnerabilities.push(severitySummary.details!.filter(x => x.id! == severity!.id!)[0].distinctCount!);
       });
       let color: string = ColorHelper.rainbow(severitiesSummary.length, namespacesCounter);
       chartData.datasets.push({
