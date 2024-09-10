@@ -35,7 +35,8 @@
             </tr>
           </ng-template>
         </p-table>
-        <p-button label="More on Severities..." [text]="true" size="small" [style]="{ 'font-size': '14px', 'float': 'right' }" />
+        <p-button label="More on Severities..." [text]="true" size="small" (onClick)="onVrsMore($event)"
+                  [style]="{ 'font-size': '14px', 'float': 'right' }" />
       </div>
 
     </div>
@@ -109,7 +110,7 @@
   <div class="container">
     <div class="row">
       <div class="col-4" style="height: 55vh">
-        <p-table [value]="othersByNsSummaryDtos" [scrollable]="true" scrollHeight="flex"
+        <p-table [value]="genericByNsSummaryDtos" [scrollable]="true" scrollHeight="flex"
                  [tableStyle]="{ 'min-width': '10rem', 'font-size': '14px' }" styleClass="p-datatable-sm">
           <ng-template pTemplate="header">
             <tr>
@@ -129,7 +130,7 @@
 
       </div>
       <div class="col-8" style="height: 55vh">
-        <p-table [value]="othersSummaryDtos" [scrollable]="true" scrollHeight="flex"
+        <p-table [value]="genericSummaryDtos" [scrollable]="true" scrollHeight="flex"
                  [tableStyle]="{ 'min-width': '10rem', 'font-size': '14px' }" styleClass="p-datatable-sm">
           <ng-template pTemplate="header">
             <tr>
@@ -148,4 +149,46 @@
       </div>
     </div>
     </div>
+</p-dialog>
+
+<p-dialog header="Vulnerability Reports Details"
+          [modal]="true"
+          [(visible)]="isMoreVRDetailsModalVisible"
+          closable="true"
+          closeOnEscape="true"
+          dismissableMask="true"
+          resizable="true"
+          [contentStyle]="{ 'height': '60vh'}"
+          [style]="{ width: '70vw' }">
+
+  <div *ngIf="vulnerabilityReportSumaryDto?.severitiesByNsSummaryDtos" style="height: 55vh">
+    <p-table [value]="vulnerabilityReportSumaryDto!.severitiesByNsSummaryDtos!.sort(sortOthersByNsSummary)"
+             [tableStyle]="{ 'min-width': '10rem', 'font-size': '14px' }" styleClass="p-datatable-sm">
+      <ng-template pTemplate="header">
+        <tr>
+          <th rowspan="2">Namespace</th>
+          <ng-container *ngFor="let id of severityHelperService.getSeverityIds()">
+            <th colspan="2" style="text-align: center;">{{severityHelperService.getCapitalizedName(id)}}</th>
+          </ng-container>
+        </tr>
+        <tr>
+          <ng-container *ngFor="let id of severityHelperService.getSeverityIds()">
+            <th style="text-align: right;">Count</th>
+            <th style="text-align: right;">Fixable</th>
+          </ng-container>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-severitiesByNsSummary>
+        <tr [ngStyle]="getRowStyle(severitiesByNsSummary)">
+          <td>{{severitiesByNsSummary.namespaceName}}</td>
+          <ng-container *ngFor="let id of severityHelperService.getSeverityIds()">
+            <td style="text-align: right;">{{getSeveritiesDistinctCount(severitiesByNsSummary.details, id)}}</td>
+            <td style="text-align: right;">{{getSeveritiesFixableCount(severitiesByNsSummary.details, id)}}</td>
+          </ng-container>
+        </tr>
+      </ng-template>
+    </p-table>
+
+  </div>
+
 </p-dialog>

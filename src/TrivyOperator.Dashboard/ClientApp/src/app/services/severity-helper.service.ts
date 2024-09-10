@@ -70,6 +70,15 @@ export class SeverityHelperService {
     return "";
   }
 
+  public getCapitalizedName(severityId: number): string {
+    let severityName = this.getName(severityId).toLowerCase();
+    return severityName.length == 0 ? "" : severityName.charAt(0).toUpperCase() + severityName.slice(1);
+  }
+
+  public getSeverityIds(): number[] {
+    return this._severityDtos ? this._severityDtos.map(x => x.id).sort((a, b) => a - b) : [];
+  }
+
   public getNames(severityIds: number[], maxDisplay?: number): string {
     severityIds = severityIds ? severityIds : [];
     maxDisplay = maxDisplay ? maxDisplay : 0;

@@ -7,6 +7,7 @@ import { SeverityHelperService } from "../services/severity-helper.service"
 import { SeverityDto } from "../../api/models/severity-dto"
 import { UIChart } from 'primeng/chart';
 import { timer } from 'rxjs';
+import { VrSeveritiesByNsSummaryDetailDto } from '../../api/models/vr-severities-by-ns-summary-detail-dto';
 
 export interface SeveritiySummary {
   severityName: string;
@@ -19,15 +20,20 @@ export interface OtherSummaryMainStatistics {
   count: number;
 }
 
-export interface OthersSummaryDto {
+export interface GenericSummaryDto {
   name: string;
   count: number;
 }
 
-export interface OthersByNsSummaryDto {
+export interface GenericByNsSummaryDto {
   namespaceName: string,
   totalCount: number,
   uniqueCount: number,
+  isTotal: boolean,
+}
+
+export interface GenericNsTotalSortable {
+  namespaceName: string,
   isTotal: boolean,
 }
 
@@ -56,12 +62,13 @@ export class HomeComponent {
   public severitiesSummaryForTable: SeveritiySummary[] = [];
   public othersSummaryForTable: OtherSummaryMainStatistics[] = [];
 
+  public isMoreVRDetailsModalVisible: boolean = false;
   public moreOthersModalTitle: string = "";
   public isMoreOthersModalVisible: boolean = false;
-  public othersSummaryDtos: OthersSummaryDto[] = [];
-  public othersByNsSummaryDtos: OthersByNsSummaryDto[] = [];
+  public genericSummaryDtos: GenericSummaryDto[] = [];
+  public genericByNsSummaryDtos: GenericByNsSummaryDto[] = [];
 
-  public showUniqueValues: boolean = true;
+  public showDistinctValues: boolean = true;
 
   constructor(vulnerabilityReportsService: VulnerabilityReportsService, severityHelperService: SeverityHelperService) {
     vulnerabilityReportsService.getVulnerabilityReportSumaryDto().subscribe(result => this.onVulnerabilityReportSummaryDtos(result), error => console.error(error));
@@ -156,8 +163,8 @@ export class HomeComponent {
         severitesTotal.details?.sort((a, b) => a.id! - b.id!).forEach(x => {
           tableValues.push({
             severityName: this.severityHelperService.getName(x.id!),
-            count: this.showUniqueValues ? x.distinctCount! : x.totalCount!,
-            fixable: this.showUniqueValues ? x.fixableDistinctCount! : x.fixableTotalCount!,
+            count: this.showDistinctValues ? x.distinctCount! : x.totalCount!,
+            fixable: this.showDistinctValues ? x.fixableDistinctCount! : x.fixableTotalCount!,
           });
         });
         this.severitiesSummaryForTable = tableValues;
@@ -168,7 +175,7 @@ export class HomeComponent {
       if (totalData) {
         this.othersSummaryForTable.push({
           description: "Images",
-          count: this.showUniqueValues ? totalData.distinctCount! : totalData.totalCount!,
+          count: this.showDistinctValues ? totalData.distinctCount! : totalData.totalCount!,
         })
       }
     }
@@ -177,7 +184,7 @@ export class HomeComponent {
       if (totalData) {
         this.othersSummaryForTable.push({
           description: "Images OSes",
-          count: this.showUniqueValues ? totalData.distinctCount! : totalData.totalCount!,
+          count: this.showDistinctValues ? totalData.distinctCount! : totalData.totalCount!,
         })
       }
     }
@@ -186,7 +193,7 @@ export class HomeComponent {
       if (totalData) {
         this.othersSummaryForTable.push({
           description: "End of Service Life",
-          count: this.showUniqueValues ? totalData.distinctCount! : totalData.totalCount!,
+          count: this.showDistinctValues ? totalData.distinctCount! : totalData.totalCount!,
         })
       }
     }
@@ -252,37 +259,60 @@ export class HomeComponent {
     
 
     this.moreOthersModalTitle = "More Info for " + element.description;
-    let tempByNsSummary: OthersByNsSummaryDto[] = [];
-    let tempSummary: OthersSummaryDto[] = [];
+    let tempByNsSummary: GenericByNsSummaryDto[] = [];
+    let tempSummary: GenericSummaryDto[] = [];
     switch (element.description) {
       case 'Images':
-        tempByNsSummary = this.vulnerabilityReportSumaryDto?.imagesByNSSummaryDtos! as OthersByNsSummaryDto[]
-        this.othersByNsSummaryDtos = tempByNsSummary.sort(this.sortOthersByNsSummary);
-        this.othersSummaryDtos = this.vulnerabilityReportSumaryDto?.imagesSummaryDtos!.sort((a, b) => a.name! > b.name! ? 1 : -1) as OthersSummaryDto[];
+        tempByNsSummary = this.vulnerabilityReportSumaryDto?.imagesByNSSummaryDtos! as GenericByNsSummaryDto[]
+        this.genericByNsSummaryDtos = tempByNsSummary.sort(this.sortOthersByNsSummary);
+        this.genericSummaryDtos = this.vulnerabilityReportSumaryDto?.imagesSummaryDtos!.sort((a, b) => a.name! > b.name! ? 1 : -1) as GenericSummaryDto[];
         break;
       case 'Images OSes':
-        tempByNsSummary = this.vulnerabilityReportSumaryDto?.imageOSesByNSSummaryDtos! as OthersByNsSummaryDto[];
-        this.othersByNsSummaryDtos = tempByNsSummary.sort(this.sortOthersByNsSummary);
-        this.othersSummaryDtos = this.vulnerabilityReportSumaryDto?.imageOSSummaryDtos!.sort((a, b) => a.name! > b.name! ? 1 : -1) as OthersSummaryDto[];
+        tempByNsSummary = this.vulnerabilityReportSumaryDto?.imageOSesByNSSummaryDtos! as GenericByNsSummaryDto[];
+        this.genericByNsSummaryDtos = tempByNsSummary.sort(this.sortOthersByNsSummary);
+        this.genericSummaryDtos = this.vulnerabilityReportSumaryDto?.imageOSSummaryDtos!.sort((a, b) => a.name! > b.name! ? 1 : -1) as GenericSummaryDto[];
         break;
       case 'End of Service Life':
-        tempByNsSummary = this.vulnerabilityReportSumaryDto?.imageEOSLByNsSummaryDtos! as OthersByNsSummaryDto[];
-        this.othersByNsSummaryDtos = tempByNsSummary.sort(this.sortOthersByNsSummary);
-        this.othersSummaryDtos = this.vulnerabilityReportSumaryDto?.imageEOSLSummaryDtos!.sort((a, b) => a.name! > b.name! ? 1 : -1) as OthersSummaryDto[];
+        tempByNsSummary = this.vulnerabilityReportSumaryDto?.imageEOSLByNsSummaryDtos! as GenericByNsSummaryDto[];
+        this.genericByNsSummaryDtos = tempByNsSummary.sort(this.sortOthersByNsSummary);
+        this.genericSummaryDtos = this.vulnerabilityReportSumaryDto?.imageEOSLSummaryDtos!.sort((a, b) => a.name! > b.name! ? 1 : -1) as GenericSummaryDto[];
         break;
     }
     this.isMoreOthersModalVisible = true;
   }
 
-  sortOthersByNsSummary = (a: OthersByNsSummaryDto, b: OthersByNsSummaryDto): number => {
+  public onVrsMore(event: MouseEvent) {
+    this.isMoreVRDetailsModalVisible = true;
+    console.log("mama");
+  }
+
+  sortOthersByNsSummary = (a: GenericNsTotalSortable, b: GenericNsTotalSortable): number => {
     if (a.isTotal === b.isTotal) {
       return a.namespaceName > b.namespaceName ? 1 : -1;
     }
     return a.isTotal ? 1 : -1;
   };
 
-  getRowStyle(rowData: OthersByNsSummaryDto) {
+  getRowStyle(rowData: GenericNsTotalSortable) {
     return rowData.isTotal ? { 'font-weight' : 'bold' } : {};
+  }
+
+  getSeveritiesDistinctCount(details: VrSeveritiesByNsSummaryDetailDto[], severityId: number): number  {
+    let detail = details.find(x => x.id === severityId);
+    if (detail == null) {
+      return 0;
+    }
+
+    return this.showDistinctValues ? detail.distinctCount! : detail.totalCount!;
+  }
+
+  getSeveritiesFixableCount(details: VrSeveritiesByNsSummaryDetailDto[], severityId: number): number {
+    let detail = details?.find(d => d.id === severityId);
+    if (detail == null) {
+      return 0;
+    }
+
+    return this.showDistinctValues ? detail.fixableDistinctCount! : detail.fixableTotalCount!;
   }
 
 }

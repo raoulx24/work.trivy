@@ -310,14 +310,17 @@ components:
           format: int32
       additionalProperties: false
     VRSeveritiesByNsSummaryDto:
+      required:
+        - isTotal
+        - namespaceName
       type: object
       properties:
         uid:
           type: string
           format: uuid
         namespaceName:
+          minLength: 1
           type: string
-          nullable: true
         isTotal:
           type: boolean
         details:
