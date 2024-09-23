@@ -6,10 +6,11 @@ export interface TrivyTableOptions {
   isExportCsvVisible: boolean,
   isRefreshVisible: boolean,
   isRefreshFiltrable: boolean,
+  isFooterVisible: boolean,
   tableSelectionMode: null | "single" | "multiple",
   tableHeight: string,
   exposeSelectedRowsEvent: boolean,
-  ifFooterVisible: boolean,
+  stateKey: string,
 }
 
 export interface Column {

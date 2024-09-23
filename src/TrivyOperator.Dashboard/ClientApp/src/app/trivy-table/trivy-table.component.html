@@ -17,7 +17,9 @@
            [(selection)]="selectedDataDtos"
            [exportFilename]="csvFileName"
            (selectionChange)="onSelectionChange($event)"
-           (onRowUnselect)="onRowUnselect($event)">
+           (onRowUnselect)="onRowUnselect($event)"
+           stateStorage="local"
+           stateKey="{{ trivyTableOptions!.stateKey }}">
     <ng-template pTemplate="caption">
       <div>
         <p-button *ngIf="trivyTableOptions!.isRefreshVisible" class="m-1 p-1" label="Refresh/Filter" icon="pi pi-refresh" size="small" [disabled]="!true" (onClick)="onFilterRefresh($event)" />
@@ -90,7 +92,7 @@
         </td>
       </tr>
     </ng-template>
-    <ng-template *ngIf="trivyTableOptions!.ifFooterVisible" pTemplate="summary">
+    <ng-template *ngIf="trivyTableOptions!.isFooterVisible" pTemplate="summary">
       <div>
         Total <p-tag value="{{ trivyTableTotalRecords }}" /> | Selected <p-tag value="{{ trivyTableSelectedRecords }}" /> | Filtered <p-tag value="{{ trivyTableFilteredRecords }}" />
       </div>
