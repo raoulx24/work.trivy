@@ -8,7 +8,6 @@ export interface TrivyTableOptions {
   isRefreshFiltrable: boolean,
   isFooterVisible: boolean,
   tableSelectionMode: null | "single" | "multiple",
-  tableHeight: string,
   exposeSelectedRowsEvent: boolean,
   stateKey: string,
 }

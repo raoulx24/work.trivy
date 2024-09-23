@@ -14,6 +14,7 @@ import { TagModule } from 'primeng/tag';
 import { Column, ExportColumn, TrivyFilterData, TrivyTableColumn, TrivyTableOptions } from "./trivy-table.types";
 import { SeverityHelperService } from "../services/severity-helper.service"
 import { SeverityDto } from "../../api/models/severity-dto"
+import { TableState } from 'primeng/api';
 
 
 @Component({
@@ -44,31 +45,11 @@ export class TrivyTableComponent<TData> {
   @ViewChild('trivyTable') trivyTable?: Table;
   @ViewChild('serverFilterDataOp') serverFilterDataOp?: OverlayPanel;
 
-  //@Input() set tableHeight(tableHeight: string) {
-  //  console.log("TrivyTableComponent<TData> - set tableHeight - ", tableHeight);
-  //  this._tableHeight = tableHeight;
-  //  if (this.trivyTable) {
-  //    this.trivyTable.scrollHeight = tableHeight;
-  //    //this.isTableVisible = false;
-  //    //setTimeout(() => this.isTableVisible = true, 0);
-  //  }
-  //}
-  //public get tableHeight(): string {
-  //  return this._tableHeight;
-  //}
-  //private _tableHeight: string = "";
   @Input() public tableHeight: string = "10vh";
+  @Input() public isLoading: boolean = false;
 
   @Input() trivyTableColumns: TrivyTableColumn[] = [];
-  public get trivyTableOptions(): TrivyTableOptions { return this._trivyTableOptions!; }
-  @Input() set trivyTableOptions(trivyTableOptions: TrivyTableOptions) {
-    if (trivyTableOptions != null && trivyTableOptions.tableHeight != "") {
-      this.tableHeight = trivyTableOptions.tableHeight;
-    }
-
-    this._trivyTableOptions = trivyTableOptions;
-  }
-  private _trivyTableOptions?: TrivyTableOptions;
+  @Input( { required: true } ) trivyTableOptions!: TrivyTableOptions;
 
   @Output() selectedRowsChanged = new EventEmitter<TData[]>();
   @Output() refreshRequested = new EventEmitter<TrivyFilterData>();
@@ -95,27 +76,18 @@ export class TrivyTableComponent<TData> {
     return this.trivyTable?.filteredValue ? this.trivyTable.filteredValue.length : 0;
   }
 
-  public get severityHelper(): SeverityHelperService {
-    return this._severityHelper;
-  };
-  @Input() set severityHelper(severityHelper: SeverityHelperService) {
-    this._severityHelper = severityHelper;
-    this._severityHelper.getSeverityDtos().then(result => this.onGetSeverities(result));
-    // more on input setter: https://stackoverflow.com/questions/36653678/angular2-input-to-a-property-with-get-set
-  }
-  private _severityHelper!: SeverityHelperService;
-
   public isTableVisible: boolean = true;
   public severityDtos?: SeverityDto[] | null | undefined;
 
+  constructor(public severityHelper: SeverityHelperService) {
+    severityHelper.getSeverityDtos().then(result => this.onGetSeverities(result));
+  }
+
   onGetSeverities(severityDtos: SeverityDto[]) {
     this.severityDtos = severityDtos;
-    severityDtos.forEach((x) => {
-      this.filterSeverityOptions.push(x.id);
-      if (this.trivyTableOptions.isRefreshFiltrable)
-        this.filterRefreshSeverities.push(x);
-    })
-
+    this.filterSeverityOptions = severityDtos.map(x => x.id);
+    if (this.trivyTableOptions?.isRefreshFiltrable)
+      this.filterRefreshSeverities = [...severityDtos];
   }
 
   public onTableClearSelected() {
@@ -127,18 +99,14 @@ export class TrivyTableComponent<TData> {
   }
 
   onSelectionChange(event: any): void {
-    console.log("Trivy - onSelectionChange");
-    // don't autoselect
-    if (event == null) {
+    if (event == null || !this.trivyTableOptions.exposeSelectedRowsEvent) {
       return;
     }
-    if (this.trivyTableOptions?.exposeSelectedRowsEvent) {
-      if (this.trivyTableOptions.tableSelectionMode === "single" && event) {
-        this.selectedRowsChanged.emit([event]);
-      }
-      else {
-        this.selectedRowsChanged.emit(event);
-      }
+    if (this.trivyTableOptions.tableSelectionMode === "single" && event) {
+      this.selectedRowsChanged.emit([event]);
+    }
+    else {
+      this.selectedRowsChanged.emit(event);
     }
   }
 
@@ -161,10 +129,9 @@ export class TrivyTableComponent<TData> {
   }
 
   onRowUnselect(event: any) {
-    // don't autoselect
+    // don't let unselect
     if (this.trivyTableOptions.tableSelectionMode === "single" && this.trivyTable != null) {
       this.trivyTable.selection = event.data;
-      return;
     }
   }
 
@@ -183,6 +150,10 @@ export class TrivyTableComponent<TData> {
     this.overlayVisible = !this.overlayVisible;
   }
 
+  //tests
+  public onStateSave(value: TableState) {
+    value.selection = null;
+  }
 }
 
 
