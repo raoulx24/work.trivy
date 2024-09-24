@@ -3,7 +3,7 @@
            [columns]="trivyTableColumns"
            [value]="dataDtos!"
            [scrollable]="true"
-           scrollHeight="40vh"
+           scrollHeight="flex"
            [virtualScroll]="true"
            [virtualScrollItemSize]="46"
            [tableStyle]="{ 'font-size': '14px' }"
@@ -18,14 +18,14 @@
            [(selection)]="selectedDataDtos"
            [exportFilename]="csvFileName"
            (selectionChange)="onSelectionChange($event)"
-           (onRowUnselect)="onRowUnselect($event)"
            stateStorage="local"
            stateKey="{{ trivyTableOptions!.stateKey }}"
            (onStateSave)="onStateSave($event)">
+    <!--(onRowUnselect)="onRowUnselect($event)"-->
     <ng-template pTemplate="caption">
       <div>
         <p-button *ngIf="trivyTableOptions!.isRefreshVisible" class="m-1 p-1"
-                  [label]="'Refresh/Filter' + (trivyTableOptions.isRefreshFiltrable ? '...' : '')" icon="pi pi-refresh" size="small"
+                  [label]="'Refresh' + (trivyTableOptions.isRefreshFiltrable ? '/Filter...' : '')" icon="pi pi-refresh" size="small"
                   (onClick)="onFilterRefresh($event)" />
         <p-button *ngIf="trivyTableOptions!.isClearSelectionVisible" class="m-1 p-1"
                   label="Clear Selected" icon="pi pi-list" size="small"
@@ -104,13 +104,13 @@
     </ng-template>
     <ng-template *ngIf="trivyTableOptions!.isFooterVisible" pTemplate="summary">
       <div>
-        Total <p-tag value="{{ trivyTableTotalRecords }}" /> | Selected <p-tag value="{{ trivyTableSelectedRecords }}" /> | Filtered <p-tag value="{{ trivyTableFilteredRecords }}" />
+        Total <p-tag value="{{ trivyTableTotalRecords }}" /> | Filtered <p-tag value="{{ trivyTableFilteredRecords }}" />
       </div>
     </ng-template>
   </p-table>
 
   <p-overlayPanel #csvExportOp [dismissable]="true" (onShow)="onOverlayToogle()" (onHide)="onOverlayToogle()">
-    <div class="flex flex-column gap-3 w-25rem" style="width: 510px">
+    <div class="flex flex-column gap-3 w-25rem" style="width: 340px">
       <div class="row">
         <div>
           <span style="font-size: 12px; padding-left: 2px;">CSV File Name</span>
@@ -137,19 +137,20 @@
                     (onClick)="trivyTable.exportCSV({ allValues: true })"
                     [style]="{'width': '100%'}" />
         </div>
-        <div class="col">
+        <!--<div class="col">
           <p-button label="Export Selected"
                     icon="pi pi-list"
                     size="small"
                     [disabled]="!isTableRowSelected()"
                     (onClick)="trivyTable.exportCSV({ selectionOnly: true })"
                     [style]="{'width': '100%'}" />
-        </div>
+        </div>-->
       </div>
     </div>
   </p-overlayPanel>
 
-  <p-overlayPanel #serverFilterDataOp
+  <p-overlayPanel *ngIf="filterRefreshSeverities"
+                  #serverFilterDataOp
                   [dismissable]="true"
                   [showTransitionOptions]="'0.3s ease-in'"
                   [hideTransitionOptions]="'0.3s ease-out'"

@@ -34,5 +34,5 @@ export interface TrivyTableColumn extends Column {
 
 export interface TrivyFilterData {
   namespaceName?: string | null;
-  selectedSeverities: SeverityDto[];
+  selectedSeverityIds: number[];
 }

@@ -59,7 +59,7 @@ export class TrivyTableComponent<TData> {
   public filterSelectedSeverityIds: number[] | null = [];
   public filterActiveNamespaces: string[] | null = [];
   public filterRefreshActiveNamespace: string | null = "";
-  public filterRefreshSeverities: SeverityDto[] = [];
+  public filterRefreshSeverities: SeverityDto[] | undefined;
 
   public get trivyTableTotalRecords(): number {
     return this.dataDtos ? this.dataDtos.length : 0;
@@ -86,8 +86,7 @@ export class TrivyTableComponent<TData> {
   onGetSeverities(severityDtos: SeverityDto[]) {
     this.severityDtos = severityDtos;
     this.filterSeverityOptions = severityDtos.map(x => x.id);
-    if (this.trivyTableOptions?.isRefreshFiltrable)
-      this.filterRefreshSeverities = [...severityDtos];
+    this.filterRefreshSeverities = [...severityDtos];
   }
 
   public onTableClearSelected() {
@@ -99,10 +98,14 @@ export class TrivyTableComponent<TData> {
   }
 
   onSelectionChange(event: any): void {
-    if (event == null || !this.trivyTableOptions.exposeSelectedRowsEvent) {
+    if (!this.trivyTableOptions.exposeSelectedRowsEvent) {
       return;
     }
-    if (this.trivyTableOptions.tableSelectionMode === "single" && event) {
+    if (!event) {
+      this.selectedRowsChanged.emit([]);
+      return;
+    }
+    if (this.trivyTableOptions.tableSelectionMode === "single") {
       this.selectedRowsChanged.emit([event]);
     }
     else {
@@ -120,28 +123,31 @@ export class TrivyTableComponent<TData> {
   }
 
   onFilterData() {
+    console.log(this.filterRefreshSeverities);
+    console.log(this.filterRefreshSeverities![0]);
+    console.log(this.filterRefreshActiveNamespace);
     let event: TrivyFilterData = {
       namespaceName: this.filterRefreshActiveNamespace,
-      selectedSeverities: this.filterRefreshSeverities,
+      selectedSeverityIds: this.filterRefreshSeverities?.map(x => x.id) ?? [],
     }
     this.serverFilterDataOp?.hide();
     this.refreshRequested.emit(event);
   }
 
-  onRowUnselect(event: any) {
-    // don't let unselect
-    if (this.trivyTableOptions.tableSelectionMode === "single" && this.trivyTable != null) {
-      this.trivyTable.selection = event.data;
-    }
-  }
+  //onRowUnselect(event: any) {
+  //  // don't let unselect
+  //  if (this.trivyTableOptions.tableSelectionMode === "single" && this.trivyTable != null) {
+  //    this.trivyTable.selection = event.data;
+  //  }
+  //}
 
-  public selectRow(data: TData) {
-    if (data == null) {
-      return;
-    }
-    this.selectedDataDtos = data;
-    this.onSelectionChange(data);
-  }
+  //public selectRow(data: TData) {
+  //  if (data == null) {
+  //    return;
+  //  }
+  //  this.selectedDataDtos = data;
+  //  this.onSelectionChange(data);
+  //}
 
   // custom back overlay
   public overlayVisible: boolean = false;
