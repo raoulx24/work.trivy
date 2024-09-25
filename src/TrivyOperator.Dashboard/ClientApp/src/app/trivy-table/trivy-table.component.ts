@@ -73,7 +73,7 @@ export class TrivyTableComponent<TData> {
     }
   }
   public get trivyTableFilteredRecords(): number {
-    return this.trivyTable?.filteredValue ? this.trivyTable.filteredValue.length : 0;
+    return this.trivyTable?.filteredValue ? this.trivyTable.filteredValue.length : this.trivyTableTotalRecords;
   }
 
   public isTableVisible: boolean = true;
@@ -154,11 +154,6 @@ export class TrivyTableComponent<TData> {
 
   public onOverlayToogle() {
     this.overlayVisible = !this.overlayVisible;
-  }
-
-  //tests
-  public onStateSave(value: TableState) {
-    value.selection = null;
   }
 }
 

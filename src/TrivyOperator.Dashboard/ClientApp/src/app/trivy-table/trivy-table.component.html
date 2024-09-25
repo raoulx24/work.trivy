@@ -19,8 +19,7 @@
            [exportFilename]="csvFileName"
            (selectionChange)="onSelectionChange($event)"
            stateStorage="local"
-           stateKey="{{ trivyTableOptions!.stateKey }}"
-           (onStateSave)="onStateSave($event)">
+           stateKey="{{ trivyTableOptions!.stateKey }}">
     <!--(onRowUnselect)="onRowUnselect($event)"-->
     <ng-template pTemplate="caption">
       <div>
@@ -88,7 +87,7 @@
           <a *ngIf="col.renderType=='standard'">{{ rowData[col.field] }}</a>
           <div *ngIf="col.renderType=='imageNameTag'">
             <a>{{ rowData[col.field] }}:{{ rowData[col.extraFields[0]] }}</a>
-            <p-tag *ngIf="rowData[col.extraFields[1]]" value="EOSL" [style]="{ background: severityHelper.getCssColor(0), 'margin-left':'10px' }" />
+            <p-tag *ngIf="rowData[col.extraFields[1]]" value="EOSL" severity="info" [style]="{ 'margin-left':'10px' }" />
           </div>
           <a *ngIf="col.renderType=='link'" href="{{ rowData[col.extraFields[0]] }}" target="_blank">{{ rowData[col.field] }}</a>
           <p-tag *ngIf="col.renderType=='severityBadge'" [value]="severityHelper.getName(rowData[col.field])" [style]="{ background: severityHelper.getCssColor(rowData[col.field]) }" />
