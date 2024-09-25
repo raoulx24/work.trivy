@@ -23,6 +23,7 @@ using TrivyOperator.Dashboard.Infrastructure.Abstractions;
 using TrivyOperator.Dashboard.Infrastructure.Clients;
 using TrivyOperator.Dashboard.Infrastructure.Services;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
+using TrivyOperator.Dashboard.Utils;
 
 Directory.SetCurrentDirectory(AppContext.BaseDirectory);
 
@@ -63,6 +64,7 @@ builder.Services.AddControllersWithViews()
         options =>
         {
             options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            options.JsonSerializerOptions.Converters.Add(new CustomDateTimeConverter());
         });
 builder.Services
     .AddHttpClient(); // see: https://docs.microsoft.com/en-us/dotnet/architecture/microservices/implement-resilient-applications/use-httpclientfactory-to-implement-resilient-http-requests

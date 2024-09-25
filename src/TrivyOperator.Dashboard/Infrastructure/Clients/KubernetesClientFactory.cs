@@ -7,6 +7,7 @@ using Polly.Retry;
 using System.Net;
 using TrivyOperator.Dashboard.Application.Services.Options;
 using TrivyOperator.Dashboard.Infrastructure.Abstractions;
+using TrivyOperator.Dashboard.Utils;
 
 namespace TrivyOperator.Dashboard.Infrastructure.Clients;
 
@@ -56,6 +57,7 @@ public class KubernetesClientFactory : IKubernetesClientFactory
             KubernetesClientConfiguration? defaultConfig = KubernetesClientConfiguration.IsInCluster()
                 ? KubernetesClientConfiguration.InClusterConfig()
                 : KubernetesClientConfiguration.BuildConfigFromConfigFile();
+            defaultConfig.AddJsonOptions(options => options.Converters.Insert(0, new CustomDateTimeConverter()));
             kubernetesClient = new Kubernetes(defaultConfig, new PolicyHttpMessageHandler(GetRetryPolicy()));
         }
     }
