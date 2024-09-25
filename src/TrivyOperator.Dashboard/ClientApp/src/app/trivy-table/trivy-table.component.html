@@ -30,8 +30,8 @@
                   label="Clear Selected" icon="pi pi-list" size="small"
                   [disabled]="!isTableRowSelected()" (onClick)="onTableClearSelected()" />
         <p-button *ngIf="trivyTableOptions!.isResetFiltersVisible" class="m-1 p-1"
-                  label="Clear Filters" icon="pi pi-filter" size="small"
-                  [disabled]="!trivyTable.filteredValue" (onClick)="trivyTable.clear()" />
+                  label="Clear Sort/Filters" icon="pi pi-filter" size="small"
+                  [disabled]="!trivyTable.filteredValue" (onClick)="trivyTable.filters = {}; trivyTable.clear()" />
         <p-button *ngIf="trivyTableOptions!.isExportCsvVisible" class="m-1 p-1"
                   label="Export to CSV" icon="pi pi-file-excel" size="small"
                   (onClick)="csvExportOp.toggle($event)" />
