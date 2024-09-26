@@ -12,13 +12,11 @@ public sealed class DateTimeJsonConverter : JsonConverter<DateTime>
     public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options) =>
         writer.WriteStringValue(value.ToString(Format));
 
-    public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-    {
-        return reader.TokenType switch
+    public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) =>
+        reader.TokenType switch
         {
             JsonTokenType.Null => throw new ArgumentException("Error converting value {null} to type"),
             JsonTokenType.String => reader.TryGetDateTime(out DateTime v) ? v : DateTime.MinValue,
-            _ => throw new NotSupportedException("Not supported: " + reader.TokenType)
+            _ => throw new NotSupportedException("Not supported: " + reader.TokenType),
         };
-    }
 }
