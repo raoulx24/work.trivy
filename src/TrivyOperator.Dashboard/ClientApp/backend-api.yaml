@@ -388,6 +388,7 @@ components:
           nullable: true
         lastModifiedDate:
           type: string
+          format: date-time
           nullable: true
         primaryLink:
           type: string
@@ -395,13 +396,14 @@ components:
           nullable: true
         publishedDate:
           type: string
+          format: date-time
           nullable: true
         resource:
           type: string
           nullable: true
         score:
           type: number
-          format: double
+          format: float
         severityId:
           type: integer
           format: int32
@@ -426,6 +428,7 @@ components:
           nullable: true
         lastModifiedDate:
           type: string
+          format: date-time
           nullable: true
         primaryLink:
           type: string
@@ -433,13 +436,14 @@ components:
           nullable: true
         publishedDate:
           type: string
+          format: date-time
           nullable: true
         resource:
           type: string
           nullable: true
         score:
           type: number
-          format: double
+          format: float
         severityId:
           type: integer
           format: int32

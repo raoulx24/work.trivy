@@ -23,16 +23,16 @@
     <!--(onRowUnselect)="onRowUnselect($event)"-->
     <ng-template pTemplate="caption">
       <div>
-        <p-button *ngIf="trivyTableOptions!.isRefreshVisible" class="m-1 p-1"
+        <p-button *ngIf="trivyTableOptions!.isRefreshVisible" text
                   [label]="'Refresh' + (trivyTableOptions.isRefreshFiltrable ? '/Filter...' : '')" icon="pi pi-refresh" size="small"
                   (onClick)="onFilterRefresh($event)" />
-        <p-button *ngIf="trivyTableOptions!.isClearSelectionVisible" class="m-1 p-1"
+        <p-button *ngIf="trivyTableOptions!.isClearSelectionVisible" text
                   label="Clear Selected" icon="pi pi-list" size="small"
                   [disabled]="!isTableRowSelected()" (onClick)="onTableClearSelected()" />
-        <p-button *ngIf="trivyTableOptions!.isResetFiltersVisible" class="m-1 p-1"
+        <p-button *ngIf="trivyTableOptions!.isResetFiltersVisible" text
                   label="Clear Sort/Filters" icon="pi pi-filter" size="small"
                   [disabled]="!trivyTable.filteredValue" (onClick)="trivyTable.filters = {}; trivyTable.clear()" />
-        <p-button *ngIf="trivyTableOptions!.isExportCsvVisible" class="m-1 p-1"
+        <p-button *ngIf="trivyTableOptions!.isExportCsvVisible" text
                   label="Export to CSV" icon="pi pi-file-excel" size="small"
                   (onClick)="csvExportOp.toggle($event)" />
       </div>
@@ -85,6 +85,7 @@
       <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex" style="height:46px">
         <td *ngFor="let col of columns" style="{{ col.style }}">
           <a *ngIf="col.renderType=='standard'">{{ rowData[col.field] }}</a>
+          <a *ngIf="col.renderType=='date'">{{ rowData[col.field] | date: 'yyyy-MM-dd' }}</a>
           <div *ngIf="col.renderType=='imageNameTag'">
             <a>{{ rowData[col.field] }}:{{ rowData[col.extraFields[0]] }}</a>
             <p-tag *ngIf="rowData[col.extraFields[1]]" value="EOSL" severity="info" [style]="{ 'margin-left':'10px' }" />
