@@ -16,10 +16,19 @@ public class KubernetesClientFactory : IKubernetesClientFactory
     private readonly Kubernetes kubernetesClient;
     private ILogger logger;
 
+    static KubernetesClientFactory()
+    {
+        KubernetesJson.AddJsonOptions(jsonSerializerOptions =>
+        {
+            jsonSerializerOptions.Converters.Insert(0, new DateTimeJsonConverter());
+            jsonSerializerOptions.Converters.Insert(0, new DateTimeNullableJsonConverter());
+        });
+    }
+
     public KubernetesClientFactory(IOptions<KubernetesOptions> options, ILogger<KubernetesClientFactory> logger)
     {
         this.logger = logger;
-
+        
         string? kubeConfigFileName = options.Value.KubeConfigFileName;
         if (!string.IsNullOrWhiteSpace(kubeConfigFileName))
         {
