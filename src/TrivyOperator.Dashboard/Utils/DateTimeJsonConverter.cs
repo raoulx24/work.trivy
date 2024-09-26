@@ -14,13 +14,11 @@ public sealed class DateTimeJsonConverter : JsonConverter<DateTime>
 
     public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        switch (reader.TokenType)
+        return reader.TokenType switch
         {
-            case JsonTokenType.Null:
-                throw new ArgumentException("Error converting value {null} to type");
-            case JsonTokenType.String: return reader.TryGetDateTime(out DateTime v) ? v : DateTime.MinValue;
-            default:
-                throw new NotSupportedException("Not supported: " + reader.TokenType);
-        }
+            JsonTokenType.Null => throw new ArgumentException("Error converting value {null} to type"),
+            JsonTokenType.String => reader.TryGetDateTime(out DateTime v) ? v : DateTime.MinValue,
+            _ => throw new NotSupportedException("Not supported: " + reader.TokenType)
+        };
     }
 }
