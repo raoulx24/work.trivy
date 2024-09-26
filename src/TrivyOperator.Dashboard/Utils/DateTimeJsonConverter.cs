@@ -1,0 +1,26 @@
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+
+namespace TrivyOperator.Dashboard.Utils;
+
+public sealed class DateTimeJsonConverter : JsonConverter<DateTime>
+{
+    private const string Format = "yyyy-MM-ddTHH:mm:ssZ";
+
+    public override bool HandleNull => true;
+
+    public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options) =>
+        writer.WriteStringValue(value.ToString(Format));
+
+    public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        switch (reader.TokenType)
+        {
+            case JsonTokenType.Null:
+                throw new ArgumentException("Error converting value {null} to type");
+            case JsonTokenType.String: return reader.TryGetDateTime(out DateTime v) ? v : DateTime.MinValue;
+            default:
+                throw new NotSupportedException("Not supported: " + reader.TokenType);
+        }
+    }
+}

@@ -29,6 +29,11 @@ public class KubernetesClientFactory : IKubernetesClientFactory
                 {
                     KubernetesClientConfiguration config =
                         KubernetesClientConfiguration.BuildConfigFromConfigFile(kubeConfigFileName);
+                    config.AddJsonOptions(jsonSerializerOptions =>
+                    {
+                        jsonSerializerOptions.Converters.Insert(0, new DateTimeJsonConverter());
+                        jsonSerializerOptions.Converters.Insert(0, new DateTimeNullableJsonConverter());
+                    });
                     kubernetesClient = new Kubernetes(config, new PolicyHttpMessageHandler(GetRetryPolicy()));
                 }
                 else
@@ -57,7 +62,11 @@ public class KubernetesClientFactory : IKubernetesClientFactory
             KubernetesClientConfiguration? defaultConfig = KubernetesClientConfiguration.IsInCluster()
                 ? KubernetesClientConfiguration.InClusterConfig()
                 : KubernetesClientConfiguration.BuildConfigFromConfigFile();
-            defaultConfig.AddJsonOptions(options => options.Converters.Insert(0, new CustomDateTimeConverter()));
+            defaultConfig.AddJsonOptions(jsonSerializerOptions =>
+            {
+                jsonSerializerOptions.Converters.Insert(0, new DateTimeJsonConverter());
+                jsonSerializerOptions.Converters.Insert(0, new DateTimeNullableJsonConverter());
+            });
             kubernetesClient = new Kubernetes(defaultConfig, new PolicyHttpMessageHandler(GetRetryPolicy()));
         }
     }
