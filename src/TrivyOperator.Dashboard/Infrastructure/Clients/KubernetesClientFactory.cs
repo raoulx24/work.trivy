@@ -5,6 +5,7 @@ using Polly;
 using Polly.Extensions.Http;
 using Polly.Retry;
 using System.Net;
+using System.Text.Json;
 using TrivyOperator.Dashboard.Application.Services.Options;
 using TrivyOperator.Dashboard.Infrastructure.Abstractions;
 using TrivyOperator.Dashboard.Utils;
@@ -18,11 +19,7 @@ public class KubernetesClientFactory : IKubernetesClientFactory
 
     static KubernetesClientFactory()
     {
-        KubernetesJson.AddJsonOptions(jsonSerializerOptions =>
-        {
-            jsonSerializerOptions.Converters.Insert(0, new DateTimeJsonConverter());
-            jsonSerializerOptions.Converters.Insert(0, new DateTimeNullableJsonConverter());
-        });
+        KubernetesJson.AddJsonOptions(ConfigureJsonSerializerOptions);
     }
 
     public KubernetesClientFactory(IOptions<KubernetesOptions> options, ILogger<KubernetesClientFactory> logger)
@@ -38,11 +35,7 @@ public class KubernetesClientFactory : IKubernetesClientFactory
                 {
                     KubernetesClientConfiguration config =
                         KubernetesClientConfiguration.BuildConfigFromConfigFile(kubeConfigFileName);
-                    config.AddJsonOptions(jsonSerializerOptions =>
-                    {
-                        jsonSerializerOptions.Converters.Insert(0, new DateTimeJsonConverter());
-                        jsonSerializerOptions.Converters.Insert(0, new DateTimeNullableJsonConverter());
-                    });
+                    config.AddJsonOptions(ConfigureJsonSerializerOptions);
                     kubernetesClient = new Kubernetes(config, new PolicyHttpMessageHandler(GetRetryPolicy()));
                 }
                 else
@@ -71,11 +64,7 @@ public class KubernetesClientFactory : IKubernetesClientFactory
             KubernetesClientConfiguration? defaultConfig = KubernetesClientConfiguration.IsInCluster()
                 ? KubernetesClientConfiguration.InClusterConfig()
                 : KubernetesClientConfiguration.BuildConfigFromConfigFile();
-            defaultConfig.AddJsonOptions(jsonSerializerOptions =>
-            {
-                jsonSerializerOptions.Converters.Insert(0, new DateTimeJsonConverter());
-                jsonSerializerOptions.Converters.Insert(0, new DateTimeNullableJsonConverter());
-            });
+            defaultConfig.AddJsonOptions(ConfigureJsonSerializerOptions);
             kubernetesClient = new Kubernetes(defaultConfig, new PolicyHttpMessageHandler(GetRetryPolicy()));
         }
     }
@@ -86,4 +75,10 @@ public class KubernetesClientFactory : IKubernetesClientFactory
         .HandleTransientHttpError()
         .OrResult(msg => msg.StatusCode == HttpStatusCode.NotFound)
         .WaitAndRetryAsync(6, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
+    
+    private static void ConfigureJsonSerializerOptions(JsonSerializerOptions jsonSerializerOptions)
+    {
+        jsonSerializerOptions.Converters.Insert(0, new DateTimeJsonConverter());
+        jsonSerializerOptions.Converters.Insert(0, new DateTimeNullableJsonConverter());
+    }
 }
