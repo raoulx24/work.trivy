@@ -1,4 +1,5 @@
 ﻿using k8s.Models;
+using Microsoft.AspNetCore.Http.Json;
 using Microsoft.AspNetCore.HttpOverrides;
 using Serilog;
 using Serilog.Extensions.Logging;
@@ -59,12 +60,19 @@ builder.Host.UseSerilog(Log.Logger);
 builder.WebHost.UseShutdownTimeout(TimeSpan.FromSeconds(10));
 builder.WebHost.ConfigureKestrel(options => { options.AddServerHeader = false; });
 
+builder.Services.Configure<JsonOptions>(options =>
+{
+    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    options.SerializerOptions.Converters.Add(new DateTimeJsonConverter());
+    options.SerializerOptions.Converters.Add(new DateTimeNullableJsonConverter());
+});
 builder.Services.AddControllersWithViews()
     .AddJsonOptions(
         options =>
         {
             options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-            options.JsonSerializerOptions.Converters.Add(new CustomDateTimeConverter());
+            options.JsonSerializerOptions.Converters.Add(new DateTimeJsonConverter());
+            options.JsonSerializerOptions.Converters.Add(new DateTimeNullableJsonConverter());
         });
 builder.Services
     .AddHttpClient(); // see: https://docs.microsoft.com/en-us/dotnet/architecture/microservices/implement-resilient-applications/use-httpclientfactory-to-implement-resilient-http-requests
