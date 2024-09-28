@@ -50,7 +50,7 @@ public static class ClusterRbacAssessmentReportCrExtensions
     public static ClusterRbacAssessmentReportDto ToClusterRbacAssessmentReportDto(this ClusterRbacAssessmentReportCr clusterRbacAssessmentReportCr)
     {
         List<ClusterRbacAssessmentReportDetailDto> clusterRbacAssessmentReportDetailDtos = new();
-        foreach(Check check in clusterRbacAssessmentReportCr.Report.Checks)
+        foreach(Check check in (clusterRbacAssessmentReportCr?.Report?.Checks ?? []))
         {
             ClusterRbacAssessmentReportDetailDto clusterRbacAssessmentReportDetailDto = new()
             {

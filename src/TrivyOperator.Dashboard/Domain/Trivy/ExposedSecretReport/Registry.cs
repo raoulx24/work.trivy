@@ -6,5 +6,5 @@ namespace TrivyOperator.Dashboard.Domain.Trivy.ExposedSecretReport;
 public class Registry
 {
     [JsonPropertyName("server")]
-    public string? Server { get; set; }
+    public string Server { get; init; } = string.Empty;
 }

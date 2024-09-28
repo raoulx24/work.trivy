@@ -6,11 +6,11 @@ public class Artifact
 {
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     [JsonPropertyName("digest")]
-    public string? Digest { get; set; }
+    public string Digest { get; init; } = string.Empty;
 
     [JsonPropertyName("repository")]
-    public string? Repository { get; set; }
+    public string Repository { get; init; } = string.Empty;
 
     [JsonPropertyName("tag")]
-    public string? Tag { get; set; }
+    public string Tag { get; init; } = string.Empty;
 }

@@ -58,7 +58,7 @@ public static class ExposedSecretReportCrExtensions
     public static ExposedSecretReportDto ToExposedSecretReportDto(this ExposedSecretReportCr exposedSecretReportCr)
     {
         List<ExposedSecretReportDetailDto> exposedSecretReportDetailDtos = new();
-        foreach (Secret secret in exposedSecretReportCr.Report.Secrets)
+        foreach (Secret secret in (exposedSecretReportCr?.Report?.Secrets ?? []))
         {
             ExposedSecretReportDetailDto exposedSecretReportDetailDto = new ExposedSecretReportDetailDto()
             {

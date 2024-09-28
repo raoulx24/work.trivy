@@ -7,20 +7,20 @@ namespace TrivyOperator.Dashboard.Domain.Trivy.ExposedSecretReport;
 public class Report
 {
     [JsonPropertyName("artifact")]
-    public Artifact? Artifact { get; set; }
+    public Artifact? Artifact { get; init; }
 
     [JsonPropertyName("registry")]
-    public Registry? Registry { get; set; }
+    public Registry? Registry { get; init; }
 
     [JsonPropertyName("scanner")]
-    public Scanner? Scanner { get; set; }
+    public Scanner? Scanner { get; init; }
 
     [JsonPropertyName("secrets")]
-    public Secret[]? Secrets { get; set; }
+    public Secret[]? Secrets { get; init; }
 
     [JsonPropertyName("summary")]
-    public Summary? Summary { get; set; }
+    public Summary? Summary { get; init; }
 
     [JsonPropertyName("updateTimestamp")]
-    public string? UpdateTimestamp { get; set; }
+    public DateTime? UpdateTimestamp { get; init; }
 }

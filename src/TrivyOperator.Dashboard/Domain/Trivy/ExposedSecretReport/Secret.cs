@@ -5,20 +5,20 @@ namespace TrivyOperator.Dashboard.Domain.Trivy.ExposedSecretReport;
 public class Secret
 {
     [JsonPropertyName("category")]
-    public string? Category { get; set; }
+    public string Category { get; init; } = string.Empty;
 
     [JsonPropertyName("match")]
-    public string? Match { get; set; }
+    public string Match { get; init; } = string.Empty;
 
     [JsonPropertyName("ruleID")]
-    public string? RuleId { get; set; }
+    public string RuleId { get; init; } = string.Empty;
 
     [JsonPropertyName("severity")]
-    public string? Severity { get; set; }
+    public string Severity { get; init; } = string.Empty;
 
     [JsonPropertyName("target")]
-    public string? Target { get; set; }
+    public string Target { get; init; } = string.Empty;
 
     [JsonPropertyName("title")]
-    public string? Title { get; set; }
+    public string Title { get; init; } = string.Empty;
 }

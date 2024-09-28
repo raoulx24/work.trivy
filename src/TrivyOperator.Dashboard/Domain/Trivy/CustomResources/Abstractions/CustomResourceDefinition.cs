@@ -10,5 +10,5 @@ public abstract class CustomResourceDefinition
 
     public abstract string Kind { get; }
 
-    public abstract string? Namespace { get; set; }
+    public abstract string? Namespace { get; init; }
 }

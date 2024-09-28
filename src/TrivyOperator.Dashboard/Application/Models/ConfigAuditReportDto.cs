@@ -54,7 +54,7 @@ public static class ConfigAuditReportCrExtensions
     public static ConfigAuditReportDto ToConfigAuditReportDto(this ConfigAuditReportCr configAuditReportCr)
     {
         List<ConfigAuditReportDetailDto> configAuditReportDetailDtos = new();
-        foreach (Check check in configAuditReportCr.Report.Checks)
+        foreach (Check check in (configAuditReportCr?.Report?.Checks ?? []))
         {
             ConfigAuditReportDetailDto configAuditReportDetailDto = new()
             {

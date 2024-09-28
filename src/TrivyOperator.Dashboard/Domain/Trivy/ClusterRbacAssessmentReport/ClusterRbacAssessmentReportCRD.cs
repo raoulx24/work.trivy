@@ -8,5 +8,5 @@ public class ClusterRbacAssessmentReportCrd : CustomResourceDefinition
     public override string Group { get; } = "aquasecurity.github.io";
     public override string PluralName { get; } = "clusterrbacassessmentreports";
     public override string Kind { get; } = "CResource";
-    public override string? Namespace { get; set; } = null;
+    public override string? Namespace { get; init; } = null;
 }
