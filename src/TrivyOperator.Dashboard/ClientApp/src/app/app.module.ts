@@ -1,7 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+//import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
@@ -35,6 +36,7 @@ import { TagModule } from 'primeng/tag';
 
 import { TrivyTableComponent } from './trivy-table/trivy-table.component';
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -46,8 +48,8 @@ import { TrivyTableComponent } from './trivy-table/trivy-table.component';
     AboutComponent,
   ],
   imports: [
-    BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
-    HttpClientModule,
+    BrowserModule,
+    //HttpClientModule,
     FormsModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
@@ -77,7 +79,7 @@ import { TrivyTableComponent } from './trivy-table/trivy-table.component';
 
     TrivyTableComponent,
   ],
-  providers: [],
+  providers: [provideHttpClient()],
   bootstrap: [AppComponent]
 })
 export class AppModule {

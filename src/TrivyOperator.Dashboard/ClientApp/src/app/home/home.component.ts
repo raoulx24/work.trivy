@@ -71,7 +71,11 @@ export class HomeComponent {
   public showDistinctValues: boolean = true;
 
   constructor(vulnerabilityReportsService: VulnerabilityReportsService, severityHelperService: SeverityHelperService) {
-    vulnerabilityReportsService.getVulnerabilityReportSumaryDto().subscribe(result => this.onVulnerabilityReportSummaryDtos(result), error => console.error(error));
+    vulnerabilityReportsService.getVulnerabilityReportSumaryDto()
+      .subscribe({
+        next: (res) => this.onVulnerabilityReportSummaryDtos(res),
+        error: (err) => console.error(err)
+      });
     this.severityHelperService = severityHelperService;
     this._primeNgHelper = new PrimeNgHelper(this.severityHelperService);
     severityHelperService.getSeverityDtos().then(result => {
