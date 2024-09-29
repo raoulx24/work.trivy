@@ -1,4 +1,5 @@
 ﻿using k8s.Models;
+using Microsoft.Extensions.Localization;
 using TrivyOperator.Dashboard.Domain.Trivy.ConfigAuditReport;
 
 namespace TrivyOperator.Dashboard.Application.Models;
@@ -6,54 +7,54 @@ namespace TrivyOperator.Dashboard.Application.Models;
 public class ConfigAuditReportDto
 {
     public Guid Uid { get; init; }
-    public string? ResourceName { get; init; }
-    public string? ResourceNamespace { get; init; }
-    public string? ResourceKind { get; init; }
-    public long CriticalCount { get; init; }
-    public long HighCount { get; init; }
-    public long MediumCount { get; init; }
-    public long LowCount { get; init; }
-    public ConfigAuditReportDetailDto[]? Checks { get; init; }
+    public string ResourceName { get; init; } = string.Empty;
+    public string ResourceNamespace { get; init; } = string.Empty;
+    public string ResourceKind { get; init; } = string.Empty;
+    public long CriticalCount { get; init; } = 0;
+    public long HighCount { get; init; } = 0;
+    public long MediumCount { get; init; } = 0;
+    public long LowCount { get; init; } = 0;
+    public ConfigAuditReportDetailDto[] Checks { get; init; } = [];
 }
 
 public class ConfigAuditReportDetailDto
 {
-    public string? Category { get; init; }
-    public string? CheckId { get; init; }
-    public string? Description { get; init; }
-    public string[]? Messages { get; init; }
-    public string? Remediation { get; init; }
-    public string? Severity { get; init; }
-    public bool Success { get; init; }
-    public string? Title { get; init; }
+    public string Category { get; init; } = string.Empty;
+    public string CheckId { get; init; } = string.Empty;
+    public string Description { get; init; } = string.Empty;
+    public string[] Messages { get; init; } = [];
+    public string Remediation { get; init; } = string.Empty;
+    public string Severity { get; init; } = string.Empty;
+    public bool Success { get; init; } = false;
+    public string Title { get; init; } = string.Empty;
 }
 
 public class ConfigAuditReportDenormalizedDto
 {
-    public Guid Uid { get; init; }
-    public string? ResourceName { get; init; }
-    public string? ResourceNamespace { get; init; }
-    public string? ResourceKind { get; init; }
-    public long CriticalCount { get; init; }
-    public long HighCount { get; init; }
-    public long MediumCount { get; init; }
-    public long LowCount { get; init; }
+    public Guid Uid { get; init; } = Guid.Empty;
+    public string ResourceName { get; init; } = string.Empty;
+    public string ResourceNamespace { get; init; } = string.Empty;
+    public string ResourceKind { get; init; } = string.Empty;
+    public long CriticalCount { get; init; } = 0;
+    public long HighCount { get; init; } = 0;
+    public long MediumCount { get; init; } = 0;
+    public long LowCount { get; init; } = 0;
     
-    public string? Category { get; init; }
-    public string? CheckId { get; init; }
-    public string? Description { get; init; }
-    public string[]? Messages { get; init; }
-    public string? Remediation { get; init; }
-    public string? Severity { get; init; }
-    public bool Success { get; init; }
-    public string? Title { get; init; }
+    public string Category { get; init; } = string.Empty;
+    public string CheckId { get; init; } = string.Empty;
+    public string Description { get; init; } = string.Empty;
+    public string[] Messages { get; init; } = [];
+    public string Remediation { get; init; } = string.Empty;
+    public string Severity { get; init; } = string.Empty;
+    public bool Success { get; init; } = false;
+    public string Title { get; init; } = string.Empty;
 }
 
 public static class ConfigAuditReportCrExtensions
 {
     public static ConfigAuditReportDto ToConfigAuditReportDto(this ConfigAuditReportCr configAuditReportCr)
     {
-        List<ConfigAuditReportDetailDto> configAuditReportDetailDtos = new();
+        List<ConfigAuditReportDetailDto> configAuditReportDetailDtos = [];
         foreach (Check check in (configAuditReportCr?.Report?.Checks ?? []))
         {
             ConfigAuditReportDetailDto configAuditReportDetailDto = new()
@@ -71,21 +72,18 @@ public static class ConfigAuditReportCrExtensions
         }
         ConfigAuditReportDto configAuditReportDto = new()
         {
-            Uid = new Guid(configAuditReportCr.Metadata.Uid),
-            ResourceName = configAuditReportCr.Metadata.Labels.ContainsKey("trivy-operator.resource.name")
-                ? configAuditReportCr.Metadata.Labels["trivy-operator.resource.name"]
-                : string.Empty,
-            ResourceNamespace = configAuditReportCr.Metadata.Labels.ContainsKey("trivy-operator.resource.namespace")
-                ? configAuditReportCr.Metadata.Labels["trivy-operator.resource.namespace"]
-                : string.Empty,
-            ResourceKind = configAuditReportCr.Metadata.Labels.ContainsKey("trivy-operator.resource.kind")
-                ? configAuditReportCr.Metadata.Labels["trivy-operator.resource.kind"]
-                : string.Empty,
-            CriticalCount = configAuditReportCr.Report?.Summary?.CriticalCount ?? 0,
-            HighCount = configAuditReportCr.Report?.Summary?.HighCount ?? 0,
-            MediumCount = configAuditReportCr.Report?.Summary?.MediumCount ?? 0,
-            LowCount = configAuditReportCr.Report?.Summary?.LowCount ?? 0,
-            Checks = configAuditReportDetailDtos.ToArray(),
+            Uid = new Guid(configAuditReportCr?.Metadata?.Uid ?? string.Empty),
+            ResourceName = configAuditReportCr?.Metadata?.Labels != null 
+                && configAuditReportCr.Metadata.Labels.TryGetValue("trivy-operator.resource.name", out string? resourceName) ? resourceName : string.Empty,
+            ResourceNamespace = configAuditReportCr?.Metadata?.Labels != null
+                && configAuditReportCr.Metadata.Labels.TryGetValue("trivy-operator.resource.namespace", out string? resourceNamespace) ? resourceNamespace : string.Empty,
+            ResourceKind = configAuditReportCr?.Metadata?.Labels != null
+                && configAuditReportCr.Metadata.Labels.TryGetValue("trivy-operator.resource.kind", out string? resourceKind) ? resourceKind : string.Empty,
+            CriticalCount = configAuditReportCr?.Report?.Summary?.CriticalCount ?? 0,
+            HighCount = configAuditReportCr?.Report?.Summary?.HighCount ?? 0,
+            MediumCount = configAuditReportCr?.Report?.Summary?.MediumCount ?? 0,
+            LowCount = configAuditReportCr?.Report?.Summary?.LowCount ?? 0,
+            Checks = [.. configAuditReportDetailDtos],
         };
 
         return configAuditReportDto;
@@ -95,7 +93,7 @@ public static class ConfigAuditReportCrExtensions
     {
         if (configAuditReportCr is null) throw new ArgumentNullException(nameof(configAuditReportCr));
         List<ConfigAuditReportDenormalizedDto> configAuditReportDenormalizedDtos = new();
-        foreach (Check check in configAuditReportCr.Report.Checks)
+        foreach (Check check in configAuditReportCr?.Report?.Checks ?? [])
         {
             ConfigAuditReportDenormalizedDto configAuditReportDenormalizedDto = new()
             {
@@ -108,20 +106,17 @@ public static class ConfigAuditReportCrExtensions
                 Success = check.Success,
                 Title = check.Title,
 
-                Uid = new Guid(configAuditReportCr.Metadata.Uid),
-                ResourceName = configAuditReportCr.Metadata.Labels.ContainsKey("trivy-operator.resource.name")
-                ? configAuditReportCr.Metadata.Labels["trivy-operator.resource.name"]
-                : string.Empty,
-                ResourceNamespace = configAuditReportCr.Metadata.Labels.ContainsKey("trivy-operator.resource.namespace")
-                ? configAuditReportCr.Metadata.Labels["trivy-operator.resource.namespace"]
-                : string.Empty,
-                ResourceKind = configAuditReportCr.Metadata.Labels.ContainsKey("trivy-operator.resource.kind")
-                ? configAuditReportCr.Metadata.Labels["trivy-operator.resource.kind"]
-                : string.Empty,
-                CriticalCount = configAuditReportCr.Report?.Summary?.CriticalCount ?? 0,
-                HighCount = configAuditReportCr.Report?.Summary?.HighCount ?? 0,
-                MediumCount = configAuditReportCr.Report?.Summary?.MediumCount ?? 0,
-                LowCount = configAuditReportCr.Report?.Summary?.LowCount ?? 0,
+                Uid = new Guid(configAuditReportCr?.Metadata?.Uid ?? string.Empty),
+                ResourceName = configAuditReportCr?.Metadata?.Labels != null
+                    && configAuditReportCr.Metadata.Labels.TryGetValue("trivy-operator.resource.name", out string? resourceName) ? resourceName : string.Empty,
+                ResourceNamespace = configAuditReportCr?.Metadata?.Labels != null
+                    && configAuditReportCr.Metadata.Labels.TryGetValue("trivy-operator.resource.namespace", out string? resourceNamespace) ? resourceNamespace : string.Empty,
+                ResourceKind = configAuditReportCr?.Metadata?.Labels != null
+                    && configAuditReportCr.Metadata.Labels.TryGetValue("trivy-operator.resource.kind", out string? resourceKind) ? resourceKind : string.Empty,
+                CriticalCount = configAuditReportCr?.Report?.Summary?.CriticalCount ?? 0,
+                HighCount = configAuditReportCr?.Report?.Summary?.HighCount ?? 0,
+                MediumCount = configAuditReportCr?.Report?.Summary?.MediumCount ?? 0,
+                LowCount = configAuditReportCr?.Report?.Summary?.LowCount ?? 0,
             };
             configAuditReportDenormalizedDtos.Add(configAuditReportDenormalizedDto);
         }
