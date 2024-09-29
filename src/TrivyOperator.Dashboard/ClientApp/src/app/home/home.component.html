@@ -1,98 +1,98 @@
 <h3 id="trivy-operator-overview">Overview</h3>
 <p-panel header="Vulnerability Reports" [toggleable]="true" *ngIf="vulnerabilityReportSumaryDto">
   <div class="row" style="height:70vh">
-    <div class="col-2">
-      <h4 style="text-align: center;">Statistics</h4>
-      <div class="row"  style="margin-bottom:20px">
-        <p-table [value]="othersSummaryForTable" [tableStyle]="{ 'font-size': '14px' }" styleClass="p-datatable-sm">
-          <ng-template pTemplate="body" let-others>
-            <tr>
-              <td style="width: 50%; max-width: 50%;">{{ others.description }}</td>
-              <td style="width: 25%; max-width: 25%; text-align: right;">{{ others.count }}</td>
-              <td style="width: 25%; max-width: 25%;">
-                <p-button label="More..." [text]="true" size="small" (onClick)="onOthersMore(others)"
-                          [style]="{ 'font-size': '14px', 'float': 'right', 'padding': '0' }" />
-              </td>
-            </tr>
-          </ng-template>
-        </p-table>
+    <div class="grid">
+      <div class="col-2">
+        <h4 style="text-align: center;">Statistics</h4>
+        <div class="row" style="margin-bottom:20px">
+          <p-table [value]="othersSummaryForTable" [tableStyle]="{ 'font-size': '14px' }" styleClass="p-datatable-sm">
+            <ng-template pTemplate="body" let-others>
+              <tr>
+                <td style="width: 50%; max-width: 50%;">{{ others.description }}</td>
+                <td style="width: 25%; max-width: 25%; text-align: right;">{{ others.count }}</td>
+                <td style="width: 25%; max-width: 25%;">
+                  <p-button label="More..." [text]="true" size="small" (onClick)="onOthersMore(others)"
+                            [style]="{ 'font-size': '14px', 'float': 'right', 'padding': '0' }" />
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+        <div class="row">
+          <p-table [value]="severitiesSummaryForTable" [tableStyle]="{ 'font-size': '14px' }" styleClass="p-datatable-sm">
+            <ng-template pTemplate="header">
+              <tr>
+                <th style="width: 50%; max-width: 50%;">Severity</th>
+                <th style="width: 25%; max-width: 25%; text-align: right;">Count</th>
+                <th style="width: 25%; max-width: 25%; text-align: right;">Fixable</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-severity>
+              <tr>
+                <td style="width: 50%; max-width: 50%;">{{ severity.severityName }}</td>
+                <td style="width: 25%; max-width: 25%; text-align: right;">{{ severity.count }}</td>
+                <td style="width: 25%; max-width: 25%; text-align: right;">{{ severity.fixable }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+          <p-button label="More on Severities..." [text]="true" size="small" (onClick)="onVrsMore($event)"
+                    [style]="{ 'font-size': '14px', 'float': 'right' }" />
+        </div>
       </div>
-
-      <div class="row">
-        <p-table [value]="severitiesSummaryForTable" [tableStyle]="{ 'font-size': '14px' }" styleClass="p-datatable-sm">
-          <ng-template pTemplate="header">
-            <tr>
-              <th style="width: 50%; max-width: 50%;">Severity</th>
-              <th style="width: 25%; max-width: 25%; text-align: right;">Count</th>
-              <th style="width: 25%; max-width: 25%; text-align: right;">Fixable</th>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="body" let-severity>
-            <tr>
-              <td style="width: 50%; max-width: 50%;">{{ severity.severityName }}</td>
-              <td style="width: 25%; max-width: 25%; text-align: right;">{{ severity.count }}</td>
-              <td style="width: 25%; max-width: 25%; text-align: right;">{{ severity.fixable }}</td>
-            </tr>
-          </ng-template>
-        </p-table>
-        <p-button label="More on Severities..." [text]="true" size="small" (onClick)="onVrsMore($event)"
-                  [style]="{ 'font-size': '14px', 'float': 'right' }" />
-      </div>
-
-    </div>
-    <div class="col-10">
-      <p-carousel [value]="slides"
-                  [numVisible]="1"
-                  [numScroll]="1"
-                  [circular]="true"
-                  [autoplayInterval]="10000"
-                  [style]="{  }">
-        <ng-template let-slide pTemplate="item">
-          <div class="custom-slide">
-            <ng-container [ngSwitch]="slide">
-              <!--<div *ngSwitchCase="'pieCharts'">
-                <div class="row row-cols-xl-6 row-cols-lg-4 row-cols-md-3 row-cols-sm-1" *ngIf="pieChartData"
-                     style="height: 55vh; width: 45vw; overflow-y: auto; display: flex; justify-content: center; align-items: center">
-                  <div class="col" *ngFor="let pieChartDataNs of pieChartData;">
-                    <div class="card">
-                      <div class="card-body">
-                        <h3 class="card-title" style="text-align: center;">{{ pieChartDataNs.title }}</h3>
-                        <p-chart #pieChart
-                                 type="pie"
-                                 [data]=pieChartDataNs
-                                 [options]="pieChartOptions"
-                                 height="200px" />
-                      </div>
+      <div class="col-10">
+        <p-carousel [value]="slides"
+                    [numVisible]="1"
+                    [numScroll]="1"
+                    [circular]="true"
+                    [autoplayInterval]="10000"
+                    [style]="{  }">
+          <ng-template let-slide pTemplate="item">
+            <div class="custom-slide">
+              <ng-container [ngSwitch]="slide">
+                <!--<div *ngSwitchCase="'pieCharts'">
+              <div class="row row-cols-xl-6 row-cols-lg-4 row-cols-md-3 row-cols-sm-1" *ngIf="pieChartData"
+                   style="height: 55vh; width: 45vw; overflow-y: auto; display: flex; justify-content: center; align-items: center">
+                <div class="col" *ngFor="let pieChartDataNs of pieChartData;">
+                  <div class="card">
+                    <div class="card-body">
+                      <h3 class="card-title" style="text-align: center;">{{ pieChartDataNs.title }}</h3>
+                      <p-chart #pieChart
+                               type="pie"
+                               [data]=pieChartDataNs
+                               [options]="pieChartOptions"
+                               height="200px" />
                     </div>
                   </div>
                 </div>
-              </div>-->
-              <div *ngSwitchCase="'barChartNS'">
-                <div *ngIf="horizontalBarChartDataByNs">
-                  <h4 style="text-align: center;">Vulnerabilities by Namespace</h4>
-                  <p-chart *ngIf="createChart"
-                           #barChartByNs
-                           type="bar"
-                           [data]="horizontalBarChartDataByNs"
-                           [options]="horizontalBarChartOption"
-                           height="60vh" width="70vw"/>
-                </div>
               </div>
-              <div *ngSwitchCase="'barChartSeverity'">
-                <div *ngIf="horizontalBarChartDataByNs">
-                  <h4 style="text-align: center;">Vulnerabilities by Severity</h4>
-                  <p-chart *ngIf="createChart"
-                           #barChartBySeverity
-                           type="bar"
-                           [data]="horizontalBarChartDataBySeverity"
-                           [options]="horizontalBarChartOption"
-                           height="60vh" width="70vw" />
+            </div>-->
+                <div *ngSwitchCase="'barChartNS'">
+                  <div *ngIf="horizontalBarChartDataByNs">
+                    <h4 style="text-align: center;">Vulnerabilities by Namespace</h4>
+                    <p-chart *ngIf="createChart"
+                             #barChartByNs
+                             type="bar"
+                             [data]="horizontalBarChartDataByNs"
+                             [options]="horizontalBarChartOption"
+                             height="60vh" width="70vw" />
+                  </div>
                 </div>
-              </div>
-            </ng-container>
-          </div>
-        </ng-template>
-      </p-carousel>
+                <div *ngSwitchCase="'barChartSeverity'">
+                  <div *ngIf="horizontalBarChartDataByNs">
+                    <h4 style="text-align: center;">Vulnerabilities by Severity</h4>
+                    <p-chart *ngIf="createChart"
+                             #barChartBySeverity
+                             type="bar"
+                             [data]="horizontalBarChartDataBySeverity"
+                             [options]="horizontalBarChartOption"
+                             height="60vh" width="70vw" />
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </ng-template>
+        </p-carousel>
+      </div>
     </div>
   </div>
 </p-panel>

@@ -98,9 +98,6 @@ export class TrivyTableComponent<TData> {
   }
 
   onSelectionChange(event: any): void {
-    if (!this.trivyTableOptions.exposeSelectedRowsEvent) {
-      return;
-    }
     if (!event) {
       this.selectedRowsChanged.emit([]);
       return;
@@ -123,9 +120,6 @@ export class TrivyTableComponent<TData> {
   }
 
   onFilterData() {
-    console.log(this.filterRefreshSeverities);
-    console.log(this.filterRefreshSeverities![0]);
-    console.log(this.filterRefreshActiveNamespace);
     let event: TrivyFilterData = {
       namespaceName: this.filterRefreshActiveNamespace,
       selectedSeverityIds: this.filterRefreshSeverities?.map(x => x.id) ?? [],

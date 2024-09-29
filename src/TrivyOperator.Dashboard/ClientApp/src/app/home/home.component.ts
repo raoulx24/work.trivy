@@ -206,23 +206,16 @@ export class HomeComponent {
 
   public onMamaClick(event: Event) {
     if (this.horizontalBarChartDataByNs == null) {
-      console.log("ciudat");
       return;
     }
-    console.log("mama");
     this.loading = !this.loading;
     this.horizontalBarChartDataByNs!.datasets[1].hidden = !this.horizontalBarChartDataByNs!.datasets[1].hidden;
     this.createChart = !this.createChart;
     console.log(this.createChart);
     timer(1).subscribe(x => { this.createChart = !this.createChart; })
     
-    console.log(this.createChart);
-
     if (this.barChartByNs == null)
       return;
-
-    console.log(this.horizontalBarChartDataByNs);
-    console.log(this.horizontalBarChartOption);
 
     //const ci = this.barChartByNs.chart;
     //const meta = ci.getDatasetMeta(1);
