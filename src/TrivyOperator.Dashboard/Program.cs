@@ -26,6 +26,7 @@ using TrivyOperator.Dashboard.Infrastructure.Clients;
 using TrivyOperator.Dashboard.Infrastructure.Services;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 using TrivyOperator.Dashboard.Utils;
+using TrivyOperator.Dashboard.Application.Services.WatcherErrorHandlers;
 
 Directory.SetCurrentDirectory(AppContext.BaseDirectory);
 
@@ -90,6 +91,9 @@ builder.Services.Configure<KubernetesOptions>(configuration.GetSection("Kubernet
 builder.Services.AddHostedService<CacheWatcherEventHandlerHostedService>();
 
 builder.Services.AddSingleton<IKubernetesClientFactory, KubernetesClientFactory>();
+
+builder.Services.AddSingleton<IWatcherState, WatcherState>();
+builder.Services.AddSingleton<IConcurrentCache<string, WatcherStateDetails>, ConcurrentCache<string, WatcherStateDetails>>();
 
 builder.Services.AddSingleton<IConcurrentCache<string, IList<V1Namespace>>, ConcurrentCache<string, IList<V1Namespace>>>();
 builder.Services.AddSingleton<IBackgroundQueue<V1Namespace>, BackgroundQueue<V1Namespace>>();

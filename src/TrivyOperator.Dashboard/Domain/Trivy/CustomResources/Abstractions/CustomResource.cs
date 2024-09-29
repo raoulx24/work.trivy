@@ -7,5 +7,5 @@ namespace TrivyOperator.Dashboard.Domain.Trivy.CustomResources.Abstractions;
 public abstract class CustomResource : KubernetesObject, IMetadata<V1ObjectMeta>
 {
     [JsonPropertyName("metadata")]
-    public V1ObjectMeta Metadata { get; set; }
+    public V1ObjectMeta Metadata { get; set; } = new V1ObjectMeta();
 }

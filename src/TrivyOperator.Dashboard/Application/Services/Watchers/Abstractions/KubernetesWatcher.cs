@@ -3,6 +3,7 @@ using k8s.Autorest;
 using k8s.Models;
 using System.Net;
 using TrivyOperator.Dashboard.Application.Services.BackgroundQueues.Abstractions;
+using TrivyOperator.Dashboard.Application.Services.WatcherErrorHandlers;
 using TrivyOperator.Dashboard.Application.Services.WatcherEvents.Abstractions;
 using TrivyOperator.Dashboard.Infrastructure.Abstractions;
 using TrivyOperator.Dashboard.Utils;
@@ -13,8 +14,10 @@ public abstract class
     KubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TBackgroundQueue, TKubernetesWatcherEvent>(
         IKubernetesClientFactory kubernetesClientFactory,
         TBackgroundQueue backgroundQueue,
-        ILogger<KubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TBackgroundQueue, TKubernetesWatcherEvent>>
-            logger) : IKubernetesWatcher<TKubernetesObject> where TKubernetesObject : IKubernetesObject<V1ObjectMeta>
+        IWatcherState watcherState,
+        ILogger<KubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TBackgroundQueue, TKubernetesWatcherEvent>> logger)
+    : IKubernetesWatcher<TKubernetesObject>
+    where TKubernetesObject : IKubernetesObject<V1ObjectMeta>
     where TKubernetesObjectList : IItems<TKubernetesObject>
     where TKubernetesWatcherEvent : IWatcherEvent<TKubernetesObject>, new()
     where TBackgroundQueue : IBackgroundQueue<TKubernetesObject>
@@ -65,6 +68,7 @@ public abstract class
                                            ex),
                                        cancellationToken))
                 {
+                    await watcherState.ProcessWatcherSuccess(typeof(TKubernetesObject), watcherKey);
                     TKubernetesWatcherEvent kubernetesWatcherEvent =
                         new() { KubernetesObject = item, WatcherEventType = type };
                     await BackgroundQueue.QueueBackgroundWorkItemAsync(kubernetesWatcherEvent);
@@ -72,25 +76,15 @@ public abstract class
             }
             catch (HttpOperationException hoe) when (hoe.Response.StatusCode == HttpStatusCode.NotFound)
             {
-                Logger.LogError(
-                    "Watcher for {kubernetesObjectType} and key {watcherKey} crashed with 404.",
-                    typeof(TKubernetesObject).Name,
-                    watcherKey);
-                // TODO: something something
+                await watcherState.ProcessWatcherError(typeof(TKubernetesObject), watcherKey, hoe);
             }
             catch (HttpOperationException hoe) when (hoe.Response.StatusCode == HttpStatusCode.Forbidden)
             {
-                Logger.LogError(
-                    "Watcher for {kubernetesObjectType} and key {watcherKey} crashed with 403.",
-                    typeof(TKubernetesObject).Name,
-                    watcherKey);
-                // TODO: something something
+                await watcherState.ProcessWatcherError(typeof(TKubernetesObject), watcherKey, hoe);
             }
             catch (TaskCanceledException)
             {
-                Logger.LogInformation("Watcher for {kubernetesObjectType} and key {watcherKey} was canceled.",
-                    typeof(TKubernetesObject).Name,
-                    watcherKey);
+                await watcherState.ProcessWatcherCancel(typeof(TKubernetesObject), watcherKey);
             }
             catch (Exception ex)
             {

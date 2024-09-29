@@ -11,7 +11,8 @@ public class CacheRefresh<TKubernetesObject, TBackgroundQueue>(
     TBackgroundQueue backgroundQueue,
     IConcurrentCache<string, IList<TKubernetesObject>> cache,
     ILogger<CacheRefresh<TKubernetesObject, TBackgroundQueue>> logger)
-    : ICacheRefresh<TKubernetesObject, TBackgroundQueue> where TKubernetesObject : IKubernetesObject<V1ObjectMeta>
+    : ICacheRefresh<TKubernetesObject, TBackgroundQueue>
+    where TKubernetesObject : IKubernetesObject<V1ObjectMeta>
     where TBackgroundQueue : IBackgroundQueue<TKubernetesObject>
 {
     protected Task? CacheRefreshTask;

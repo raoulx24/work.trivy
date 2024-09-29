@@ -1,6 +1,7 @@
 ﻿using k8s;
 using k8s.Models;
 using TrivyOperator.Dashboard.Application.Services.BackgroundQueues.Abstractions;
+using TrivyOperator.Dashboard.Application.Services.WatcherErrorHandlers;
 using TrivyOperator.Dashboard.Application.Services.WatcherEvents.Abstractions;
 using TrivyOperator.Dashboard.Infrastructure.Abstractions;
 
@@ -10,11 +11,13 @@ public abstract class
     ClusterScopedWatcher<TKubernetesObjectList, TKubernetesObject, TBackgroundQueue, TKubernetesWatcherEvent>(
         IKubernetesClientFactory kubernetesClientFactory,
         TBackgroundQueue backgroundQueue,
+        IWatcherState watcherState,
         ILogger<ClusterScopedWatcher<TKubernetesObjectList, TKubernetesObject, TBackgroundQueue,
             TKubernetesWatcherEvent>> logger)
     : KubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TBackgroundQueue, TKubernetesWatcherEvent>(
         kubernetesClientFactory,
         backgroundQueue,
+        watcherState,
         logger), IClusterScopedWatcher<TKubernetesObject>
     where TKubernetesObject : class, IKubernetesObject<V1ObjectMeta>, new()
     where TKubernetesObjectList : IKubernetesObject, IItems<TKubernetesObject>

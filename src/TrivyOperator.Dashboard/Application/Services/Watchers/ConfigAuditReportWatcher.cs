@@ -2,6 +2,7 @@
 using k8s.Autorest;
 using k8s.Models;
 using TrivyOperator.Dashboard.Application.Services.BackgroundQueues.Abstractions;
+using TrivyOperator.Dashboard.Application.Services.WatcherErrorHandlers;
 using TrivyOperator.Dashboard.Application.Services.WatcherEvents.Abstractions;
 using TrivyOperator.Dashboard.Application.Services.Watchers.Abstractions;
 using TrivyOperator.Dashboard.Domain.Trivy.ConfigAuditReport;
@@ -13,11 +14,13 @@ namespace TrivyOperator.Dashboard.Application.Services.Watchers;
 public class ConfigAuditReportWatcher(
     IKubernetesClientFactory kubernetesClientFactory,
     IBackgroundQueue<ConfigAuditReportCr> backgroundQueue,
+    IWatcherState watcherState,
     ILogger<ConfigAuditReportWatcher> logger)
     : NamespacedWatcher<CustomResourceList<ConfigAuditReportCr>, ConfigAuditReportCr,
         IBackgroundQueue<ConfigAuditReportCr>, WatcherEvent<ConfigAuditReportCr>>(
         kubernetesClientFactory,
         backgroundQueue,
+        watcherState,
         logger)
 {
     protected override async Task<HttpOperationResponse<CustomResourceList<ConfigAuditReportCr>>>
