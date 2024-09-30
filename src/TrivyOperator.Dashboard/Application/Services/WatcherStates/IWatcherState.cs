@@ -1,6 +1,6 @@
 ﻿using k8s.Autorest;
 
-namespace TrivyOperator.Dashboard.Application.Services.WatcherState;
+namespace TrivyOperator.Dashboard.Application.Services.WatcherStates;
 public interface IWatcherState
 {
     Task ProcessWatcherError(Type watchedKubernetesObjectType, string watcherKey, HttpOperationException exception);

@@ -26,7 +26,7 @@ using TrivyOperator.Dashboard.Infrastructure.Clients;
 using TrivyOperator.Dashboard.Infrastructure.Services;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 using TrivyOperator.Dashboard.Utils;
-using TrivyOperator.Dashboard.Application.Services.WatcherState;
+using TrivyOperator.Dashboard.Application.Services.WatcherStates;
 
 Directory.SetCurrentDirectory(AppContext.BaseDirectory);
 

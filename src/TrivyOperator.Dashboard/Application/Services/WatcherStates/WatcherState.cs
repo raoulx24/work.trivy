@@ -3,7 +3,7 @@ using k8s.Autorest;
 using TrivyOperator.Dashboard.Infrastructure.Abstractions;
 using TrivyOperator.Dashboard.Utils;
 
-namespace TrivyOperator.Dashboard.Application.Services.WatcherState;
+namespace TrivyOperator.Dashboard.Application.Services.WatcherStates;
 
 public class WatcherState(IConcurrentCache<string, WatcherStateInfo> watcherStateCache, ILogger<WatcherState> logger)
     : IWatcherState
@@ -48,15 +48,15 @@ public class WatcherState(IConcurrentCache<string, WatcherStateInfo> watcherStat
             {
                 WatchedKubernetesObjectType = watchedKubernetesObjectType,
                 NamespaceName = watcherKey == VarUtils.DefaultCacheRefreshKey ? null : watcherKey,
-                Message = newMessage,
+                Status = newException == null ? WatcherStateStatus.Green : WatcherStateStatus.Red,
                 LastException = newException,
             };
             watcherStateCache.TryAdd(cacheKey, newWatcherStateDetails);
         }
         else
         {
-            watcherStateDetails.Message = newMessage;
-            watcherStateDetails.LastException = newException;
+            watcherStateDetails.Status = newException == null ? WatcherStateStatus.Green : WatcherStateStatus.Red;
+            watcherStateDetails.LastException = newException ?? watcherStateDetails.LastException;
         }
     }
 }

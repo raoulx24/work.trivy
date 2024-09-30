@@ -654,7 +654,10 @@ components:
         namespaceName:
           type: string
           nullable: true
-        message:
+        status:
+          type: string
+          nullable: true
+        mitigationMessage:
           type: string
           nullable: true
         lastException:

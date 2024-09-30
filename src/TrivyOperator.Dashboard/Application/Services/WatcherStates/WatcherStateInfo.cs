@@ -1,9 +1,11 @@
-﻿namespace TrivyOperator.Dashboard.Application.Services.WatcherState;
+﻿using TrivyOperator.Dashboard.Application.Services.WatcherStates;
+
+namespace TrivyOperator.Dashboard.Application.Services.WatcherStates;
 
 public class WatcherStateInfo
 {
     public required Type WatchedKubernetesObjectType { get; set; }
     public string? NamespaceName {get; set; } 
-    public string Message { get; set; } = string.Empty;
+    public WatcherStateStatus Status { get; set; }
     public Exception? LastException { get; set; }
 }

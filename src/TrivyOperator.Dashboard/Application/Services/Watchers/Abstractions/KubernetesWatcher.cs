@@ -3,7 +3,7 @@ using k8s.Autorest;
 using k8s.Models;
 using System.Net;
 using TrivyOperator.Dashboard.Application.Services.BackgroundQueues.Abstractions;
-using TrivyOperator.Dashboard.Application.Services.WatcherState;
+using TrivyOperator.Dashboard.Application.Services.WatcherStates;
 using TrivyOperator.Dashboard.Application.Services.WatcherEvents.Abstractions;
 using TrivyOperator.Dashboard.Infrastructure.Abstractions;
 using TrivyOperator.Dashboard.Utils;
@@ -25,7 +25,6 @@ public abstract class
 {
     protected readonly TBackgroundQueue BackgroundQueue = backgroundQueue;
     protected readonly Kubernetes KubernetesClient = kubernetesClientFactory.GetClient();
-    protected bool isWatcherStateRed = false;
 
     protected readonly ILogger<KubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TBackgroundQueue,
         TKubernetesWatcherEvent>> Logger = logger;
@@ -69,11 +68,7 @@ public abstract class
                                            ex),
                                        cancellationToken))
                 {
-                    if (isWatcherStateRed)
-                    {
-                        await watcherState.ProcessWatcherSuccess(typeof(TKubernetesObject), watcherKey);
-                        isWatcherStateRed = false;
-                    }
+                    await watcherState.ProcessWatcherSuccess(typeof(TKubernetesObject), watcherKey);
                     TKubernetesWatcherEvent kubernetesWatcherEvent =
                         new() { KubernetesObject = item, WatcherEventType = type };
                     await BackgroundQueue.QueueBackgroundWorkItemAsync(kubernetesWatcherEvent);
@@ -86,7 +81,6 @@ public abstract class
                 )
             {
                 await watcherState.ProcessWatcherError(typeof(TKubernetesObject), watcherKey, hoe);
-                isWatcherStateRed = true;
             }
             catch (TaskCanceledException)
             {
