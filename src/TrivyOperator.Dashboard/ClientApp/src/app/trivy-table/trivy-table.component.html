@@ -110,41 +110,36 @@
   </p-table>
 
   <p-overlayPanel #csvExportOp [dismissable]="true" (onShow)="onOverlayToogle()" (onHide)="onOverlayToogle()">
-    <div class="flex flex-column gap-3 w-25rem" style="width: 340px">
-      <div class="row">
-        <div>
-          <span style="font-size: 12px; padding-left: 2px;">CSV File Name</span>
-        </div>
+    <div style="width: 300px">
+      <div class="field">
+        <label for="csvFileName" class="text-xs">CSV File Name</label>
+        <input pInputText id="csvFileName" [(ngModel)]="csvFileName" 
+               class="text-xs text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full">
       </div>
-      <div class="row">
-        <div>
-          <input pInputText style="font-size: 14px; width: 100%; margin-top: 10px; margin-bottom: 10px" [(ngModel)]="csvFileName" />
-        </div>
-      </div>
-      <div class="row">
-        <div class="col">
+      <div class="grid">
+        <div class="col-6">
           <p-button label="Export Filtered"
                     icon="pi pi-filter"
                     size="small"
                     [disabled]="!trivyTable.filteredValue"
                     (onClick)="trivyTable.exportCSV()"
-                    [style]="{'width': '100%'}" />
+                    [style]="{'width': '100%'}" text />
         </div>
-        <div class="col">
+        <div class="col-6">
           <p-button label="Export All"
                     icon="pi pi-align-justify"
                     size="small"
                     (onClick)="trivyTable.exportCSV({ allValues: true })"
-                    [style]="{'width': '100%'}" />
+                    [style]="{'width': '100%'}" text />
         </div>
         <!--<div class="col">
-          <p-button label="Export Selected"
-                    icon="pi pi-list"
-                    size="small"
-                    [disabled]="!isTableRowSelected()"
-                    (onClick)="trivyTable.exportCSV({ selectionOnly: true })"
-                    [style]="{'width': '100%'}" />
-        </div>-->
+      <p-button label="Export Selected"
+                icon="pi pi-list"
+                size="small"
+                [disabled]="!isTableRowSelected()"
+                (onClick)="trivyTable.exportCSV({ selectionOnly: true })"
+                [style]="{'width': '100%'}" />
+    </div>-->
       </div>
     </div>
   </p-overlayPanel>

@@ -107,48 +107,46 @@
           [contentStyle]="{ 'height': '60vh'}"
           [style]="{ width: '70vw' }">
 
-  <div class="container">
-    <div class="row">
-      <div class="col-4" style="height: 55vh">
-        <p-table [value]="genericByNsSummaryDtos" [scrollable]="true" scrollHeight="flex"
-                 [tableStyle]="{ 'min-width': '10rem', 'font-size': '14px' }" styleClass="p-datatable-sm">
-          <ng-template pTemplate="header">
-            <tr>
-              <th style="width: 50%; max-width: 50%;">Namespace</th>
-              <th style="width: 25%; max-width: 25%; text-align: right;">Total</th>
-              <th style="width: 25%; max-width: 25%; text-align: right;">Distinct</th>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="body" let-others>
-            <tr [ngStyle]="getRowStyle(others)">
-              <td style="width: 50%; max-width: 50%;">{{ others.namespaceName }}</td>
-              <td style="width: 25%; max-width: 25%; text-align: right;">{{ others.totalCount }}</td>
-              <td style="width: 25%; max-width: 25%; text-align: right;">{{ others.distinctCount }}</td>
-            </tr>
-          </ng-template>
-        </p-table>
+  <div class="row grid">
+    <div class="col-4" style="height: 55vh">
+      <p-table [value]="genericByNsSummaryDtos" [scrollable]="true" scrollHeight="flex"
+                [tableStyle]="{ 'min-width': '10rem', 'font-size': '14px' }" styleClass="p-datatable-sm">
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 50%; max-width: 50%;">Namespace</th>
+            <th style="width: 25%; max-width: 25%; text-align: right;">Total</th>
+            <th style="width: 25%; max-width: 25%; text-align: right;">Distinct</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-others>
+          <tr [ngStyle]="getRowStyle(others)">
+            <td style="width: 50%; max-width: 50%;">{{ others.namespaceName }}</td>
+            <td style="width: 25%; max-width: 25%; text-align: right;">{{ others.totalCount }}</td>
+            <td style="width: 25%; max-width: 25%; text-align: right;">{{ others.distinctCount }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
 
-      </div>
-      <div class="col-8" style="height: 55vh">
-        <p-table [value]="genericSummaryDtos" [scrollable]="true" scrollHeight="flex"
-                 [tableStyle]="{ 'min-width': '10rem', 'font-size': '14px' }" styleClass="p-datatable-sm">
-          <ng-template pTemplate="header">
-            <tr>
-              <th style="width: 70%; max-width: 70%;">Name</th>
-              <th style="width: 30%; max-width: 30%; text-align: right;">Count</th>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="body" let-others>
-            <tr>
-              <td style="width: 70%; max-width: 70%;">{{ others.name }}</td>
-              <td style="width: 30%; max-width: 30%; text-align: right;">{{ others.count }}</td>
-            </tr>
-          </ng-template>
-        </p-table>
+    </div>
+    <div class="col-8" style="height: 55vh">
+      <p-table [value]="genericSummaryDtos" [scrollable]="true" scrollHeight="flex"
+                [tableStyle]="{ 'min-width': '10rem', 'font-size': '14px' }" styleClass="p-datatable-sm">
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 70%; max-width: 70%;">Name</th>
+            <th style="width: 30%; max-width: 30%; text-align: right;">Count</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-others>
+          <tr>
+            <td style="width: 70%; max-width: 70%;">{{ others.name }}</td>
+            <td style="width: 30%; max-width: 30%; text-align: right;">{{ others.count }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
 
-      </div>
     </div>
-    </div>
+  </div>
 </p-dialog>
 
 <p-dialog header="Vulnerability Reports Details"
