@@ -26,7 +26,7 @@ using TrivyOperator.Dashboard.Infrastructure.Clients;
 using TrivyOperator.Dashboard.Infrastructure.Services;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 using TrivyOperator.Dashboard.Utils;
-using TrivyOperator.Dashboard.Application.Services.WatcherErrorHandlers;
+using TrivyOperator.Dashboard.Application.Services.WatcherState;
 
 Directory.SetCurrentDirectory(AppContext.BaseDirectory);
 
@@ -93,7 +93,7 @@ builder.Services.AddHostedService<CacheWatcherEventHandlerHostedService>();
 builder.Services.AddSingleton<IKubernetesClientFactory, KubernetesClientFactory>();
 
 builder.Services.AddSingleton<IWatcherState, WatcherState>();
-builder.Services.AddSingleton<IConcurrentCache<string, WatcherStateDetails>, ConcurrentCache<string, WatcherStateDetails>>();
+builder.Services.AddSingleton<IConcurrentCache<string, WatcherStateInfo>, ConcurrentCache<string, WatcherStateInfo>>();
 
 builder.Services.AddSingleton<IConcurrentCache<string, IList<V1Namespace>>, ConcurrentCache<string, IList<V1Namespace>>>();
 builder.Services.AddSingleton<IBackgroundQueue<V1Namespace>, BackgroundQueue<V1Namespace>>();
@@ -143,6 +143,7 @@ builder.Services.AddSingleton<INamespacedCacheWatcherEventHandler, ExposedSecret
 
 builder.Services.AddScoped<IVulnerabilityReportService, VulnerabilityReportService>();
 builder.Services.AddScoped<INamespaceService, NamespaceService>();
+builder.Services.AddScoped<IWatcherStateInfoService, WatcherStateInfoService>();
 
 #endregion
 

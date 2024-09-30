@@ -6,7 +6,7 @@ namespace TrivyOperator.Dashboard.Application.Controllers;
 
 [ApiController]
 [Route("api/severities")]
-public class SeveritiesController(ILogger<NamespacesController> logger)
+public class SeveritiesController(ILogger<SeveritiesController> logger)
     : ControllerBase
 {
     [HttpGet(Name = "getSeverities")]

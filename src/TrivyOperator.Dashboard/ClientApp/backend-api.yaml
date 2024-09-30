@@ -230,6 +230,32 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
+  /api/watcher-state-infos:
+    get:
+      tags:
+        - WatcherStateInfo
+      operationId: get WatcherStateInfos
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WatcherStateInfoDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
 components:
   schemas:
     GenericByNsSummaryDto:
@@ -617,5 +643,21 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/GenericSummaryDto'
+          nullable: true
+      additionalProperties: false
+    WatcherStateInfoDto:
+      type: object
+      properties:
+        kubernetesObjectType:
+          type: string
+          nullable: true
+        namespaceName:
+          type: string
+          nullable: true
+        message:
+          type: string
+          nullable: true
+        lastException:
+          type: string
           nullable: true
       additionalProperties: false

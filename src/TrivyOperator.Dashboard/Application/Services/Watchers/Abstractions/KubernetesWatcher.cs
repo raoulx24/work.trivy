@@ -3,7 +3,7 @@ using k8s.Autorest;
 using k8s.Models;
 using System.Net;
 using TrivyOperator.Dashboard.Application.Services.BackgroundQueues.Abstractions;
-using TrivyOperator.Dashboard.Application.Services.WatcherErrorHandlers;
+using TrivyOperator.Dashboard.Application.Services.WatcherState;
 using TrivyOperator.Dashboard.Application.Services.WatcherEvents.Abstractions;
 using TrivyOperator.Dashboard.Infrastructure.Abstractions;
 using TrivyOperator.Dashboard.Utils;
@@ -25,7 +25,7 @@ public abstract class
 {
     protected readonly TBackgroundQueue BackgroundQueue = backgroundQueue;
     protected readonly Kubernetes KubernetesClient = kubernetesClientFactory.GetClient();
-    protected bool isDirty = false;
+    protected bool isWatcherStateRed = false;
 
     protected readonly ILogger<KubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TBackgroundQueue,
         TKubernetesWatcherEvent>> Logger = logger;
@@ -69,30 +69,24 @@ public abstract class
                                            ex),
                                        cancellationToken))
                 {
-                    if (isDirty)
+                    if (isWatcherStateRed)
                     {
                         await watcherState.ProcessWatcherSuccess(typeof(TKubernetesObject), watcherKey);
-                        isDirty = false;
+                        isWatcherStateRed = false;
                     }
                     TKubernetesWatcherEvent kubernetesWatcherEvent =
                         new() { KubernetesObject = item, WatcherEventType = type };
                     await BackgroundQueue.QueueBackgroundWorkItemAsync(kubernetesWatcherEvent);
                 }
             }
-            catch (HttpOperationException hoe) when (hoe.Response.StatusCode == HttpStatusCode.Unauthorized)
+            catch (HttpOperationException hoe) when (
+                hoe.Response.StatusCode == HttpStatusCode.Unauthorized ||
+                hoe.Response.StatusCode == HttpStatusCode.Forbidden ||
+                hoe.Response.StatusCode == HttpStatusCode.NotFound
+                )
             {
                 await watcherState.ProcessWatcherError(typeof(TKubernetesObject), watcherKey, hoe);
-                isDirty = true;
-            }
-            catch (HttpOperationException hoe) when (hoe.Response.StatusCode == HttpStatusCode.Forbidden)
-            {
-                await watcherState.ProcessWatcherError(typeof(TKubernetesObject), watcherKey, hoe);
-                isDirty = true;
-            }
-            catch (HttpOperationException hoe) when (hoe.Response.StatusCode == HttpStatusCode.NotFound)
-            {
-                await watcherState.ProcessWatcherError(typeof(TKubernetesObject), watcherKey, hoe);
-                isDirty = true;
+                isWatcherStateRed = true;
             }
             catch (TaskCanceledException)
             {

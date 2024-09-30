@@ -1,37 +1,20 @@
 ﻿using System.Net;
 using k8s.Autorest;
 using TrivyOperator.Dashboard.Infrastructure.Abstractions;
+using TrivyOperator.Dashboard.Utils;
 
-namespace TrivyOperator.Dashboard.Application.Services.WatcherErrorHandlers;
+namespace TrivyOperator.Dashboard.Application.Services.WatcherState;
 
-public class WatcherState(IConcurrentCache<string, WatcherStateDetails> watcherStateCache, ILogger<WatcherState> logger)
+public class WatcherState(IConcurrentCache<string, WatcherStateInfo> watcherStateCache, ILogger<WatcherState> logger)
     : IWatcherState
 {
     public async Task ProcessWatcherError(Type watchedKubernetesObjectType, string watcherKey, HttpOperationException exception)
     {
-        switch (exception.Response.StatusCode)
-        {
-            case HttpStatusCode.NotFound:
-                logger.LogError(
-                    "Watcher for {kubernetesObjectType} and key {watcherKey} crashed with 404.",
-                    watchedKubernetesObjectType.Name,
-                    watcherKey);
-                break;
-            case HttpStatusCode.Forbidden:
-                logger.LogError(
-                    "Watcher for {kubernetesObjectType} and key {watcherKey} crashed with 403.",
-                    watchedKubernetesObjectType.Name,
-                    watcherKey);
-                break;
-            default:
-                logger.LogError(
-                    "Watcher for {kubernetesObjectType} and key {watcherKey} crashed with {httpError}",
-                    watchedKubernetesObjectType.Name,
-                    watcherKey,
-                    (int)exception.Response.StatusCode);
-                break;
-        }
-
+        logger.LogError(
+            "Watcher for {kubernetesObjectType} and key {watcherKey} crashed with {httpError}",
+            watchedKubernetesObjectType.Name,
+            watcherKey,
+            (int)exception.Response.StatusCode);
         AddOrUpdateKey(watchedKubernetesObjectType, watcherKey, "Red", exception);
 
         await Task.Delay(60000);
@@ -52,18 +35,19 @@ public class WatcherState(IConcurrentCache<string, WatcherStateDetails> watcherS
         return ValueTask.CompletedTask; 
     }
 
-
     private static string GetCacheKey(Type watchedKubernetesObjectType, string watcherKey)
         => $"{watchedKubernetesObjectType.Name}|{watcherKey}";
 
     private void AddOrUpdateKey(Type watchedKubernetesObjectType, string watcherKey, string newMessage, Exception? newException = null)
     {
         string cacheKey = GetCacheKey(watchedKubernetesObjectType, watcherKey);
-        watcherStateCache.TryGetValue(cacheKey, value: out WatcherStateDetails? watcherStateDetails);
+        watcherStateCache.TryGetValue(cacheKey, value: out WatcherStateInfo? watcherStateDetails);
         if (watcherStateDetails == null)
         {
-            WatcherStateDetails newWatcherStateDetails = new()
+            WatcherStateInfo newWatcherStateDetails = new()
             {
+                WatchedKubernetesObjectType = watchedKubernetesObjectType,
+                NamespaceName = watcherKey == VarUtils.DefaultCacheRefreshKey ? null : watcherKey,
                 Message = newMessage,
                 LastException = newException,
             };
