@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
+import { WatcherStateInfoService } from '../../api/services/watcher-state-info.service';
+import { WatcherStateInfoDto } from '../../api/models/watcher-state-info-dto'
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-nav-menu',
@@ -11,10 +14,10 @@ import { MenuItem } from 'primeng/api';
 
 export class NavMenuComponent {
   items!: MenuItem[];
-  alertsCount: number = 6;
+  alertsCount: number = 9;
   isDarkMode!: boolean;
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private watcherStateInfoService: WatcherStateInfoService) {
     this.isDarkMode = this.getDarkMode();
     this.items = [
       {
@@ -40,6 +43,14 @@ export class NavMenuComponent {
         ],
       },
     ];
+
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      this.getWatcherStateErrors();
+    });
+    //this.getWatcherStateErrors();
+
   }
 
   public switchLightDarkMode() {
@@ -61,5 +72,16 @@ export class NavMenuComponent {
 
   private getDarkMode(): boolean {
     return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-  } 
+  }
+
+  private getWatcherStateErrors() {
+    this.watcherStateInfoService.getWatcherStateInfos()
+      .subscribe({
+        next: (res) => {
+          this.alertsCount = res.filter(x => x.status === "Red").length;
+        },
+        error: (err) => console.error(err)
+      });
+  }
+
 }
