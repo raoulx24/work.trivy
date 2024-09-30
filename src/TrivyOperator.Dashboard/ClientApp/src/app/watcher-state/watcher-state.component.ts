@@ -56,12 +56,12 @@ export class WatcherStateComponent {
       {
         field: "mitigationMessage", header: "Mitigation",
         isFiltrable: true, isSortable: true, multiSelectType: "none",
-        style: "width: 330px; max-width: 330px;", renderType: "standard",
+        style: "width: 330px; max-width: 330px; white-space: normal;", renderType: "standard",
       },
       {
         field: "lastException", header: "Last Exception",
         isFiltrable: true, isSortable: true, multiSelectType: "none",
-        style: "width: 330px; max-width: 330px;", renderType: "standard",
+        style: "width: 330px; max-width: 330px; white-space: normal;", renderType: "standard",
       },
     ]
 
