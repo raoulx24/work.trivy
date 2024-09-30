@@ -10,7 +10,7 @@ import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
 import { VulnerabilityReportsComponent } from './vulnerability-reports/vulnerability-reports.component';
 import { VulnerabilityReportsDetailedComponent } from './vulnerability-reports-detailed/vulnerability-reports-detailed.component';
-import { AlertsComponent } from './alerts/alerts.component';
+//import { AlertsComponent } from './alerts/alerts.component';
 import { AboutComponent } from './about/about.component';
 
 import { ApiModule } from "../api/api.module";
@@ -44,7 +44,6 @@ import { TrivyTableComponent } from './trivy-table/trivy-table.component';
     HomeComponent,
     VulnerabilityReportsComponent,
     VulnerabilityReportsDetailedComponent,
-    AlertsComponent,
     AboutComponent,
   ],
   imports: [
@@ -55,7 +54,8 @@ import { TrivyTableComponent } from './trivy-table/trivy-table.component';
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'vulnerability-reports', component: VulnerabilityReportsComponent },
       { path: 'vulnerability-reports-detailed', component: VulnerabilityReportsDetailedComponent },
-      { path: 'alerts', component: AlertsComponent, },
+      //{ path: 'alerts', component: AlertsComponent, },
+      { path: 'alerts', loadComponent: () => import('./watcher-status/watcher-status.component').then(m => m.WatcherStatusComponent) },
       { path: 'about', component: AboutComponent, },
     ]),
     ApiModule.forRoot({rootUrl: environment.baseUrl}),
