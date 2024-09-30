@@ -25,6 +25,7 @@ public abstract class
 {
     protected readonly TBackgroundQueue BackgroundQueue = backgroundQueue;
     protected readonly Kubernetes KubernetesClient = kubernetesClientFactory.GetClient();
+    protected bool isDirty = false;
 
     protected readonly ILogger<KubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TBackgroundQueue,
         TKubernetesWatcherEvent>> Logger = logger;
@@ -68,19 +69,30 @@ public abstract class
                                            ex),
                                        cancellationToken))
                 {
-                    await watcherState.ProcessWatcherSuccess(typeof(TKubernetesObject), watcherKey);
+                    if (isDirty)
+                    {
+                        await watcherState.ProcessWatcherSuccess(typeof(TKubernetesObject), watcherKey);
+                        isDirty = false;
+                    }
                     TKubernetesWatcherEvent kubernetesWatcherEvent =
                         new() { KubernetesObject = item, WatcherEventType = type };
                     await BackgroundQueue.QueueBackgroundWorkItemAsync(kubernetesWatcherEvent);
                 }
             }
-            catch (HttpOperationException hoe) when (hoe.Response.StatusCode == HttpStatusCode.NotFound)
+            catch (HttpOperationException hoe) when (hoe.Response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 await watcherState.ProcessWatcherError(typeof(TKubernetesObject), watcherKey, hoe);
+                isDirty = true;
             }
             catch (HttpOperationException hoe) when (hoe.Response.StatusCode == HttpStatusCode.Forbidden)
             {
                 await watcherState.ProcessWatcherError(typeof(TKubernetesObject), watcherKey, hoe);
+                isDirty = true;
+            }
+            catch (HttpOperationException hoe) when (hoe.Response.StatusCode == HttpStatusCode.NotFound)
+            {
+                await watcherState.ProcessWatcherError(typeof(TKubernetesObject), watcherKey, hoe);
+                isDirty = true;
             }
             catch (TaskCanceledException)
             {

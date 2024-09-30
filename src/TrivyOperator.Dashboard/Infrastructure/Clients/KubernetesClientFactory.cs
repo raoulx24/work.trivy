@@ -36,7 +36,8 @@ public class KubernetesClientFactory : IKubernetesClientFactory
                     KubernetesClientConfiguration config =
                         KubernetesClientConfiguration.BuildConfigFromConfigFile(kubeConfigFileName);
                     config.AddJsonOptions(ConfigureJsonSerializerOptions);
-                    kubernetesClient = new Kubernetes(config, new PolicyHttpMessageHandler(GetRetryPolicy()));
+                    //kubernetesClient = new Kubernetes(config, new PolicyHttpMessageHandler(GetRetryPolicy()));
+                    kubernetesClient = new Kubernetes(config);
                 }
                 else
                 {
@@ -65,7 +66,8 @@ public class KubernetesClientFactory : IKubernetesClientFactory
                 ? KubernetesClientConfiguration.InClusterConfig()
                 : KubernetesClientConfiguration.BuildConfigFromConfigFile();
             defaultConfig.AddJsonOptions(ConfigureJsonSerializerOptions);
-            kubernetesClient = new Kubernetes(defaultConfig, new PolicyHttpMessageHandler(GetRetryPolicy()));
+            //kubernetesClient = new Kubernetes(defaultConfig, new PolicyHttpMessageHandler(GetRetryPolicy()));
+            kubernetesClient = new Kubernetes(defaultConfig);
         }
     }
 
