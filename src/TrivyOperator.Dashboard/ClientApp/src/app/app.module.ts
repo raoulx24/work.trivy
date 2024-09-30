@@ -55,7 +55,7 @@ import { TrivyTableComponent } from './trivy-table/trivy-table.component';
       { path: 'vulnerability-reports', component: VulnerabilityReportsComponent },
       { path: 'vulnerability-reports-detailed', component: VulnerabilityReportsDetailedComponent },
       //{ path: 'alerts', component: AlertsComponent, },
-      { path: 'alerts', loadComponent: () => import('./watcher-status/watcher-status.component').then(m => m.WatcherStatusComponent) },
+      { path: 'alerts', loadComponent: () => import('./watcher-state/watcher-state.component').then(m => m.WatcherStateComponent) },
       { path: 'about', component: AboutComponent, },
     ]),
     ApiModule.forRoot({rootUrl: environment.baseUrl}),
