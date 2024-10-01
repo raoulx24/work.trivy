@@ -19,19 +19,19 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { BadgeModule } from 'primeng/badge';
 import { ButtonModule } from 'primeng/button';
-import { CarouselModule } from 'primeng/carousel';
-import { ChartModule } from 'primeng/chart';
-import { CheckboxModule } from 'primeng/checkbox';
-import { DialogModule } from 'primeng/dialog';
-import { DropdownModule } from 'primeng/dropdown';
-import { FloatLabelModule } from 'primeng/floatlabel';
-import { InputTextModule } from 'primeng/inputtext';
+//import { CarouselModule } from 'primeng/carousel';
+//import { ChartModule } from 'primeng/chart';
+//import { CheckboxModule } from 'primeng/checkbox';
+//import { DialogModule } from 'primeng/dialog';
+//import { DropdownModule } from 'primeng/dropdown';
+//import { FloatLabelModule } from 'primeng/floatlabel';
+//import { InputTextModule } from 'primeng/inputtext';
 import { MenubarModule } from 'primeng/menubar';
-import { MultiSelectModule } from 'primeng/multiselect';
-import { OverlayPanelModule } from 'primeng/overlaypanel';
-import { PanelModule } from 'primeng/panel';
-import { SplitterModule } from 'primeng/splitter';
-import { TableModule } from 'primeng/table';
+//import { MultiSelectModule } from 'primeng/multiselect';
+//import { OverlayPanelModule } from 'primeng/overlaypanel';
+//import { PanelModule } from 'primeng/panel';
+//import { SplitterModule } from 'primeng/splitter';
+//import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 
 import { TrivyTableComponent } from './trivy-table/trivy-table.component';
@@ -66,19 +66,19 @@ import { TrivyTableComponent } from './trivy-table/trivy-table.component';
     BrowserAnimationsModule,
     BadgeModule,
     ButtonModule,
-    CarouselModule,
-    ChartModule,
-    CheckboxModule,
-    DialogModule,
-    DropdownModule,
-    FloatLabelModule,
-    InputTextModule,
+    //CarouselModule,
+    //ChartModule,
+    //CheckboxModule,
+    //DialogModule,
+    //DropdownModule,
+    //FloatLabelModule,
+    //InputTextModule,
     MenubarModule,
-    MultiSelectModule,
-    OverlayPanelModule,
-    PanelModule,
-    SplitterModule,
-    TableModule,
+    //MultiSelectModule,
+    //OverlayPanelModule,
+    //PanelModule,
+    //SplitterModule,
+    //TableModule,
     TagModule,
 
     TrivyTableComponent,

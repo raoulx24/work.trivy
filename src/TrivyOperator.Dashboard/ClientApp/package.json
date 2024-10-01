@@ -9,7 +9,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "prebuild": "node build/preBuild.js",
-    "update-endpoints:local": "curl -L http://localhost:5032/swagger/v1/swagger.yaml -o backend-api.yaml"
+    "update-endpoints:local": "curl -L http://localhost:5032/swagger/v1/swagger.yaml -o backend-api.yaml",
+    "sme": "ng build --source-map=true --named-chunks==true && source-map-explorer dist/**/*.js"
   },
   "private": true,
   "dependencies": {
@@ -45,6 +46,7 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "^2.1.0",
     "ng-openapi-gen": "^0.52.0",
+    "source-map-explorer": "^2.5.3",
     "typescript": "^5.5.4"
   },
   "overrides": {
