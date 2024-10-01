@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import { VulnerabilityReportsService } from "../../api/services/vulnerability-reports.service";
 import { VulnerabilityReportSumaryDto } from "../../api/models/vulnerability-report-sumary-dto";
@@ -8,6 +9,13 @@ import { SeverityDto } from "../../api/models/severity-dto"
 import { UIChart } from 'primeng/chart';
 import { timer } from 'rxjs';
 import { VrSeveritiesByNsSummaryDetailDto } from '../../api/models/vr-severities-by-ns-summary-detail-dto';
+
+import { ButtonModule } from 'primeng/button';
+import { CarouselModule } from 'primeng/carousel';
+import { ChartModule } from 'primeng/chart';
+import { DialogModule } from 'primeng/dialog';
+import { PanelModule } from 'primeng/panel';
+import { TableModule } from 'primeng/table';
 
 export interface SeveritiySummary {
   severityName: string;
@@ -39,6 +47,8 @@ export interface GenericNsTotalSortable {
 
 @Component({
   selector: 'app-home',
+  standalone: true,
+  imports: [CommonModule, ButtonModule, CarouselModule, ChartModule, DialogModule, PanelModule, TableModule],
   templateUrl: './home.component.html',
 })
 

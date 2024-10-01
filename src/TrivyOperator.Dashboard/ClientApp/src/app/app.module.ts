@@ -7,11 +7,11 @@ import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
-import { HomeComponent } from './home/home.component';
-import { VulnerabilityReportsComponent } from './vulnerability-reports/vulnerability-reports.component';
-import { VulnerabilityReportsDetailedComponent } from './vulnerability-reports-detailed/vulnerability-reports-detailed.component';
+//import { HomeComponent } from './home/home.component';
+//import { VulnerabilityReportsComponent } from './vulnerability-reports/vulnerability-reports.component';
+//import { VulnerabilityReportsDetailedComponent } from './vulnerability-reports-detailed/vulnerability-reports-detailed.component';
 //import { AlertsComponent } from './alerts/alerts.component';
-import { AboutComponent } from './about/about.component';
+//import { AboutComponent } from './about/about.component';
 
 import { ApiModule } from "../api/api.module";
 import { environment } from "../environments/environment";
@@ -41,22 +41,26 @@ import { TrivyTableComponent } from './trivy-table/trivy-table.component';
   declarations: [
     AppComponent,
     NavMenuComponent,
-    HomeComponent,
-    VulnerabilityReportsComponent,
-    VulnerabilityReportsDetailedComponent,
-    AboutComponent,
+    //HomeComponent,
+    //VulnerabilityReportsComponent,
+    //VulnerabilityReportsDetailedComponent,
+    //AboutComponent,
   ],
   imports: [
     BrowserModule,
     //HttpClientModule,
     FormsModule,
     RouterModule.forRoot([
-      { path: '', component: HomeComponent, pathMatch: 'full' },
-      { path: 'vulnerability-reports', component: VulnerabilityReportsComponent },
-      { path: 'vulnerability-reports-detailed', component: VulnerabilityReportsDetailedComponent },
+      //{ path: '', component: HomeComponent, pathMatch: 'full' },
+      { path: '', loadComponent: () => import('./home/home.component').then(m => m.HomeComponent) },
+      //{ path: 'vulnerability-reports', component: VulnerabilityReportsComponent },
+      { path: 'vulnerability-reports', loadComponent: () => import('./vulnerability-reports/vulnerability-reports.component').then(m => m.VulnerabilityReportsComponent) },
+      //{ path: 'vulnerability-reports-detailed', component: VulnerabilityReportsDetailedComponent },
+      { path: 'vulnerability-reports-detailed', loadComponent: () => import('./vulnerability-reports-detailed/vulnerability-reports-detailed.component').then(m => m.VulnerabilityReportsDetailedComponent) },
       //{ path: 'alerts', component: AlertsComponent, },
-      { path: 'alerts', loadComponent: () => import('./watcher-state/watcher-state.component').then(m => m.WatcherStateComponent) },
-      { path: 'about', component: AboutComponent, },
+      { path: 'watcher-states', loadComponent: () => import('./watcher-state/watcher-state.component').then(m => m.WatcherStateComponent) },
+      //{ path: 'about', component: AboutComponent, },
+      { path: 'about', loadComponent: () => import('./about/about.component').then(m => m.AboutComponent) },
     ]),
     ApiModule.forRoot({rootUrl: environment.baseUrl}),
     BrowserAnimationsModule,

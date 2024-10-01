@@ -63,7 +63,7 @@ export class NavMenuComponent {
   }
 
   public onAlertsClick() {
-    this.router.navigate(['/alerts']);
+    this.router.navigate(['/watcher-states']);
   }
 
   public onAboutClick() {
