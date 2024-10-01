@@ -72,6 +72,11 @@ export class SeverityHelperService {
 
   public getCapitalizedName(severityId: number): string {
     let severityName = this.getName(severityId).toLowerCase();
+    return this.getCapitalizedString(severityName);
+  }
+
+  public getCapitalizedString(severityName: string): string {
+    severityName = severityName.toLowerCase();
     return severityName.length == 0 ? "" : severityName.charAt(0).toUpperCase() + severityName.slice(1);
   }
 

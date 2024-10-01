@@ -6,11 +6,10 @@
            scrollHeight="flex"
            [virtualScroll]="true"
            [virtualScrollItemSize]="46"
-           [tableStyle]="{ 'font-size': '14px' }"
            [resizableColumns]="true"
            columnResizeMode="expand"
            [reorderableColumns]="true"
-           styleClass="p-datatable-sm"
+           styleClass="p-datatable-sm text-sm"
            sortMode="multiple"
            [autoLayout]="true"
            [loading]="isLoading"
@@ -50,10 +49,11 @@
                              placeholder="Any"
                              (onChange)="filter($event.value)"
                              optionLabel=""
-                             [style]="{'font-size':'14px', 'width':'300px'}">
+                             [style]="{'width':'300px'}"
+                             styleClass="text-sm">
               </p-multiSelect>
               <ng-template let-option pTemplate="item">
-                <div [style]="{'font-size':'14px'}">{{ option }}</div>
+                <div [class]="'text-sm'">{{ option }}</div>
               </ng-template>
             </ng-template>
           </p-columnFilter>
@@ -64,7 +64,7 @@
                              placeholder="Any"
                              (onChange)="filter($event.value)"
                              optionLabel="name"
-                             [style]="{'font-size':'14px'}"
+                             styleClass="text-sm"
                              [filter]="false"
                              [showToggleAll]="false"
                              [showHeader]="false">
@@ -112,9 +112,9 @@
   <p-overlayPanel #csvExportOp [dismissable]="true" (onShow)="onOverlayToogle()" (onHide)="onOverlayToogle()">
     <div style="width: 300px">
       <div class="field">
-        <label for="csvFileName" class="text-xs">CSV File Name</label>
+        <label for="csvFileName" class="text-sm">CSV File Name</label>
         <input pInputText id="csvFileName" [(ngModel)]="csvFileName" 
-               class="text-xs text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full">
+               class="text-sm w-full">
       </div>
       <div class="grid">
         <div class="col-6">
@@ -151,26 +151,27 @@
                   [hideTransitionOptions]="'0.3s ease-out'"
                   (onShow)="onOverlayToogle()"
                   (onHide)="onOverlayToogle()">
-    <div class="flex flex-column gap-3 w-25rem">
-      <div class="row">
+    <div class="flex-column gap-3 w-15rem">
+      <div class="row w-full tex-xs">
         <p-dropdown [options]="activeNamespaces!"
                     [(ngModel)]="filterRefreshActiveNamespace"
                     [checkmark]="true"
                     [showClear]="true"
                     placeholder="Select a Namespace"
-                    [style]="{'font-size':'14px', 'width':'250px'}" />
+                    styleClass="w-full text-sm" />
       </div>
       <hr />
 
       <div class="row">
         <a>Severities</a>
         <div>
-          <div class="flex flex-column gap-2">
-            <div *ngFor="let severityDto of severityDtos" class="field-checkbox" style="font-size: 14px; margin-top: 10px; margin-bottom: 10px; margin-left: 10px">
+          <div class="flex-column gap-0 mt-2">
+            <div *ngFor="let severityDto of severityDtos" class="field-checkbox mb-2 text-sm">
               <p-checkbox [(ngModel)]="filterRefreshSeverities"
                           [label]="severityDto.name"
                           name="group"
-                          [value]="severityDto" />
+                          [value]="severityDto"
+                          styleClass="ml-2"/>
             </div>
           </div>
         </div>
@@ -182,7 +183,7 @@
                     icon="pi pi-refresh"
                     size="small"
                     (onClick)="onFilterData()"
-                    [style]="{'width': '100%'}" />
+                    styleClass="w-full" />
         </div>
       </div>
     </div>

@@ -176,7 +176,7 @@ export class HomeComponent {
         let tableValues: SeveritiySummary[] = [];
         severitesTotal.details?.sort((a, b) => a.id! - b.id!).forEach(x => {
           tableValues.push({
-            severityName: this.severityHelperService.getName(x.id!),
+            severityName: this.severityHelperService.getCapitalizedName(x.id!),
             count: this.showDistinctValues ? x.distinctCount! : x.totalCount!,
             fixable: this.showDistinctValues ? x.fixableDistinctCount! : x.fixableTotalCount!,
           });

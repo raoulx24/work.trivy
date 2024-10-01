@@ -3,20 +3,20 @@
   <ng-template pTemplate="item" let-item let-root="root">
     <a pRipple class="flex align-items-center p-menuitem-link">
       <span [class]="item.icon"></span>
-      <span class="ml-2" style="margin-left:5px">{{ item.label }}</span>
+      <span class="ml-2">{{ item.label }}</span>
       <p-badge *ngIf="item.badge" [ngClass]="{ 'ml-auto': !root, 'ml-2': root }" [value]="item.badge" />
       <!--<i *ngIf="item.items" [ngClass]="['pi', root ? 'pi-angle-down ml-2' : 'pi-angle-right ml-auto']"></i>-->
     </a>
   </ng-template>
   <ng-template pTemplate="end">
-    <div style="display: flex; align-items: center; gap: 10px">
+    <div class="flex align-items-center gap-3">
       <div class="p-overlay-badge">
-        <p-button label="" icon="pi pi-bell" [rounded]="true" [text]="true" [raised]="true" size="large" (click)="onAlertsClick()" />
-        <span class="p-badge p-badge-danger">{{ alertsCount }}</span>
+        <p-button label="" icon="pi pi-bell" [rounded]="true" [text]="true" [raised]="true" (click)="onAlertsClick()" />
+        <span class="p-badge p-badge-danger text-xs">{{ alertsCount }}</span>
       </div>
-      <p-button icon="pi pi-info-circle" [rounded]="true" [text]="true" [raised]="true" size="large" (click)="onAboutClick()" />
-      <p-button *ngIf="isDarkMode" icon="pi pi-sun" [rounded]="true" [text]="true" [raised]="true" size="large" (click)="switchLightDarkMode()"></p-button>
-      <p-button *ngIf="!isDarkMode" icon="pi pi-moon" [rounded]="true" [text]="true" [raised]="true" size="large" (click)="switchLightDarkMode()"></p-button>
+      <p-button icon="pi pi-info-circle" [rounded]="true" [text]="true" [raised]="true" (click)="onAboutClick()" />
+      <p-button *ngIf="isDarkMode" icon="pi pi-sun" [rounded]="true" [text]="true" [raised]="true" (click)="switchLightDarkMode()"></p-button>
+      <p-button *ngIf="!isDarkMode" icon="pi pi-moon" [rounded]="true" [text]="true" [raised]="true" (click)="switchLightDarkMode()"></p-button>
     </div>
 </ng-template>
 </p-menubar>

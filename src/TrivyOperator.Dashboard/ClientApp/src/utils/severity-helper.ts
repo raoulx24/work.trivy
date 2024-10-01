@@ -92,7 +92,7 @@ export class PrimeNgHelper {
         totalVulnerabilities.push(severitySummary.details!.filter(x => x.id! == severity!.id!)[0].distinctCount!);
       });
       chartData.datasets.push({
-        label: severity.name!,
+        label: this._severityHelperService.getCapitalizedString(severity.name!),
         data: totalVulnerabilities,
         backgroundColor: this._severityHelperService.getCssColor(severity.id!),
         hoverBackgroundColor: this._severityHelperService.getCssColorHover(severity.id!),
@@ -112,7 +112,7 @@ export class PrimeNgHelper {
     };
     let severities = await this._severityHelperService.getSeverityDtos();
     let namespacesCounter: number = 0;
-    severities.forEach(x => { chartData.labels.push(x.name); });
+    severities.forEach(x => { chartData.labels.push(this._severityHelperService.getCapitalizedString(x.name)); });
     severitiesSummary.filter(x => !x.isTotal).forEach(severitySummary => {
       let totalVulnerabilities: number[] = [];
       severities.forEach(severity => {
