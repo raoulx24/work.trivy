@@ -15,14 +15,14 @@ public class WatcherState(IConcurrentCache<string, WatcherStateInfo> watcherStat
             watchedKubernetesObjectType.Name,
             watcherKey,
             (int)exception.Response.StatusCode);
-        AddOrUpdateKey(watchedKubernetesObjectType, watcherKey, "Red", exception);
+        AddOrUpdateKey(watchedKubernetesObjectType, watcherKey, exception);
 
         await Task.Delay(60000);
     }
 
     public ValueTask ProcessWatcherSuccess(Type watchedKubernetesObjectType, string watcherKey)
     {
-        AddOrUpdateKey(watchedKubernetesObjectType, watcherKey, "Green");
+        AddOrUpdateKey(watchedKubernetesObjectType, watcherKey);
         return ValueTask.CompletedTask;
     }
 
@@ -38,7 +38,7 @@ public class WatcherState(IConcurrentCache<string, WatcherStateInfo> watcherStat
     private static string GetCacheKey(Type watchedKubernetesObjectType, string watcherKey)
         => $"{watchedKubernetesObjectType.Name}|{watcherKey}";
 
-    private void AddOrUpdateKey(Type watchedKubernetesObjectType, string watcherKey, string newMessage, Exception? newException = null)
+    private void AddOrUpdateKey(Type watchedKubernetesObjectType, string watcherKey, Exception? newException = null)
     {
         string cacheKey = GetCacheKey(watchedKubernetesObjectType, watcherKey);
         watcherStateCache.TryGetValue(cacheKey, value: out WatcherStateInfo? watcherStateDetails);

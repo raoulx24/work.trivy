@@ -27,6 +27,8 @@ using TrivyOperator.Dashboard.Infrastructure.Services;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 using TrivyOperator.Dashboard.Utils;
 using TrivyOperator.Dashboard.Application.Services.WatcherStates;
+using TrivyOperator.Dashboard.Domain.Services.Abstractions;
+using TrivyOperator.Dashboard.Domain.Services;
 
 Directory.SetCurrentDirectory(AppContext.BaseDirectory);
 
@@ -97,7 +99,15 @@ builder.Services.AddSingleton<IConcurrentCache<string, WatcherStateInfo>, Concur
 
 builder.Services.AddSingleton<IConcurrentCache<string, IList<V1Namespace>>, ConcurrentCache<string, IList<V1Namespace>>>();
 builder.Services.AddSingleton<IBackgroundQueue<V1Namespace>, BackgroundQueue<V1Namespace>>();
-builder.Services.AddSingleton<IClusterScopedWatcher<V1Namespace>, NamespaceWatcher>();
+if (string.IsNullOrWhiteSpace(configuration.GetSection("Kubernetes").GetValue<String>("NamespaceList")))
+{
+    builder.Services.AddSingleton<IClusterScopedWatcher<V1Namespace>, NamespaceWatcher>();
+}
+else
+{
+    builder.Services.AddSingleton<IKubernetesNamespaceDomainService, StaticKubernetesNamespaceDomainService>();
+    builder.Services.AddSingleton<IClusterScopedWatcher<V1Namespace>, StaticNamespaceWatcher>();
+}
 builder.Services.AddSingleton<ICacheRefresh<V1Namespace, IBackgroundQueue<V1Namespace>>, NamespaceCacheRefresh>();
 builder.Services.AddSingleton<IClusterScopedCacheWatcherEventHandler, NamespaceCacheWatcherEventHandler>();
 

@@ -36,7 +36,6 @@ public class KubernetesClientFactory : IKubernetesClientFactory
                     KubernetesClientConfiguration config =
                         KubernetesClientConfiguration.BuildConfigFromConfigFile(kubeConfigFileName);
                     config.AddJsonOptions(ConfigureJsonSerializerOptions);
-                    //kubernetesClient = new Kubernetes(config, new PolicyHttpMessageHandler(GetRetryPolicy()));
                     kubernetesClient = new Kubernetes(config);
                 }
                 else
@@ -66,18 +65,12 @@ public class KubernetesClientFactory : IKubernetesClientFactory
                 ? KubernetesClientConfiguration.InClusterConfig()
                 : KubernetesClientConfiguration.BuildConfigFromConfigFile();
             defaultConfig.AddJsonOptions(ConfigureJsonSerializerOptions);
-            //kubernetesClient = new Kubernetes(defaultConfig, new PolicyHttpMessageHandler(GetRetryPolicy()));
             kubernetesClient = new Kubernetes(defaultConfig);
         }
     }
 
     public Kubernetes GetClient() => kubernetesClient;
 
-    private static AsyncRetryPolicy<HttpResponseMessage> GetRetryPolicy() => HttpPolicyExtensions
-        .HandleTransientHttpError()
-        .OrResult(msg => msg.StatusCode == HttpStatusCode.NotFound)
-        .WaitAndRetryAsync(6, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
-    
     private static void ConfigureJsonSerializerOptions(JsonSerializerOptions jsonSerializerOptions)
     {
         jsonSerializerOptions.Converters.Insert(0, new DateTimeJsonConverter());

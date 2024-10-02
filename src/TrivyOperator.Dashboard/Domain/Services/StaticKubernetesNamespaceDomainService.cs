@@ -12,7 +12,6 @@ public class StaticKubernetesNamespaceDomainService(
 
     public Task<List<string>> GetKubernetesNamespaces()
     {
-        // TODO: change from IConfiguration to IOptions
         string? configKubernetesNamespaces = kubernetesOptions.Value.NamespaceList;
 
         if (string.IsNullOrWhiteSpace(configKubernetesNamespaces))
