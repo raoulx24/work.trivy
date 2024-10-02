@@ -10,7 +10,6 @@ namespace TrivyOperator.Dashboard.Application.Services.BackgroundQueues;
 
 public class BackgroundQueue<TKubernetesObject> : IBackgroundQueue<TKubernetesObject>
     where TKubernetesObject : IKubernetesObject<V1ObjectMeta>
-    //where TKubernetesWatcherEvent : IWatcherEvent<TKubernetesObject>
 {
     private readonly ILogger<BackgroundQueue<TKubernetesObject>> logger;
     private readonly IOptions<BackgroundQueueOptions> options;
@@ -32,17 +31,7 @@ public class BackgroundQueue<TKubernetesObject> : IBackgroundQueue<TKubernetesOb
 
     public async ValueTask QueueBackgroundWorkItemAsync(IWatcherEvent<TKubernetesObject> watcherEvent)
     {
-        if (watcherEvent == null)
-        {
-            throw new ArgumentNullException(nameof(watcherEvent));
-        }
-
-        //// TODO clarify if it is ok, more logging
-        //TKubernetesWatcherEvent kubernetesWatcherEvent = (TKubernetesWatcherEvent)watcherEvent;
-        //if (kubernetesWatcherEvent == null)
-        //{
-        //    throw new ArgumentException(nameof(watcherEvent));
-        //}
+        ArgumentNullException.ThrowIfNull(watcherEvent, nameof(watcherEvent));
 
         logger.LogDebug(
             "Queueing Event {watcherEventType} - {kubernetesObjectType} - {kubernetesObjectName}",

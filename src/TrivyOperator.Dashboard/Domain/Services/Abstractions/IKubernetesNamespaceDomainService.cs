@@ -2,6 +2,5 @@
 
 public interface IKubernetesNamespaceDomainService
 {
-    bool IsStaticList { get; }
     Task<List<string>> GetKubernetesNamespaces();
 }

@@ -8,8 +8,6 @@ public class StaticKubernetesNamespaceDomainService(
     IOptions<KubernetesOptions> kubernetesOptions,
     ILogger<StaticKubernetesNamespaceDomainService> logger) : IKubernetesNamespaceDomainService
 {
-    public bool IsStaticList => true;
-
     public Task<List<string>> GetKubernetesNamespaces()
     {
         string? configKubernetesNamespaces = kubernetesOptions.Value.NamespaceList;

@@ -13,8 +13,6 @@ public class KubernetesNamespaceDomainService(
 {
     private readonly Kubernetes kubernetesClient = kubernetesClientFactory.GetClient();
 
-    public bool IsStaticList => false;
-
     public async Task<List<string>> GetKubernetesNamespaces()
     {
         try
