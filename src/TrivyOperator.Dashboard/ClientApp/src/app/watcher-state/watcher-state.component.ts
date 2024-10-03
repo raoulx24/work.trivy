@@ -74,6 +74,7 @@ export class WatcherStateComponent {
       isFooterVisible: true,
       tableSelectionMode: null,
       stateKey: 'ws.table-all',
+      dataKey: null,
     };
   };
 

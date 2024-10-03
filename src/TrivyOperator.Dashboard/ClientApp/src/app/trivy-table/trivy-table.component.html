@@ -18,7 +18,11 @@
            [exportFilename]="csvFileName"
            (selectionChange)="onSelectionChange($event)"
            stateStorage="local"
-           stateKey="{{ trivyTableOptions!.stateKey }}">
+           stateKey="{{ trivyTableOptions!.stateKey }}"
+
+           dataKey="{{ trivyTableOptions!.dataKey }}"
+           [expandedRowKeys]="expandedRows"
+           >
     <!--(onRowUnselect)="onRowUnselect($event)"-->
     <ng-template pTemplate="caption">
       <div>
@@ -38,6 +42,7 @@
     </ng-template>
     <ng-template pTemplate="header" let-columns>
       <tr>
+        <th *ngIf="trivyTableOptions!.dataKey" style="width:50px"></th>
         <th *ngFor="let col of columns" pResizableColumn [pSortableColumn]="col.isSortable ? col.field : null" style="{{ col.style }}">
           {{ col.header }}
           <p-sortIcon *ngIf="col.isSortable" field="{{ col.field }}" />
@@ -81,8 +86,13 @@
         </th>
       </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+    <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex" let-expanded="expanded">
       <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex" style="height:46px">
+        <td *ngIf="trivyTableOptions!.dataKey" style="max-width:50px">
+          <p-button type="button" styleClass="p-0" size="small" pRipple [pRowToggler]="rowData"
+                    [text]="true" [rounded]="true" [plain]="true"
+                    [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
+        </td>
         <td *ngFor="let col of columns" style="{{ col.style }}">
           <a *ngIf="col.renderType=='standard'">{{ rowData[col.field] }}</a>
           <a *ngIf="col.renderType=='date'">{{ rowData[col.field] | date: 'yyyy-MM-dd' }}</a>
@@ -102,6 +112,42 @@
         </td>
       </tr>
     </ng-template>
+
+
+
+
+
+    <ng-template *ngIf="trivyTableOptions!.dataKey" pTemplate="rowexpansion" let-rowData>
+      <tr>
+        <td [attr.colspan]="trivyTableColumns.length + 1">
+          <p>Lorem ipsum</p>
+          <p-table [value]="[{}]"
+                   styleClass="text-sm p-datatable-sm">
+            <ng-template *ngIf="trivyDetailsTableOptions.isHeaderVisible" pTemplate="header">
+              <tr>
+                <th *ngFor="let col of trivyDetailsTableOptions.columnsArray">
+                  {{ detailsFunction(rowData, 'header', col) }}
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body">
+              <!--<ng-template *ngFor="let row of trivyDetailsTableOptions.rowsArray; index as rowIndex">-->
+                <tr *ngFor="let row of trivyDetailsTableOptions.rowsArray;">
+                  <td *ngFor="let col of trivyDetailsTableOptions.columnsArray">
+                    {{ detailsFunction(rowData, 'row', col, row) }}
+                  </td>
+                </tr>
+              <!--</ng-template>-->
+            </ng-template>
+          </p-table>
+        </td>
+      </tr>
+    </ng-template>
+
+
+
+
+
     <ng-template *ngIf="trivyTableOptions!.isFooterVisible" pTemplate="summary">
       <div>
         Total <p-tag value="{{ trivyTableTotalRecords }}" /> | Filtered <p-tag value="{{ trivyTableFilteredRecords }}" />

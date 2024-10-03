@@ -11,7 +11,7 @@ import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { Table, TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 
-import { Column, ExportColumn, TrivyFilterData, TrivyTableColumn, TrivyTableOptions } from "./trivy-table.types";
+import { Column, ExportColumn, TrivyFilterData, TrivyTableColumn, TrivyTableOptions, TrivyDetailsTableOptions } from "./trivy-table.types";
 import { SeverityHelperService } from "../services/severity-helper.service"
 import { SeverityDto } from "../../api/models/severity-dto"
 import { TableState } from 'primeng/api';
@@ -51,8 +51,13 @@ export class TrivyTableComponent<TData> {
   @Input() trivyTableColumns: TrivyTableColumn[] = [];
   @Input( { required: true } ) trivyTableOptions!: TrivyTableOptions;
 
+  @Input() trivyDetailsTableOptions: TrivyDetailsTableOptions = new TrivyDetailsTableOptions();
+  @Input() detailsFunction: (dto: TData, type: "header" | "row", column: number, row?: number) => string = () => 'Default value';
+
   @Output() selectedRowsChanged = new EventEmitter<TData[]>();
   @Output() refreshRequested = new EventEmitter<TrivyFilterData>();
+
+  
 
   public selectedDataDtos?: any | null;
   public filterSeverityOptions: number[] = []
@@ -149,6 +154,9 @@ export class TrivyTableComponent<TData> {
   public onOverlayToogle() {
     this.overlayVisible = !this.overlayVisible;
   }
+
+  //tests expand
+  expandedRows = {};
 }
 
 

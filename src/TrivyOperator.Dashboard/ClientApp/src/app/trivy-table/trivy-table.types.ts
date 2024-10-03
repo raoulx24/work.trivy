@@ -9,6 +9,8 @@ export interface TrivyTableOptions {
   isFooterVisible: boolean,
   tableSelectionMode: null | "single" | "multiple",
   stateKey: string,
+
+  dataKey: string | null,
 }
 
 export interface Column {
@@ -34,4 +36,13 @@ export interface TrivyTableColumn extends Column {
 export interface TrivyFilterData {
   namespaceName?: string | null;
   selectedSeverityIds: number[];
+}
+
+export class TrivyDetailsTableOptions {
+  isHeaderVisible: boolean = true;
+  columnsNo: number = 0;
+  rowsNo: number = 0;
+  get columnsArray(): number[] { return Array(this.columnsNo).fill(0).map((_, i) => i); };
+  get rowsArray(): number[] { return Array(this.rowsNo).fill(0).map((_, i) => i); }
+
 }
