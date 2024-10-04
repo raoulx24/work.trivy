@@ -32,12 +32,18 @@
         <p-button *ngIf="trivyTableOptions!.isClearSelectionVisible" text
                   label="Clear Selected" icon="pi pi-list" size="small"
                   [disabled]="!isTableRowSelected()" (onClick)="onTableClearSelected()" />
+        <!--<p-button *ngIf="trivyTableOptions!.dataKey" text
+            label="Expand/Collapse All" icon="pi pi-expand" size="small"
+            (onClick)="onTableExpandCollapse()" />-->
         <p-button *ngIf="trivyTableOptions!.isResetFiltersVisible" text
                   label="Clear Sort/Filters" icon="pi pi-filter" size="small"
                   [disabled]="!trivyTable.filteredValue" (onClick)="trivyTable.filters = {}; trivyTable.clear()" />
         <p-button *ngIf="trivyTableOptions!.isExportCsvVisible" text
                   label="Export to CSV" icon="pi pi-file-excel" size="small"
                   (onClick)="csvExportOp.toggle($event)" />
+        <p-button text
+                  label="Test" icon="pi pi-expand" size="small"
+                  (onClick)="ontest()" />
       </div>
     </ng-template>
     <ng-template pTemplate="header" let-columns>
@@ -120,21 +126,22 @@
     <ng-template *ngIf="trivyTableOptions!.dataKey" pTemplate="rowexpansion" let-rowData>
       <tr>
         <td [attr.colspan]="trivyTableColumns.length + 1">
-          <p>Lorem ipsum</p>
           <p-table [value]="[{}]"
                    styleClass="text-sm p-datatable-sm">
             <ng-template *ngIf="trivyDetailsTableOptions.isHeaderVisible" pTemplate="header">
               <tr>
-                <th *ngFor="let col of trivyDetailsTableOptions.columnsArray">
-                  {{ detailsFunction(rowData, 'header', col) }}
+                <th *ngFor="let col of trivyDetailsTableOptions.columnsArray" style="{{ trivyDetailsTableFunction(rowData, 'row', col).style }}">
+                  {{ trivyDetailsTableFunction(rowData, 'header', col).value }}
                 </th>
               </tr>
             </ng-template>
             <ng-template pTemplate="body">
               <!--<ng-template *ngFor="let row of trivyDetailsTableOptions.rowsArray; index as rowIndex">-->
                 <tr *ngFor="let row of trivyDetailsTableOptions.rowsArray;">
-                  <td *ngFor="let col of trivyDetailsTableOptions.columnsArray">
-                    {{ detailsFunction(rowData, 'row', col, row) }}
+                  <td *ngFor="let col of trivyDetailsTableOptions.columnsArray" style="{{ trivyDetailsTableFunction(rowData, 'row', col, row).style }}">
+                    <a>{{ trivyDetailsTableFunction(rowData, 'row', col, row).value }}</a>
+                    <p-button *ngIf="trivyDetailsTableFunction(rowData, 'row', col, row).buttonLink" label="{{ trivyDetailsTableFunction(rowData, 'row', col, row).buttonLink }}" [text]="true" size="small" (onClick)="onTrivyDetailsTableCallback(rowData)" />
+                    <p-tag *ngIf="trivyDetailsTableFunction(rowData, 'row', col, row).badge" [value]="trivyDetailsTableFunction(rowData, 'row', col, row).badge" severity="info" [style]="{ 'margin-left': '10px', }" />
                   </td>
                 </tr>
               <!--</ng-template>-->

@@ -44,5 +44,12 @@ export class TrivyDetailsTableOptions {
   rowsNo: number = 0;
   get columnsArray(): number[] { return Array(this.columnsNo).fill(0).map((_, i) => i); };
   get rowsArray(): number[] { return Array(this.rowsNo).fill(0).map((_, i) => i); }
+}
 
+export interface TrivyDetailsCell<TData> {
+  value: string;
+  style: string;
+  buttonLink: string | undefined;
+  badge: string | undefined;
+  //callbackFunction: ((dto: TData) => void) | null;
 }

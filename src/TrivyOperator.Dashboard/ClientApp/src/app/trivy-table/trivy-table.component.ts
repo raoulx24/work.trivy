@@ -11,7 +11,7 @@ import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { Table, TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 
-import { Column, ExportColumn, TrivyFilterData, TrivyTableColumn, TrivyTableOptions, TrivyDetailsTableOptions } from "./trivy-table.types";
+import { Column, ExportColumn, TrivyFilterData, TrivyTableColumn, TrivyTableOptions, TrivyDetailsTableOptions, TrivyDetailsCell } from "./trivy-table.types";
 import { SeverityHelperService } from "../services/severity-helper.service"
 import { SeverityDto } from "../../api/models/severity-dto"
 import { TableState } from 'primeng/api';
@@ -52,7 +52,9 @@ export class TrivyTableComponent<TData> {
   @Input( { required: true } ) trivyTableOptions!: TrivyTableOptions;
 
   @Input() trivyDetailsTableOptions: TrivyDetailsTableOptions = new TrivyDetailsTableOptions();
-  @Input() detailsFunction: (dto: TData, type: "header" | "row", column: number, row?: number) => string = () => 'Default value';
+  @Input() trivyDetailsTableFunction: (dto: TData, type: "header" | "row", column: number, row?: number) => TrivyDetailsCell<TData> =
+    (dto, type, column, row) => ({ value: "", style: "", buttonLink: undefined, badge: undefined });
+  @Output() trivyDetailsTableCallback = new EventEmitter<TData>();
 
   @Output() selectedRowsChanged = new EventEmitter<TData[]>();
   @Output() refreshRequested = new EventEmitter<TrivyFilterData>();
@@ -156,7 +158,26 @@ export class TrivyTableComponent<TData> {
   }
 
   //tests expand
-  expandedRows = {};
+  expandedRows: any = {};
+
+  onTrivyDetailsTableCallback(dto: TData) {
+    this.trivyDetailsTableCallback.emit(dto);
+  }
+
+  ontest() {
+    console.log(JSON.stringify(this.expandedRows));
+    let x: keyof TData = this.trivyTableOptions.dataKey as keyof TData;
+    if (!this.dataDtos) {
+      return;
+    }
+    console.log(this.dataDtos[0][x]);
+    if (this.expandedRows) {
+      //this.expandedRows = {};
+    }
+    else {
+      
+    }
+  }
 }
 
 
