@@ -32,18 +32,15 @@
         <p-button *ngIf="trivyTableOptions!.isClearSelectionVisible" text
                   label="Clear Selected" icon="pi pi-list" size="small"
                   [disabled]="!isTableRowSelected()" (onClick)="onTableClearSelected()" />
-        <!--<p-button *ngIf="trivyTableOptions!.dataKey" text
-            label="Expand/Collapse All" icon="pi pi-expand" size="small"
-            (onClick)="onTableExpandCollapse()" />-->
+        <p-button *ngIf="trivyTableOptions!.dataKey" text
+                  label="Collapse All" icon="pi pi-expand" size="small"
+                  [disabled]="!isAnyRowExpanded()" (onClick)="onTableCollapseAll()" />
         <p-button *ngIf="trivyTableOptions!.isResetFiltersVisible" text
                   label="Clear Sort/Filters" icon="pi pi-filter" size="small"
-                  [disabled]="!trivyTable.filteredValue" (onClick)="trivyTable.filters = {}; trivyTable.clear()" />
+                  [disabled]="!isTableFilteredOrSorted()" (onClick)="onClearSortFilters()" />
         <p-button *ngIf="trivyTableOptions!.isExportCsvVisible" text
                   label="Export to CSV" icon="pi pi-file-excel" size="small"
                   (onClick)="csvExportOp.toggle($event)" />
-        <p-button text
-                  label="Test" icon="pi pi-expand" size="small"
-                  (onClick)="ontest()" />
       </div>
     </ng-template>
     <ng-template pTemplate="header" let-columns>
@@ -55,7 +52,7 @@
           <p-columnFilter *ngIf="col.isFiltrable && col.multiSelectType==='none'" type="text" field="{{ col.field }}" display="menu" />
           <p-columnFilter *ngIf="col.isFiltrable && col.multiSelectType==='namespaces'" field="{{ col.field }}" matchMode="in" display="menu" [showMatchModes]="false" [showOperator]="false" [showAddButton]="false">
             <ng-template pTemplate="filter" let-filter="filterCallback">
-              <p-multiSelect [(ngModel)]="filterActiveNamespaces"
+              <p-multiSelect [(ngModel)]="filterSelectedActiveNamespaces"
                              [options]="activeNamespaces!"
                              placeholder="Any"
                              (onChange)="filter($event.value)"
@@ -104,60 +101,52 @@
           <a *ngIf="col.renderType=='date'">{{ rowData[col.field] | date: 'yyyy-MM-dd' }}</a>
           <div *ngIf="col.renderType=='imageNameTag'">
             <a>{{ rowData[col.field] }}:{{ rowData[col.extraFields[0]] }}</a>
-            <p-tag *ngIf="rowData[col.extraFields[1]]" value="EOSL" severity="info" [style]="{ 'margin-left':'10px' }" />
+            <p-tag *ngIf="rowData[col.extraFields[1]]" value="EOSL" [rounded]="true" severity="info" [style]="{ 'margin-left':'10px' }" />
           </div>
           <a *ngIf="col.renderType=='link'" href="{{ rowData[col.extraFields[0]] }}" target="_blank">{{ rowData[col.field] }}</a>
-          <p-tag *ngIf="col.renderType=='severityBadge'" [value]="severityHelper.getName(rowData[col.field])" [style]="{ background: severityHelper.getCssColor(rowData[col.field]) }" />
+          <p-tag *ngIf="col.renderType=='severityBadge'" [rounded]="true" [value]="severityHelper.getName(rowData[col.field])" [style]="{ background: severityHelper.getCssColor(rowData[col.field]) }" />
           <div *ngIf="col.renderType=='severityMultiTags'" style="display: flex; justify-content: space-between">
-            <p-tag [value]="rowData[col.field]" [style]="{ background: severityHelper.getCssColor(0) }" />
-            <p-tag [value]="rowData[col.extraFields[0]]" [style]="{ background: severityHelper.getCssColor(1) }" />
-            <p-tag [value]="rowData[col.extraFields[1]]" [style]="{ background: severityHelper.getCssColor(2) }" />
-            <p-tag [value]="rowData[col.extraFields[2]]" [style]="{ background: severityHelper.getCssColor(3) }" />
-            <p-tag [value]="rowData[col.extraFields[3]]" [style]="{ background: severityHelper.getCssColor(4) }" />
+            <p-tag [value]="rowData[col.field]" [rounded]="true" [style]="{ background: severityHelper.getCssColor(0) }" />
+            <p-tag [value]="rowData[col.extraFields[0]]" [rounded]="true" [style]="{ background: severityHelper.getCssColor(1) }" />
+            <p-tag [value]="rowData[col.extraFields[1]]" [rounded]="true" [style]="{ background: severityHelper.getCssColor(2) }" />
+            <p-tag [value]="rowData[col.extraFields[2]]" [rounded]="true" [style]="{ background: severityHelper.getCssColor(3) }" />
+            <p-tag [value]="rowData[col.extraFields[3]]" [rounded]="true" [style]="{ background: severityHelper.getCssColor(4) }" />
           </div>
         </td>
       </tr>
     </ng-template>
-
-
-
-
-
     <ng-template *ngIf="trivyTableOptions!.dataKey" pTemplate="rowexpansion" let-rowData>
       <tr>
         <td [attr.colspan]="trivyTableColumns.length + 1">
-          <p-table [value]="[{}]"
-                   styleClass="text-sm p-datatable-sm">
-            <ng-template *ngIf="trivyDetailsTableOptions.isHeaderVisible" pTemplate="header">
-              <tr>
-                <th *ngFor="let col of trivyDetailsTableOptions.columnsArray" style="{{ trivyDetailsTableFunction(rowData, 'row', col).style }}">
-                  {{ trivyDetailsTableFunction(rowData, 'header', col).value }}
-                </th>
-              </tr>
-            </ng-template>
-            <ng-template pTemplate="body">
-              <!--<ng-template *ngFor="let row of trivyDetailsTableOptions.rowsArray; index as rowIndex">-->
-                <tr *ngFor="let row of trivyDetailsTableOptions.rowsArray;">
-                  <td *ngFor="let col of trivyDetailsTableOptions.columnsArray" style="{{ trivyDetailsTableFunction(rowData, 'row', col, row).style }}">
-                    <a>{{ trivyDetailsTableFunction(rowData, 'row', col, row).value }}</a>
-                    <p-button *ngIf="trivyDetailsTableFunction(rowData, 'row', col, row).buttonLink" label="{{ trivyDetailsTableFunction(rowData, 'row', col, row).buttonLink }}" [text]="true" size="small" (onClick)="onTrivyDetailsTableCallback(rowData)" />
-                    <p-tag *ngIf="trivyDetailsTableFunction(rowData, 'row', col, row).badge" [value]="trivyDetailsTableFunction(rowData, 'row', col, row).badge" severity="info" [style]="{ 'margin-left': '10px', }" />
+          <div class="pl-3">
+            <p-table [value]="[{}]"
+                     styleClass="text-sm p-datatable-sm">
+              <ng-template *ngIf="trivyExpandTableOptions.isHeaderVisible" pTemplate="header">
+                <tr>
+                  <th *ngFor="let col of trivyExpandTableOptions.columnsArray" style="{{ trivyExpandTableFunction(rowData, 'row', col).style }}">
+                    {{ trivyExpandTableFunction(rowData, 'header', col).value }}
+                  </th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body">
+                <!--<ng-template *ngFor="let row of trivyExpandTableOptions.rowsArray; index as rowIndex">-->
+                <tr *ngFor="let row of trivyExpandTableOptions.rowsArray;">
+                  <td *ngFor="let col of trivyExpandTableOptions.columnsArray" style="{{ trivyExpandTableFunction(rowData, 'row', col, row).style }}">
+                    <a>{{ trivyExpandTableFunction(rowData, 'row', col, row).value }}</a>
+                    <p-button *ngIf="trivyExpandTableFunction(rowData, 'row', col, row).buttonLink" label="{{ trivyExpandTableFunction(rowData, 'row', col, row).buttonLink }}" [text]="true" size="small" (onClick)="onTrivyDetailsTableCallback(rowData)" />
+                    <p-tag *ngIf="trivyExpandTableFunction(rowData, 'row', col, row).badge" [rounded]="true" [value]="trivyExpandTableFunction(rowData, 'row', col, row).badge" severity="info" [style]="{ 'margin-left': '10px', }" />
                   </td>
                 </tr>
-              <!--</ng-template>-->
-            </ng-template>
-          </p-table>
+                <!--</ng-template>-->
+              </ng-template>
+            </p-table>
+          </div>
         </td>
       </tr>
     </ng-template>
-
-
-
-
-
     <ng-template *ngIf="trivyTableOptions!.isFooterVisible" pTemplate="summary">
       <div>
-        Total <p-tag value="{{ trivyTableTotalRecords }}" /> | Filtered <p-tag value="{{ trivyTableFilteredRecords }}" />
+        Total <p-tag [rounded]="true" value="{{ trivyTableTotalRecords }}" /> | Filtered <p-tag [rounded]="true" value="{{ trivyTableFilteredRecords }}" />
       </div>
     </ng-template>
   </p-table>

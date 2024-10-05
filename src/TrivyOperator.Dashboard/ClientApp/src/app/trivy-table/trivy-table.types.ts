@@ -1,5 +1,3 @@
-import { SeverityDto } from '../../api/models/severity-dto';
-
 export interface TrivyTableOptions {
   isClearSelectionVisible: boolean,
   isResetFiltersVisible: boolean,
@@ -38,18 +36,24 @@ export interface TrivyFilterData {
   selectedSeverityIds: number[];
 }
 
-export class TrivyDetailsTableOptions {
+export class TrivyExpandTableOptions {
   isHeaderVisible: boolean = true;
   columnsNo: number = 0;
   rowsNo: number = 0;
   get columnsArray(): number[] { return Array(this.columnsNo).fill(0).map((_, i) => i); };
   get rowsArray(): number[] { return Array(this.rowsNo).fill(0).map((_, i) => i); }
+  // or return Array.from({ length: this.columnsNo }, (_, i) => i);
+
+  constructor(isHeaderVisible: boolean, columnsNo: number, rowsNo: number) {
+    this.isHeaderVisible = isHeaderVisible;
+    this.columnsNo = columnsNo;
+    this.rowsNo = rowsNo;
+  }
 }
 
-export interface TrivyDetailsCell<TData> {
+export interface TrivyTableCellCustomOptions {
   value: string;
   style: string;
   buttonLink: string | undefined;
   badge: string | undefined;
-  //callbackFunction: ((dto: TData) => void) | null;
 }

@@ -5,24 +5,27 @@ import { SeveritiesService } from "../../api/services/severities.service"
 
 @Injectable({ providedIn: 'root', })
 export class SeverityHelperService {
-  private _severitiesService: SeveritiesService;
-  private _severityDtos?: SeverityDto[] | null | undefined;
+  private severityDtos?: SeverityDto[] | null | undefined;
   private get colorIntensity(): number { return 400; }
 
   public async getSeverityDtos(): Promise<SeverityDto[]> {
-    if (this._severityDtos == null) {
-      const x = lastValueFrom(this._severitiesService.getSeverities());
-      x.then(result => { this._severityDtos = result; });
+    if (this.severityDtos == null) {
+      const x = lastValueFrom(this.severitiesService.getSeverities());
+      x.then(result => { this.severityDtos = result; });
       return x;
     }
     else {
-      return new Promise((resolve) => { resolve(this._severityDtos!); })
+      return new Promise((resolve) => { resolve(this.severityDtos!); })
     }
   }
 
-  constructor(severitiesService: SeveritiesService) {
+  constructor(private severitiesService: SeveritiesService) {
+    severitiesService.getSeverities()
+      .subscribe({
+        next: (res) => this.severityDtos = res,
+        error: (err) => console.error(err)
+      });
     console.log("SeverityHelperService - constructor");
-    this._severitiesService = severitiesService;
   }
 
   public getCssColor(severityId: number): string {
@@ -57,13 +60,13 @@ export class SeverityHelperService {
   }
 
   public getName(severityId: number): string {
-    if (this._severityDtos == null) {
+    if (this.severityDtos == null) {
       return "";
     }
 
-    for (let i = 0; i < this._severityDtos.length; i++) {
-      if (this._severityDtos[i].id != null && this._severityDtos[i].id == severityId) {
-        return this._severityDtos[i].name ? this._severityDtos[i].name : "";
+    for (let i = 0; i < this.severityDtos.length; i++) {
+      if (this.severityDtos[i].id != null && this.severityDtos[i].id == severityId) {
+        return this.severityDtos[i].name ? this.severityDtos[i].name : "";
       }
     }
 
@@ -81,7 +84,7 @@ export class SeverityHelperService {
   }
 
   public getSeverityIds(): number[] {
-    return this._severityDtos ? this._severityDtos.map(x => x.id).sort((a, b) => a - b) : [];
+    return this.severityDtos ? this.severityDtos.map(x => x.id).sort((a, b) => a - b) : [];
   }
 
   public getNames(severityIds: number[], maxDisplay?: number): string {

@@ -11,7 +11,7 @@ import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { Table, TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 
-import { Column, ExportColumn, TrivyFilterData, TrivyTableColumn, TrivyTableOptions, TrivyDetailsTableOptions, TrivyDetailsCell } from "./trivy-table.types";
+import { Column, ExportColumn, TrivyFilterData, TrivyTableColumn, TrivyTableOptions, TrivyExpandTableOptions, TrivyTableCellCustomOptions } from "./trivy-table.types";
 import { SeverityHelperService } from "../services/severity-helper.service"
 import { SeverityDto } from "../../api/models/severity-dto"
 import { TableState } from 'primeng/api';
@@ -42,7 +42,7 @@ export class TrivyTableComponent<TData> {
 
   @Input() exportColumns!: ExportColumn[];
   @Input() tableColumns!: Column[];
-  @ViewChild('trivyTable') trivyTable?: Table;
+  @ViewChild('trivyTable') trivyTable!: Table;
   @ViewChild('serverFilterDataOp') serverFilterDataOp?: OverlayPanel;
 
   @Input() public tableHeight: string = "10vh";
@@ -51,8 +51,8 @@ export class TrivyTableComponent<TData> {
   @Input() trivyTableColumns: TrivyTableColumn[] = [];
   @Input( { required: true } ) trivyTableOptions!: TrivyTableOptions;
 
-  @Input() trivyDetailsTableOptions: TrivyDetailsTableOptions = new TrivyDetailsTableOptions();
-  @Input() trivyDetailsTableFunction: (dto: TData, type: "header" | "row", column: number, row?: number) => TrivyDetailsCell<TData> =
+  @Input() trivyExpandTableOptions: TrivyExpandTableOptions = new TrivyExpandTableOptions(false, 0, 0);
+  @Input() trivyExpandTableFunction: (dto: TData, type: "header" | "row", column: number, row?: number) => TrivyTableCellCustomOptions =
     (dto, type, column, row) => ({ value: "", style: "", buttonLink: undefined, badge: undefined });
   @Output() trivyDetailsTableCallback = new EventEmitter<TData>();
 
@@ -64,7 +64,7 @@ export class TrivyTableComponent<TData> {
   public selectedDataDtos?: any | null;
   public filterSeverityOptions: number[] = []
   public filterSelectedSeverityIds: number[] | null = [];
-  public filterActiveNamespaces: string[] | null = [];
+  public filterSelectedActiveNamespaces: string[] | null = [];
   public filterRefreshActiveNamespace: string | null = "";
   public filterRefreshSeverities: SeverityDto[] | undefined;
 
@@ -97,7 +97,7 @@ export class TrivyTableComponent<TData> {
   }
 
   public onTableClearSelected() {
-    this.selectedDataDtos = [];
+    this.selectedDataDtos = null;
   }
 
   public isTableRowSelected(): boolean {
@@ -135,21 +135,6 @@ export class TrivyTableComponent<TData> {
     this.refreshRequested.emit(event);
   }
 
-  //onRowUnselect(event: any) {
-  //  // don't let unselect
-  //  if (this.trivyTableOptions.tableSelectionMode === "single" && this.trivyTable != null) {
-  //    this.trivyTable.selection = event.data;
-  //  }
-  //}
-
-  //public selectRow(data: TData) {
-  //  if (data == null) {
-  //    return;
-  //  }
-  //  this.selectedDataDtos = data;
-  //  this.onSelectionChange(data);
-  //}
-
   // custom back overlay
   public overlayVisible: boolean = false;
 
@@ -157,26 +142,73 @@ export class TrivyTableComponent<TData> {
     this.overlayVisible = !this.overlayVisible;
   }
 
-  //tests expand
-  expandedRows: any = {};
+  public isTableFilteredOrSorted(): boolean {
+    if (!this.trivyTable) {
+      return false;
+    }
+    return (this.trivyTable.filteredValue ? true : false) ||
+      (this.trivyTable.multiSortMeta == null ? false : this.trivyTable.multiSortMeta.length > 0);
+  }
+  // there is an NG0100 error from here
+
+  public onClearSortFilters() {
+    let currentFilters = JSON.parse(JSON.stringify(this.trivyTable.filters));
+    this.trivyTable.filters = this.clearTableFilters(currentFilters);
+    this.trivyTable.clear();
+    this.filterSelectedActiveNamespaces = [];
+    this.filterSelectedSeverityIds = [];
+    if (this.trivyTableOptions.stateKey) {
+      let tableState = localStorage.getItem(this.trivyTableOptions.stateKey);
+      if (!tableState) {
+        return;
+      }
+      let tableStateJson = JSON.parse(tableState);
+      tableStateJson.filters = this.clearTableFilters(tableStateJson.filters);
+      localStorage.setItem(this.trivyTableOptions.stateKey, JSON.stringify(tableStateJson));
+    }
+  }
+
+  private clearTableFilters(tableFilters: any): any {
+    for (let filter in tableFilters) {
+      if (tableFilters[filter] && tableFilters[filter].length > 0) {
+        tableFilters[filter] = [tableFilters[filter][0]];
+        tableFilters[filter].forEach((item: any) => {
+          if (item.matchMode === "in") {
+            item.value = [];
+          } else {
+            item.value = "";
+          }
+        });
+      }
+    }
+    return tableFilters;
+  }
+
+  //rows expand
+  expandedRows = {};
 
   onTrivyDetailsTableCallback(dto: TData) {
     this.trivyDetailsTableCallback.emit(dto);
   }
 
-  ontest() {
-    console.log(JSON.stringify(this.expandedRows));
-    let x: keyof TData = this.trivyTableOptions.dataKey as keyof TData;
-    if (!this.dataDtos) {
-      return;
+  onTableCollapseAll() {
+    this.expandedRows = {};
+    if (this.trivyTableOptions.stateKey) {
+      let tableState = localStorage.getItem(this.trivyTableOptions.stateKey);
+      if (!tableState) {
+        return;
+      }
+
+      let tableStateJson = JSON.parse(tableState);
+      if (tableStateJson.hasOwnProperty('expandedRowKeys')) {
+        delete tableStateJson.expandedRowKeys;
+      }
+      localStorage.setItem(this.trivyTableOptions.stateKey, JSON.stringify(tableStateJson));
     }
-    console.log(this.dataDtos[0][x]);
-    if (this.expandedRows) {
-      //this.expandedRows = {};
-    }
-    else {
-      
-    }
+  }
+
+  isAnyRowExpanded(): boolean {
+    return JSON.stringify(this.expandedRows) != '{}'
   }
 }
 
