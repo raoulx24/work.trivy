@@ -6,8 +6,8 @@ export interface TrivyTableOptions {
   isRefreshFiltrable: boolean,
   isFooterVisible: boolean,
   tableSelectionMode: null | "single" | "multiple",
-  stateKey: string,
-
+  tableStyle: { [klass: string]: any; },
+  stateKey: string | null,
   dataKey: string | null,
 }
 

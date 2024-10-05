@@ -73,6 +73,7 @@ export class WatcherStateComponent {
       isRefreshFiltrable: false,
       isFooterVisible: true,
       tableSelectionMode: null,
+      tableStyle: {},
       stateKey: 'ws.table-all',
       dataKey: null,
     };

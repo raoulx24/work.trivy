@@ -10,6 +10,7 @@
            columnResizeMode="expand"
            [reorderableColumns]="true"
            styleClass="p-datatable-sm text-sm"
+           [tableStyle]="trivyTableOptions!.tableStyle"
            sortMode="multiple"
            [autoLayout]="true"
            [loading]="isLoading"
@@ -17,13 +18,11 @@
            [(selection)]="selectedDataDtos"
            [exportFilename]="csvFileName"
            (selectionChange)="onSelectionChange($event)"
-           stateStorage="local"
            stateKey="{{ trivyTableOptions!.stateKey }}"
-
+           stateStorage="local"
            dataKey="{{ trivyTableOptions!.dataKey }}"
-           [expandedRowKeys]="expandedRows"
-           >
-    <!--(onRowUnselect)="onRowUnselect($event)"-->
+           [expandedRowKeys]="expandedRows">
+
     <ng-template pTemplate="caption">
       <div>
         <p-button *ngIf="trivyTableOptions!.isRefreshVisible" text
@@ -46,7 +45,7 @@
     <ng-template pTemplate="header" let-columns>
       <tr>
         <th *ngIf="trivyTableOptions!.dataKey" style="width:50px"></th>
-        <th *ngFor="let col of columns" pResizableColumn [pSortableColumn]="col.isSortable ? col.field : null" style="{{ col.style }}">
+        <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.isSortable ? col.field : null" style="{{ col.style }}">
           {{ col.header }}
           <p-sortIcon *ngIf="col.isSortable" field="{{ col.field }}" />
           <p-columnFilter *ngIf="col.isFiltrable && col.multiSelectType==='none'" type="text" field="{{ col.field }}" display="menu" />
