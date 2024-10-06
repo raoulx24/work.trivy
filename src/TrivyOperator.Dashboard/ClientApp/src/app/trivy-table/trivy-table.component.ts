@@ -143,7 +143,7 @@ export class TrivyTableComponent<TData> {
   }
 
   public isTableFilteredOrSorted(): boolean {
-    if (!this.trivyTable) {
+    if (!this.trivyTable || this.isLoading) {
       return false;
     }
     return (this.trivyTable.filteredValue ? true : false) ||
