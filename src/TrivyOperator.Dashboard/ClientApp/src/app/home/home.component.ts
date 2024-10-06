@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { VulnerabilityReportsService } from "../../api/services/vulnerability-reports.service";
 import { VulnerabilityReportSumaryDto } from "../../api/models/vulnerability-report-sumary-dto";
 import { VrSeveritiesByNsSummaryDto } from '../../api/models/vr-severities-by-ns-summary-dto';
@@ -14,6 +15,7 @@ import { ButtonModule } from 'primeng/button';
 import { CarouselModule } from 'primeng/carousel';
 import { ChartModule } from 'primeng/chart';
 import { DialogModule } from 'primeng/dialog';
+import { InputSwitchChangeEvent, InputSwitchModule } from 'primeng/inputswitch';
 import { PanelModule } from 'primeng/panel';
 import { TableModule } from 'primeng/table';
 
@@ -48,8 +50,9 @@ export interface GenericNsTotalSortable {
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, ButtonModule, CarouselModule, ChartModule, DialogModule, PanelModule, TableModule],
+  imports: [CommonModule, FormsModule, ButtonModule, CarouselModule, ChartModule, DialogModule, InputSwitchModule, PanelModule, TableModule],
   templateUrl: './home.component.html',
+  styleUrl: './home.component.scss',
 })
 
 export class HomeComponent {
@@ -59,15 +62,11 @@ export class HomeComponent {
   public get primeNgHelper(): PrimeNgHelper { return this._primeNgHelper; };
   private _primeNgHelper: PrimeNgHelper;
 
-  public pieChartData: PrimeNgPieChartData[] | null | undefined;
+  //public pieChartData: PrimeNgPieChartData[] | null | undefined;
   public horizontalBarChartDataByNs: PrimeNgHorizontalBarChartData | null | undefined;
   public horizontalBarChartDataBySeverity: PrimeNgHorizontalBarChartData | null | undefined;
-  public pieChartOptions: any;
   public horizontalBarChartOption: any;
   public slides: string[] = ["barChartNS", "barChartSeverity"];
-
-  public severityDtos: SeverityDto[] | null | undefined;
-  public filterRefreshSeverities: SeverityDto[] = [];
 
   public severitiesSummaryForTable: SeveritiySummary[] = [];
   public othersSummaryForTable: OtherSummaryMainStatistics[] = [];
@@ -89,7 +88,6 @@ export class HomeComponent {
     this.severityHelperService = severityHelperService;
     this._primeNgHelper = new PrimeNgHelper(this.severityHelperService);
     severityHelperService.getSeverityDtos().then(result => {
-      this.filterRefreshSeverities = result;
       this.initComponents();
     });
   }
@@ -99,19 +97,6 @@ export class HomeComponent {
     const textColor = documentStyle.getPropertyValue('--text-color');
     const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
     const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
-
-    this.pieChartOptions = {
-      plugins: {
-        legend: {
-          display: false,
-          labels: {
-            usePointStyle: true,
-            color: textColor,
-          },
-          position: 'bottom',
-        }
-      }
-    };
 
     this.horizontalBarChartOption = {
       indexAxis: 'y',
@@ -158,15 +143,19 @@ export class HomeComponent {
     if (vulnerabilityReportSumaryDto == null) {
       return;
     }
-    this.severityHelperService.getSeverityDtos().then(x => {
-      this.severityDtos = x;
-      this.pieChartData = this._primeNgHelper.getDataForPieChart(vulnerabilityReportSumaryDto.severitiesByNsSummaryDtos as SeveritiesSummary[]);
-      this._primeNgHelper.getDataForHorizontalBarChartByNamespace(vulnerabilityReportSumaryDto.severitiesByNsSummaryDtos as SeveritiesSummary[])
-        .then(x => this.horizontalBarChartDataByNs = x);
-      this._primeNgHelper.getDataForHorizontalBarChartBySeverity(vulnerabilityReportSumaryDto.severitiesByNsSummaryDtos as SeveritiesSummary[])
-        .then(x => this.horizontalBarChartDataBySeverity = x);
+    this.severityHelperService.getSeverityDtos().then(_ => {
+      this.extractDataForCharts();
       this.extractDataForTables();
     });
+  }
+
+  private extractDataForCharts() {
+    this._primeNgHelper.getDataForHorizontalBarChartByNamespace(
+      this.vulnerabilityReportSumaryDto?.severitiesByNsSummaryDtos as SeveritiesSummary[], this.showDistinctValues)
+      .then(x => this.horizontalBarChartDataByNs = x);
+    this._primeNgHelper.getDataForHorizontalBarChartBySeverity(
+      this.vulnerabilityReportSumaryDto?.severitiesByNsSummaryDtos as SeveritiesSummary[], this.showDistinctValues)
+      .then(x => this.horizontalBarChartDataBySeverity = x);
   }
 
   private extractDataForTables() {
@@ -184,6 +173,7 @@ export class HomeComponent {
         this.severitiesSummaryForTable = tableValues;
       }
     }
+    this.othersSummaryForTable = [];
     if (this.vulnerabilityReportSumaryDto?.imagesByNSSummaryDtos) {
       let totalData = this.vulnerabilityReportSumaryDto.imagesByNSSummaryDtos.find(x => x.isTotal);
       if (totalData) {
@@ -214,57 +204,7 @@ export class HomeComponent {
 
   }
 
-  public onMamaClick(event: Event) {
-    if (this.horizontalBarChartDataByNs == null) {
-      return;
-    }
-    this.loading = !this.loading;
-    this.horizontalBarChartDataByNs!.datasets[1].hidden = !this.horizontalBarChartDataByNs!.datasets[1].hidden;
-    this.createChart = !this.createChart;
-    console.log(this.createChart);
-    timer(1).subscribe(x => { this.createChart = !this.createChart; })
-    
-    if (this.barChartByNs == null)
-      return;
-
-    //const ci = this.barChartByNs.chart;
-    //const meta = ci.getDatasetMeta(1);
-    //console.log(meta);
-    //console.log(ci.data.datasets[1]);
-    //meta.hidden = meta.hidden != null ? !ci.data.datasets[1].hidden : false;
-    //ci.update();
-
-    //const dataset = this.barChartByNs.chart.data.datasets[2];
-    //if (this.loading) {
-    //  this.barChartByNs.chart.show(0);
-    //  this.barChartByNs.chart.hide(1);
-    //  this.barChartByNs.chart.hide(2);
-    //}
-    //else {
-    //  this.barChartByNs.chart.show(0);
-    //  this.barChartByNs.chart.show(1);
-    //  this.barChartByNs.chart.show(2);
-    //}
-    //console.log(dataset);
-    ////console.log(dataset.hidden);
-    ////dataset.hidden = true;
-    ////console.log(dataset.hidden);
-    ////dataset.data = null;
-    //console.log("here");
-    //// Update the chart
-    ////this.barChartByNs.chart = { ...this.barChartByNs.chart };
-    //this.barChartByNs.chart.update();
-  }
-
-  public loading: boolean = false;
-  @ViewChild('pieChart') pieChart?: UIChart;
-  @ViewChild('barChartByNs') barChartByNs?: UIChart;
-  hideNoTwo: boolean = false;
-  public createChart: boolean = true;
-
   public onOthersMore(element: OtherSummaryMainStatistics) {
-    
-
     this.moreOthersModalTitle = "More Info for " + element.description;
     let tempByNsSummary: GenericByNsSummaryDto[] = [];
     let tempSummary: GenericSummaryDto[] = [];
@@ -290,7 +230,6 @@ export class HomeComponent {
 
   public onVrsMore(event: MouseEvent) {
     this.isMoreVRDetailsModalVisible = true;
-    console.log("mama");
   }
 
   sortOthersByNsSummary = (a: GenericNsTotalSortable, b: GenericNsTotalSortable): number => {
@@ -322,4 +261,8 @@ export class HomeComponent {
     return this.showDistinctValues ? detail.fixableDistinctCount! : detail.fixableTotalCount!;
   }
 
+  onDistinctSwitch(event: any) {
+    this.extractDataForCharts();
+    this.extractDataForTables();
+  }
 }

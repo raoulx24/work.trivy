@@ -1,0 +1,19 @@
+/*::ng-deep .custom-table .p-datatable-tbody tr td {
+  border-bottom: 1px solid #ddd;*/ /* Line between rows */
+/*}
+
+::ng-deep .custom-table .p-datatable-tbody tr td:not(:last-child) {
+  border-right: 1px solid #ddd;*/ /* Line between columns */
+/*}
+
+::ng-deep .custom-table .p-datatable-thead th {
+  border-bottom: 1px solid #ddd;*/ /* Line below header */
+/*}
+
+::ng-deep .custom-table .p-datatable-tbody tr:last-child td {
+  border-bottom: none;*/ /* Remove bottom border of the last row */
+/*}
+
+::ng-deep .custom-table .p-datatable-tbody tr td:last-child {
+  border-right: none;*/ /* Remove right border of the last column */
+/*}*/

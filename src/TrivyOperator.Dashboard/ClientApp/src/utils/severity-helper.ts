@@ -77,7 +77,7 @@ export class PrimeNgHelper {
     return pieChartData;
   }
 
-  public async getDataForHorizontalBarChartByNamespace(severitiesSummary: SeveritiesSummary[]): Promise<PrimeNgHorizontalBarChartData> {
+  public async getDataForHorizontalBarChartByNamespace(severitiesSummary: SeveritiesSummary[], distinct: boolean): Promise<PrimeNgHorizontalBarChartData> {
     // TODO make required everything in severitiesDto and severitiesSummaryDto
     let chartData: PrimeNgHorizontalBarChartData = {
       datasets: [],
@@ -89,7 +89,8 @@ export class PrimeNgHelper {
     severities.forEach(severity => {
       let totalVulnerabilities: number[] = [];
       severitiesSummary.filter(x => !x.isTotal).forEach(severitySummary => {
-        totalVulnerabilities.push(severitySummary.details!.filter(x => x.id! == severity!.id!)[0].distinctCount!);
+        let severityDetail = severitySummary.details!.filter(x => x.id! == severity!.id!)[0];
+        totalVulnerabilities.push(distinct ? severityDetail.distinctCount! : severityDetail.totalCount!);
       });
       chartData.datasets.push({
         label: this._severityHelperService.getCapitalizedString(severity.name!),
@@ -103,7 +104,7 @@ export class PrimeNgHelper {
     return chartData;
   }
 
-  public async getDataForHorizontalBarChartBySeverity(severitiesSummary: SeveritiesSummary[]): Promise<PrimeNgHorizontalBarChartData> {
+  public async getDataForHorizontalBarChartBySeverity(severitiesSummary: SeveritiesSummary[], distinct: boolean): Promise<PrimeNgHorizontalBarChartData> {
     // TODO make required everything in severitiesDto and severitiesSummaryDto
     let chartData: PrimeNgHorizontalBarChartData = {
       datasets: [],
@@ -116,7 +117,8 @@ export class PrimeNgHelper {
     severitiesSummary.filter(x => !x.isTotal).forEach(severitySummary => {
       let totalVulnerabilities: number[] = [];
       severities.forEach(severity => {
-        totalVulnerabilities.push(severitySummary.details!.filter(x => x.id! == severity!.id!)[0].distinctCount!);
+        let severityDetail = severitySummary.details!.filter(x => x.id! == severity!.id!)[0];
+        totalVulnerabilities.push(distinct ? severityDetail.distinctCount! : severityDetail.totalCount!);
       });
       let color: string = ColorHelper.rainbow(severitiesSummary.length, namespacesCounter);
       chartData.datasets.push({
@@ -130,19 +132,6 @@ export class PrimeNgHelper {
     });
 
     return chartData;
-  //  severities.forEach(severity => {
-  //    let totalVulnerabilities: number[] = [];
-  //    severitiesSummary.forEach(severitySummary => {
-  //      totalVulnerabilities.push(severitySummary.details!.filter(x => x.id! == severity!.id!)[0].totalCount!);
-  //    });
-  //    chartData.datasets.push({
-  //      label: severity.name!,
-  //      data: totalVulnerabilities,
-  //      backgroundColor: null,
-  //      hoverBackgroundColor: null,
-  //      hidden: false,
-  //    });
-  //  });
   }
 }
 

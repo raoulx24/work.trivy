@@ -1,24 +1,24 @@
-<h3 id="trivy-operator-overview">Overview</h3>
+<h3>Overview</h3>
 <p-panel header="Vulnerability Reports" [toggleable]="true" *ngIf="vulnerabilityReportSumaryDto">
   <div class="row" style="height:70vh">
     <div class="grid">
-      <div class="col-2">
+      <div class="col-2 relative">
         <h4 class="text-center">Statistics</h4>
-        <div class="row mb-5">
+        <div class="flex row mb-5">
           <p-table [value]="othersSummaryForTable" styleClass="p-datatable-sm text-sm">
             <ng-template pTemplate="body" let-others>
               <tr>
                 <td style="width: 50%; max-width: 50%;">{{ others.description }}</td>
-                <td style="width: 25%; max-width: 25%;" class ="text-right">{{ others.count }}</td>
+                <td style="width: 25%; max-width: 25%;" class="text-right">{{ others.count }}</td>
                 <td style="width: 25%; max-width: 25%;">
                   <p-button label="More..." [text]="true" size="small" (onClick)="onOthersMore(others)"
-                            styleClass ="text-sm float-right p-0"/>
+                            styleClass="text-sm float-right p-0" />
                 </td>
               </tr>
             </ng-template>
           </p-table>
         </div>
-        <div class="row text-xl">
+        <div class="flex row">
           <p-table [value]="severitiesSummaryForTable" styleClass="p-datatable-sm text-sm">
             <ng-template pTemplate="header">
               <tr>
@@ -35,8 +35,14 @@
               </tr>
             </ng-template>
           </p-table>
-          <p-button label="More on Severities..." [text]="true" size="small" (onClick)="onVrsMore($event)"
-                    [style]="{ 'font-size': '14px', 'float': 'right' }" />
+        </div>
+        <div class="flex row mb-5 text-sm justify-content-start -ml-1">
+          <p-button label="More on Severities..." [text]="true" size="small" (onClick)="onVrsMore($event)" />
+        </div>
+        <div class="flex row text-sm justify-content-end align-items-center pb-5 absolute bottom-0 left-0.5">
+          <p-inputSwitch inputId="distinctSwitch" [(ngModel)]="showDistinctValues"
+                         (onChange)="onDistinctSwitch($event)" class="border-round"></p-inputSwitch>
+          <label for="switch1" class="ml-2">Distinct values</label>
         </div>
       </div>
       <div class="col-10">
@@ -52,9 +58,7 @@
                 <div *ngSwitchCase="'barChartNS'">
                   <div *ngIf="horizontalBarChartDataByNs">
                     <h4 style="text-align: center;">Vulnerabilities by Namespace</h4>
-                    <p-chart *ngIf="createChart"
-                             #barChartByNs
-                             type="bar"
+                    <p-chart type="bar"
                              [data]="horizontalBarChartDataByNs"
                              [options]="horizontalBarChartOption"
                              height="60vh" width="70vw" />
@@ -63,9 +67,7 @@
                 <div *ngSwitchCase="'barChartSeverity'">
                   <div *ngIf="horizontalBarChartDataByNs">
                     <h4 style="text-align: center;">Vulnerabilities by Severity</h4>
-                    <p-chart *ngIf="createChart"
-                             #barChartBySeverity
-                             type="bar"
+                    <p-chart type="bar"
                              [data]="horizontalBarChartDataBySeverity"
                              [options]="horizontalBarChartOption"
                              height="60vh" width="70vw" />
