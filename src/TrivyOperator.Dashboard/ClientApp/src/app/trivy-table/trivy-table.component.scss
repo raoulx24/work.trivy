@@ -12,3 +12,22 @@
 .custom-backdrop.animated-backdrop {
   opacity: 1;
 }
+
+.trivy-table-container {
+  height: calc(100vh - 150px);
+  display: flex !important;
+  flex-direction: column !important;
+  flex-grow: 1 !important;
+}
+
+/*.p-datatable-wrapper {
+  flex: 1 !important;
+  display: flex !important;
+  overflow-y: auto !important;
+  flex-direction: column !important;
+}*/
+
+/*.p-datatable-scrollable-body {
+  flex-grow: 1;
+  overflow: auto;*/ /* Ensure scrolling works */
+/*}*/

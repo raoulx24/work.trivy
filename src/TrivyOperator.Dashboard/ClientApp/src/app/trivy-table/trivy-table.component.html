@@ -1,4 +1,4 @@
-<div *ngIf="isTableVisible" style="height:{{ tableHeight }}">
+<div *ngIf="isTableVisible" class="trivy-table-container">
   <p-table #trivyTable
            [columns]="trivyTableColumns"
            [value]="dataDtos!"
@@ -10,6 +10,7 @@
            columnResizeMode="expand"
            [reorderableColumns]="true"
            styleClass="p-datatable-sm text-sm"
+           [ngStyle]="{'flex-grow': '1', 'display': 'flex', 'flex-direction': 'column'}"
            [tableStyle]="trivyTableOptions!.tableStyle"
            sortMode="multiple"
            [autoLayout]="true"
