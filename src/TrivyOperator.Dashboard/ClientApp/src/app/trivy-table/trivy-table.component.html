@@ -101,10 +101,12 @@
           <a *ngIf="col.renderType=='date'">{{ rowData[col.field] | date: 'yyyy-MM-dd' }}</a>
           <div *ngIf="col.renderType=='imageNameTag'">
             <a>{{ rowData[col.field] }}:{{ rowData[col.extraFields[0]] }}</a>
-            <p-tag *ngIf="rowData[col.extraFields[1]]" value="EOSL" [rounded]="true" severity="info" [style]="{ 'margin-left':'10px' }" />
+            <p-tag *ngIf="rowData[col.extraFields[1]]" value="EOSL" [rounded]="true"
+                   [style]="{ 'margin-left':'10px', background: severityHelper.getCssColor(1) }" />
           </div>
           <a *ngIf="col.renderType=='link'" href="{{ rowData[col.extraFields[0]] }}" target="_blank">{{ rowData[col.field] }}</a>
-          <p-tag *ngIf="col.renderType=='severityBadge'" [rounded]="true" [value]="severityHelper.getName(rowData[col.field])" [style]="{ background: severityHelper.getCssColor(rowData[col.field]) }" />
+          <p-tag *ngIf="col.renderType=='severityBadge'" [rounded]="true" [value]="severityHelper.getName(rowData[col.field])"
+                 [style]="{ background: severityHelper.getCssColor(rowData[col.field]) }" />
           <div *ngIf="col.renderType=='severityMultiTags'" style="display: flex; justify-content: space-between">
             <p-tag [value]="rowData[col.field]" [rounded]="true" [style]="{ background: severityHelper.getCssColor(0) }" />
             <p-tag [value]="rowData[col.extraFields[0]]" [rounded]="true" [style]="{ background: severityHelper.getCssColor(1) }" />
@@ -112,6 +114,8 @@
             <p-tag [value]="rowData[col.extraFields[2]]" [rounded]="true" [style]="{ background: severityHelper.getCssColor(3) }" />
             <p-tag [value]="rowData[col.extraFields[3]]" [rounded]="true" [style]="{ background: severityHelper.getCssColor(4) }" />
           </div>
+          <p-tag *ngIf="col.renderType=='eosl' && rowData[col.field]" [value]="'true'" icon="pi pi-exclamation-circle" [rounded]="true"
+                 [style]="{ background: severityHelper.getCssColor(1) }" />
         </td>
       </tr>
     </ng-template>
@@ -133,8 +137,12 @@
                 <tr *ngFor="let row of trivyExpandTableOptions.rowsArray;">
                   <td *ngFor="let col of trivyExpandTableOptions.columnsArray" style="{{ trivyExpandTableFunction(rowData, 'row', col, row).style }}">
                     <a>{{ trivyExpandTableFunction(rowData, 'row', col, row).value }}</a>
-                    <p-button *ngIf="trivyExpandTableFunction(rowData, 'row', col, row).buttonLink" label="{{ trivyExpandTableFunction(rowData, 'row', col, row).buttonLink }}" [text]="true" size="small" (onClick)="onTrivyDetailsTableCallback(rowData)" />
-                    <p-tag *ngIf="trivyExpandTableFunction(rowData, 'row', col, row).badge" [rounded]="true" [value]="trivyExpandTableFunction(rowData, 'row', col, row).badge" severity="info" [style]="{ 'margin-left': '10px', }" />
+                    <p-button *ngIf="trivyExpandTableFunction(rowData, 'row', col, row).buttonLink"
+                              label="{{ trivyExpandTableFunction(rowData, 'row', col, row).buttonLink }}" [text]="true" size="small"
+                              (onClick)="onTrivyDetailsTableCallback(rowData)" />
+                    <p-tag *ngIf="trivyExpandTableFunction(rowData, 'row', col, row).badge"
+                           [rounded]="true" [value]="trivyExpandTableFunction(rowData, 'row', col, row).badge"
+                           [style]="{ 'margin-left': '10px', background: severityHelper.getCssColor(1) }" />
                   </td>
                 </tr>
                 <!--</ng-template>-->

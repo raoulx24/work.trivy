@@ -17,3 +17,30 @@
 ::ng-deep .custom-table .p-datatable-tbody tr td:last-child {
   border-right: none;*/ /* Remove right border of the last column */
 /*}*/
+
+:host {
+  ::ng-deep .p-inputswitch {
+    height: 1rem;
+    width: 2rem;
+
+    &.p-inputswitch-checked {
+      .p-inputswitch-slider::before {
+        transform: translateX(.66rem);
+      }
+    }
+
+    .p-inputswitch-slider::before {
+      width: 0.8rem;
+      height: 0.8rem;
+      margin-top: -0.37rem;
+    }
+  }
+
+  ::ng-deep p-inputswitch .p-inputswitch-slider {
+    border-radius: 30px;
+  }
+
+  ::ng-deep p-inputswitch .p-inputswitch-slider::before {
+    border-radius: 50%;
+  }
+}
