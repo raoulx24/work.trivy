@@ -1,1 +1,39 @@
-<p>settings works!</p>
+<h3>Settings</h3>
+
+<p-panel header="" [toggleable]="true">
+  <h5>Clear Table States</h5>
+  <p-table [value]="clearTablesOptions"
+           styleClass="p-datatable-sm text-sm"
+           [tableStyle]="{'width': '600px'}">
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width:50%">Table Name</th>
+        <th style="width:10%">Sort</th>
+        <th style="width:10%">Filters</th>
+        <th style="width:10%">Widths</th>
+        <th style="width:10%">Order</th>
+        <th style="width:10%">All</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-item>
+      <tr>
+        <td>{{ item.description }}</td>
+        <td><p-checkbox [(ngModel)]="item.filters" binary="true"></p-checkbox></td>
+        <td><p-checkbox [(ngModel)]="item.sort" binary="true"></p-checkbox></td>
+        <td><p-checkbox [(ngModel)]="item.columnWidths" binary="true"></p-checkbox></td>
+        <td><p-checkbox [(ngModel)]="item.columnOrder" binary="true"></p-checkbox></td>
+        <td><p-checkbox [(ngModel)]="item.all" binary="true"></p-checkbox></td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="footer">
+      <div>
+        <p-button label="Clear Selected" icon="pi pi-check-square" size="small" text
+                  (onClick)="onClearTableStatesSelected($event)" />
+        <p-button label="Clear All" icon="pi pi-trash" size="small" text
+                  (onClick)="onClearTableStatesAll($event)" />
+      </div>
+    </ng-template>
+  </p-table>
+  <hr />
+</p-panel>

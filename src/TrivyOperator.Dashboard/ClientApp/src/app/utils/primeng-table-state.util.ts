@@ -28,6 +28,6 @@ export class PrimengTableStateUtil {
   }
 
   public static clearTableColumnOrder(tableState: any) {
-    tableState.columnOrder = [];
+    tableState.columnOrder = undefined;
   }
 }
