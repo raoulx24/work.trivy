@@ -15,7 +15,7 @@ import { Column, ExportColumn, TrivyFilterData, TrivyTableColumn, TrivyTableOpti
 import { SeverityHelperService } from "../services/severity-helper.service"
 import { SemaphoreStatusHelperService } from "../services/semaphore-status-helper.service"
 import { SeverityDto } from "../../api/models/severity-dto"
-import { TableState } from 'primeng/api';
+import { PrimengTableStateUtil } from "../utils/primeng-table-state.util"
 
 
 @Component({
@@ -154,7 +154,7 @@ export class TrivyTableComponent<TData> {
 
   public onClearSortFilters() {
     let currentFilters = JSON.parse(JSON.stringify(this.trivyTable.filters));
-    this.trivyTable.filters = this.clearTableFilters(currentFilters);
+    PrimengTableStateUtil.clearFilters(this.trivyTable.filters);
     this.trivyTable.clear();
     this.filterSelectedActiveNamespaces = [];
     this.filterSelectedSeverityIds = [];
@@ -164,25 +164,10 @@ export class TrivyTableComponent<TData> {
         return;
       }
       let tableStateJson = JSON.parse(tableState);
-      tableStateJson.filters = this.clearTableFilters(tableStateJson.filters);
+      PrimengTableStateUtil.clearTableFilters(tableStateJson);
+      PrimengTableStateUtil.clearTableMultiSort(tableStateJson);
       localStorage.setItem(this.trivyTableOptions.stateKey, JSON.stringify(tableStateJson));
     }
-  }
-
-  private clearTableFilters(tableFilters: any): any {
-    for (let filter in tableFilters) {
-      if (tableFilters[filter] && tableFilters[filter].length > 0) {
-        tableFilters[filter] = [tableFilters[filter][0]];
-        tableFilters[filter].forEach((item: any) => {
-          if (item.matchMode === "in") {
-            item.value = [];
-          } else {
-            item.value = "";
-          }
-        });
-      }
-    }
-    return tableFilters;
   }
 
   //rows expand

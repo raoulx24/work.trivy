@@ -42,6 +42,22 @@ export class NavMenuComponent {
           }
         ],
       },
+      {
+        label: 'System',
+        icon: 'pi pi-cog',
+        items: [
+          {
+            label: 'Watcher States',
+            route: '/watcher-states',
+            command: () => { this.router.navigate(['/watcher-states']); },
+          },
+          {
+            label: 'Settings',
+            route: '/settings',
+            command: () => { this.router.navigate(['/settings']); },
+          }
+        ]
+      }
     ];
 
     this.router.events.pipe(
