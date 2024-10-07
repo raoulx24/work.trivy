@@ -29,6 +29,7 @@ using TrivyOperator.Dashboard.Utils;
 using TrivyOperator.Dashboard.Application.Services.WatcherStates;
 using TrivyOperator.Dashboard.Domain.Services.Abstractions;
 using TrivyOperator.Dashboard.Domain.Services;
+using TrivyOperator.Dashboard.Application.Services.BuilderServicesExtensions;
 
 Directory.SetCurrentDirectory(AppContext.BaseDirectory);
 
@@ -94,66 +95,12 @@ builder.Services.AddHostedService<CacheWatcherEventHandlerHostedService>();
 
 builder.Services.AddSingleton<IKubernetesClientFactory, KubernetesClientFactory>();
 
-builder.Services.AddSingleton<IWatcherState, WatcherState>();
-builder.Services.AddSingleton<IConcurrentCache<string, WatcherStateInfo>, ConcurrentCache<string, WatcherStateInfo>>();
-
-builder.Services.AddSingleton<IConcurrentCache<string, IList<V1Namespace>>, ConcurrentCache<string, IList<V1Namespace>>>();
-builder.Services.AddSingleton<IBackgroundQueue<V1Namespace>, BackgroundQueue<V1Namespace>>();
-if (string.IsNullOrWhiteSpace(configuration.GetSection("Kubernetes").GetValue<String>("NamespaceList")))
-{
-    builder.Services.AddSingleton<IClusterScopedWatcher<V1Namespace>, NamespaceWatcher>();
-}
-else
-{
-    builder.Services.AddSingleton<IKubernetesNamespaceDomainService, StaticKubernetesNamespaceDomainService>();
-    builder.Services.AddSingleton<IClusterScopedWatcher<V1Namespace>, StaticNamespaceWatcher>();
-}
-builder.Services.AddSingleton<ICacheRefresh<V1Namespace, IBackgroundQueue<V1Namespace>>, NamespaceCacheRefresh>();
-builder.Services.AddSingleton<IClusterScopedCacheWatcherEventHandler, NamespaceCacheWatcherEventHandler>();
-
-builder.Services.AddSingleton<
-    IConcurrentCache<string, IList<ClusterRbacAssessmentReportCr>>,
-    ConcurrentCache<string, IList<ClusterRbacAssessmentReportCr>>>();
-builder.Services.AddSingleton<IBackgroundQueue<ClusterRbacAssessmentReportCr>, BackgroundQueue<ClusterRbacAssessmentReportCr>>();
-builder.Services.AddSingleton<IClusterScopedWatcher<ClusterRbacAssessmentReportCr>, ClusterRbacAssessmentReportWatcher>();
-builder.Services.AddSingleton<
-    ICacheRefresh<ClusterRbacAssessmentReportCr, IBackgroundQueue<ClusterRbacAssessmentReportCr>>,
-    CacheRefresh<ClusterRbacAssessmentReportCr, IBackgroundQueue<ClusterRbacAssessmentReportCr>>>();
-builder.Services.AddSingleton<IClusterScopedCacheWatcherEventHandler, ClusterRbacAssessmentReportWatcherCacheSomething>();
-
-builder.Services.AddSingleton<
-    IConcurrentCache<string, IList<VulnerabilityReportCr>>,
-    ConcurrentCache<string, IList<VulnerabilityReportCr>>>();
-builder.Services.AddSingleton<IBackgroundQueue<VulnerabilityReportCr>, BackgroundQueue<VulnerabilityReportCr>>();
-builder.Services.AddSingleton<INamespacedWatcher<VulnerabilityReportCr>, VulnerabilityReportWatcher>();
-builder.Services.AddSingleton<
-    ICacheRefresh<VulnerabilityReportCr, IBackgroundQueue<VulnerabilityReportCr>>,
-    CacheRefresh<VulnerabilityReportCr, IBackgroundQueue<VulnerabilityReportCr>>>();
-builder.Services.AddSingleton<INamespacedCacheWatcherEventHandler, VulnerabilityReportCacheWatcherEventHandler>();
-
-builder.Services.AddSingleton<
-    IConcurrentCache<string, IList<ConfigAuditReportCr>>,
-    ConcurrentCache<string, IList<ConfigAuditReportCr>>>();
-builder.Services.AddSingleton<IBackgroundQueue<ConfigAuditReportCr>, BackgroundQueue<ConfigAuditReportCr>>();
-builder.Services.AddSingleton<INamespacedWatcher<ConfigAuditReportCr>, ConfigAuditReportWatcher>();
-builder.Services.AddSingleton<
-    ICacheRefresh<ConfigAuditReportCr, IBackgroundQueue<ConfigAuditReportCr>>,
-    CacheRefresh<ConfigAuditReportCr, IBackgroundQueue<ConfigAuditReportCr>>>();
-builder.Services.AddSingleton<INamespacedCacheWatcherEventHandler, ConfigAuditReportCacheWatcherEventHandler>();
-
-builder.Services.AddSingleton<
-    IConcurrentCache<string, IList<ExposedSecretReportCr>>,
-    ConcurrentCache<string, IList<ExposedSecretReportCr>>>();
-builder.Services.AddSingleton<IBackgroundQueue<ExposedSecretReportCr>, BackgroundQueue<ExposedSecretReportCr>>();
-builder.Services.AddSingleton<INamespacedWatcher<ExposedSecretReportCr>, ExposedSecretReportWatcher>();
-builder.Services.AddSingleton<
-    ICacheRefresh<ExposedSecretReportCr, IBackgroundQueue<ExposedSecretReportCr>>,
-    CacheRefresh<ExposedSecretReportCr, IBackgroundQueue<ExposedSecretReportCr>>>();
-builder.Services.AddSingleton<INamespacedCacheWatcherEventHandler, ExposedSecretReportCacheWatcherEventHandler>();
-
-builder.Services.AddScoped<IVulnerabilityReportService, VulnerabilityReportService>();
-builder.Services.AddScoped<INamespaceService, NamespaceService>();
-builder.Services.AddScoped<IWatcherStateInfoService, WatcherStateInfoService>();
+builder.Services.AddWatcherStateServices();
+builder.Services.AddV1NamespaceServices(configuration.GetSection("Kubernetes"));
+builder.Services.AddClusterRbacAssessmentReportServices(configuration.GetSection("Kubernetes"));
+builder.Services.AddConfigAuditReportServices(configuration.GetSection("Kubernetes"));
+builder.Services.AddExposedSecretReportServices(configuration.GetSection("Kubernetes"));
+builder.Services.AddVulnerabilityReportServices(configuration.GetSection("Kubernetes"));
 
 #endregion
 
