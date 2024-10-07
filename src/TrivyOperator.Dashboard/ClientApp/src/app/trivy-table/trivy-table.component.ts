@@ -13,6 +13,7 @@ import { TagModule } from 'primeng/tag';
 
 import { Column, ExportColumn, TrivyFilterData, TrivyTableColumn, TrivyTableOptions, TrivyExpandTableOptions, TrivyTableCellCustomOptions } from "./trivy-table.types";
 import { SeverityHelperService } from "../services/severity-helper.service"
+import { SemaphoreStatusHelperService } from "../services/semaphore-status-helper.service"
 import { SeverityDto } from "../../api/models/severity-dto"
 import { TableState } from 'primeng/api';
 
@@ -86,7 +87,7 @@ export class TrivyTableComponent<TData> {
   public isTableVisible: boolean = true;
   public severityDtos?: SeverityDto[] | null | undefined;
 
-  constructor(public severityHelper: SeverityHelperService) {
+  constructor(public severityHelper: SeverityHelperService, public semaphoreStatusHelper: SemaphoreStatusHelperService) {
     severityHelper.getSeverityDtos().then(result => this.onGetSeverities(result));
   }
 

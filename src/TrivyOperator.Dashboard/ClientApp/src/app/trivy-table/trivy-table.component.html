@@ -116,6 +116,8 @@
           </div>
           <p-tag *ngIf="col.renderType=='eosl' && rowData[col.field]" [value]="'true'" icon="pi pi-exclamation-circle" [rounded]="true"
                  [style]="{ background: severityHelper.getCssColor(1) }" />
+          <p-tag *ngIf="col.renderType=='semaphore'" [value]="rowData[col.field]" [rounded]="true"
+                 [style]="{ background: semaphoreStatusHelper.getCssColor(rowData[col.field]) }" />
         </td>
       </tr>
     </ng-template>

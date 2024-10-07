@@ -3,5 +3,7 @@
 public enum WatcherStateStatus
 {
     Green,
+    Yellow,
     Red,
+    Unknown
 }

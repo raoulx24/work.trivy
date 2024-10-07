@@ -51,7 +51,7 @@ export class WatcherStateComponent {
       {
         field: "status", header: "Status",
         isFiltrable: true, isSortable: true, multiSelectType: "none",
-        style: "width: 130px; max-width: 130px;", renderType: "standard",
+        style: "width: 130px; max-width: 130px;", renderType: "semaphore",
       },
       {
         field: "mitigationMessage", header: "Mitigation",
