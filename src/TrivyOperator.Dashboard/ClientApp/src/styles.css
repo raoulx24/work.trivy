@@ -3,3 +3,15 @@
 @import "../node_modules/primeicons/primeicons.css";
 @import '../node_modules/primeflex/primeflex.min.css';
 
+/* fix p-panel with h-full */
+p-panel.h-full > .p-panel.p-component {
+  height: 100% !important;
+}
+
+p-panel.h-full > .p-panel.p-component > .p-toggleable-content {
+  height: 100% !important;
+}
+
+p-panel.h-full > .p-panel.p-component > .p-toggleable-content > .p-panel-content {
+  height: 100% !important;
+}

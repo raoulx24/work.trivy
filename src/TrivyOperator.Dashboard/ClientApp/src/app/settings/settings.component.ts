@@ -16,8 +16,7 @@ import { PrimengTableStateUtil } from '../utils/primeng-table-state.util'
   standalone: true,
   imports: [FormsModule, ButtonModule, CardModule, CheckboxModule, InputTextModule, PanelModule, TableModule],
   templateUrl: './settings.component.html',
-  styleUrl: './settings.component.scss',
-  encapsulation: ViewEncapsulation.None
+  styleUrl: './settings.component.scss'
 })
 export class SettingsComponent {
   private knownTables: KnownTables[] = [];
