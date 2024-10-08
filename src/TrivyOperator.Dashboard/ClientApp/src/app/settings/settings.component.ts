@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { ButtonModule } from 'primeng/button';
+import { CardModule } from 'primeng/card';
 import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { PanelModule } from 'primeng/panel';
@@ -13,7 +14,7 @@ import { PrimengTableStateUtil } from '../utils/primeng-table-state.util'
 @Component({
   selector: 'app-settings',
   standalone: true,
-  imports: [FormsModule, ButtonModule, CheckboxModule, InputTextModule, PanelModule, TableModule],
+  imports: [FormsModule, ButtonModule, CardModule, CheckboxModule, InputTextModule, PanelModule, TableModule],
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.scss'
 })
