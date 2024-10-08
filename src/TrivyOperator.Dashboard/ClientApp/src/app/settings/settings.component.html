@@ -6,7 +6,6 @@
       <p-table [tableStyle]=""
                [value]="clearTablesOptions"
                styleClass="p-datatable-sm text-sm">
-
         <ng-template pTemplate="header">
           <tr>
             <th style="width: 200px; min-width: 200px">Table Name</th>
@@ -51,11 +50,11 @@
     </p-panel>
   </div>
   <div class="col-12 md:col-6">
-    <p-panel header="Others">
+    <p-panel header="Others" class="h-full">
       <div *ngFor="let file of csvFileNames" class="field">
         <label for="{{ file.dataKey }}" class="text-sm">{{ file.fileName }}</label>
         <input pInputText id="{{ file.dataKey }}" [(ngModel)]="file.savedCsvName"
-                          class="text-sm w-full">
+               class="text-sm w-full">
       </div>
     </p-panel>
   </div>
