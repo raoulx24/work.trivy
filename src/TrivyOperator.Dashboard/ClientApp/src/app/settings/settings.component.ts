@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { ButtonModule } from 'primeng/button';
@@ -16,7 +16,8 @@ import { PrimengTableStateUtil } from '../utils/primeng-table-state.util'
   standalone: true,
   imports: [FormsModule, ButtonModule, CardModule, CheckboxModule, InputTextModule, PanelModule, TableModule],
   templateUrl: './settings.component.html',
-  styleUrl: './settings.component.scss'
+  styleUrl: './settings.component.scss',
+  encapsulation: ViewEncapsulation.None
 })
 export class SettingsComponent {
   private knownTables: KnownTables[] = [];

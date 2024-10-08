@@ -3,50 +3,56 @@
 <div class="grid align-items-stretch">
   <div class="col-12 md:col-6">
     <p-panel header="Table States">
-      <div style="height: 280px">
-        <p-table [value]="clearTablesOptions"
-                 styleClass="p-datatable-sm text-sm"
-                 [tableStyle]="">
+      <p-table [tableStyle]=""
+               [value]="clearTablesOptions"
+               styleClass="p-datatable-sm text-sm">
 
-          <ng-template pTemplate="header">
-            <tr>
-              <th style="width: 200px; min-width: 200px">Table Name</th>
-              <th style="width: 60px; min-width: 60px">Sort</th>
-              <th style="width: 60px; min-width: 60px">Filters</th>
-              <th style="width: 60px; min-width: 60px">Widths</th>
-              <th style="width: 60px; min-width: 60px">Order</th>
-              <th style="width: 60px; min-width: 60px">All</th>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="body" let-item>
-            <tr>
-              <td style="width: 200px; min-width: 200px">{{ item.description }}</td>
-              <td style="width: 60px; min-width: 60px"><p-checkbox [(ngModel)]="item.filters" binary="true"></p-checkbox></td>
-              <td style="width: 60px; min-width: 60px"><p-checkbox [(ngModel)]="item.sort" binary="true"></p-checkbox></td>
-              <td style="width: 60px; min-width: 60px"><p-checkbox [(ngModel)]="item.columnWidths" binary="true"></p-checkbox></td>
-              <td style="width: 60px; min-width: 60px"><p-checkbox [(ngModel)]="item.columnOrder" binary="true"></p-checkbox></td>
-              <td style="width: 60px; min-width: 60px"><p-checkbox [(ngModel)]="item.all" binary="true"></p-checkbox></td>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="footer">
-            <tr>
-              <td colspan="6">
-                <p-button label="Clear Selected" icon="pi pi-check-square" size="small" text
-                          (onClick)="onClearTableStatesSelected($event)" />
-                <p-button label="Clear All" icon="pi pi-trash" size="small" text
-                          (onClick)="onClearTableStatesAll($event)" />
-              </td>
-            </tr>
-          </ng-template>
-        </p-table>
-      </div>
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 200px; min-width: 200px">Table Name</th>
+            <th style="width: 60px; min-width: 60px">Sort</th>
+            <th style="width: 60px; min-width: 60px">Filters</th>
+            <th style="width: 60px; min-width: 60px">Widths</th>
+            <th style="width: 60px; min-width: 60px">Order</th>
+            <th style="width: 60px; min-width: 60px">All</th>
+          </tr>
+        </ng-template>
+        <ng-template let-item pTemplate="body">
+          <tr>
+            <td style="width: 200px; min-width: 200px">{{ item.description }}</td>
+            <td style="width: 60px; min-width: 60px">
+              <p-checkbox [(ngModel)]="item.filters" binary="true"></p-checkbox>
+            </td>
+            <td style="width: 60px; min-width: 60px">
+              <p-checkbox [(ngModel)]="item.sort" binary="true"></p-checkbox>
+            </td>
+            <td style="width: 60px; min-width: 60px">
+              <p-checkbox [(ngModel)]="item.columnWidths" binary="true"></p-checkbox>
+            </td>
+            <td style="width: 60px; min-width: 60px">
+              <p-checkbox [(ngModel)]="item.columnOrder" binary="true"></p-checkbox>
+            </td>
+            <td style="width: 60px; min-width: 60px">
+              <p-checkbox [(ngModel)]="item.all" binary="true"></p-checkbox>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="footer">
+          <tr>
+            <td colspan="6">
+              <p-button (onClick)="onClearTableStatesSelected($event)" icon="pi pi-check-square" label="Clear Selected" size="small"
+                        text/>
+              <p-button (onClick)="onClearTableStatesAll($event)" icon="pi pi-trash" label="Clear All" size="small"
+                        text/>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
     </p-panel>
   </div>
   <div class="col-12 md:col-6">
     <p-panel header="Others">
-      <div style="height: 280px">
-        <p>remove me and we will be equall</p>
-      </div>
+      <p>remove me and we will be equal</p>
     </p-panel>
   </div>
 </div>

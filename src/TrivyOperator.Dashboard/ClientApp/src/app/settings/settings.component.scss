@@ -1,0 +1,11 @@
+.p-panel.p-component {
+  height: 100% !important;
+
+  .p-toggleable-content {
+    height: 100% !important;
+
+    .p-panel-content {
+      height: 100% !important;
+    }
+  }
+}
