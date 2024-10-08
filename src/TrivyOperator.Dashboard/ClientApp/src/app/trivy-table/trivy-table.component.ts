@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { ButtonModule } from 'primeng/button';
@@ -35,11 +35,12 @@ import { PrimengTableStateUtil } from "../utils/primeng-table-state.util"
   styleUrl: './trivy-table.component.scss'
 })
 
-export class TrivyTableComponent<TData> {
+export class TrivyTableComponent<TData> implements OnInit {
   @Input() dataDtos?: TData[] | null | undefined;
   @Input() activeNamespaces?: string[] | null | undefined = [];
 
-  @Input() csvFileName: string = "Vulnerability.Reports";
+  @Input() csvStoragekey: string = "csvFileName.default";
+  @Input() csvFileName: string = "Default.csv.FileName";
 
   @Input() exportColumns!: ExportColumn[];
   @Input() tableColumns!: Column[];
@@ -89,6 +90,13 @@ export class TrivyTableComponent<TData> {
 
   constructor(public severityHelper: SeverityHelperService, public semaphoreStatusHelper: SemaphoreStatusHelperService) {
     severityHelper.getSeverityDtos().then(result => this.onGetSeverities(result));
+  }
+
+  ngOnInit() {
+    let savedCsvFileName = localStorage.getItem("csvFileName." + this.csvStoragekey);
+    if (savedCsvFileName) {
+      this.csvFileName = savedCsvFileName;
+    }
   }
 
   onGetSeverities(severityDtos: SeverityDto[]) {
@@ -195,6 +203,18 @@ export class TrivyTableComponent<TData> {
 
   isAnyRowExpanded(): boolean {
     return JSON.stringify(this.expandedRows) != '{}'
+  }
+
+  onExportToCsv(exportType: string) {
+    localStorage.setItem("csvFileName." + this.csvStoragekey, this.csvFileName);
+    switch (exportType) {
+      case "all":
+        this.trivyTable.exportCSV({ allValues: true });
+        break;
+      case "filtered":
+        this.trivyTable.exportCSV();
+        break;
+    }
   }
 }
 

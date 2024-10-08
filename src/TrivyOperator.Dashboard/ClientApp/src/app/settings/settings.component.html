@@ -51,8 +51,12 @@
     </p-panel>
   </div>
   <div class="col-12 md:col-6">
-    <p-panel header="Others" class="h-full">
-      <p>remove me and we will be equal</p>
+    <p-panel header="Others">
+      <div *ngFor="let file of csvFileNames" class="field">
+        <label for="{{ file.dataKey }}" class="text-sm">{{ file.fileName }}</label>
+        <input pInputText id="{{ file.dataKey }}" [(ngModel)]="file.savedCsvName"
+                          class="text-sm w-full">
+      </div>
     </p-panel>
   </div>
 </div>

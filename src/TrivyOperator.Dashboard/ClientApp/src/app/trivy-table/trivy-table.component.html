@@ -174,14 +174,14 @@
                     icon="pi pi-filter"
                     size="small"
                     [disabled]="!trivyTable.filteredValue"
-                    (onClick)="trivyTable.exportCSV()"
+                    (onClick)="onExportToCsv('filtered')"
                     [style]="{'width': '100%'}" text />
         </div>
         <div class="col-6">
           <p-button label="Export All"
                     icon="pi pi-align-justify"
                     size="small"
-                    (onClick)="trivyTable.exportCSV({ allValues: true })"
+                    (onClick)="onExportToCsv('all')"
                     [style]="{'width': '100%'}" text />
         </div>
         <!--<div class="col">

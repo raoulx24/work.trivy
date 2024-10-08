@@ -1,4 +1,5 @@
-import {Component, ViewEncapsulation} from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { ButtonModule } from 'primeng/button';
@@ -8,19 +9,24 @@ import { InputTextModule } from 'primeng/inputtext';
 import { PanelModule } from 'primeng/panel';
 import { TableModule } from 'primeng/table';
 
-import { ClearTablesOptions, KnownTables } from './settings.types'
+import { ClearTablesOptions, KnownTables, SavedCsvFileName } from './settings.types'
 import { PrimengTableStateUtil } from '../utils/primeng-table-state.util'
 
 @Component({
   selector: 'app-settings',
   standalone: true,
-  imports: [FormsModule, ButtonModule, CardModule, CheckboxModule, InputTextModule, PanelModule, TableModule],
+  imports: [CommonModule, FormsModule, ButtonModule, CardModule, CheckboxModule, InputTextModule, PanelModule, TableModule],
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.scss'
 })
 export class SettingsComponent {
   private knownTables: KnownTables[] = [];
   public clearTablesOptions: ClearTablesOptions[] = [];
+  public defaultCsvFileName: string = "Vulnerability.Reports";
+  public csvFileNames: SavedCsvFileName[] = [];
+
+  //TODO static, or something
+  private csvKeyNamePrefix: string = "csvFileName.";
 
   constructor() {
     this.knownTables = [
@@ -33,6 +39,16 @@ export class SettingsComponent {
     this.clearTablesOptions = this.knownTables.map(x => {
       return new ClearTablesOptions(x);
     });
+
+    this.csvFileNames = this
+      .getKeysWithPrefix(this.csvKeyNamePrefix)
+      .map(x => {
+        return {
+          dataKey: x,
+          fileName: x.slice(this.csvKeyNamePrefix.length),
+          savedCsvName: localStorage.getItem(x) ?? "",
+        }
+      });
   }
 
   onClearTableStatesSelected(event: MouseEvent) {
@@ -69,5 +85,16 @@ export class SettingsComponent {
         localStorage.removeItem(option.dataKey);
       }
     });
+  }
+
+  private getKeysWithPrefix(prefix: string): string[] {
+    let keys: string[] = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      let key = localStorage.key(i);
+      if (key && key.startsWith(prefix)) {
+        keys.push(key);
+      }
+    }
+    return keys;
   }
 }

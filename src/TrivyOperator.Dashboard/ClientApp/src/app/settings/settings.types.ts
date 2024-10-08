@@ -17,3 +17,9 @@ export class ClearTablesOptions {
     this.description = knownTable.description;
   }
 }
+
+export interface SavedCsvFileName {
+  dataKey: string,
+  fileName: string,
+  savedCsvName: string,
+}
