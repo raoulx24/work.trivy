@@ -16,6 +16,7 @@ import { SeverityHelperService } from "../services/severity-helper.service"
 import { SemaphoreStatusHelperService } from "../services/semaphore-status-helper.service"
 import { SeverityDto } from "../../api/models/severity-dto"
 import { PrimengTableStateUtil } from "../utils/primeng-table-state.util"
+import { LocalStorageUtils } from '../utils/local-storage.utils'
 
 
 @Component({
@@ -39,7 +40,7 @@ export class TrivyTableComponent<TData> implements OnInit {
   @Input() dataDtos?: TData[] | null | undefined;
   @Input() activeNamespaces?: string[] | null | undefined = [];
 
-  @Input() csvStoragekey: string = "csvFileName.default";
+  @Input() csvStoragekey: string = "default";
   @Input() csvFileName: string = "Default.csv.FileName";
 
   @Input() exportColumns!: ExportColumn[];
@@ -61,7 +62,7 @@ export class TrivyTableComponent<TData> implements OnInit {
   @Output() selectedRowsChanged = new EventEmitter<TData[]>();
   @Output() refreshRequested = new EventEmitter<TrivyFilterData>();
 
-  
+  tableStateKey: string | undefined = undefined;
 
   public selectedDataDtos?: any | null;
   public filterSeverityOptions: number[] = []
@@ -93,10 +94,11 @@ export class TrivyTableComponent<TData> implements OnInit {
   }
 
   ngOnInit() {
-    let savedCsvFileName = localStorage.getItem("csvFileName." + this.csvStoragekey);
+    let savedCsvFileName = localStorage.getItem(LocalStorageUtils.csvFileNameKeyPrefix + this.csvStoragekey);
     if (savedCsvFileName) {
       this.csvFileName = savedCsvFileName;
     }
+    this.tableStateKey = LocalStorageUtils.trivyTableKeyPrefix + this.trivyTableOptions.stateKey;
   }
 
   onGetSeverities(severityDtos: SeverityDto[]) {
@@ -206,7 +208,7 @@ export class TrivyTableComponent<TData> implements OnInit {
   }
 
   onExportToCsv(exportType: string) {
-    localStorage.setItem("csvFileName." + this.csvStoragekey, this.csvFileName);
+    localStorage.setItem(LocalStorageUtils.csvFileNameKeyPrefix + this.csvStoragekey, this.csvFileName);
     switch (exportType) {
       case "all":
         this.trivyTable.exportCSV({ allValues: true });

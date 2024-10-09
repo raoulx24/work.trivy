@@ -36,13 +36,22 @@
             </td>
           </tr>
         </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="6" class="font-italic text-color-secondary text-sm text-center">
+              No data: no saved table layouts found...
+            </td>
+          </tr>
+        </ng-template>
         <ng-template pTemplate="footer">
           <tr>
             <td colspan="6">
-              <p-button (onClick)="onClearTableStatesSelected($event)" icon="pi pi-check-square" label="Clear Selected" size="small"
-                        text/>
-              <p-button (onClick)="onClearTableStatesAll($event)" icon="pi pi-trash" label="Clear All" size="small"
-                        text/>
+              <p-button icon="pi pi-check-square" label="Clear Selected" size="small" text
+                        [disabled]="clearTablesOptions.length == 0"
+                        (onClick)="onClearTableStatesSelected($event)"/>
+              <p-button icon="pi pi-trash" label="Clear All" size="small" text
+                        [disabled]="clearTablesOptions.length == 0"
+                        (onClick)="onClearTableStatesAll($event)" />
             </td>
           </tr>
         </ng-template>
@@ -50,12 +59,18 @@
     </p-panel>
   </div>
   <div class="col-12 md:col-6">
-    <p-panel header="Others" class="h-full">
+    <p-panel header="CSV File Names" class="h-full">
       <div *ngFor="let file of csvFileNames" class="field">
-        <label for="{{ file.dataKey }}" class="text-sm">{{ file.fileName }}</label>
+        <label for="{{ file.dataKey }}" class="text-sm">{{ file.description }}</label>
         <input pInputText id="{{ file.dataKey }}" [(ngModel)]="file.savedCsvName"
                class="text-sm w-full">
       </div>
+      <div *ngIf="csvFileNames.length == 0">
+        <p class="font-italic text-color-secondary text-sm">No data: no CSV files saved...</p>
+      </div>
+      <p-button icon="pi pi-file-check" label="Update Names" size="small" text
+                [disabled]="csvFileNames.length == 0"
+                (onClick)="onupdateCsvFileNames($event)"/>
     </p-panel>
   </div>
 </div>

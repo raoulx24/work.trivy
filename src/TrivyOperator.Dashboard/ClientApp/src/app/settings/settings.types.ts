@@ -1,8 +1,3 @@
-export interface KnownTables {
-  dataKey: string,
-  description: string,
-}
-
 export class ClearTablesOptions {
   dataKey: string = "";
   description: string = "";
@@ -12,14 +7,14 @@ export class ClearTablesOptions {
   columnOrder: boolean = false;
   all: boolean = false;
 
-  constructor(knownTable: KnownTables) {
-    this.dataKey = knownTable.dataKey;
-    this.description = knownTable.description;
+  constructor(dataKey: string, description: string) {
+    this.dataKey = dataKey;
+    this.description = description;
   }
 }
 
 export interface SavedCsvFileName {
   dataKey: string,
-  fileName: string,
+  description: string,
   savedCsvName: string,
 }

@@ -95,19 +95,36 @@
   <div class="row grid">
     <div class="col-4" style="height: 55vh">
       <p-table [value]="genericByNsSummaryDtos" [scrollable]="true" scrollHeight="flex"
-               styleClass="p-datatable-sm text-sm">
+               styleClass="p-datatable-sm text-sm"
+               sortMode="multiple">
         <ng-template pTemplate="header">
           <tr>
-            <th style="width: 50%; max-width: 50%;">Namespace</th>
-            <th style="width: 25%; max-width: 25%;" class="text-right">Total</th>
-            <th style="width: 25%; max-width: 25%;" class="text-right">Distinct</th>
+            <th pSortableColumn="namespaceName" style="width: 50%; max-width: 50%;">
+              Namespace
+              <p-sortIcon field="namespaceName" />
+            </th>
+            <th pSortableColumn="totalCount" style="width: 25%; max-width: 25%;" class="text-right">
+              Total
+              <p-sortIcon field="totalCount" />
+            </th>
+            <th pSortableColumn="distinctCount" style="width: 25%; max-width: 25%;" class="text-right">
+              Distinct
+              <p-sortIcon field="distinctCount" />
+            </th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-others>
-          <tr [ngStyle]="getRowStyle(others)">
+          <tr *ngIf="!others.isTotal">
             <td style="width: 50%; max-width: 50%;">{{ others.namespaceName }}</td>
             <td style="width: 25%; max-width: 25%;" class="text-right">{{ others.totalCount }}</td>
             <td style="width: 25%; max-width: 25%;" class="text-right">{{ others.distinctCount }}</td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="footer" let-othersx>
+          <tr>
+            <td></td>
+            <td class="text-right">{{ getFooterData("totalCount") }}</td>
+            <td class="text-right">{{ getFooterData("distinctCount") }}</td>
           </tr>
         </ng-template>
       </p-table>
@@ -119,8 +136,14 @@
                sortMode="multiple">
         <ng-template pTemplate="header">
           <tr>
-            <th pSortableColumn="name" style="width: 70%; max-width: 70%;">Name</th>
-            <th pSortableColumn="count" style="width: 30%; max-width: 30%;" class="text-right">Count</th>
+            <th pSortableColumn="name" style="width: 70%; max-width: 70%;">
+              Name
+              <p-sortIcon field="name" />
+            </th>
+            <th pSortableColumn="count" style="width: 30%; max-width: 30%;" class="text-right">
+              Count
+              <p-sortIcon field="count" />
+            </th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-others>

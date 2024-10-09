@@ -38,7 +38,7 @@ export interface GenericSummaryDto {
 export interface GenericByNsSummaryDto {
   namespaceName: string,
   totalCount: number,
-  uniqueCount: number,
+  distinctCount: number,
   isTotal: boolean,
 }
 
@@ -241,6 +241,23 @@ export class HomeComponent {
 
   getRowStyle(rowData: GenericNsTotalSortable) {
     return rowData.isTotal ? { 'font-weight' : 'bold' } : {};
+  }
+
+  getFooterData(fieldName: string): string {
+    let dto: GenericByNsSummaryDto = this.genericByNsSummaryDtos.filter(x => x.isTotal)[0];
+    if (!dto) {
+      return "";
+    }
+    switch (fieldName) {
+      case "namespaceName":
+        return dto.namespaceName;
+      case "totalCount":
+        return dto.totalCount.toString();
+      case "distinctCount":
+        return dto.distinctCount.toString();
+      default:
+        return "";
+    }
   }
 
   getSeveritiesDistinctCount(details: VrSeveritiesByNsSummaryDetailDto[], severityId: number): number  {

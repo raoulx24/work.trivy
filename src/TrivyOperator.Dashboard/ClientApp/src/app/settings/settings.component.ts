@@ -9,8 +9,9 @@ import { InputTextModule } from 'primeng/inputtext';
 import { PanelModule } from 'primeng/panel';
 import { TableModule } from 'primeng/table';
 
-import { ClearTablesOptions, KnownTables, SavedCsvFileName } from './settings.types'
+import { ClearTablesOptions, SavedCsvFileName } from './settings.types'
 import { PrimengTableStateUtil } from '../utils/primeng-table-state.util'
+import { LocalStorageUtils } from '../utils/local-storage.utils'
 
 @Component({
   selector: 'app-settings',
@@ -20,32 +21,23 @@ import { PrimengTableStateUtil } from '../utils/primeng-table-state.util'
   styleUrl: './settings.component.scss'
 })
 export class SettingsComponent {
-  private knownTables: KnownTables[] = [];
   public clearTablesOptions: ClearTablesOptions[] = [];
-  public defaultCsvFileName: string = "Vulnerability.Reports";
   public csvFileNames: SavedCsvFileName[] = [];
 
-  //TODO static, or something
-  private csvKeyNamePrefix: string = "csvFileName.";
 
   constructor() {
-    this.knownTables = [
-      { dataKey: 'vr.table-main', description: 'Vulnerability Reports - Main' },
-      { dataKey: 'vr.table-details', description: 'Vulnerability Reports - Details' },
-      { dataKey: 'vrd.table-all', description: 'Vulnerability Reports Detailed' },
-      { dataKey: 'ws.table-all', description: 'Watcher States' },
-    ];
+    this.clearTablesOptions = LocalStorageUtils
+      .getKeysWithPrefix(LocalStorageUtils.trivyTableKeyPrefix)
+      .map(x => {
+        return new ClearTablesOptions(x, x.slice(LocalStorageUtils.trivyTableKeyPrefix.length))
+      })
 
-    this.clearTablesOptions = this.knownTables.map(x => {
-      return new ClearTablesOptions(x);
-    });
-
-    this.csvFileNames = this
-      .getKeysWithPrefix(this.csvKeyNamePrefix)
+    this.csvFileNames = LocalStorageUtils
+      .getKeysWithPrefix(LocalStorageUtils.csvFileNameKeyPrefix)
       .map(x => {
         return {
           dataKey: x,
-          fileName: x.slice(this.csvKeyNamePrefix.length),
+          description: x.slice(LocalStorageUtils.csvFileNameKeyPrefix.length),
           savedCsvName: localStorage.getItem(x) ?? "",
         }
       });
@@ -87,14 +79,9 @@ export class SettingsComponent {
     });
   }
 
-  private getKeysWithPrefix(prefix: string): string[] {
-    let keys: string[] = [];
-    for (let i = 0; i < localStorage.length; i++) {
-      let key = localStorage.key(i);
-      if (key && key.startsWith(prefix)) {
-        keys.push(key);
-      }
-    }
-    return keys;
+  onupdateCsvFileNames(event: MouseEvent) {
+    this.csvFileNames.forEach(x => {
+      localStorage.setItem(x.dataKey, x.savedCsvName);
+    })
   }
 }

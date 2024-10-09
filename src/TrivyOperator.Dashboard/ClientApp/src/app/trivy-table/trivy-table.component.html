@@ -19,7 +19,7 @@
            [(selection)]="selectedDataDtos"
            [exportFilename]="csvFileName"
            (selectionChange)="onSelectionChange($event)"
-           stateKey="{{ trivyTableOptions!.stateKey }}"
+           [stateKey]="tableStateKey"
            stateStorage="local"
            dataKey="{{ trivyTableOptions!.dataKey }}"
            [expandedRowKeys]="expandedRows">
