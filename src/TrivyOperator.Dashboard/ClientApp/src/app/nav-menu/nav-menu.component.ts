@@ -28,7 +28,7 @@ export class NavMenuComponent {
       },
       {
         label: 'Vulnerability Reports',
-        icon: 'pi pi-palette',
+        icon: 'pi pi-flag',
         items: [
           {
             label: 'Browse',

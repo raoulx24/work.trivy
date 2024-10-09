@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { ButtonModule } from 'primeng/button';
@@ -33,7 +33,8 @@ import { LocalStorageUtils } from '../utils/local-storage.utils'
     TableModule,
     TagModule, ],
   templateUrl: './trivy-table.component.html',
-  styleUrl: './trivy-table.component.scss'
+  styleUrl: './trivy-table.component.scss',
+  encapsulation: ViewEncapsulation.None,
 })
 
 export class TrivyTableComponent<TData> implements OnInit {
