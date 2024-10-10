@@ -48,7 +48,7 @@
             <td colspan="6">
               <p-button icon="pi pi-check-square" label="Clear Selected" size="small" text
                         [disabled]="clearTablesOptions.length == 0"
-                        (onClick)="onClearTableStatesSelected($event)"/>
+                        (onClick)="onClearTableStatesSelected($event)" />
               <p-button icon="pi pi-trash" label="Clear All" size="small" text
                         [disabled]="clearTablesOptions.length == 0"
                         (onClick)="onClearTableStatesAll($event)" />
@@ -56,6 +56,12 @@
           </tr>
         </ng-template>
       </p-table>
+      <ng-template pTemplate="footer">
+        <p class="text-sm">
+          <i class="pi pi-info-circle"></i>
+          <b> Hint:</b> Use the options to reset saved states of the tables. This will return the table to its default state.
+        </p>
+      </ng-template>
     </p-panel>
   </div>
   <div class="col-12 md:col-6">
@@ -70,7 +76,13 @@
       </div>
       <p-button icon="pi pi-file-check" label="Update Names" size="small" text
                 [disabled]="csvFileNames.length == 0"
-                (onClick)="onupdateCsvFileNames($event)"/>
+                (onClick)="onupdateCsvFileNames($event)" />
+      <ng-template pTemplate="footer">
+        <p class="text-sm">
+          <i class="pi pi-info-circle"></i>
+          <b> Hint:</b> Use the options to change the default file names used from CSV exports from Detailed pages.
+        </p>
+      </ng-template>
     </p-panel>
   </div>
 </div>

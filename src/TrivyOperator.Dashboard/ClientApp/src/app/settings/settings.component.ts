@@ -28,12 +28,14 @@ export class SettingsComponent {
   constructor() {
     this.clearTablesOptions = LocalStorageUtils
       .getKeysWithPrefix(LocalStorageUtils.trivyTableKeyPrefix)
+      .sort((x, y) => x > y ? 1 : -1)
       .map(x => {
         return new ClearTablesOptions(x, x.slice(LocalStorageUtils.trivyTableKeyPrefix.length))
       })
 
     this.csvFileNames = LocalStorageUtils
       .getKeysWithPrefix(LocalStorageUtils.csvFileNameKeyPrefix)
+      .sort((x, y) => x > y ? 1 : -1)
       .map(x => {
         return {
           dataKey: x,
