@@ -2,10 +2,10 @@
 <p-panel header="Vulnerability Reports" [toggleable]="true" *ngIf="vulnerabilityReportSumaryDto">
   <div class="row" style="height:70vh">
     <div class="grid flex">
-      <div class="col-12 md:col-4 lg:col-3 xl:col-2 relative">
+      <div class="col-12 lg:col-3 relative">
         <h4 class="text-center">Statistics</h4>
         <div class="flex row mb-5">
-          <p-table [value]="othersSummaryForTable" styleClass="p-datatable-sm text-sm" ngClass="w-full">
+          <p-table [value]="othersSummaryForTable" styleClass="p-datatable-sm text-sm" class="w-full">
             <ng-template pTemplate="body" let-others>
               <tr>
                 <td style="width: 50%; max-width: 50%;">{{ others.description }}</td>
@@ -45,7 +45,7 @@
           <label for="switch1" class="ml-2">Distinct values</label>
         </div>
       </div>
-      <div class="hide-on-small md:col-8 lg:col-9 xl:col-10 h-full">
+      <div class="hide-on-small lg:col-9 h-full">
         <p-carousel [value]="slides"
                     [numVisible]="1"
                     [numScroll]="1"
@@ -55,21 +55,22 @@
             <div class="custom-slide">
               <ng-container [ngSwitch]="slide">
                 <div *ngSwitchCase="'barChartNS'">
-                  <div *ngIf="horizontalBarChartDataByNs" class="h-full">
-                    <h4 style="text-align: center;">Vulnerabilities by Namespace</h4>
+                  <h4 style="text-align: center;">Vulnerabilities by Namespace</h4>
+                  <div *ngIf="horizontalBarChartDataByNs" class="flex justify-content-center">
                     <p-chart type="bar"
                              [data]="horizontalBarChartDataByNs"
                              [options]="horizontalBarChartOption"
-                              />
+                             height="60vh" width="60vw"
+                             class="justify-content-center" />
                   </div>
                 </div>
                 <div *ngSwitchCase="'barChartSeverity'">
-                  <div *ngIf="horizontalBarChartDataByNs">
-                    <h4 style="text-align: center;">Vulnerabilities by Severity</h4>
+                  <h4 style="text-align: center;">Vulnerabilities by Severity</h4>
+                  <div *ngIf="horizontalBarChartDataByNs" class="flex justify-content-center">
                     <p-chart type="bar"
                              [data]="horizontalBarChartDataBySeverity"
                              [options]="horizontalBarChartOption"
-                             class="h-full w-full" />
+                             height="60vh" width="60vw" />
                   </div>
                 </div>
               </ng-container>
@@ -89,10 +90,10 @@
           dismissableMask="true"
           resizable="true"
           [contentStyle]="{ 'height': '60vh'}"
-          [style]="{ width: '70vw' }">
+          [style]="{ width: '90vw' }">
 
   <div class="row grid">
-    <div class="col-4" style="height: 55vh">
+    <div class="col-12 sm:col-4" style="height: 55vh">
       <p-table [value]="genericByNsSummaryDtos" [scrollable]="true" scrollHeight="flex"
                styleClass="p-datatable-sm text-sm"
                sortMode="multiple">
@@ -129,7 +130,7 @@
       </p-table>
 
     </div>
-    <div class="col-8" style="height: 55vh">
+    <div class="col-12 sm:col-8" style="height: 55vh">
       <p-table [value]="genericSummaryDtos" [scrollable]="true" scrollHeight="flex"
                styleClass="p-datatable-sm text-sm"
                sortMode="multiple">
@@ -139,7 +140,7 @@
               Name
               <p-sortIcon field="name" />
             </th>
-            <th pSortableColumn="count" style="width: 30%; max-width: 30%;" class="text-right">
+            <th pSortableColumn="count" style="width: 30%; min-width:20%" class="text-right">
               Count
               <p-sortIcon field="count" />
             </th>
@@ -165,14 +166,14 @@
           dismissableMask="true"
           resizable="true"
           [contentStyle]="{ 'height': '60vh'}"
-          [style]="{ width: '70vw' }">
+          [style]="{ width: '90vw' }">
 
   <div *ngIf="vulnerabilityReportSumaryDto?.severitiesByNsSummaryDtos" style="height: 55vh">
     <p-table [value]="vulnerabilityReportSumaryDto!.severitiesByNsSummaryDtos!.sort(sortOthersByNsSummary)"
              styleClass="p-datatable-sm text-sm">
       <ng-template pTemplate="header">
         <tr>
-          <th rowspan="2">Namespace</th>
+          <th rowspan="2" pFrozenColumn>Namespace</th>
           <ng-container *ngFor="let id of severityHelperService.getSeverityIds()">
             <th colspan="2" class="text-center">{{severityHelperService.getCapitalizedName(id)}}</th>
           </ng-container>
@@ -186,7 +187,7 @@
       </ng-template>
       <ng-template pTemplate="body" let-severitiesByNsSummary>
         <tr [ngStyle]="getRowStyle(severitiesByNsSummary)">
-          <td>{{severitiesByNsSummary.namespaceName}}</td>
+          <td pFrozenColumn>{{severitiesByNsSummary.namespaceName}}</td>
           <ng-container *ngFor="let id of severityHelperService.getSeverityIds()">
             <td class="text-right">{{getSeveritiesDistinctCount(severitiesByNsSummary.details, id)}}</td>
             <td class="text-right">{{getSeveritiesFixableCount(severitiesByNsSummary.details, id)}}</td>

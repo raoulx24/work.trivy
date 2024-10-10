@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { VulnerabilityReportsService } from "../../api/services/vulnerability-reports.service";
 import { VulnerabilityReportSumaryDto } from "../../api/models/vulnerability-report-sumary-dto";
@@ -58,13 +58,11 @@ export interface GenericNsTotalSortable {
 export class HomeComponent {
   public vulnerabilityReportSumaryDto?: VulnerabilityReportSumaryDto | null | undefined;
 
-  public severityHelperService: SeverityHelperService;
   public get primeNgHelper(): PrimeNgChartUtils { return this._primeNgHelper; };
   private _primeNgHelper: PrimeNgChartUtils;
 
-  //public pieChartData: PrimeNgPieChartData[] | null | undefined;
-  public horizontalBarChartDataByNs: PrimeNgHorizontalBarChartData | null | undefined;
-  public horizontalBarChartDataBySeverity: PrimeNgHorizontalBarChartData | null | undefined;
+  public horizontalBarChartDataByNs: PrimeNgHorizontalBarChartData | null = { labels: [], datasets: [], title: "" };
+  public horizontalBarChartDataBySeverity: PrimeNgHorizontalBarChartData | null = { labels: [], datasets: [], title: "" };
   public horizontalBarChartOption: any;
   public slides: string[] = ["barChartNS", "barChartSeverity"];
 
@@ -79,13 +77,12 @@ export class HomeComponent {
 
   public showDistinctValues: boolean = true;
 
-  constructor(vulnerabilityReportsService: VulnerabilityReportsService, severityHelperService: SeverityHelperService) {
-    vulnerabilityReportsService.getVulnerabilityReportSumaryDto()
+  constructor(private vulnerabilityReportsService: VulnerabilityReportsService, public severityHelperService: SeverityHelperService) {
+    this.vulnerabilityReportsService.getVulnerabilityReportSumaryDto()
       .subscribe({
         next: (res) => this.onVulnerabilityReportSummaryDtos(res),
         error: (err) => console.error(err)
-      });
-    this.severityHelperService = severityHelperService;
+      });    
     this._primeNgHelper = new PrimeNgChartUtils(this.severityHelperService);
     severityHelperService.getSeverityDtos().then(result => {
       this.initComponents();
