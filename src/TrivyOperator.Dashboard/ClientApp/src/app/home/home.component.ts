@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { VulnerabilityReportsService } from "../../api/services/vulnerability-reports.service";
 import { VulnerabilityReportSumaryDto } from "../../api/models/vulnerability-report-sumary-dto";
 import { VrSeveritiesByNsSummaryDto } from '../../api/models/vr-severities-by-ns-summary-dto';
-import { PrimeNgPieChartData, PrimeNgHorizontalBarChartData, PrimeNgHelper, SeveritiesSummary } from "../../utils/severity-helper";
+import { PrimeNgPieChartData, PrimeNgHorizontalBarChartData, PrimeNgChartUtils, SeveritiesSummary } from "../utils/primeng-chart.utils";
 import { SeverityHelperService } from "../services/severity-helper.service"
 import { SeverityDto } from "../../api/models/severity-dto"
 import { UIChart } from 'primeng/chart';
@@ -59,8 +59,8 @@ export class HomeComponent {
   public vulnerabilityReportSumaryDto?: VulnerabilityReportSumaryDto | null | undefined;
 
   public severityHelperService: SeverityHelperService;
-  public get primeNgHelper(): PrimeNgHelper { return this._primeNgHelper; };
-  private _primeNgHelper: PrimeNgHelper;
+  public get primeNgHelper(): PrimeNgChartUtils { return this._primeNgHelper; };
+  private _primeNgHelper: PrimeNgChartUtils;
 
   //public pieChartData: PrimeNgPieChartData[] | null | undefined;
   public horizontalBarChartDataByNs: PrimeNgHorizontalBarChartData | null | undefined;
@@ -86,7 +86,7 @@ export class HomeComponent {
         error: (err) => console.error(err)
       });
     this.severityHelperService = severityHelperService;
-    this._primeNgHelper = new PrimeNgHelper(this.severityHelperService);
+    this._primeNgHelper = new PrimeNgChartUtils(this.severityHelperService);
     severityHelperService.getSeverityDtos().then(result => {
       this.initComponents();
     });
