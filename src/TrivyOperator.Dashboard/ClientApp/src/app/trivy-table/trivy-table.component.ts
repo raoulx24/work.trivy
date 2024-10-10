@@ -219,6 +219,10 @@ export class TrivyTableComponent<TData> implements OnInit {
         break;
     }
   }
+
+  getExtraClasses() {
+    return this.trivyTableOptions.extraClasses;
+  }
 }
 
 

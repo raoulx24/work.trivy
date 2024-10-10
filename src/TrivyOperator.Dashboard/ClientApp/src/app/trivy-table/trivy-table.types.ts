@@ -9,6 +9,7 @@ export interface TrivyTableOptions {
   tableStyle: { [klass: string]: any; },
   stateKey: string | null,
   dataKey: string | null,
+  extraClasses: string,
 }
 
 export interface Column {

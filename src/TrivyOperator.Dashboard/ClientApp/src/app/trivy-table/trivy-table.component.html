@@ -1,4 +1,4 @@
-<div class="trivy-table">
+<div class="trivy-table" [ngClass]="getExtraClasses()">
   <p-table #trivyTable
            [columns]="trivyTableColumns"
            [value]="dataDtos!"

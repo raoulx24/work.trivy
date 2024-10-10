@@ -76,6 +76,7 @@ export class WatcherStateComponent {
       tableStyle: {},
       stateKey: 'Watcher States',
       dataKey: null,
+      extraClasses: "",
     };
   };
 
