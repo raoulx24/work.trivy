@@ -14,13 +14,13 @@ namespace TrivyOperator.Dashboard.Application.Services.Watchers;
 public class ExposedSecretReportWatcher(
     IKubernetesClientFactory kubernetesClientFactory,
     IBackgroundQueue<ExposedSecretReportCr> backgroundQueue,
-    IWatcherState watcherState,
+    IServiceProvider serviceProvider,
     ILogger<ExposedSecretReportWatcher> logger)
     : NamespacedWatcher<CustomResourceList<ExposedSecretReportCr>, ExposedSecretReportCr,
         IBackgroundQueue<ExposedSecretReportCr>, WatcherEvent<ExposedSecretReportCr>>(
         kubernetesClientFactory,
         backgroundQueue,
-        watcherState,
+        serviceProvider,
         logger)
 {
     protected override async Task<HttpOperationResponse<CustomResourceList<ExposedSecretReportCr>>>

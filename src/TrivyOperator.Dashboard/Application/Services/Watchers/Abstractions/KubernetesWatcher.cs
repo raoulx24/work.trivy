@@ -14,7 +14,7 @@ public abstract class
     KubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TBackgroundQueue, TKubernetesWatcherEvent>(
         IKubernetesClientFactory kubernetesClientFactory,
         TBackgroundQueue backgroundQueue,
-        IWatcherState watcherState,
+        IServiceProvider serviceProvider,
         ILogger<KubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TBackgroundQueue, TKubernetesWatcherEvent>> logger)
     : IKubernetesWatcher<TKubernetesObject>
     where TKubernetesObject : IKubernetesObject<V1ObjectMeta>
@@ -68,7 +68,12 @@ public abstract class
                                            ex),
                                        cancellationToken))
                 {
-                    await watcherState.ProcessWatcherSuccess(typeof(TKubernetesObject), watcherKey);
+                    using (var scope = serviceProvider.CreateScope())
+                    {
+                        var watcherState = scope.ServiceProvider.GetRequiredService<IWatcherState>();
+                        await watcherState.ProcessWatcherSuccess(typeof(TKubernetesObject), watcherKey);
+                    }
+                    
                     TKubernetesWatcherEvent kubernetesWatcherEvent =
                         new() { KubernetesObject = item, WatcherEventType = type };
                     await BackgroundQueue.QueueBackgroundWorkItemAsync(kubernetesWatcherEvent);
@@ -80,10 +85,14 @@ public abstract class
                 hoe.Response.StatusCode == HttpStatusCode.NotFound
                 )
             {
+                using var scope = serviceProvider.CreateScope();
+                var watcherState = scope.ServiceProvider.GetRequiredService<IWatcherState>();
                 await watcherState.ProcessWatcherError(typeof(TKubernetesObject), watcherKey, hoe);
             }
             catch (TaskCanceledException)
             {
+                using var scope = serviceProvider.CreateScope();
+                var watcherState = scope.ServiceProvider.GetRequiredService<IWatcherState>();
                 await watcherState.ProcessWatcherCancel(typeof(TKubernetesObject), watcherKey);
             }
             catch (Exception ex)

@@ -7,29 +7,16 @@ using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using TrivyOperator.Dashboard.Application.Services;
-using TrivyOperator.Dashboard.Application.Services.Abstractions;
-using TrivyOperator.Dashboard.Application.Services.BackgroundQueues;
-using TrivyOperator.Dashboard.Application.Services.BackgroundQueues.Abstractions;
-using TrivyOperator.Dashboard.Application.Services.CacheRefresh;
-using TrivyOperator.Dashboard.Application.Services.CacheRefresh.Abstractions;
 using TrivyOperator.Dashboard.Application.Services.Options;
-using TrivyOperator.Dashboard.Application.Services.CacheWatcherEventHandlers;
-using TrivyOperator.Dashboard.Application.Services.CacheWatcherEventHandlers.Abstractions;
-using TrivyOperator.Dashboard.Application.Services.Watchers;
-using TrivyOperator.Dashboard.Application.Services.Watchers.Abstractions;
-using TrivyOperator.Dashboard.Domain.Trivy.ClusterRbacAssessmentReport;
-using TrivyOperator.Dashboard.Domain.Trivy.ConfigAuditReport;
-using TrivyOperator.Dashboard.Domain.Trivy.ExposedSecretReport;
-using TrivyOperator.Dashboard.Domain.Trivy.VulnerabilityReport;
 using TrivyOperator.Dashboard.Infrastructure.Abstractions;
 using TrivyOperator.Dashboard.Infrastructure.Clients;
-using TrivyOperator.Dashboard.Infrastructure.Services;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 using TrivyOperator.Dashboard.Utils;
-using TrivyOperator.Dashboard.Application.Services.WatcherStates;
-using TrivyOperator.Dashboard.Domain.Services.Abstractions;
-using TrivyOperator.Dashboard.Domain.Services;
 using TrivyOperator.Dashboard.Application.Services.BuilderServicesExtensions;
+using TrivyOperator.Dashboard.Application.Hubs;
+using TrivyOperator.Dashboard.Application.Services.Abstractions;
+using TrivyOperator.Dashboard.Application.Alerts;
+using TrivyOperator.Dashboard.Infrastructure.Services;
 
 Directory.SetCurrentDirectory(AppContext.BaseDirectory);
 
@@ -86,6 +73,11 @@ builder.Services.AddCors(
     options => options.AddDefaultPolicy(
         configurePolicy => configurePolicy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
 
+builder.Services.AddSignalR();
+
+builder.Services.AddSingleton<IConcurrentCache<string, IList<Alert>>, ConcurrentCache<string, IList<Alert>>>();
+builder.Services.AddTransient<IAlertsService, AlertsService>();
+
 #region Kubernetes Related Services
 
 builder.Services.Configure<BackgroundQueueOptions>(configuration.GetSection("Queues"));
@@ -110,6 +102,8 @@ IHostApplicationLifetime appLifetime = app.Lifetime;
 appLifetime.ApplicationStarted.Register(OnStarted);
 appLifetime.ApplicationStopping.Register(OnStopping);
 appLifetime.ApplicationStopped.Register(OnStopped);
+
+app.MapHub<AlertsHub>("/alertsHub");
 
 // Configure the HTTP request pipeline. Middleware order: https://learn.microsoft.com/en-us/aspnet/core/fundamentals/middleware/?view=aspnetcore-8.0#middleware-order
 app.UseForwardedHeaders();

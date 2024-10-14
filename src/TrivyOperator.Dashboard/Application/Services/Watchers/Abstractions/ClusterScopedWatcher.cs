@@ -11,13 +11,13 @@ public abstract class
     ClusterScopedWatcher<TKubernetesObjectList, TKubernetesObject, TBackgroundQueue, TKubernetesWatcherEvent>(
         IKubernetesClientFactory kubernetesClientFactory,
         TBackgroundQueue backgroundQueue,
-        IWatcherState watcherState,
+        IServiceProvider serviceProvider,
         ILogger<ClusterScopedWatcher<TKubernetesObjectList, TKubernetesObject, TBackgroundQueue,
             TKubernetesWatcherEvent>> logger)
     : KubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TBackgroundQueue, TKubernetesWatcherEvent>(
         kubernetesClientFactory,
         backgroundQueue,
-        watcherState,
+        serviceProvider,
         logger), IClusterScopedWatcher<TKubernetesObject>
     where TKubernetesObject : class, IKubernetesObject<V1ObjectMeta>, new()
     where TKubernetesObjectList : IKubernetesObject, IItems<TKubernetesObject>

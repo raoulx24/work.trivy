@@ -14,13 +14,13 @@ namespace TrivyOperator.Dashboard.Application.Services.Watchers;
 public class ConfigAuditReportWatcher(
     IKubernetesClientFactory kubernetesClientFactory,
     IBackgroundQueue<ConfigAuditReportCr> backgroundQueue,
-    IWatcherState watcherState,
+    IServiceProvider serviceProvider,
     ILogger<ConfigAuditReportWatcher> logger)
     : NamespacedWatcher<CustomResourceList<ConfigAuditReportCr>, ConfigAuditReportCr,
         IBackgroundQueue<ConfigAuditReportCr>, WatcherEvent<ConfigAuditReportCr>>(
         kubernetesClientFactory,
         backgroundQueue,
-        watcherState,
+        serviceProvider,
         logger)
 {
     protected override async Task<HttpOperationResponse<CustomResourceList<ConfigAuditReportCr>>>

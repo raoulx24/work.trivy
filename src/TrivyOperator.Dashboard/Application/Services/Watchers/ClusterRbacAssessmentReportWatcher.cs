@@ -14,13 +14,13 @@ namespace TrivyOperator.Dashboard.Application.Services.Watchers;
 public class ClusterRbacAssessmentReportWatcher(
     IKubernetesClientFactory kubernetesClientFactory,
     IBackgroundQueue<ClusterRbacAssessmentReportCr> backgroundQueue,
-    IWatcherState watcherState,
+    IServiceProvider serviceProvider,
     ILogger<ClusterRbacAssessmentReportWatcher> logger)
     : ClusterScopedWatcher<CustomResourceList<ClusterRbacAssessmentReportCr>, ClusterRbacAssessmentReportCr,
         IBackgroundQueue<ClusterRbacAssessmentReportCr>, WatcherEvent<ClusterRbacAssessmentReportCr>>(
         kubernetesClientFactory,
         backgroundQueue,
-        watcherState,
+        serviceProvider,
         logger)
 {
     protected override async Task<HttpOperationResponse<CustomResourceList<ClusterRbacAssessmentReportCr>>>

@@ -11,13 +11,13 @@ public abstract class
     NamespacedWatcher<TKubernetesObjectList, TKubernetesObject, TBackgroundQueue, TKubernetesWatcherEvent>(
         IKubernetesClientFactory kubernetesClientFactory,
         TBackgroundQueue backgroundQueue,
-        IWatcherState watcherState,
+        IServiceProvider serviceProvider,
         ILogger<NamespacedWatcher<TKubernetesObjectList, TKubernetesObject, TBackgroundQueue, TKubernetesWatcherEvent>>
             logger)
     : KubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TBackgroundQueue, TKubernetesWatcherEvent>(
         kubernetesClientFactory,
         backgroundQueue,
-        watcherState,
+        serviceProvider,
         logger), INamespacedWatcher<TKubernetesObject>
     where TKubernetesObject : class, IKubernetesObject<V1ObjectMeta>, new()
     where TKubernetesObjectList : IKubernetesObject, IItems<TKubernetesObject>

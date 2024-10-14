@@ -119,7 +119,7 @@ public static class BuilderServicesExtensions
 
     public static void AddWatcherStateServices(this IServiceCollection services)
     {
-        services.AddSingleton<IWatcherState, WatcherState>();
+        services.AddTransient<IWatcherState, WatcherState>();
         services.AddSingleton<IConcurrentCache<string, WatcherStateInfo>, ConcurrentCache<string, WatcherStateInfo>>();
 
         services.AddScoped<IWatcherStateInfoService, WatcherStateInfoService>();

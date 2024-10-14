@@ -1,11 +1,14 @@
 ﻿using System.Net;
 using k8s.Autorest;
+using TrivyOperator.Dashboard.Application.Services.Abstractions;
 using TrivyOperator.Dashboard.Infrastructure.Abstractions;
 using TrivyOperator.Dashboard.Utils;
 
 namespace TrivyOperator.Dashboard.Application.Services.WatcherStates;
 
-public class WatcherState(IConcurrentCache<string, WatcherStateInfo> watcherStateCache, ILogger<WatcherState> logger)
+public class WatcherState(IConcurrentCache<string, WatcherStateInfo> watcherStateCache,
+    IAlertsService alertService,
+    ILogger<WatcherState> logger)
     : IWatcherState
 {
     public async Task ProcessWatcherError(Type watchedKubernetesObjectType, string watcherKey, HttpOperationException exception)
