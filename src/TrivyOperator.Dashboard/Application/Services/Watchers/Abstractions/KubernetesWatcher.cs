@@ -54,6 +54,8 @@ public abstract class
         IKubernetesObject<V1ObjectMeta>? sourceKubernetesObject,
         CancellationToken cancellationToken)
     {
+        bool isRecoveringfromError = false;
+        bool isFreshStart = true;
         while (!cancellationToken.IsCancellationRequested)
         {
             string watcherKey = GetNamespaceFromSourceEvent(sourceKubernetesObject);
@@ -68,12 +70,14 @@ public abstract class
                                            ex),
                                        cancellationToken))
                 {
-                    using (var scope = serviceProvider.CreateScope())
+                    if (isRecoveringfromError || isFreshStart)
                     {
+                        using var scope = serviceProvider.CreateScope();
                         var watcherState = scope.ServiceProvider.GetRequiredService<IWatcherState>();
                         await watcherState.ProcessWatcherSuccess(typeof(TKubernetesObject), watcherKey);
+                        isRecoveringfromError = false;
+                        isFreshStart = false;
                     }
-                    
                     TKubernetesWatcherEvent kubernetesWatcherEvent =
                         new() { KubernetesObject = item, WatcherEventType = type };
                     await BackgroundQueue.QueueBackgroundWorkItemAsync(kubernetesWatcherEvent);
@@ -108,6 +112,7 @@ public abstract class
             if (!cancellationToken.IsCancellationRequested)
             {
                 await EnqueueWatcherEventWithError(sourceKubernetesObject);
+                isRecoveringfromError = true;
             }
         }
     }

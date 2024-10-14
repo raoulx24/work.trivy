@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Runtime.InteropServices;
 using k8s.Autorest;
 using TrivyOperator.Dashboard.Application.Services.Abstractions;
 using TrivyOperator.Dashboard.Infrastructure.Abstractions;
@@ -18,15 +19,14 @@ public class WatcherState(IConcurrentCache<string, WatcherStateInfo> watcherStat
             watchedKubernetesObjectType.Name,
             watcherKey,
             (int)exception.Response.StatusCode);
-        AddOrUpdateKey(watchedKubernetesObjectType, watcherKey, exception);
+        await AddOrUpdateKey(watchedKubernetesObjectType, watcherKey, exception);
 
         await Task.Delay(60000);
     }
 
-    public ValueTask ProcessWatcherSuccess(Type watchedKubernetesObjectType, string watcherKey)
+    public async ValueTask ProcessWatcherSuccess(Type watchedKubernetesObjectType, string watcherKey)
     {
-        AddOrUpdateKey(watchedKubernetesObjectType, watcherKey);
-        return ValueTask.CompletedTask;
+        await AddOrUpdateKey(watchedKubernetesObjectType, watcherKey);
     }
 
     public ValueTask ProcessWatcherCancel(Type watchedKubernetesObjectType, string watcherKey)
@@ -41,7 +41,7 @@ public class WatcherState(IConcurrentCache<string, WatcherStateInfo> watcherStat
     private static string GetCacheKey(Type watchedKubernetesObjectType, string watcherKey)
         => $"{watchedKubernetesObjectType.Name}|{watcherKey}";
 
-    private void AddOrUpdateKey(Type watchedKubernetesObjectType, string watcherKey, Exception? newException = null)
+    private async ValueTask AddOrUpdateKey(Type watchedKubernetesObjectType, string watcherKey, Exception? newException = null)
     {
         string cacheKey = GetCacheKey(watchedKubernetesObjectType, watcherKey);
         watcherStateCache.TryGetValue(cacheKey, value: out WatcherStateInfo? watcherStateDetails);
@@ -61,5 +61,31 @@ public class WatcherState(IConcurrentCache<string, WatcherStateInfo> watcherStat
             watcherStateDetails.Status = newException == null ? WatcherStateStatus.Green : WatcherStateStatus.Red;
             watcherStateDetails.LastException = newException ?? watcherStateDetails.LastException;
         }
+        await SetAlert(watchedKubernetesObjectType, watcherKey, newException);
     }
+
+    private async Task SetAlert(Type watchedKubernetesObjectType, string watcherKey, Exception? newException = null)
+    {
+        if (newException != null)
+        {
+            string namespaceName = watcherKey == VarUtils.DefaultCacheRefreshKey ? "n/a" : watcherKey;
+            await alertService.AddAlert(alertEmitter, new()
+            {
+                EmitterKey = watcherKey,
+                Message = $"Watcher for {watchedKubernetesObjectType.Name} and Namespace {namespaceName} failed.",
+                Severity = Alerts.Severity.Error,
+            });
+        }
+        else
+        {
+            await alertService.RemoveAlert(alertEmitter, new()
+            {
+                EmitterKey = watcherKey,
+                Message = string.Empty,
+                Severity = Alerts.Severity.Info,
+            });
+        }
+    }
+
+    private readonly string alertEmitter = "Watcher";
 }
