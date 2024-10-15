@@ -11,7 +11,10 @@ public class AlertsHub(IAlertsService alertsService,
     {
         logger.LogDebug("New client connected to Hub.");
         IList<AlertDto> items = await alertsService.GetAlertDtos();
-        await Clients.Caller.SendAsync("ReceiveAddedAlert", items);
+        foreach (AlertDto item in items)
+        {
+            await Clients.Caller.SendAsync("ReceiveAddedAlert", item);
+        }
 
         await base.OnConnectedAsync();
     }

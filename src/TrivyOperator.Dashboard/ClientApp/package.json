@@ -23,6 +23,7 @@
     "@angular/platform-browser-dynamic": "^18.2.6",
     "@angular/platform-server": "^18.2.6",
     "@angular/router": "^18.2.6",
+    "@microsoft/signalr": "^8.0.7",
     "chart.js": "^4.4.4",
     "primeflex": "^3.3.1",
     "primeicons": "^7.0.0",

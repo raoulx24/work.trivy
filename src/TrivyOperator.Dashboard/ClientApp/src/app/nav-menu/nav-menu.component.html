@@ -10,10 +10,10 @@
   </ng-template>
   <ng-template pTemplate="end">
     <div class="flex align-items-center gap-3">
-      <!--<div class="p-overlay-badge">
+      <div *ngIf="alertsCount" class="p-overlay-badge">
         <p-button label="" icon="pi pi-bell" [rounded]="true" [text]="true" [raised]="true" (click)="onAlertsClick()" />
         <span class="p-badge p-badge-danger text-xs">{{ alertsCount }}</span>
-      </div>-->
+      </div>
       <p-button icon="pi pi-info-circle" [rounded]="true" [text]="true" [raised]="true" (click)="onAboutClick()" />
       <p-button *ngIf="isDarkMode" icon="pi pi-sun" [rounded]="true" [text]="true" [raised]="true" (click)="switchLightDarkMode()"></p-button>
       <p-button *ngIf="!isDarkMode" icon="pi pi-moon" [rounded]="true" [text]="true" [raised]="true" (click)="switchLightDarkMode()"></p-button>
