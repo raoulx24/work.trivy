@@ -71,7 +71,7 @@ public class WatcherState(IConcurrentCache<string, WatcherStateInfo> watcherStat
             string namespaceName = watcherKey == VarUtils.DefaultCacheRefreshKey ? "n/a" : watcherKey;
             await alertService.AddAlert(alertEmitter, new()
             {
-                EmitterKey = watcherKey,
+                EmitterKey = GetCacheKey(watchedKubernetesObjectType, watcherKey),
                 Message = $"Watcher for {watchedKubernetesObjectType.Name} and Namespace {namespaceName} failed.",
                 Severity = Alerts.Severity.Error,
             });
@@ -80,7 +80,7 @@ public class WatcherState(IConcurrentCache<string, WatcherStateInfo> watcherStat
         {
             await alertService.RemoveAlert(alertEmitter, new()
             {
-                EmitterKey = watcherKey,
+                EmitterKey = GetCacheKey(watchedKubernetesObjectType, watcherKey),
                 Message = string.Empty,
                 Severity = Alerts.Severity.Info,
             });

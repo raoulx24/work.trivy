@@ -1,5 +1,4 @@
-﻿using k8s.Models;
-using Microsoft.AspNetCore.Http.Json;
+﻿using Microsoft.AspNetCore.Http.Json;
 using Microsoft.AspNetCore.HttpOverrides;
 using Serilog;
 using Serilog.Extensions.Logging;
@@ -14,9 +13,6 @@ using ILogger = Microsoft.Extensions.Logging.ILogger;
 using TrivyOperator.Dashboard.Utils;
 using TrivyOperator.Dashboard.Application.Services.BuilderServicesExtensions;
 using TrivyOperator.Dashboard.Application.Hubs;
-using TrivyOperator.Dashboard.Application.Services.Abstractions;
-using TrivyOperator.Dashboard.Application.Alerts;
-using TrivyOperator.Dashboard.Infrastructure.Services;
 
 Directory.SetCurrentDirectory(AppContext.BaseDirectory);
 
@@ -75,8 +71,7 @@ builder.Services.AddCors(
 
 builder.Services.AddSignalR();
 
-builder.Services.AddSingleton<IConcurrentCache<string, IList<Alert>>, ConcurrentCache<string, IList<Alert>>>();
-builder.Services.AddTransient<IAlertsService, AlertsService>();
+builder.Services.AddAlertsServices();
 
 #region Kubernetes Related Services
 
@@ -103,7 +98,7 @@ appLifetime.ApplicationStarted.Register(OnStarted);
 appLifetime.ApplicationStopping.Register(OnStopping);
 appLifetime.ApplicationStopped.Register(OnStopped);
 
-app.MapHub<AlertsHub>("/alertsHub");
+app.MapHub<AlertsHub>("/alerts-hub");
 
 // Configure the HTTP request pipeline. Middleware order: https://learn.microsoft.com/en-us/aspnet/core/fundamentals/middleware/?view=aspnetcore-8.0#middleware-order
 app.UseForwardedHeaders();

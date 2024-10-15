@@ -9,10 +9,8 @@ public class AlertsHub(IAlertsService alertsService,
 {
     public override async Task OnConnectedAsync()
     {
-        
-
         logger.LogDebug("New client connected to Hub.");
-        IList<AlertDto> items = await alertsService.GetAllAlertDtos();
+        IList<AlertDto> items = await alertsService.GetAlertDtos();
         await Clients.Caller.SendAsync("ReceiveAddedAlert", items);
 
         await base.OnConnectedAsync();

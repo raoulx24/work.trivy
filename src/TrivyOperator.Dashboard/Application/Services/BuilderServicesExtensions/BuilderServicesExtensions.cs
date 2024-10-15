@@ -19,6 +19,7 @@ using TrivyOperator.Dashboard.Domain.Services.Abstractions;
 using TrivyOperator.Dashboard.Domain.Services;
 using TrivyOperator.Dashboard.Application.Services.WatcherStates;
 using TrivyOperator.Dashboard.Application.Services.Abstractions;
+using TrivyOperator.Dashboard.Application.Alerts;
 
 namespace TrivyOperator.Dashboard.Application.Services.BuilderServicesExtensions;
 
@@ -123,5 +124,11 @@ public static class BuilderServicesExtensions
         services.AddSingleton<IConcurrentCache<string, WatcherStateInfo>, ConcurrentCache<string, WatcherStateInfo>>();
 
         services.AddScoped<IWatcherStateInfoService, WatcherStateInfoService>();
+    }
+
+    public static void AddAlertsServices(this IServiceCollection services)
+    {
+        services.AddSingleton<IConcurrentCache<string, IList<Alert>>, ConcurrentCache<string, IList<Alert>>>();
+        services.AddTransient<IAlertsService, AlertsService>();
     }
 }

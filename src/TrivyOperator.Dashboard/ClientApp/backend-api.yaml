@@ -3,6 +3,32 @@ info:
   title: TrivyOperator.Dashboard
   version: '1.0'
 paths:
+  /api/alerts:
+    get:
+      tags:
+        - Alerts
+      operationId: get alerts
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AlertDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
   /api/kubernetes-namespaces:
     get:
       tags:
@@ -258,6 +284,21 @@ paths:
                 $ref: '#/components/schemas/ProblemDetails'
 components:
   schemas:
+    AlertDto:
+      type: object
+      properties:
+        emiter:
+          type: string
+          nullable: true
+        emitterKey:
+          type: string
+          nullable: true
+        message:
+          type: string
+          nullable: true
+        severity:
+          $ref: '#/components/schemas/Severity'
+      additionalProperties: false
     GenericByNsSummaryDto:
       type: object
       properties:
@@ -303,6 +344,12 @@ components:
           type: string
           nullable: true
       additionalProperties: { }
+    Severity:
+      enum:
+        - Error
+        - Warning
+        - Info
+      type: string
     SeverityDto:
       required:
         - id
