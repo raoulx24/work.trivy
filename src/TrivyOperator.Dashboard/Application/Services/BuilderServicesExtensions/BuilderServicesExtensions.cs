@@ -103,6 +103,7 @@ public static class BuilderServicesExtensions
         bool? useServices = configuration.GetValue<bool?>("TrivyUseVulnerabilityReport");
         if (useServices == null || !(bool)useServices)
         {
+            services.AddScoped<IVulnerabilityReportService, VulnerabilityReportStubService>();
             return;
         }
         services.AddSingleton<
