@@ -1,5 +1,5 @@
-﻿using TrivyOperator.Dashboard.Application.Alerts;
-using TrivyOperator.Dashboard.Application.Models;
+﻿using TrivyOperator.Dashboard.Application.Models;
+using TrivyOperator.Dashboard.Application.Services.Alerts;
 
 namespace TrivyOperator.Dashboard.Application.Services.Abstractions;
 public interface IAlertsService

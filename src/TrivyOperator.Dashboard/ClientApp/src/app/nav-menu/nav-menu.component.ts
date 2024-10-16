@@ -3,7 +3,7 @@ import { NavigationEnd, Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { WatcherStateInfoService } from '../../api/services/watcher-state-info.service';
 import { WatcherStateInfoDto } from '../../api/models/watcher-state-info-dto'
-import { filter, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 import { } from '../services/alerts.service'
 import { AlertsService } from '../services/alerts.service';
@@ -20,7 +20,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   alertsCount: number = 0;
   isDarkMode!: boolean;
 
-  //private alertSubscription!: Subscription;
+  private alertSubscription!: Subscription;
   alerts: AlertDto[] = [];
 
   constructor(private router: Router, private alertsService: AlertsService) {
@@ -65,23 +65,16 @@ export class NavMenuComponent implements OnInit, OnDestroy {
         ]
       }
     ];
-
-    //this.router.events.pipe(
-    //  filter(event => event instanceof NavigationEnd)
-    //).subscribe(() => {
-    //  this.getWatcherStateErrors();
-    //});
-    //this.getWatcherStateErrors();
   }
 
   ngOnInit() {
-    //this.alertSubscription = this.alertsService.alerts$.subscribe((alerts: AlertDto[]) => {
-    //  this.onNewAlerts(alerts);
-    //});
+    this.alertSubscription = this.alertsService.alerts$.subscribe((alerts: AlertDto[]) => {
+      this.onNewAlerts(alerts);
+    });
   }
 
   ngOnDestroy() {
-    //this.alertSubscription.unsubscribe();
+    this.alertSubscription.unsubscribe();
   }
 
   public switchLightDarkMode() {
@@ -104,16 +97,6 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   private getDarkMode(): boolean {
     return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
   }
-
-  //private getWatcherStateErrors() {
-  //  this.watcherStateInfoService.getWatcherStateInfos()
-  //    .subscribe({
-  //      next: (res: { filter: (arg0: (x: any) => boolean) => { (): any; new(): any; length: number; }; }) => {
-  //        this.alertsCount = res.filter((x: { status: string; }) => x.status === "Red").length;
-  //      },
-  //      error: (err: any) => console.error(err)
-  //    });
-  //}
 
   private onNewAlerts(alerts: AlertDto[]) {
     this.alerts = alerts;

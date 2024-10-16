@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.SignalR;
-using TrivyOperator.Dashboard.Application.Alerts;
 using TrivyOperator.Dashboard.Application.Hubs;
 using TrivyOperator.Dashboard.Application.Models;
 using TrivyOperator.Dashboard.Application.Services.Abstractions;
 using TrivyOperator.Dashboard.Infrastructure.Abstractions;
 
-namespace TrivyOperator.Dashboard.Application.Services;
+namespace TrivyOperator.Dashboard.Application.Services.Alerts;
 
 public class AlertsService(IConcurrentCache<string, IList<Alert>> cache,
     IHubContext<AlertsHub> alertsHubContext,
@@ -14,6 +13,10 @@ public class AlertsService(IConcurrentCache<string, IList<Alert>> cache,
     public async Task AddAlert(string emitter, Alert alert)
     {
         cache.TryGetValue(emitter, value: out IList<Alert>? alerts);
+        if (alerts != null && alerts.Where(x => x.EmitterKey == alert.EmitterKey).Any())
+        {
+            return;
+        }
         if (alerts == null)
         {
             alerts = [];
@@ -22,10 +25,7 @@ public class AlertsService(IConcurrentCache<string, IList<Alert>> cache,
         }
         else
         {
-            if (!alerts.Where(x => x.EmitterKey == alert.EmitterKey).Any())
-            {
-                alerts.Add(alert);
-            }
+            alerts.Add(alert);
         }
         await alertsHubContext.Clients.All.SendAsync("ReceiveAddedAlert", alert.ToAlertDto(emitter));
 

@@ -19,7 +19,7 @@ using TrivyOperator.Dashboard.Domain.Services.Abstractions;
 using TrivyOperator.Dashboard.Domain.Services;
 using TrivyOperator.Dashboard.Application.Services.WatcherStates;
 using TrivyOperator.Dashboard.Application.Services.Abstractions;
-using TrivyOperator.Dashboard.Application.Alerts;
+using TrivyOperator.Dashboard.Application.Services.Alerts;
 
 namespace TrivyOperator.Dashboard.Application.Services.BuilderServicesExtensions;
 

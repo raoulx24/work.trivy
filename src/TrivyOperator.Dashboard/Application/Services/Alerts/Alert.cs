@@ -1,4 +1,4 @@
-﻿namespace TrivyOperator.Dashboard.Application.Alerts;
+﻿namespace TrivyOperator.Dashboard.Application.Services.Alerts;
 
 public class Alert
 {

@@ -16,8 +16,8 @@ export class AlertsService {
   private retryPolicy = new RetryPolicyUtils();
 
   constructor() {
-  //  this.startConnection();
-  //  this.addEventListeners();
+    this.startConnection();
+    this.addEventListeners();
   }
 
   private startConnection() {
@@ -46,6 +46,7 @@ export class AlertsService {
 
     this.hubConnection.onreconnecting(error => {
       console.warn(`Connection lost due to ${error}. Reconnecting...`);
+      this.alertsSubject.next([]);
     });
 
     this.hubConnection.onreconnected(connectionId => {
