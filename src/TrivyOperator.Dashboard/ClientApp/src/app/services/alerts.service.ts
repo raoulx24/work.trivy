@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpTransportType, HubConnection, HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
 import { BehaviorSubject, Observable } from 'rxjs';
 
+import { ApiConfiguration } from '../../api/api-configuration';
+
 import { AlertDto } from '../../api/models/alert-dto'
 import { RetryPolicyUtils } from '../utils/retry-policy.utils'
 
@@ -14,15 +16,18 @@ export class AlertsService {
   public alerts$: Observable<AlertDto[]> = this.alertsSubject.asObservable();
 
   private retryPolicy = new RetryPolicyUtils();
+  private readonly hubPath: string = "/alerts-hub";
+  private hubUrl: string = "";
 
-  constructor() {
+  constructor(private apiConfiguration: ApiConfiguration) {
+    this.hubUrl = new URL(this.hubPath, apiConfiguration.rootUrl).toString();
     this.startConnection();
     this.addEventListeners();
   }
 
   private startConnection() {
     this.hubConnection = new HubConnectionBuilder()
-      .withUrl('http://localhost:5032/alerts-hub', {
+      .withUrl(this.hubUrl, {
         skipNegotiation: true,
         transport: HttpTransportType.WebSockets,
         // https://stackoverflow.com/questions/52086158/angular-signalr-error-failed-to-complete-negotiation-with-the-server
