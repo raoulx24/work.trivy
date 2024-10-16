@@ -21,6 +21,7 @@
            (selectionChange)="onSelectionChange($event)"
            [stateKey]="tableStateKey"
            stateStorage="local"
+           (onStateSave)="onTableStateSave()"
            dataKey="{{ trivyTableOptions!.dataKey }}"
            [expandedRowKeys]="expandedRows">
 

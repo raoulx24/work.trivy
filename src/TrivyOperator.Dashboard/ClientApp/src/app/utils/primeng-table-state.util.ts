@@ -30,4 +30,11 @@ export class PrimengTableStateUtil {
   public static clearTableColumnOrder(tableState: any) {
     tableState.columnOrder = undefined;
   }
+
+  public static clearTableSelection(tableState: any) {
+    console.log(JSON.stringify(tableState));
+    if (tableState.hasOwnProperty('selection')) {
+      tableState.selection = undefined;
+    }
+  }
 }

@@ -223,6 +223,22 @@ export class TrivyTableComponent<TData> implements OnInit {
   getExtraClasses() {
     return this.trivyTableOptions.extraClasses;
   }
+
+  public onTableStateSave() {
+    if (!this.trivyTableOptions.tableSelectionMode) {
+      return;
+    }
+    if (!this.tableStateKey) {
+      return;
+    }
+    let tableState = localStorage.getItem(this.tableStateKey);
+    if (!tableState) {
+      return;
+    }
+    let tableStateJson = JSON.parse(tableState);
+    PrimengTableStateUtil.clearTableSelection(tableStateJson);
+    localStorage.setItem(this.tableStateKey, JSON.stringify(tableStateJson));
+  }
 }
 
 
