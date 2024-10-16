@@ -20,7 +20,9 @@ export class AlertsService {
   private hubUrl: string = "";
 
   constructor(private apiConfiguration: ApiConfiguration) {
-    this.hubUrl = new URL(this.hubPath, apiConfiguration.rootUrl).toString();
+    this.hubUrl = apiConfiguration.rootUrl
+      ? new URL(this.hubPath, apiConfiguration.rootUrl).toString()
+      : this.hubPath;
     this.startConnection();
     this.addEventListeners();
   }
