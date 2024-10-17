@@ -15,3 +15,26 @@ p-panel.h-full > .p-panel.p-component > .p-toggleable-content {
 p-panel.h-full > .p-panel.p-component > .p-toggleable-content > .p-panel-content {
   height: 100% !important;
 }
+
+.p-inputswitch {
+  height: 1rem;
+  width: 2rem;
+}
+
+.p-inputswitch-checked .p-inputswitch-slider::before {
+  transform: translateX(0.66rem);
+}
+
+.p-inputswitch-slider::before {
+  width: 0.8rem;
+  height: 0.8rem;
+  margin-top: -0.37rem;
+}
+
+p-inputswitch .p-inputswitch-slider {
+  border-radius: 30px;
+}
+
+  p-inputswitch .p-inputswitch-slider::before {
+    border-radius: 50%;
+  }
