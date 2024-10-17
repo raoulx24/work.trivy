@@ -584,7 +584,7 @@ components:
         unknownCount:
           type: integer
           format: int64
-        vulnerabilities:
+        details:
           type: array
           items:
             $ref: '#/components/schemas/VulnerabilityReportDetailDto'
@@ -637,7 +637,7 @@ components:
         unknownCount:
           type: integer
           format: int64
-        vulnerabilities:
+        details:
           type: array
           items:
             $ref: '#/components/schemas/VulnerabilityReportDetailDto'

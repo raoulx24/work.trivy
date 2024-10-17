@@ -12,7 +12,7 @@ public class ClusterRbacAssessmentReportDto
     public long HighCount { get; init; } = 0;
     public long MediumCount { get; init; } = 0;
     public long LowCount { get; init; } = 0;
-    public ClusterRbacAssessmentReportDetailDto[] Checks { get; init; } = [];
+    public ClusterRbacAssessmentReportDetailDto[] Details { get; init; } = [];
 
 }
 
@@ -76,7 +76,7 @@ public static class ClusterRbacAssessmentReportCrExtensions
             HighCount = clusterRbacAssessmentReportCr?.Report?.Summary?.HighCount ?? 0,
             MediumCount = clusterRbacAssessmentReportCr?.Report?.Summary?.MediumCount ?? 0,
             LowCount = clusterRbacAssessmentReportCr?.Report?.Summary?.LowCount ?? 0,
-            Checks = [.. clusterRbacAssessmentReportDetailDtos],
+            Details = [.. clusterRbacAssessmentReportDetailDtos],
         };
 
         return clusterRbacAssessmentReportDto;

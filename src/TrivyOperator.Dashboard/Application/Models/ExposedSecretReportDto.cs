@@ -17,7 +17,7 @@ public class ExposedSecretReportDto
     public long HighCount { get; init; } = 0;
     public long MediumCount { get; init; } = 0;
     public long LowCount { get; init; } = 0;
-    public ExposedSecretReportDetailDto[] Secrets { get; init; } = [];
+    public ExposedSecretReportDetailDto[] Details { get; init; } = [];
 }
 
 public class ExposedSecretReportDetailDto
@@ -89,7 +89,7 @@ public static class ExposedSecretReportCrExtensions
             HighCount = exposedSecretReportCr?.Report?.Summary?.HighCount ?? 0,
             MediumCount = exposedSecretReportCr?.Report?.Summary?.MediumCount ?? 0,
             LowCount = exposedSecretReportCr?.Report?.Summary?.LowCount ?? 0,
-            Secrets = [.. exposedSecretReportDetailDtos],
+            Details = [.. exposedSecretReportDetailDtos],
         };
 
         return exposedSecretReportDto;

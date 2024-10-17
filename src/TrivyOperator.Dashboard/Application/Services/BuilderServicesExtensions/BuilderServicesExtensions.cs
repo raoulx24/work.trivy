@@ -1,5 +1,4 @@
-﻿using TrivyOperator.Dashboard.Application.Models;
-using TrivyOperator.Dashboard.Application.Services.BackgroundQueues.Abstractions;
+﻿using TrivyOperator.Dashboard.Application.Services.BackgroundQueues.Abstractions;
 using TrivyOperator.Dashboard.Application.Services.BackgroundQueues;
 using TrivyOperator.Dashboard.Application.Services.CacheRefresh.Abstractions;
 using TrivyOperator.Dashboard.Application.Services.CacheWatcherEventHandlers.Abstractions;
@@ -13,7 +12,6 @@ using TrivyOperator.Dashboard.Domain.Trivy.ClusterRbacAssessmentReport;
 using TrivyOperator.Dashboard.Domain.Trivy.ConfigAuditReport;
 using TrivyOperator.Dashboard.Domain.Trivy.ExposedSecretReport;
 using k8s.Models;
-using Microsoft.Extensions.Configuration;
 using TrivyOperator.Dashboard.Application.Services.CacheRefresh;
 using TrivyOperator.Dashboard.Domain.Services.Abstractions;
 using TrivyOperator.Dashboard.Domain.Services;
@@ -103,7 +101,7 @@ public static class BuilderServicesExtensions
         bool? useServices = configuration.GetValue<bool?>("TrivyUseVulnerabilityReport");
         if (useServices == null || !(bool)useServices)
         {
-            services.AddScoped<IVulnerabilityReportService, VulnerabilityReportStubService>();
+            services.AddScoped<IVulnerabilityReportService, VulnerabilityReportNullService>();
             return;
         }
         services.AddSingleton<

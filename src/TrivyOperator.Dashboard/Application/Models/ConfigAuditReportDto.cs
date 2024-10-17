@@ -14,7 +14,7 @@ public class ConfigAuditReportDto
     public long HighCount { get; init; } = 0;
     public long MediumCount { get; init; } = 0;
     public long LowCount { get; init; } = 0;
-    public ConfigAuditReportDetailDto[] Checks { get; init; } = [];
+    public ConfigAuditReportDetailDto[] Details { get; init; } = [];
 }
 
 public class ConfigAuditReportDetailDto
@@ -83,7 +83,7 @@ public static class ConfigAuditReportCrExtensions
             HighCount = configAuditReportCr?.Report?.Summary?.HighCount ?? 0,
             MediumCount = configAuditReportCr?.Report?.Summary?.MediumCount ?? 0,
             LowCount = configAuditReportCr?.Report?.Summary?.LowCount ?? 0,
-            Checks = [.. configAuditReportDetailDtos],
+            Details = [.. configAuditReportDetailDtos],
         };
 
         return configAuditReportDto;
