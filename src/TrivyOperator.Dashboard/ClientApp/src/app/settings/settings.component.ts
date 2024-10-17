@@ -26,23 +26,8 @@ export class SettingsComponent {
 
 
   constructor() {
-    this.clearTablesOptions = LocalStorageUtils
-      .getKeysWithPrefix(LocalStorageUtils.trivyTableKeyPrefix)
-      .sort((x, y) => x > y ? 1 : -1)
-      .map(x => {
-        return new ClearTablesOptions(x, x.slice(LocalStorageUtils.trivyTableKeyPrefix.length))
-      })
-
-    this.csvFileNames = LocalStorageUtils
-      .getKeysWithPrefix(LocalStorageUtils.csvFileNameKeyPrefix)
-      .sort((x, y) => x > y ? 1 : -1)
-      .map(x => {
-        return {
-          dataKey: x,
-          description: x.slice(LocalStorageUtils.csvFileNameKeyPrefix.length),
-          savedCsvName: localStorage.getItem(x) ?? "",
-        }
-      });
+    this.loadTableOptions();
+    this.loadCsvFileNames();
   }
 
   onClearTableStatesSelected(event: MouseEvent) {
@@ -70,6 +55,7 @@ export class SettingsComponent {
         }
       }
     });
+    this.loadTableOptions();
   }
 
   onClearTableStatesAll(event: MouseEvent) {
@@ -79,11 +65,34 @@ export class SettingsComponent {
         localStorage.removeItem(option.dataKey);
       }
     });
+    this.loadTableOptions();
   }
 
   onupdateCsvFileNames(event: MouseEvent) {
     this.csvFileNames.forEach(x => {
       localStorage.setItem(x.dataKey, x.savedCsvName);
     })
+  }
+
+  private loadTableOptions() {
+    this.clearTablesOptions = LocalStorageUtils
+      .getKeysWithPrefix(LocalStorageUtils.trivyTableKeyPrefix)
+      .sort((x, y) => x > y ? 1 : -1)
+      .map(x => {
+        return new ClearTablesOptions(x, x.slice(LocalStorageUtils.trivyTableKeyPrefix.length))
+      })
+  }
+
+  private loadCsvFileNames() {
+    this.csvFileNames = LocalStorageUtils
+      .getKeysWithPrefix(LocalStorageUtils.csvFileNameKeyPrefix)
+      .sort((x, y) => x > y ? 1 : -1)
+      .map(x => {
+        return {
+          dataKey: x,
+          description: x.slice(LocalStorageUtils.csvFileNameKeyPrefix.length),
+          savedCsvName: localStorage.getItem(x) ?? "",
+        }
+      });
   }
 }
