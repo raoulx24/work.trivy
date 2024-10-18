@@ -1,4 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 import { GenericMasterDetailComponent } from '../generic-master-detail/generic-master-detail.component'
 import { VulnerabilityReportImageDto } from '../../api/models/vulnerability-report-image-dto';
@@ -9,10 +10,13 @@ import { SeverityHelperService } from '../services/severity-helper.service';
 import { GetVulnerabilityReportImageDtos$Params } from '../../api/fn/vulnerability-reports/get-vulnerability-report-image-dtos';
 import { VulnerabilityReportDetailDto } from '../../api/models';
 
+import { DialogModule } from 'primeng/dialog';
+import { TableModule } from 'primeng/table';
+
 @Component({
   selector: 'app-test',
   standalone: true,
-  imports: [GenericMasterDetailComponent],
+  imports: [ CommonModule, GenericMasterDetailComponent, DialogModule, TableModule ],
   templateUrl: './test.component.html',
   styleUrl: './test.component.scss'
 })
@@ -230,5 +234,9 @@ export class TestComponent {
       badge: celBadge,
       buttonLink: celButtonLink,
     }
+  }
+
+  getPanelHeaderText() {
+    return `Image Usage for ${this.mainTableExpandCallbackDto?.imageName}:${this.mainTableExpandCallbackDto?.imageTag} in namespace ${this.mainTableExpandCallbackDto?.resourceNamespace}`;
   }
 }

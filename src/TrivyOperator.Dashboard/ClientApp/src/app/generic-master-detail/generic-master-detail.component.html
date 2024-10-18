@@ -1,6 +1,6 @@
 <div class="row">
   <div class="grid flex">
-    <div class="col-12 sm:col-6 md:col-5 lg:col-4 p-1">
+    <div class="col-12 md:col-5 lg:col-4 p-1">
       <app-trivy-table #mainTable
                        [dataDtos]="dataDtos!"
                        [activeNamespaces]="activeNamespaces"
@@ -15,7 +15,7 @@
                        (trivyDetailsTableCallback)="onMainTableExpandCallback($event)" />
     </div>
 
-    <div class="col-12 sm:col-12 md:col-7 lg:col-8 p-1">
+    <div class="col-12 md:col-7 lg:col-8 p-1">
       <app-trivy-table class="row"
                        [dataDtos]="selectedDataDto?.details"
                        [activeNamespaces]="activeNamespaces"
