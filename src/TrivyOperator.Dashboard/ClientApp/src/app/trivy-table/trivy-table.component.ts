@@ -57,7 +57,7 @@ export class TrivyTableComponent<TData> implements OnInit {
 
   @Input() trivyExpandTableOptions: TrivyExpandTableOptions = new TrivyExpandTableOptions(false, 0, 0);
   @Input() trivyExpandTableFunction: (dto: TData, type: "header" | "row", column: number, row?: number) => TrivyTableCellCustomOptions =
-    (dto, type, column, row) => ({ value: "", style: "", buttonLink: undefined, badge: undefined });
+    (_dto, _type, _column, _row) => ({ value: "", style: "", buttonLink: undefined, badge: undefined });
   @Output() trivyDetailsTableCallback = new EventEmitter<TData>();
 
   @Output() selectedRowsChanged = new EventEmitter<TData[]>();
