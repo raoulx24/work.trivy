@@ -1,4 +1,4 @@
-import { Component, Input, Output, ViewChild, input } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild, input } from '@angular/core';
 
 import { SeverityDto } from '../../api/models/severity-dto';
 import { TrivyTableComponent } from '../trivy-table/trivy-table.component';
@@ -6,7 +6,7 @@ import { TrivyExpandTableOptions, TrivyFilterData, TrivyTableCellCustomOptions, 
 
 
 export interface IMasterDetail<TDetailDto> {
-  details?: TDetailDto[];
+  details?: Array<TDetailDto> | null;
 }
 
 @Component({
@@ -18,7 +18,6 @@ export interface IMasterDetail<TDetailDto> {
 })
 export class GenericMasterDetailComponent<TDataDto extends IMasterDetail<TDetailDto>, TDetailDto> {
   @Input() dataDtos: TDataDto[] = [];
-  @Input() selectedDataDto: TDataDto | null = null;
   @Input() severityDtos: SeverityDto[] | null = [];
   @Input() activeNamespaces: string[] | null = [];
 
@@ -27,7 +26,6 @@ export class GenericMasterDetailComponent<TDataDto extends IMasterDetail<TDetail
   @Input() mainTableExpandTableOptions: TrivyExpandTableOptions = new TrivyExpandTableOptions(false, 0, 0);
   @Input() public mainTableExpandCellOptions: (dto: TDataDto, type: "header" | "row", column: number, row?: number) => TrivyTableCellCustomOptions =
     (_dto, _type, _column, _row) => ({ value: "", style: "", buttonLink: undefined, badge: undefined });
-  @Input() public mainTableExpandCallback: (dto: TDataDto) => void = (_dto) => { };
   
   @Input() public isMainTableLoading: boolean = true;
   @ViewChild('mainTable', { static: true }) mainTable!: TrivyTableComponent<TDataDto>;
@@ -35,10 +33,16 @@ export class GenericMasterDetailComponent<TDataDto extends IMasterDetail<TDetail
   @Input() public detailsTableColumns: TrivyTableColumn[] = [];
   @Input( { required: true } ) public detailsTableOptions!: TrivyTableOptions;
 
-  @Input() public onRefreshRequested: (event: TrivyFilterData) => void = (_event) => { };
-  
+  @Output() refreshRequested = new EventEmitter<TrivyFilterData>();
+  @Output() public mainTableExpandCallback = new EventEmitter<TDataDto>();
 
-  @Output() public mainTableExpandCallbackDto: TDataDto | null | undefined;
+  selectedDataDto: TDataDto | null = null;
+
+  onGetTDataDtos() {
+    this.mainTable.onTableClearSelected();
+    this.selectedDataDto = null;
+    this.isMainTableLoading = false;
+  }
 
   onMainTableSelectionChange(event: TDataDto[]) {
     if (event == null || event.length == 0) {
@@ -49,4 +53,12 @@ export class GenericMasterDetailComponent<TDataDto extends IMasterDetail<TDetail
       this.selectedDataDto = event[0];
     }
   }
+
+  onRefreshRequested(event: TrivyFilterData) {
+    this.refreshRequested.emit(event);
+  }
+
+  onMainTableExpandCallback(event: TDataDto) {
+    this.mainTableExpandCallback.emit(event);
+  } 
 }

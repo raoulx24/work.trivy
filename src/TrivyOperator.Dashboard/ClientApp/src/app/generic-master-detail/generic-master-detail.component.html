@@ -4,23 +4,21 @@
       <app-trivy-table #mainTable
                        [dataDtos]="dataDtos!"
                        [activeNamespaces]="activeNamespaces"
-                       [tableColumns]="mainTableColumns"
                        [trivyTableColumns]="mainTableColumns"
                        [trivyTableOptions]="mainTableOptions"
                        (selectedRowsChanged)="onMainTableSelectionChange($event)"
-                       (refreshRequested)="onRefreshRequested"
+                       (refreshRequested)="onRefreshRequested($event)"
                        tableHeight="82vh"
                        [isLoading]="isMainTableLoading"
                        [trivyExpandTableOptions]="mainTableExpandTableOptions"
                        [trivyExpandTableFunction]="mainTableExpandCellOptions"
-                       (trivyDetailsTableCallback)="mainTableExpandCallback" />
+                       (trivyDetailsTableCallback)="onMainTableExpandCallback($event)" />
     </div>
 
     <div class="col-12 sm:col-12 md:col-7 lg:col-8 p-1">
       <app-trivy-table class="row"
                        [dataDtos]="selectedDataDto?.details"
                        [activeNamespaces]="activeNamespaces"
-                       [tableColumns]="detailsTableColumns"
                        [trivyTableColumns]="detailsTableColumns"
                        [trivyTableOptions]="detailsTableOptions"
                        tableHeight="82vh" />

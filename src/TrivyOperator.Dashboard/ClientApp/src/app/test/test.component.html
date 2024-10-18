@@ -1,0 +1,14 @@
+<app-generic-master-detail #genericMasterDetail
+                           [dataDtos]="vulnerabilityReportDtos"
+                           [severityDtos]="severityDtos"
+                           [activeNamespaces]="activeNamespaces"
+                           [mainTableColumns]="mainTableColumns"
+                           [mainTableOptions]="mainTableOptions"
+                           [mainTableExpandTableOptions]="mainTableExpandTableOptions"
+                           [mainTableExpandCellOptions]="mainTableExpandCellOptions"
+                           [isMainTableLoading]="isMainTableLoading"
+                           [detailsTableColumns]="detailsTableColumns"
+                           [detailsTableOptions]="detailsTableOptions"
+                           (refreshRequested)="onRefreshRequested($event)"
+                           (mainTableExpandCallback)="onMainTableExpandCallback($event)"/>
+
