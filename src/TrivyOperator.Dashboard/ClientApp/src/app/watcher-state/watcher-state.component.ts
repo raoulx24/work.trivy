@@ -4,7 +4,7 @@ import { WatcherStateInfoService } from '../../api/services/watcher-state-info.s
 import { WatcherStateInfoDto } from '../../api/models/watcher-state-info-dto'
 
 import { TrivyTableComponent } from '../trivy-table/trivy-table.component';
-import { ExportColumn, Column, TrivyTableColumn, TrivyTableOptions } from '../trivy-table/trivy-table.types';
+import { TrivyTableColumn, TrivyTableOptions } from '../trivy-table/trivy-table.types';
 
 @Component({
   selector: 'app-watcher-state',
@@ -18,24 +18,12 @@ import { ExportColumn, Column, TrivyTableColumn, TrivyTableOptions } from '../tr
 export class WatcherStateComponent {
   public watcherStateInfoDtos: WatcherStateInfoDto[] = [];
   public isLoading: boolean = false;
-  public exportColumns!: ExportColumn[];
-  public tableColumns!: Column[];
 
   public trivyTableColumns: TrivyTableColumn[] = [];
   public trivyTableOptions: TrivyTableOptions;
 
   constructor(private watcherStateInfoService: WatcherStateInfoService) {
     this.getTableDataDtos();
-
-    this.tableColumns = [
-      { field: 'kubernetesObjectType', header: 'k8s Object' },
-      { field: 'namespaceName', header: 'NS' },
-      { field: 'status', header: 'Status' },
-      { field: 'mitigationMessage', header: 'Mitigation' },
-      { field: 'lastException', header: 'Last Exception' },
-    ];
-
-    this.exportColumns = [];
 
     this.trivyTableColumns = [
       {

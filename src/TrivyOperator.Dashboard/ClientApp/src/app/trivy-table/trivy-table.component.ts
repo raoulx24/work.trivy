@@ -44,8 +44,7 @@ export class TrivyTableComponent<TData> implements OnInit {
   @Input() csvStoragekey: string = "default";
   @Input() csvFileName: string = "Default.csv.FileName";
 
-  @Input() exportColumns!: ExportColumn[];
-  @Input() tableColumns!: Column[];
+  @Input() exportColumns: ExportColumn[] = [];
   @ViewChild('trivyTable') trivyTable!: Table;
   @ViewChild('serverFilterDataOp') serverFilterDataOp?: OverlayPanel;
 
