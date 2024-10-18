@@ -32,9 +32,14 @@ export class PrimengTableStateUtil {
   }
 
   public static clearTableSelection(tableState: any) {
-    console.log(JSON.stringify(tableState));
     if (tableState.hasOwnProperty('selection')) {
       tableState.selection = undefined;
+    }
+  }
+
+  public static clearTableExpandedRows(tableState: any) {
+    if (tableState.hasOwnProperty('expandedRowKeys')) {
+      tableState.expandedRowKeys = undefined;
     }
   }
 }

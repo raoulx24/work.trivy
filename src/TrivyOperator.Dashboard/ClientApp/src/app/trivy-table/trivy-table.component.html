@@ -23,7 +23,9 @@
            stateStorage="local"
            (onStateSave)="onTableStateSave()"
            dataKey="{{ trivyTableOptions!.dataKey }}"
-           [expandedRowKeys]="expandedRows">
+           [expandedRowKeys]="expandedRows"
+           (onRowExpand)="onRowExpandCollapse($event)"
+           (onRowCollapse)="onRowExpandCollapse($event)" >
 
     <ng-template pTemplate="caption">
       <div>
@@ -35,7 +37,7 @@
                   [disabled]="!isTableRowSelected()" (onClick)="onTableClearSelected()" />
         <p-button *ngIf="trivyTableOptions!.dataKey" text
                   label="Collapse All" icon="pi pi-expand" size="small"
-                  [disabled]="!isAnyRowExpanded()" (onClick)="onTableCollapseAll()" />
+                  [disabled]="!anyRowExpanded" (onClick)="onTableCollapseAll()" />
         <p-button *ngIf="trivyTableOptions!.isResetFiltersVisible" text
                   label="Clear Sort/Filters" icon="pi pi-filter" size="small"
                   [disabled]="!isTableFilteredOrSorted()" (onClick)="onClearSortFilters()" />

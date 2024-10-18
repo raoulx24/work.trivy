@@ -158,7 +158,6 @@ export class TestComponent {
   }
 
   public onRefreshRequested(event: TrivyFilterData) {
-    console.log("VulnerabilityReportsComponent - onRefreshRequested - enter");
     let excludedSeverities = this.severityHelperService.getSeverityIds()
       .filter(severityId => !event.selectedSeverityIds.includes(severityId)) || [];
 

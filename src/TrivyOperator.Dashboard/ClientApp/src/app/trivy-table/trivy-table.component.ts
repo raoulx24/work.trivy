@@ -182,6 +182,7 @@ export class TrivyTableComponent<TData> implements OnInit {
 
   //rows expand
   expandedRows = {};
+  anyRowExpanded: boolean = false;
 
   onTrivyDetailsTableCallback(dto: TData) {
     this.trivyDetailsTableCallback.emit(dto);
@@ -189,6 +190,7 @@ export class TrivyTableComponent<TData> implements OnInit {
 
   onTableCollapseAll() {
     this.expandedRows = {};
+    this.anyRowExpanded = false;
     if (this.trivyTableOptions.stateKey) {
       let tableState = localStorage.getItem(this.trivyTableOptions.stateKey);
       if (!tableState) {
@@ -203,8 +205,8 @@ export class TrivyTableComponent<TData> implements OnInit {
     }
   }
 
-  isAnyRowExpanded(): boolean {
-    return JSON.stringify(this.expandedRows) != '{}'
+  onRowExpandCollapse(_event: any) {
+    this.anyRowExpanded = JSON.stringify(this.expandedRows) != '{}'
   }
 
   onExportToCsv(exportType: string) {
@@ -230,13 +232,14 @@ export class TrivyTableComponent<TData> implements OnInit {
     if (!this.tableStateKey) {
       return;
     }
-    let tableState = localStorage.getItem(this.tableStateKey);
-    if (!tableState) {
+    let tableStateJson = localStorage.getItem(this.tableStateKey);
+    if (!tableStateJson) {
       return;
     }
-    let tableStateJson = JSON.parse(tableState);
-    PrimengTableStateUtil.clearTableSelection(tableStateJson);
-    localStorage.setItem(this.tableStateKey, JSON.stringify(tableStateJson));
+    let tableState = JSON.parse(tableStateJson);
+    PrimengTableStateUtil.clearTableSelection(tableState);
+    PrimengTableStateUtil.clearTableExpandedRows(tableState);
+    localStorage.setItem(this.tableStateKey, JSON.stringify(tableState));
   }
 }
 

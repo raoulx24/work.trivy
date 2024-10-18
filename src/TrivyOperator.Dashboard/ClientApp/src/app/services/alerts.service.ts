@@ -43,11 +43,10 @@ export class AlertsService {
     this.hubConnection
       .start()
       .then(() => {
-        console.log('Connection started');
         this.retryPolicy.resetCounter();
       })
       .catch(err => {
-        console.error('Connection error', err);
+        console.error('Connection error ', err);
         this.retryConnection();
       });
 
@@ -57,7 +56,6 @@ export class AlertsService {
     });
 
     this.hubConnection.onreconnected(connectionId => {
-      console.log(`Connection reestablished. Connected with connectionId ${connectionId}.`);
       this.retryPolicy.resetCounter();
     });
 

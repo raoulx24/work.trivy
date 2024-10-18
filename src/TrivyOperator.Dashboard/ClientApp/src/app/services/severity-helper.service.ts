@@ -25,7 +25,6 @@ export class SeverityHelperService {
         next: (res) => this.severityDtos = res,
         error: (err) => console.error(err)
       });
-    console.log("SeverityHelperService - constructor");
   }
 
   public getCssColor(severityId: number): string {
