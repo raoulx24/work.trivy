@@ -31,6 +31,8 @@ import { TrivyTableComponent } from './trivy-table/trivy-table.component';
       { path: '', loadComponent: () => import('./home/home.component').then(m => m.HomeComponent) },
       { path: 'vulnerability-reports', loadComponent: () => import('./vulnerability-reports/vulnerability-reports.component').then(m => m.VulnerabilityReportsComponent) },
       { path: 'vulnerability-reports-detailed', loadComponent: () => import('./vulnerability-reports-detailed/vulnerability-reports-detailed.component').then(m => m.VulnerabilityReportsDetailedComponent) },
+      { path: 'config-audit-reports', loadComponent: () => import('./config-audit-reports/config-audit-reports.component').then(m => m.ConfigAuditReportsComponent) },
+      { path: 'config-audit-reports-detailed', loadComponent: () => import('./config-audit-reports-detailed/config-audit-reports-detailed.component').then(m => m.ConfigAuditReportsDetailedComponent) },
       { path: 'watcher-states', loadComponent: () => import('./watcher-state/watcher-state.component').then(m => m.WatcherStateComponent) },
       { path: 'settings', loadComponent: () => import('./settings/settings.component').then(m => m.SettingsComponent) },
       { path: 'about', loadComponent: () => import('./about/about.component').then(m => m.AboutComponent) },

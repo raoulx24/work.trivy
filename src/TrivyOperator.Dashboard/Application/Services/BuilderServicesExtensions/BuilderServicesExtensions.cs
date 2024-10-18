@@ -76,6 +76,8 @@ public static class BuilderServicesExtensions
             ICacheRefresh<ConfigAuditReportCr, IBackgroundQueue<ConfigAuditReportCr>>,
             CacheRefresh<ConfigAuditReportCr, IBackgroundQueue<ConfigAuditReportCr>>>();
         services.AddSingleton<INamespacedCacheWatcherEventHandler, ConfigAuditReportCacheWatcherEventHandler>();
+
+        services.AddScoped<IConfigAuditReportService, ConfigAuditReportService>();
     }
 
     public static void AddExposedSecretReportServices(this IServiceCollection services, IConfiguration configuration)

@@ -21,7 +21,7 @@ public class Check
     public string Remediation { get; init; } = string.Empty;
 
     [JsonPropertyName("severity")]
-    public string Severity { get; init; } = string.Empty;
+    public TrivySeverity Severity { get; init; }
 
     [JsonPropertyName("success")]
     public bool Success { get; init; } = false;

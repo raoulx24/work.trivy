@@ -33,7 +33,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
         command: () => { this.router.navigate(['/']); },
       },
       {
-        label: 'Vulnerability Reports',
+        label: 'Vulnerabilities',
         icon: 'pi pi-flag',
         items: [
           {
@@ -45,6 +45,22 @@ export class NavMenuComponent implements OnInit, OnDestroy {
             label: 'Detailed',
             route: '/vulnerability-reports-detailed',
             command: () => { this.router.navigate(['/vulnerability-reports-detailed']); },
+          }
+        ],
+      },
+      {
+        label: 'Config Audit',
+        icon: 'pi pi-flag',
+        items: [
+          {
+            label: 'Browse',
+            route: '/vulnerability-reports',
+            command: () => { this.router.navigate(['/config-audit-reports']); },
+          },
+          {
+            label: 'Detailed',
+            route: '/vulnerability-reports-detailed',
+            command: () => { this.router.navigate(['/config-audit-reports-detailed']); },
           }
         ],
       },
