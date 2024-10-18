@@ -34,7 +34,6 @@ import { TrivyTableComponent } from './trivy-table/trivy-table.component';
       { path: 'watcher-states', loadComponent: () => import('./watcher-state/watcher-state.component').then(m => m.WatcherStateComponent) },
       { path: 'settings', loadComponent: () => import('./settings/settings.component').then(m => m.SettingsComponent) },
       { path: 'about', loadComponent: () => import('./about/about.component').then(m => m.AboutComponent) },
-      { path: 'test', loadComponent: () => import('./test/test.component').then(m => m.TestComponent) },
     ]),
     ApiModule.forRoot({rootUrl: environment.baseUrl}),
     BrowserAnimationsModule,
