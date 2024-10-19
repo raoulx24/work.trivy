@@ -28,7 +28,7 @@ export interface TrivyTableColumn extends Column {
   isFiltrable: boolean;
   style: string;
   multiSelectType: "none" | "namespaces" | "severities";
-  renderType: "standard" | "severityBadge" | "severityMultiTags" | "imageNameTag" | "link" | "date" | "eosl" | "semaphore";
+  renderType: "standard" | "severityBadge" | "severityMultiTags" | "imageNameTag" | "link" | "date" | "eosl" | "semaphore" | "multiline";
   extraFields?: string[];
 }
 

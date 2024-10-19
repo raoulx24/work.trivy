@@ -14,7 +14,7 @@ public class ConfigAuditReportDto
     public long HighCount { get; init; } = 0;
     public long MediumCount { get; init; } = 0;
     public long LowCount { get; init; } = 0;
-    public ConfigAuditReportDetailDto[] Details { get; init; } = [];
+    public ConfigAuditReportDetailDto[] Details { get; set; } = [];
 }
 
 public class ConfigAuditReportDetailDto

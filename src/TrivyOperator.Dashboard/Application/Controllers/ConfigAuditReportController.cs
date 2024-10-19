@@ -2,6 +2,7 @@
 using TrivyOperator.Dashboard.Application.Models;
 using TrivyOperator.Dashboard.Application.Services;
 using TrivyOperator.Dashboard.Application.Services.Abstractions;
+using TrivyOperator.Dashboard.Utils;
 
 namespace TrivyOperator.Dashboard.Application.Controllers;
 
@@ -16,9 +17,17 @@ public class ConfigAuditReportController(
     [Produces("application/json")]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status500InternalServerError)]
-    public async Task<IEnumerable<ConfigAuditReportDto>> Get([FromQuery] string? namespaceName)
+    public async Task<IActionResult> Get([FromQuery] string? namespaceName, [FromQuery] string? excludedSeverities)
     {
-        return await configAuditReportService.GetConfigAuditReportDtos(namespaceName);
+        List<int>? excludedSeverityIds = VarUtils.GetExcludedSeverityIdsFromStringList(excludedSeverities);
+
+        if (excludedSeverityIds == null)
+        {
+            return BadRequest();
+        }
+
+        IEnumerable<ConfigAuditReportDto> configAuditReportImageDtos = await configAuditReportService.GetConfigAuditReportDtos(namespaceName, excludedSeverityIds);
+        return Ok(configAuditReportImageDtos);
     }
 
     [HttpGet("denormalized", Name = "GetConfigAuditReportDenormalizedDto")]

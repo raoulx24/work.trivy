@@ -1,2 +1,11 @@
 <h3>Config Audit Reports Detailed</h3>
-<p>Lorem ipsum...</p>
+<app-trivy-table [dataDtos]="dataDtos"
+                 [activeNamespaces]="activeNamespaces"
+                 [exportColumns]="exportColumns"
+                 [trivyTableColumns]="trivyTableColumns"
+                 [trivyTableOptions]="trivyTableOptions"
+                 (refreshRequested)="getTableDataDtos()"
+                 tableHeight="82vh"
+                 [isLoading]="isLoading"
+                 csvStoragekey="Config Audit Reports"
+                 csvFileName="Config Audit Reports" />

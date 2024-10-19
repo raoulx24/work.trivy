@@ -5,8 +5,10 @@ import { ConfigAuditReportService } from '../../api/services/config-audit-report
 import { SeverityHelperService } from '../services/severity-helper.service';
 import { ConfigAuditReportDto } from '../../api/models/config-audit-report-dto'
 import { ConfigAuditReportDetailDto } from '../../api/models/config-audit-report-detail-dto';
+import { GetConfigAuditReportDtos$Params } from '../../api/fn/config-audit-report/get-config-audit-report-dtos';
 import { SeverityDto } from '../../api/models/severity-dto';
 import { TrivyFilterData, TrivyTableColumn, TrivyTableOptions } from '../trivy-table/trivy-table.types';
+
 
 
 @Component({
@@ -131,5 +133,20 @@ export class ConfigAuditReportsComponent {
     this.activeNamespaces = activeNamespaces.sort((x, y) => x > y ? 1 : -1);
   }
 
-  public onRefreshRequested(_event: TrivyFilterData) { }
+  public onRefreshRequested(event: TrivyFilterData) {
+    console.log("mama");
+    let excludedSeverities = this.severityHelperService.getSeverityIds()
+      .filter(severityId => !event.selectedSeverityIds.includes(severityId)) || [];
+
+    let params: GetConfigAuditReportDtos$Params = {
+      namespaceName: event.namespaceName ?? undefined,
+      excludedSeverities: excludedSeverities.length > 0 ? excludedSeverities.join(",") : undefined,
+    }
+    this.isMainTableLoading = true;
+    this.dataDtoService.getConfigAuditReportDtos(params)
+      .subscribe({
+        next: (res) => this.onGetDataDtos(res),
+        error: (err) => console.error(err)
+      });
+  }
 }
