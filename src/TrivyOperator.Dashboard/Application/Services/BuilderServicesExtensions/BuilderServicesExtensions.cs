@@ -47,6 +47,7 @@ public static class BuilderServicesExtensions
         bool? useServices = configuration.GetValue<bool?>("TrivyUseClusterRbacAssessmentReport");
         if (useServices == null || !(bool)useServices)
         {
+            services.AddScoped<IClusterRbacAssessmentReportService, ClusterRbacAssessmentReportNullService>();
             return;
         }
         services.AddSingleton<
