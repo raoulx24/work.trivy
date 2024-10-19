@@ -1,10 +1,5 @@
 ﻿using k8s;
-using Microsoft.Extensions.Http;
 using Microsoft.Extensions.Options;
-using Polly;
-using Polly.Extensions.Http;
-using Polly.Retry;
-using System.Net;
 using System.Text.Json;
 using TrivyOperator.Dashboard.Application.Services.Options;
 using TrivyOperator.Dashboard.Infrastructure.Abstractions;
