@@ -86,6 +86,32 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
+  /api/config-audit-reports/active-namespaces:
+    get:
+      tags:
+        - ConfigAuditReport
+      operationId: GetConfigAuditReportActiveNamespaces
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
   /api/kubernetes-namespaces:
     get:
       tags:

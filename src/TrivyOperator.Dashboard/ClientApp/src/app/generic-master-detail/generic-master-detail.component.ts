@@ -17,7 +17,12 @@ export interface IMasterDetail<TDetailDto> {
   styleUrl: './generic-master-detail.component.scss'
 })
 export class GenericMasterDetailComponent<TDataDto extends IMasterDetail<TDetailDto>, TDetailDto> {
-  @Input() dataDtos: TDataDto[] = [];
+  /*@Input() dataDtos: TDataDto[] = [];*/
+  @Input() set dataDtos(dataDtos: TDataDto[]) {
+    this._dataDtos = dataDtos;
+    this.onGetTDataDtos();
+  }
+  get dataDtos(): TDataDto[] | null { return this._dataDtos; }
   @Input() severityDtos: SeverityDto[] | null = [];
   @Input() activeNamespaces: string[] | null = [];
 
@@ -37,6 +42,8 @@ export class GenericMasterDetailComponent<TDataDto extends IMasterDetail<TDetail
   @Output() public mainTableExpandCallback = new EventEmitter<TDataDto>();
 
   selectedDataDto: TDataDto | null = null;
+
+  private _dataDtos: TDataDto[] | null = [];
 
   onGetTDataDtos() {
     this.mainTable.onTableClearSelected();

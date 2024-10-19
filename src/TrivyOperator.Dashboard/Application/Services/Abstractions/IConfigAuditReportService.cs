@@ -5,4 +5,5 @@ public interface IConfigAuditReportService
 {
     Task<IList<ConfigAuditReportDenormalizedDto>> GetConfigAuditReportDenormalizedDtos(string? namespaceName = null);
     Task<IList<ConfigAuditReportDto>> GetConfigAuditReportDtos(string? namespaceName = null);
+    Task<IEnumerable<string>> GetActiveNamespaces();
 }

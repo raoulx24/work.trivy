@@ -28,4 +28,9 @@ public class ConfigAuditReportService(IConcurrentCache<string, IList<ConfigAudit
 
         return Task.FromResult<IList<ConfigAuditReportDenormalizedDto>>(result);
     }
+
+    public Task<IEnumerable<string>> GetActiveNamespaces()
+    {
+        return Task.FromResult(cache.Where(x => x.Value.Any()).Select(x => x.Key));
+    }
 }
