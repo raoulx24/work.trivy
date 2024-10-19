@@ -93,6 +93,7 @@ export class ClusterRbacAssessmentReportsDetailedComponent {
       tableStyle: { 'width': '1970px' },
       stateKey: "Cluster RBAC Assessment Reports Detailed",
       dataKey: null,
+      rowExpansionRender: null,
       extraClasses: "",
     };
   }

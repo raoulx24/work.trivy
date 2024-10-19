@@ -48,7 +48,7 @@
     </ng-template>
     <ng-template pTemplate="header" let-columns>
       <tr>
-        <th *ngIf="trivyTableOptions!.dataKey" style="width:50px"></th>
+        <th *ngIf="trivyTableOptions!.rowExpansionRender" style="width:50px"></th>
         <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.isSortable ? col.field : null" style="{{ col.style }}">
           {{ col.header }}
           <p-sortIcon *ngIf="col.isSortable" field="{{ col.field }}" />
@@ -124,10 +124,10 @@
         </td>
       </tr>
     </ng-template>
-    <ng-template *ngIf="trivyTableOptions!.dataKey" pTemplate="rowexpansion" let-rowData>
+    <ng-template *ngIf="trivyTableOptions!.rowExpansionRender" pTemplate="rowexpansion" let-rowData>
       <tr>
         <td [attr.colspan]="trivyTableColumns.length + 1">
-          <div class="pl-3">
+          <div *ngIf="trivyTableOptions!.rowExpansionRender == 'table'" class="pl-3">
             <p-table [value]="[{}]"
                      styleClass="text-sm p-datatable-sm">
               <ng-template *ngIf="trivyExpandTableOptions.isHeaderVisible" pTemplate="header">
@@ -138,7 +138,6 @@
                 </tr>
               </ng-template>
               <ng-template pTemplate="body">
-                <!--<ng-template *ngFor="let row of trivyExpandTableOptions.rowsArray; index as rowIndex">-->
                 <tr *ngFor="let row of trivyExpandTableOptions.rowsArray;">
                   <td *ngFor="let col of trivyExpandTableOptions.columnsArray" style="{{ trivyExpandTableFunction(rowData, 'row', col, row).style }}">
                     <a>{{ trivyExpandTableFunction(rowData, 'row', col, row).value }}</a>
@@ -150,9 +149,11 @@
                            [style]="{ 'margin-left': '10px', background: severityHelper.getCssColor(1) }" />
                   </td>
                 </tr>
-                <!--</ng-template>-->
               </ng-template>
             </p-table>
+          </div>
+          <div *ngIf="trivyTableOptions!.rowExpansionRender == 'messages'" class="pl-3">
+            <li *ngFor="let mess of rowData.messages">{{ mess }}</li>
           </div>
         </td>
       </tr>

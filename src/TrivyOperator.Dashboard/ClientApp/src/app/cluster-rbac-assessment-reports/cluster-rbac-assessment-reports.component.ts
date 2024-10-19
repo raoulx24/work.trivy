@@ -57,6 +57,7 @@ export class ClusterRbacAssessmentReportsComponent {
       tableStyle: {},
       stateKey: "Cluster RBAC Assessment Reports - Main",
       dataKey: null,
+      rowExpansionRender: null,
       extraClasses: "trivy-half",
     };
     this.detailsTableColumns = [
@@ -101,7 +102,8 @@ export class ClusterRbacAssessmentReportsComponent {
       tableSelectionMode: null,
       tableStyle: {},
       stateKey: "Cluster RBAC Assessment Reports - Details",
-      dataKey: null,
+      dataKey: 'uid',
+      rowExpansionRender: 'messages',
       extraClasses: "trivy-half",
     }
   }

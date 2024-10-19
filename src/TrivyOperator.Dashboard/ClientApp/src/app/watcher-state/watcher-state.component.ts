@@ -24,7 +24,6 @@ export class WatcherStateComponent {
 
   constructor(private watcherStateInfoService: WatcherStateInfoService) {
     this.getTableDataDtos();
-
     this.trivyTableColumns = [
       {
         field: "kubernetesObjectType", header: "k8s Object",
@@ -52,7 +51,6 @@ export class WatcherStateComponent {
         style: "width: 330px; max-width: 330px; white-space: normal;", renderType: "standard",
       },
     ]
-
     this.trivyTableOptions = {
       isClearSelectionVisible: false,
       isExportCsvVisible: false,
@@ -64,6 +62,7 @@ export class WatcherStateComponent {
       tableStyle: {},
       stateKey: 'Watcher States',
       dataKey: null,
+      rowExpansionRender: null,
       extraClasses: "",
     };
   };

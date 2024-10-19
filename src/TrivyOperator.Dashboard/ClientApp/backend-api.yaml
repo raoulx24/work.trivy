@@ -488,6 +488,9 @@ components:
     ClusterRbacAssessmentReportDetailDto:
       type: object
       properties:
+        uid:
+          type: string
+          format: uuid
         category:
           type: string
           nullable: true
@@ -585,6 +588,9 @@ components:
     ConfigAuditReportDetailDto:
       type: object
       properties:
+        uid:
+          type: string
+          format: uuid
         category:
           type: string
           nullable: true

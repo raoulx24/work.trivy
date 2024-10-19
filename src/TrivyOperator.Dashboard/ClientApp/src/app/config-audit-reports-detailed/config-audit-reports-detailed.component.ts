@@ -107,6 +107,7 @@ export class ConfigAuditReportsDetailedComponent {
       tableStyle: { 'width': '2200px' },
       stateKey: "Config Audit Reports Detailed",
       dataKey: null,
+      rowExpansionRender: null,
       extraClasses: "",
     };
   }

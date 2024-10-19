@@ -19,6 +19,7 @@ public class ConfigAuditReportDto
 
 public class ConfigAuditReportDetailDto
 {
+    public Guid Uid { get; init; } = Guid.NewGuid();
     public string Category { get; init; } = string.Empty;
     public string CheckId { get; init; } = string.Empty;
     public string Description { get; init; } = string.Empty;

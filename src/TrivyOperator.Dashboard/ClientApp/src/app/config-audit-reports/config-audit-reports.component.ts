@@ -75,6 +75,7 @@ export class ConfigAuditReportsComponent {
       tableStyle: {},
       stateKey: "Config Audit Reports - Main",
       dataKey: null,
+      rowExpansionRender: null,
       extraClasses: "trivy-half",
     };
     this.detailsTableColumns = [
@@ -119,7 +120,8 @@ export class ConfigAuditReportsComponent {
       tableSelectionMode: null,
       tableStyle: {},
       stateKey: "Config Audit Reports - Details",
-      dataKey: null,
+      dataKey: "uid",
+      rowExpansionRender: 'messages',
       extraClasses: "trivy-half",
     };
   }
