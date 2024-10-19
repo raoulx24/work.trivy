@@ -112,10 +112,13 @@
                  [style]="{ background: severityHelper.getCssColor(rowData[col.field]) }" />
           <div *ngIf="col.renderType=='severityMultiTags'" style="display: flex; justify-content: space-between">
             <p-tag [value]="rowData[col.field]" [rounded]="true" [style]="{ background: severityHelper.getCssColor(0) }" />
-            <p-tag [value]="rowData[col.extraFields[0]]" [rounded]="true" [style]="{ background: severityHelper.getCssColor(1) }" />
+            <div *ngFor="let extraField of col.extraFields; let i = index">
+              <p-tag [value]="rowData[col.extraFields[i]]" [rounded]="true" [style]="{ background: severityHelper.getCssColor(i+1) }" />
+            </div>
+            <!--<p-tag [value]="rowData[col.extraFields[0]]" [rounded]="true" [style]="{ background: severityHelper.getCssColor(1) }" />
             <p-tag [value]="rowData[col.extraFields[1]]" [rounded]="true" [style]="{ background: severityHelper.getCssColor(2) }" />
             <p-tag [value]="rowData[col.extraFields[2]]" [rounded]="true" [style]="{ background: severityHelper.getCssColor(3) }" />
-            <p-tag [value]="rowData[col.extraFields[3]]" [rounded]="true" [style]="{ background: severityHelper.getCssColor(4) }" />
+            <p-tag [value]="rowData[col.extraFields[3]]" [rounded]="true" [style]="{ background: severityHelper.getCssColor(4) }" />-->
           </div>
           <p-tag *ngIf="col.renderType=='eosl' && rowData[col.field]" [value]="'true'" icon="pi pi-exclamation-circle" [rounded]="true"
                  [style]="{ background: severityHelper.getCssColor(1) }" />
