@@ -23,7 +23,7 @@ public class ClusterRbacAssessmentReportDetailDto
     public string Description { get; init; } = string.Empty;
     public string[] Messages { get; init; } = [];
     public string Remediation { get; init; } = string.Empty;
-    public string Severity { get; init; } = string.Empty;
+    public int SeverityId { get; init; }
     public bool Success { get; init; } = false;
     public string Title { get; init; } = string.Empty;
 }
@@ -42,7 +42,7 @@ public class ClusterRbacAssessmentReportDenormalizedDto
     public string Description { get; init; } = string.Empty;
     public string[] Messages { get; init; } = [];
     public string Remediation { get; init; } = string.Empty;
-    public string Severity { get; init; } = string.Empty;
+    public int SeverityId { get; init; }
     public bool Success { get; init; } = false;
     public string Title { get; init; } = string.Empty;
 }
@@ -61,7 +61,7 @@ public static class ClusterRbacAssessmentReportCrExtensions
                 Description = check.Description,
                 Messages = check.Messages,
                 Remediation = check.Remediation,
-                Severity = check.Severity,
+                SeverityId = (int)check.Severity,
                 Success = check.Success,
                 Title = check.Title,
             };
@@ -94,7 +94,7 @@ public static class ClusterRbacAssessmentReportCrExtensions
                 Description = check.Description,
                 Messages = check.Messages,
                 Remediation = check.Remediation,
-                Severity = check.Severity,
+                SeverityId = (int)check.Severity,
                 Success = check.Success,
                 Title = check.Title,
 

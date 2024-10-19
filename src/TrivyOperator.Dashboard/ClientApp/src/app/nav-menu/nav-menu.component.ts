@@ -29,7 +29,6 @@ export class NavMenuComponent implements OnInit, OnDestroy {
       {
         label: 'Home',
         icon: 'pi pi-home',
-        route: '/',
         command: () => { this.router.navigate(['/']); },
       },
       {
@@ -38,12 +37,10 @@ export class NavMenuComponent implements OnInit, OnDestroy {
         items: [
           {
             label: 'Browse',
-            route: '/vulnerability-reports',
             command: () => { this.router.navigate(['/vulnerability-reports']); },
           },
           {
             label: 'Detailed',
-            route: '/vulnerability-reports-detailed',
             command: () => { this.router.navigate(['/vulnerability-reports-detailed']); },
           }
         ],
@@ -54,13 +51,25 @@ export class NavMenuComponent implements OnInit, OnDestroy {
         items: [
           {
             label: 'Browse',
-            route: '/vulnerability-reports',
             command: () => { this.router.navigate(['/config-audit-reports']); },
           },
           {
             label: 'Detailed',
-            route: '/vulnerability-reports-detailed',
             command: () => { this.router.navigate(['/config-audit-reports-detailed']); },
+          }
+        ],
+      },
+      {
+        label: 'Cluster Rbac Assessment',
+        icon: 'pi pi-flag',
+        items: [
+          {
+            label: 'Browse',
+            command: () => { this.router.navigate(['/cluster-rbac-assessment-reports']); },
+          },
+          {
+            label: 'Detailed',
+            command: () => { this.router.navigate(['/cluster-rbac-assessment-reports-detailed']); },
           }
         ],
       },
@@ -70,12 +79,10 @@ export class NavMenuComponent implements OnInit, OnDestroy {
         items: [
           {
             label: 'Watcher States',
-            route: '/watcher-states',
             command: () => { this.router.navigate(['/watcher-states']); },
           },
           {
             label: 'Settings',
-            route: '/settings',
             command: () => { this.router.navigate(['/settings']); },
           }
         ]

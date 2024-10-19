@@ -33,6 +33,8 @@ import { TrivyTableComponent } from './trivy-table/trivy-table.component';
       { path: 'vulnerability-reports-detailed', loadComponent: () => import('./vulnerability-reports-detailed/vulnerability-reports-detailed.component').then(m => m.VulnerabilityReportsDetailedComponent) },
       { path: 'config-audit-reports', loadComponent: () => import('./config-audit-reports/config-audit-reports.component').then(m => m.ConfigAuditReportsComponent) },
       { path: 'config-audit-reports-detailed', loadComponent: () => import('./config-audit-reports-detailed/config-audit-reports-detailed.component').then(m => m.ConfigAuditReportsDetailedComponent) },
+      { path: 'cluster-rbac-assessment-reports', loadComponent: () => import('./cluster-rbac-assessment-reports/cluster-rbac-assessment-reports.component').then(m => m.ClusterRbacAssessmentReportsComponent) },
+      { path: 'cluster-rbac-assessment-reports-detailed', loadComponent: () => import('./cluster-rbac-assessment-reports-detailed/cluster-rbac-assessment-reports-detailed.component').then(m => m.ClusterRbacAssessmentReportsDetailedComponent) },
       { path: 'watcher-states', loadComponent: () => import('./watcher-state/watcher-state.component').then(m => m.WatcherStateComponent) },
       { path: 'settings', loadComponent: () => import('./settings/settings.component').then(m => m.SettingsComponent) },
       { path: 'about', loadComponent: () => import('./about/about.component').then(m => m.AboutComponent) },

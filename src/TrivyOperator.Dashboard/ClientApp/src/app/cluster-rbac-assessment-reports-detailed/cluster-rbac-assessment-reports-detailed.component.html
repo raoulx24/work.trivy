@@ -1,0 +1,11 @@
+<h3>Cluster RBAC Assessment Reports Detailed</h3>
+<app-trivy-table [dataDtos]="dataDtos"
+                 [activeNamespaces]="activeNamespaces"
+                 [exportColumns]="exportColumns"
+                 [trivyTableColumns]="trivyTableColumns"
+                 [trivyTableOptions]="trivyTableOptions"
+                 (refreshRequested)="getTableDataDtos()"
+                 tableHeight="82vh"
+                 [isLoading]="isLoading"
+                 csvStoragekey="Config Audit Reports"
+                 csvFileName="Config Audit Reports" />

@@ -29,6 +29,58 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
+  /api/cluster-rbac-assessment-reports:
+    get:
+      tags:
+        - ClusterRbacAssessmentReport
+      operationId: GetClusterRbacAssessmentReportDtos
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ClusterRbacAssessmentReportDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/cluster-rbac-assessment-reports/denormalized:
+    get:
+      tags:
+        - ClusterRbacAssessmentReport
+      operationId: GetClusterRbacAssessmentReportDenormalizedDto
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ClusterRbacAssessmentReportDenormalizedDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
   /api/config-audit-reports:
     get:
       tags:
@@ -385,6 +437,109 @@ components:
           nullable: true
         severity:
           $ref: '#/components/schemas/Severity'
+      additionalProperties: false
+    ClusterRbacAssessmentReportDenormalizedDto:
+      type: object
+      properties:
+        uid:
+          type: string
+          format: uuid
+        resourceName:
+          type: string
+          nullable: true
+        criticalCount:
+          type: integer
+          format: int64
+        highCount:
+          type: integer
+          format: int64
+        mediumCount:
+          type: integer
+          format: int64
+        lowCount:
+          type: integer
+          format: int64
+        category:
+          type: string
+          nullable: true
+        checkId:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        messages:
+          type: array
+          items:
+            type: string
+          nullable: true
+        remediation:
+          type: string
+          nullable: true
+        severityId:
+          type: integer
+          format: int32
+        success:
+          type: boolean
+        title:
+          type: string
+          nullable: true
+      additionalProperties: false
+    ClusterRbacAssessmentReportDetailDto:
+      type: object
+      properties:
+        category:
+          type: string
+          nullable: true
+        checkId:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        messages:
+          type: array
+          items:
+            type: string
+          nullable: true
+        remediation:
+          type: string
+          nullable: true
+        severityId:
+          type: integer
+          format: int32
+        success:
+          type: boolean
+        title:
+          type: string
+          nullable: true
+      additionalProperties: false
+    ClusterRbacAssessmentReportDto:
+      type: object
+      properties:
+        uid:
+          type: string
+          format: uuid
+        resourceName:
+          type: string
+          nullable: true
+        criticalCount:
+          type: integer
+          format: int64
+        highCount:
+          type: integer
+          format: int64
+        mediumCount:
+          type: integer
+          format: int64
+        lowCount:
+          type: integer
+          format: int64
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClusterRbacAssessmentReportDetailDto'
+          nullable: true
       additionalProperties: false
     ConfigAuditReportDenormalizedDto:
       type: object
