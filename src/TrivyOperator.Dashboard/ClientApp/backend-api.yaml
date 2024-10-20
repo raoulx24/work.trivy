@@ -255,6 +255,41 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
+  /api/exposed-secret-reports/grouped-by-image:
+    get:
+      tags:
+        - ExposedSecretReport
+      operationId: GetExposedSecretReportImageDtos
+      parameters:
+        - name: namespaceName
+          in: query
+          schema:
+            type: string
+        - name: excludedSeverities
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ExposedSecretReportImageDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
   /api/kubernetes-namespaces:
     get:
       tags:
@@ -866,6 +901,60 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ExposedSecretReportDetailDto'
+          nullable: true
+      additionalProperties: false
+    ExposedSecretReportImageDto:
+      type: object
+      properties:
+        uid:
+          type: string
+          format: uuid
+        resourceNamespace:
+          type: string
+          nullable: true
+        imageName:
+          type: string
+          nullable: true
+        imageTag:
+          type: string
+          nullable: true
+        imageRepository:
+          type: string
+          nullable: true
+        resources:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExposedSecretReportImageResourceDto'
+          nullable: true
+        criticalCount:
+          type: integer
+          format: int64
+        highCount:
+          type: integer
+          format: int64
+        mediumCount:
+          type: integer
+          format: int64
+        lowCount:
+          type: integer
+          format: int64
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExposedSecretReportDetailDto'
+          nullable: true
+      additionalProperties: false
+    ExposedSecretReportImageResourceDto:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+        kind:
+          type: string
+          nullable: true
+        containerName:
+          type: string
           nullable: true
       additionalProperties: false
     GenericByNsSummaryDto:

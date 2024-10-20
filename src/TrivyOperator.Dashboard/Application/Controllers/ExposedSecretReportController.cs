@@ -48,4 +48,23 @@ public class ExposedSecretReportController(
     {
         return await exposedSecretReportService.GetActiveNamespaces();
     }
+
+    [HttpGet("grouped-by-image", Name = "GetExposedSecretReportImageDtos")]
+    [ProducesResponseType<IEnumerable<ExposedSecretReportImageDto>>(StatusCodes.Status200OK)]
+    [Produces("application/json")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetGroupedByImage([FromQuery] string? namespaceName, [FromQuery] string? excludedSeverities)
+    {
+        List<int>? excludedSeverityIds = VarUtils.GetExcludedSeverityIdsFromStringList(excludedSeverities);
+
+        if (excludedSeverityIds == null)
+        {
+            return BadRequest();
+        }
+
+        IEnumerable<ExposedSecretReportImageDto> exposedSecretReportImageDtos = await exposedSecretReportService.GetExposedSecretReportImageDtos(namespaceName, excludedSeverityIds);
+
+        return Ok(exposedSecretReportImageDtos);
+    }
 }

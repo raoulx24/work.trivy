@@ -45,4 +45,28 @@ public class ExposedSecretReportService(IConcurrentCache<string, IList<ExposedSe
     {
         return Task.FromResult(cache.Where(x => x.Value.Any()).Select(x => x.Key));
     }
+
+    public Task<IEnumerable<ExposedSecretReportImageDto>> GetExposedSecretReportImageDtos(
+        string? namespaceName = null, IEnumerable<int>? excludedSeverities = null)
+    {
+        excludedSeverities ??= [];
+        int[] incudedSeverities = ((int[])Enum.GetValues(typeof(TrivySeverity))).ToList().Except(excludedSeverities).ToArray();
+
+        IEnumerable<ExposedSecretReportImageDto> exposedSecretReportImageDtos = cache
+            .Where(kvp => string.IsNullOrEmpty(namespaceName) || kvp.Key == namespaceName)
+            .SelectMany(kvp => kvp.Value
+                .GroupBy(esr => esr.Report?.Artifact?.Digest)
+                .Select(group => group.ToExposedSecretReportImageDto())
+                .Select(esrDto =>
+                {
+                    esrDto.Details = esrDto.Details
+                        .Join(incudedSeverities, vulnerability => vulnerability.SeverityId, id => id, (vulnerability, id) => vulnerability)
+                        .ToArray();
+                    return esrDto;
+                })
+                .Where(esrDto => !excludedSeverities.Any() || esrDto.Details.Length != 0)
+            );
+
+        return Task.FromResult(exposedSecretReportImageDtos);
+    }
 }
