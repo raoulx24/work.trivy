@@ -24,7 +24,7 @@ public class ConfigAuditReportService(IConcurrentCache<string, IList<ConfigAudit
                         .ToArray();
                     return dto;
                 })
-                .Where(dto => dto.Details.Length != 0)
+                .Where(dto => !excludedSeverities.Any() || dto.Details.Length != 0)
             );
 
         return Task.FromResult<IEnumerable<ConfigAuditReportDto>>(dtos);
