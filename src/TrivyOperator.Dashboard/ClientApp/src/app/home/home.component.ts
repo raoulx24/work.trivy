@@ -82,7 +82,7 @@ export class HomeComponent {
       .subscribe({
         next: (res) => this.onVulnerabilityReportSummaryDtos(res),
         error: (err) => console.error(err)
-      });    
+      });
     this._primeNgHelper = new PrimeNgChartUtils(this.severityHelperService);
     severityHelperService.getSeverityDtos().then(result => {
       this.initComponents();
@@ -157,10 +157,10 @@ export class HomeComponent {
 
   private extractDataForTables() {
     if (this.vulnerabilityReportSumaryDto?.severitiesByNsSummaryDtos) {
-      let severitesTotal = this.vulnerabilityReportSumaryDto.severitiesByNsSummaryDtos.find(x => x.isTotal);
-      if (severitesTotal) {
+      let severitiesTotal = this.vulnerabilityReportSumaryDto.severitiesByNsSummaryDtos.find(x => x.isTotal);
+      if (severitiesTotal) {
         let tableValues: SeveritiySummary[] = [];
-        severitesTotal.details?.sort((a, b) => a.id! - b.id!).forEach(x => {
+        severitiesTotal.details?.sort((a, b) => a.id! - b.id!).forEach(x => {
           tableValues.push({
             severityName: this.severityHelperService.getCapitalizedName(x.id!),
             count: this.showDistinctValues ? x.distinctCount! : x.totalCount!,
