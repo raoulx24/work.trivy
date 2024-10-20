@@ -46,7 +46,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
         ],
       },
       {
-        label: 'Config Audit',
+        label: 'Config Audits',
         icon: 'pi pi-flag',
         items: [
           {
@@ -60,7 +60,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
         ],
       },
       {
-        label: 'Cluster Rbac Assessment',
+        label: 'Cluster RBAC Assessments',
         icon: 'pi pi-flag',
         items: [
           {
@@ -70,6 +70,20 @@ export class NavMenuComponent implements OnInit, OnDestroy {
           {
             label: 'Detailed',
             command: () => { this.router.navigate(['/cluster-rbac-assessment-reports-detailed']); },
+          }
+        ],
+      },
+      {
+        label: 'Exposed Secrets',
+        icon: 'pi pi-flag',
+        items: [
+          {
+            label: 'Browse',
+            command: () => { this.router.navigate(['/exposed-secret-reports']); },
+          },
+          {
+            label: 'Detailed',
+            command: () => { this.router.navigate(['/exposed-secret-reports-detailed']); },
           }
         ],
       },
