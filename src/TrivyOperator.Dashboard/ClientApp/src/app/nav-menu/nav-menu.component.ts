@@ -33,7 +33,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
       },
       {
         label: 'Vulnerabilities',
-        icon: 'pi pi-flag',
+        icon: 'pi pi-tags',
         items: [
           {
             label: 'Browse',
@@ -47,7 +47,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
       },
       {
         label: 'Config Audits',
-        icon: 'pi pi-flag',
+        icon: 'pi pi-clipboard',
         items: [
           {
             label: 'Browse',
@@ -61,7 +61,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
       },
       {
         label: 'Cluster RBAC Assessments',
-        icon: 'pi pi-flag',
+        icon: 'pi pi-building-columns',
         items: [
           {
             label: 'Browse',
@@ -75,7 +75,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
       },
       {
         label: 'Exposed Secrets',
-        icon: 'pi pi-flag',
+        icon: 'pi pi-briefcase',
         items: [
           {
             label: 'Browse',
