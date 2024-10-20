@@ -47,6 +47,7 @@ export class TrivyTableComponent<TData> implements OnInit {
   @Input() exportColumns: ExportColumn[] = [];
   @ViewChild('trivyTable') trivyTable!: Table;
   @ViewChild('serverFilterDataOp') serverFilterDataOp?: OverlayPanel;
+  @ViewChild('csvExportOp') csvExportOp?: OverlayPanel;
 
   @Input() public tableHeight: string = "10vh";
   @Input() public isLoading: boolean = false;
@@ -218,6 +219,9 @@ export class TrivyTableComponent<TData> implements OnInit {
       case "filtered":
         this.trivyTable.exportCSV();
         break;
+    }
+    if (this.csvExportOp) {
+      this.csvExportOp.hide();
     }
   }
 
