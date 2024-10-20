@@ -23,3 +23,10 @@ ng g component fetch-data-new --skip-tests --style=scss
 ng g class
 ng g service
 ```
+
+### Linter 
+
+```sh
+npm run lint
+npm run lint:fix
+```
