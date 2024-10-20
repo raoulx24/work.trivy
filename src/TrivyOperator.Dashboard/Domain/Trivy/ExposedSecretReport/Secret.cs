@@ -14,7 +14,7 @@ public class Secret
     public string RuleId { get; init; } = string.Empty;
 
     [JsonPropertyName("severity")]
-    public string Severity { get; init; } = string.Empty;
+    public TrivySeverity Severity { get; init; }
 
     [JsonPropertyName("target")]
     public string Target { get; init; } = string.Empty;

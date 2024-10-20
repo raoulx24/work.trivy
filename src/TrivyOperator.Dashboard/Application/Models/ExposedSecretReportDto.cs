@@ -12,12 +12,13 @@ public class ExposedSecretReportDto
     public string ResourceContainerName { get; init; } = string.Empty;
     public string ImageName { get; init; } = string.Empty;
     public string ImageTag { get; init; } = string.Empty;
+    public string ImageDigest {  get; init; } = string.Empty;
     public string ImageRepository { get; init; } = string.Empty;
     public long CriticalCount { get; init; } = 0;
     public long HighCount { get; init; } = 0;
     public long MediumCount { get; init; } = 0;
     public long LowCount { get; init; } = 0;
-    public ExposedSecretReportDetailDto[] Details { get; init; } = [];
+    public ExposedSecretReportDetailDto[] Details { get; set; } = [];
 }
 
 public class ExposedSecretReportDetailDto
@@ -25,7 +26,7 @@ public class ExposedSecretReportDetailDto
     public string Category { get; init; } = string.Empty;
     public string Match { get; init; } = string.Empty;
     public string RuleId { get; init; } = string.Empty;
-    public string Severity { get; init; } = string.Empty;
+    public int SeverityId { get; init; }
     public string Target { get; init; } = string.Empty;
     public string Title { get; init; } = string.Empty;
 }
@@ -39,6 +40,7 @@ public class ExposedSecretReportDenormalizedDto
     public string ResourceContainerName { get; init; } = string.Empty;
     public string ImageName { get; init; } = string.Empty;
     public string ImageTag { get; init; } = string.Empty;
+    public string ImageDigest {  get; init; } = string.Empty;
     public string ImageRepository { get; init; } = string.Empty;
     public long CriticalCount { get; init; } = 0;
     public long HighCount { get; init; } = 0;
@@ -48,7 +50,7 @@ public class ExposedSecretReportDenormalizedDto
     public string Category { get; init; } = string.Empty;
     public string Match { get; init; } = string.Empty;
     public string RuleId { get; init; } = string.Empty;
-    public string Severity { get; init; } = string.Empty;
+    public int SeverityId { get; init; }
     public string Target { get; init; } = string.Empty;
     public string Title { get; init; } = string.Empty;
 }
@@ -65,7 +67,7 @@ public static class ExposedSecretReportCrExtensions
                 Category = secret.Category,
                 Match = secret.Match,
                 RuleId = secret.RuleId,
-                Severity = secret.Severity,
+                SeverityId = (int)secret.Severity,
                 Target = secret.Target,
                 Title = secret.Title,
             };
@@ -84,6 +86,7 @@ public static class ExposedSecretReportCrExtensions
               && exposedSecretReportCr.Metadata.Labels.TryGetValue("trivy-operator.container.name", out string? resourceContainerName) ? resourceContainerName : string.Empty,
             ImageName = exposedSecretReportCr?.Report?.Artifact?.Repository ?? string.Empty,
             ImageTag = exposedSecretReportCr?.Report?.Artifact?.Tag ?? string.Empty,
+            ImageDigest = exposedSecretReportCr?.Report?.Artifact?.Digest ?? string.Empty,
             ImageRepository = exposedSecretReportCr?.Report?.Registry?.Server ?? string.Empty,
             CriticalCount = exposedSecretReportCr?.Report?.Summary?.CriticalCount ?? 0,
             HighCount = exposedSecretReportCr?.Report?.Summary?.HighCount ?? 0,
@@ -105,7 +108,7 @@ public static class ExposedSecretReportCrExtensions
                 Category = secret.Category,
                 Match = secret.Match,
                 RuleId = secret.RuleId,
-                Severity = secret.Severity,
+                SeverityId = (int)secret.Severity,
                 Target = secret.Target,
                 Title = secret.Title,
 
@@ -120,6 +123,7 @@ public static class ExposedSecretReportCrExtensions
                     && exposedSecretReportCr.Metadata.Labels.TryGetValue("trivy-operator.container.name", out string? resourceContainerName) ? resourceContainerName : string.Empty,
                 ImageName = exposedSecretReportCr?.Report?.Artifact?.Repository ?? string.Empty,
                 ImageTag = exposedSecretReportCr?.Report?.Artifact?.Tag ?? string.Empty,
+                ImageDigest = exposedSecretReportCr?.Report?.Artifact?.Digest ?? string.Empty,
                 ImageRepository = exposedSecretReportCr?.Report?.Registry?.Server ?? string.Empty,
                 CriticalCount = exposedSecretReportCr?.Report?.Summary?.CriticalCount ?? 0,
                 HighCount = exposedSecretReportCr?.Report?.Summary?.HighCount ?? 0,

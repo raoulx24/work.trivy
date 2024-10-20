@@ -38,7 +38,6 @@ public static class BuilderServicesExtensions
         }
         services.AddSingleton<ICacheRefresh<V1Namespace, IBackgroundQueue<V1Namespace>>, NamespaceCacheRefresh>();
         services.AddSingleton<IClusterScopedCacheWatcherEventHandler, NamespaceCacheWatcherEventHandler>();
-
         services.AddScoped<INamespaceService, NamespaceService>();
     }
 
@@ -59,7 +58,6 @@ public static class BuilderServicesExtensions
             ICacheRefresh<ClusterRbacAssessmentReportCr, IBackgroundQueue<ClusterRbacAssessmentReportCr>>,
             CacheRefresh<ClusterRbacAssessmentReportCr, IBackgroundQueue<ClusterRbacAssessmentReportCr>>>();
         services.AddSingleton<IClusterScopedCacheWatcherEventHandler, ClusterRbacAssessmentReportWatcherCacheSomething>();
-
         services.AddScoped<IClusterRbacAssessmentReportService, ClusterRbacAssessmentReportService>();
     }
 
@@ -80,7 +78,6 @@ public static class BuilderServicesExtensions
             ICacheRefresh<ConfigAuditReportCr, IBackgroundQueue<ConfigAuditReportCr>>,
             CacheRefresh<ConfigAuditReportCr, IBackgroundQueue<ConfigAuditReportCr>>>();
         services.AddSingleton<INamespacedCacheWatcherEventHandler, ConfigAuditReportCacheWatcherEventHandler>();
-
         services.AddScoped<IConfigAuditReportService, ConfigAuditReportService>();
     }
 
@@ -100,6 +97,7 @@ public static class BuilderServicesExtensions
             ICacheRefresh<ExposedSecretReportCr, IBackgroundQueue<ExposedSecretReportCr>>,
             CacheRefresh<ExposedSecretReportCr, IBackgroundQueue<ExposedSecretReportCr>>>();
         services.AddSingleton<INamespacedCacheWatcherEventHandler, ExposedSecretReportCacheWatcherEventHandler>();
+        services.AddScoped<IExposedSecretReportService, ExposedSecretReportService>();
     }
 
     public static void AddVulnerabilityReportServices(this IServiceCollection services, IConfiguration configuration)
@@ -119,7 +117,6 @@ public static class BuilderServicesExtensions
             ICacheRefresh<VulnerabilityReportCr, IBackgroundQueue<VulnerabilityReportCr>>,
             CacheRefresh<VulnerabilityReportCr, IBackgroundQueue<VulnerabilityReportCr>>>();
         services.AddSingleton<INamespacedCacheWatcherEventHandler, VulnerabilityReportCacheWatcherEventHandler>();
-
         services.AddScoped<IVulnerabilityReportService, VulnerabilityReportService>();
     }
 

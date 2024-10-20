@@ -168,6 +168,93 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
+  /api/exposed-secret-reports:
+    get:
+      tags:
+        - ExposedSecretReport
+      operationId: GetExposedSecretReportDtos
+      parameters:
+        - name: namespaceName
+          in: query
+          schema:
+            type: string
+        - name: excludedSeverities
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ExposedSecretReportDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/exposed-secret-reports/denormalized:
+    get:
+      tags:
+        - ExposedSecretReport
+      operationId: GetExposedSecretReportDenormalizedDto
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ExposedSecretReportDenormalizedDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/exposed-secret-reports/active-namespaces:
+    get:
+      tags:
+        - ExposedSecretReport
+      operationId: GetExposedSecretReportActiveNamespaces
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
   /api/kubernetes-namespaces:
     get:
       tags:
@@ -648,6 +735,137 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ConfigAuditReportDetailDto'
+          nullable: true
+      additionalProperties: false
+    ExposedSecretReportDenormalizedDto:
+      type: object
+      properties:
+        uid:
+          type: string
+          format: uuid
+        resourceName:
+          type: string
+          nullable: true
+        resourceNamespace:
+          type: string
+          nullable: true
+        resourceKind:
+          type: string
+          nullable: true
+        resourceContainerName:
+          type: string
+          nullable: true
+        imageName:
+          type: string
+          nullable: true
+        imageTag:
+          type: string
+          nullable: true
+        imageDigest:
+          type: string
+          nullable: true
+        imageRepository:
+          type: string
+          nullable: true
+        criticalCount:
+          type: integer
+          format: int64
+        highCount:
+          type: integer
+          format: int64
+        mediumCount:
+          type: integer
+          format: int64
+        lowCount:
+          type: integer
+          format: int64
+        category:
+          type: string
+          nullable: true
+        match:
+          type: string
+          nullable: true
+        ruleId:
+          type: string
+          nullable: true
+        severityId:
+          type: integer
+          format: int32
+        target:
+          type: string
+          nullable: true
+        title:
+          type: string
+          nullable: true
+      additionalProperties: false
+    ExposedSecretReportDetailDto:
+      type: object
+      properties:
+        category:
+          type: string
+          nullable: true
+        match:
+          type: string
+          nullable: true
+        ruleId:
+          type: string
+          nullable: true
+        severityId:
+          type: integer
+          format: int32
+        target:
+          type: string
+          nullable: true
+        title:
+          type: string
+          nullable: true
+      additionalProperties: false
+    ExposedSecretReportDto:
+      type: object
+      properties:
+        uid:
+          type: string
+          format: uuid
+        resourceName:
+          type: string
+          nullable: true
+        resourceNamespace:
+          type: string
+          nullable: true
+        resourceKind:
+          type: string
+          nullable: true
+        resourceContainerName:
+          type: string
+          nullable: true
+        imageName:
+          type: string
+          nullable: true
+        imageTag:
+          type: string
+          nullable: true
+        imageDigest:
+          type: string
+          nullable: true
+        imageRepository:
+          type: string
+          nullable: true
+        criticalCount:
+          type: integer
+          format: int64
+        highCount:
+          type: integer
+          format: int64
+        mediumCount:
+          type: integer
+          format: int64
+        lowCount:
+          type: integer
+          format: int64
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExposedSecretReportDetailDto'
           nullable: true
       additionalProperties: false
     GenericByNsSummaryDto:
