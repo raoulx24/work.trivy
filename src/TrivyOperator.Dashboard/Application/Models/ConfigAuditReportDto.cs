@@ -46,6 +46,15 @@ public class ConfigAuditReportDenormalizedDto
     public string Title { get; init; } = string.Empty;
 }
 
+public class ConfigAuditReportSummaryDto
+{
+    public string NamespaceName { get; init; } = string.Empty;
+    public int SeverityId { get; init; } = 0;
+    public string Kind { get; init; } = string.Empty;
+    public int TotalCount { get; init; } = 0;
+    public int DistinctCount { get; init; } = 0;
+}
+
 public static class ConfigAuditReportCrExtensions
 {
     public static ConfigAuditReportDto ToConfigAuditReportDto(this ConfigAuditReportCr configAuditReportCr)

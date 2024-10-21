@@ -9,7 +9,7 @@ namespace TrivyOperator.Dashboard.Application.Controllers;
 public class AlertsController(IAlertsService alertsService, ILogger<AlertsController> logger)
     : ControllerBase
 {
-    [HttpGet(Name = "get alerts")]
+    [HttpGet(Name = "GetAlerts")]
     [ProducesResponseType<IEnumerable<AlertDto>>(StatusCodes.Status200OK)]
     [Produces("application/json")]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]

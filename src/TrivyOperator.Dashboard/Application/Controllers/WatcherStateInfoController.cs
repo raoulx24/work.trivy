@@ -9,7 +9,7 @@ namespace TrivyOperator.Dashboard.Application.Controllers;
 public class WatcherStateInfoController(IWatcherStateInfoService watcherStateInfoService, ILogger<WatcherStateInfoController> logger)
     : ControllerBase
 {
-    [HttpGet(Name = "get WatcherStateInfos")]
+    [HttpGet(Name = "GetWatcherStateInfos")]
     [ProducesResponseType<IEnumerable<WatcherStateInfoDto>>(StatusCodes.Status200OK)]
     [Produces("application/json")]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]

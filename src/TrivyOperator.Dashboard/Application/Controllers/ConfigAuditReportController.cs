@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TrivyOperator.Dashboard.Application.Models;
-using TrivyOperator.Dashboard.Application.Services;
 using TrivyOperator.Dashboard.Application.Services.Abstractions;
 using TrivyOperator.Dashboard.Utils;
 
@@ -48,5 +47,15 @@ public class ConfigAuditReportController(
     public async Task<IEnumerable<string>> GetActiveNamespaces()
     {
         return await configAuditReportService.GetActiveNamespaces();
+    }
+
+    [HttpGet("summary", Name = "GetConfigAuditReportSumaryDtos")]
+    [ProducesResponseType<IEnumerable<ConfigAuditReportSummaryDto>>(StatusCodes.Status200OK)]
+    [Produces("application/json")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status500InternalServerError)]
+    public async Task<IEnumerable<ConfigAuditReportSummaryDto>> GetConfigAuditReportSumaryDtos()
+    {
+        return await configAuditReportService.GetConfigAuditReportSummaryDtos();
     }
 }

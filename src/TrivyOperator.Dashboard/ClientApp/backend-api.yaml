@@ -7,7 +7,7 @@ paths:
     get:
       tags:
         - Alerts
-      operationId: get alerts
+      operationId: GetAlerts
       responses:
         '200':
           description: OK
@@ -156,6 +156,32 @@ paths:
                 type: array
                 items:
                   type: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/config-audit-reports/summary:
+    get:
+      tags:
+        - ConfigAuditReport
+      operationId: GetConfigAuditReportSumaryDtos
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConfigAuditReportSummaryDto'
         '400':
           description: Bad Request
           content:
@@ -521,7 +547,7 @@ paths:
     get:
       tags:
         - WatcherStateInfo
-      operationId: get WatcherStateInfos
+      operationId: GetWatcherStateInfos
       responses:
         '200':
           description: OK
@@ -771,6 +797,25 @@ components:
           items:
             $ref: '#/components/schemas/ConfigAuditReportDetailDto'
           nullable: true
+      additionalProperties: false
+    ConfigAuditReportSummaryDto:
+      type: object
+      properties:
+        namespaceName:
+          type: string
+          nullable: true
+        severityId:
+          type: integer
+          format: int32
+        kind:
+          type: string
+          nullable: true
+        totalCount:
+          type: integer
+          format: int32
+        distinctCount:
+          type: integer
+          format: int32
       additionalProperties: false
     ExposedSecretReportDenormalizedDto:
       type: object

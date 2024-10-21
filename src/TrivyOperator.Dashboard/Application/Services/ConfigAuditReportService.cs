@@ -1,4 +1,5 @@
-﻿using TrivyOperator.Dashboard.Application.Models;
+﻿using System;
+using TrivyOperator.Dashboard.Application.Models;
 using TrivyOperator.Dashboard.Application.Services.Abstractions;
 using TrivyOperator.Dashboard.Domain.Trivy;
 using TrivyOperator.Dashboard.Domain.Trivy.ConfigAuditReport;
@@ -44,5 +45,53 @@ public class ConfigAuditReportService(IConcurrentCache<string, IList<ConfigAudit
     public Task<IEnumerable<string>> GetActiveNamespaces()
     {
         return Task.FromResult(cache.Where(x => x.Value.Any()).Select(x => x.Key));
+    }
+
+    public Task<IEnumerable<ConfigAuditReportSummaryDto>> GetConfigAuditReportSummaryDtos()
+    {
+        var actualValues = cache
+            .SelectMany(kvp => kvp.Value
+            .Select(car => car.ToConfigAuditReportDto())
+            .SelectMany(dto => dto.Details.Select(detail => new
+            {
+                NamespaceName = kvp.Key,
+                Kind = dto.ResourceKind,
+                detail.SeverityId,
+                detail.CheckId
+            }))
+            .GroupBy(key => new { key.NamespaceName, key.Kind, key.SeverityId })
+            .Select(group => new
+            {
+                ns = group.Key.NamespaceName,
+                kind = group.Key.Kind,
+                severityId = group.Key.SeverityId,
+                totalCount = group.Count(),
+                distinctCount = group.Select(x => x.CheckId).Distinct().Count()
+            }));
+
+        string[] allKinds = actualValues.Select(x => x.kind).Distinct().ToArray();
+        int[] allSeverities = Enum.GetValues(typeof(TrivySeverity)).Cast<int>().ToArray();
+
+        var allCombinations = cache
+            .Select(kvp => kvp.Key)
+            .SelectMany(ns => allKinds, (ns, kind) => new { ns, kind })
+            .SelectMany(nk => allSeverities, (nk, severityId) => new { nk.ns, nk.kind, severityId });
+
+        var result = allCombinations
+            .GroupJoin(
+                actualValues,
+                combo => new { combo.ns, combo.kind, combo.severityId },
+                count => new { count.ns, count.kind, count.severityId },
+                (combo, countGroup) => new ConfigAuditReportSummaryDto
+                {
+                    NamespaceName = combo.ns,
+                    Kind = combo.kind,
+                    SeverityId = combo.severityId,
+                    TotalCount = countGroup.FirstOrDefault()?.totalCount ?? 0,
+                    DistinctCount = countGroup.FirstOrDefault()?.distinctCount ?? 0
+                }
+            );
+            
+        return Task.FromResult(result);
     }
 }

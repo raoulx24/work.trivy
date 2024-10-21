@@ -13,4 +13,7 @@ public class ConfigAuditReportNullService(ILogger<ConfigAuditReportNullService> 
 
     public Task<IEnumerable<string>> GetActiveNamespaces()
     { return Task.FromResult<IEnumerable<string>>([]); }
+
+    public Task<IEnumerable<ConfigAuditReportSummaryDto>> GetConfigAuditReportSummaryDtos()
+    { return Task.FromResult<IEnumerable<ConfigAuditReportSummaryDto>>([]); }
 }
