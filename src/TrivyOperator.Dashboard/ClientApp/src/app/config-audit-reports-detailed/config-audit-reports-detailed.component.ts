@@ -6,6 +6,7 @@ import { SeverityDto } from '../../api/models/severity-dto';
 
 import { TrivyTableComponent } from '../trivy-table/trivy-table.component';
 import { ExportColumn, TrivyTableColumn, TrivyTableOptions } from "../trivy-table/trivy-table.types";
+import { TrivyTableUtils } from '../utils/trivy-table.utils'
 
 
 @Component({
@@ -31,19 +32,6 @@ export class ConfigAuditReportsDetailedComponent {
   constructor(private dataDtoService: ConfigAuditReportService) {
     this.getTableDataDtos();
 
-    this.exportColumns = [
-      { dataKey: 'resourceNamespace', title: 'NS' },
-      { dataKey: 'resourceName', title: 'Name' },
-      { dataKey: 'resourceKind', title: 'Kind' },
-      { dataKey: 'severityId', title: 'Sev' },
-      { dataKey: 'category', title: 'Category' },
-      { dataKey: 'checkId', title: 'CheckId' },
-      { dataKey: 'title', title: 'Title' },
-      { dataKey: 'description', title: 'Description' },
-      { dataKey: 'remediation', title: 'Remediation' },
-      { dataKey: 'messages', title: 'Messages' },
-
-    ];
     this.trivyTableColumns = [
       {
         field: "resourceNamespace", header: "NS",
@@ -110,6 +98,7 @@ export class ConfigAuditReportsDetailedComponent {
       rowExpansionRender: null,
       extraClasses: "",
     };
+    this.exportColumns = TrivyTableUtils.convertFromTableColumnToExportColumn(this.trivyTableColumns);
   }
 
   public getTableDataDtos() {

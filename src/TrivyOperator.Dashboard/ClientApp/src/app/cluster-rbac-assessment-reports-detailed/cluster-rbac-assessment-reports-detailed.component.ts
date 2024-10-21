@@ -6,6 +6,7 @@ import { SeverityDto } from '../../api/models/severity-dto';
 
 import { TrivyTableComponent } from '../trivy-table/trivy-table.component';
 import { ExportColumn, TrivyTableColumn, TrivyTableOptions } from "../trivy-table/trivy-table.types";
+import { TrivyTableUtils } from '../utils/trivy-table.utils'
 
 @Component({
   selector: 'app-cluster-rbac-assessment-reports-detailed',
@@ -30,16 +31,6 @@ export class ClusterRbacAssessmentReportsDetailedComponent {
   constructor(private dataDtoService: ClusterRbacAssessmentReportService) {
     this.getTableDataDtos();
 
-    this.exportColumns = [
-      { dataKey: 'resourceName', title: 'Name' },
-      { dataKey: 'severityId', title: 'Sev' },
-      { dataKey: 'category', title: 'Category' },
-      { dataKey: 'checkId', title: 'CheckId' },
-      { dataKey: 'title', title: 'Title' },
-      { dataKey: 'description', title: 'Description' },
-      { dataKey: 'remediation', title: 'Remediation' },
-      { dataKey: 'messages', title: 'Messages' },
-    ];
     this.trivyTableColumns = [
       {
         field: "resourceName", header: "Name",
@@ -96,6 +87,7 @@ export class ClusterRbacAssessmentReportsDetailedComponent {
       rowExpansionRender: null,
       extraClasses: "",
     };
+    this.exportColumns = TrivyTableUtils.convertFromTableColumnToExportColumn(this.trivyTableColumns);
   }
 
   public getTableDataDtos() {
