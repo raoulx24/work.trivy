@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { HomeVulnerabilityReportsComponent } from '../home-vulnerability-reports/home-vulnerability-reports.component'
+import { HomeConfigAuditReportsComponent } from '../home-config-audit-reports/home-config-audit-reports.component'
 
 import { PanelModule } from 'primeng/panel';
 import { CarouselModule } from 'primeng/carousel';
@@ -10,13 +11,13 @@ import { CarouselModule } from 'primeng/carousel';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, HomeVulnerabilityReportsComponent, CarouselModule, PanelModule],
+  imports: [CommonModule, HomeVulnerabilityReportsComponent, HomeConfigAuditReportsComponent, CarouselModule, PanelModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
 
 export class HomeComponent {
-  public slides: string[] = ["vr", "lorem"];
+  public slides: string[] = ["lorem", "vr", "car", "lorem"];
   constructor() {
   }
 }
