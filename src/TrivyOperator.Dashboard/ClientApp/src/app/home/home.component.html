@@ -1,26 +1,35 @@
-<h3>Overview</h3>
-<p-panel header="Vulnerability Reports"
-         [toggleable]="true"
-         [collapsed]="!expandedPanels.includes('vr')"
-         (collapsedChange)="onVrPanelChange($event)">
-  <app-home-vulnerability-reports></app-home-vulnerability-reports>
+<h3>Home</h3>
+<p-panel header="Overview"
+         [toggleable]="false">
+  
+  <p-carousel [value]="slides"
+              [numVisible]="1"
+              [numScroll]="1"
+              [circular]="true"
+              [autoplayInterval]="10000">
+    <ng-template let-slide pTemplate="item">
+      <div class="custom-slide">
+        <ng-container [ngSwitch]="slide">
+          <div *ngSwitchCase="'vr'">
+            <app-home-vulnerability-reports></app-home-vulnerability-reports>
+          </div>
+          <div *ngSwitchCase="'lorem'">
+            <h4 style="text-align: center;">Lorem ipsum</h4>
+            <p>
+              Lorem ipsum odor amet, consectetuer adipiscing elit. Ligula justo curabitur tristique dui tristique per euismod. Mattis tellus interdum dignissim felis semper primis in nulla. At facilisi interdum phasellus cras taciti mattis congue nam. Velit rhoncus adipiscing conubia torquent egestas lobortis. Dictumst fames ex habitasse urna, lorem gravida pellentesque lectus diam? Pellentesque nibh mus erat facilisi facilisis ut etiam. Lectus tempus nibh penatibus per lacinia nascetur. Bibendum elementum metus aliquam nam sapien lobortis bibendum platea. Placerat adipiscing non gravida curabitur natoque sagittis libero magna.
+            </p>
+            <!--<p>
+              Egestas efficitur mattis urna enim facilisi, nascetur velit vulputate inceptos. Ipsum fames leo porta consequat netus nulla himenaeos neque vel. Cubilia erat libero tristique nunc et. Urna iaculis tortor sem volutpat dictum neque cubilia potenti. Est penatibus laoreet natoque nunc erat posuere vivamus donec. Felis erat ante cras odio consectetur quam luctus porta felis. Dolor commodo vehicula vivamus facilisi maximus scelerisque commodo ligula. Donec rutrum montes venenatis erat ultricies dapibus fringilla.
+            </p>
+            <p>
+              Sed placerat vel semper eros imperdiet pellentesque. Convallis aenean vehicula mollis sollicitudin consectetur mattis. Quis mattis netus eget ex mattis ornare pellentesque elementum. Ex cursus aenean magnis est at augue quam. Ante sociosqu per facilisis habitasse auctor natoque integer. Maximus sem luctus semper eleifend libero faucibus pulvinar tristique orci. Odio suspendisse semper vitae integer dolor per diam.
+            </p>
+            <p>
+              Quam condimentum risus at eleifend curabitur erat vel amet? Ante quam neque non arcu, vel faucibus sapien purus eros. Aliquam venenatis tempor pellentesque ipsum accumsan. Potenti mauris sollicitudin sociosqu tincidunt arcu est ligula. Convallis euismod in ante euismod quam morbi mollis. Quis suscipit odio vulputate dignissim rhoncus quisque aptent mus pulvinar. Vulputate ultrices consectetur tempor, mus convallis orci varius nibh. Enim fermentum lacus neque maecenas nec porta. Himenaeos neque et nam gravida bibendum viverra potenti commodo. Risus integer venenatis hendrerit habitant tempus vivamus ad.
+            </p>-->
+          </div>
+        </ng-container>
+      </div>
+    </ng-template>
+  </p-carousel>
 </p-panel>
-<div class="pt-3"></div>
-<p-panel header="Lorem Ipsum"
-         [toggleable]="true"
-         [collapsed]="!expandedPanels.includes('li')"
-         (collapsedChange)="onLiPanelChange($event)">
-  <p>
-    Lorem ipsum odor amet, consectetuer adipiscing elit. Ligula justo curabitur tristique dui tristique per euismod. Mattis tellus interdum dignissim felis semper primis in nulla. At facilisi interdum phasellus cras taciti mattis congue nam. Velit rhoncus adipiscing conubia torquent egestas lobortis. Dictumst fames ex habitasse urna, lorem gravida pellentesque lectus diam? Pellentesque nibh mus erat facilisi facilisis ut etiam. Lectus tempus nibh penatibus per lacinia nascetur. Bibendum elementum metus aliquam nam sapien lobortis bibendum platea. Placerat adipiscing non gravida curabitur natoque sagittis libero magna.
-  </p>
-  <p>
-    Egestas efficitur mattis urna enim facilisi, nascetur velit vulputate inceptos. Ipsum fames leo porta consequat netus nulla himenaeos neque vel. Cubilia erat libero tristique nunc et. Urna iaculis tortor sem volutpat dictum neque cubilia potenti. Est penatibus laoreet natoque nunc erat posuere vivamus donec. Felis erat ante cras odio consectetur quam luctus porta felis. Dolor commodo vehicula vivamus facilisi maximus scelerisque commodo ligula. Donec rutrum montes venenatis erat ultricies dapibus fringilla.
-  </p>
-  <p>
-    Sed placerat vel semper eros imperdiet pellentesque. Convallis aenean vehicula mollis sollicitudin consectetur mattis. Quis mattis netus eget ex mattis ornare pellentesque elementum. Ex cursus aenean magnis est at augue quam. Ante sociosqu per facilisis habitasse auctor natoque integer. Maximus sem luctus semper eleifend libero faucibus pulvinar tristique orci. Odio suspendisse semper vitae integer dolor per diam.
-  </p>
-  <p>
-    Quam condimentum risus at eleifend curabitur erat vel amet? Ante quam neque non arcu, vel faucibus sapien purus eros. Aliquam venenatis tempor pellentesque ipsum accumsan. Potenti mauris sollicitudin sociosqu tincidunt arcu est ligula. Convallis euismod in ante euismod quam morbi mollis. Quis suscipit odio vulputate dignissim rhoncus quisque aptent mus pulvinar. Vulputate ultrices consectetur tempor, mus convallis orci varius nibh. Enim fermentum lacus neque maecenas nec porta. Himenaeos neque et nam gravida bibendum viverra potenti commodo. Risus integer venenatis hendrerit habitant tempus vivamus ad.
-  </p>
-</p-panel>
-
