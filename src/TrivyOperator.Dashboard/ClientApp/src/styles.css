@@ -16,8 +16,9 @@ p-panel.h-full > .p-panel.p-component > .p-toggleable-content > .p-panel-content
   height: 100% !important;
 }
 
+/* p-inputsitch */
 .p-inputswitch {
-  height: 1rem;
+  height: 1.2rem;
   width: 2rem;
 }
 
