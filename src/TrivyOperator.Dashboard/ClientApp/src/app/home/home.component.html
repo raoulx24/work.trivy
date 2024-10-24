@@ -1,11 +1,18 @@
 <h3>Home</h3>
-<p-panel header="Overview"
+<p-tabView [scrollable]="true" >
+  <p-tabPanel header="Vulnerability Reports">
+    <app-home-vulnerability-reports />
+  </p-tabPanel>
+  <p-tabPanel header="Config Audit Reports">
+    <app-home-config-audit-reports />
+  </p-tabPanel>
+</p-tabView>
+<!--<p-panel header="Overview"
          [toggleable]="false">
   
   <p-carousel [value]="slides"
               [numVisible]="1"
               [numScroll]="1"
-              [circular]="true"
               [autoplayInterval]="10000">
     <ng-template let-slide pTemplate="item">
       <div class="custom-slide">
@@ -26,4 +33,4 @@
       </div>
     </ng-template>
   </p-carousel>
-</p-panel>
+</p-panel>-->

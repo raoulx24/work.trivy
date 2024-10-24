@@ -6,18 +6,19 @@ import { HomeConfigAuditReportsComponent } from '../home-config-audit-reports/ho
 
 import { PanelModule } from 'primeng/panel';
 import { CarouselModule } from 'primeng/carousel';
+import { TabViewModule } from 'primeng/tabview';
 
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, HomeVulnerabilityReportsComponent, HomeConfigAuditReportsComponent, CarouselModule, PanelModule],
+  imports: [CommonModule, HomeVulnerabilityReportsComponent, HomeConfigAuditReportsComponent, CarouselModule, PanelModule, TabViewModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
 
 export class HomeComponent {
-  public slides: string[] = ["lorem", "vr", "car", "lorem"];
+  
   constructor() {
   }
 }
