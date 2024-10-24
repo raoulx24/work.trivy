@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 
 import { GenericMasterDetailComponent } from '../generic-master-detail/generic-master-detail.component'
 import { ConfigAuditReportService } from '../../api/services/config-audit-report.service'
-import { SeverityHelperService } from '../services/severity-helper.service';
 import { ConfigAuditReportDto } from '../../api/models/config-audit-report-dto'
 import { GetConfigAuditReportDtos$Params } from '../../api/fn/config-audit-report/get-config-audit-report-dtos';
+import { SeverityUtils } from '../utils/severity.utils'
 import { SeverityDto } from '../../api/models/severity-dto';
 import { TrivyFilterData, TrivyTableColumn, TrivyTableOptions } from '../trivy-table/trivy-table.types';
 
@@ -19,7 +19,6 @@ import { TrivyFilterData, TrivyTableColumn, TrivyTableOptions } from '../trivy-t
 })
 export class ConfigAuditReportsComponent {
   public dataDtos: ConfigAuditReportDto[] = [];
-  public severityDtos: SeverityDto[] | null = [];
   public activeNamespaces: string[] | null = [];
 
   public mainTableColumns: TrivyTableColumn[] = [];
@@ -30,7 +29,7 @@ export class ConfigAuditReportsComponent {
   public detailsTableColumns: TrivyTableColumn[] = [];
   public detailsTableOptions: TrivyTableOptions;
 
-  constructor(private dataDtoService: ConfigAuditReportService, public severityHelperService: SeverityHelperService) {
+  constructor(private dataDtoService: ConfigAuditReportService) {
     dataDtoService.getConfigAuditReportDtos()
       .subscribe({
         next: (res) => this.onGetDataDtos(res),
@@ -135,8 +134,7 @@ export class ConfigAuditReportsComponent {
   }
 
   public onRefreshRequested(event: TrivyFilterData) {
-    console.log("mama");
-    let excludedSeverities = this.severityHelperService.getSeverityIds()
+    let excludedSeverities = SeverityUtils.getSeverityIds()
       .filter(severityId => !event.selectedSeverityIds.includes(severityId)) || [];
 
     let params: GetConfigAuditReportDtos$Params = {

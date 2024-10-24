@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 
 import { ConfigAuditReportService } from '../../api/services/config-audit-report.service'
 import { ConfigAuditReportSummaryDto } from '../../api/models/config-audit-report-summary-dto'
-import { SeverityHelperService } from '../services/severity-helper.service'
 import { CarSeveritySummary } from './home-config-audit-reports.types'
+import { PrimeNgChartUtils, PrimeNgHorizontalBarChartData, SeveritiesSummary } from '../utils/primeng-chart.utils'
 
 import { ButtonModule } from 'primeng/button';
 import { ChartModule } from 'primeng/chart';
@@ -12,6 +12,7 @@ import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { TabViewModule } from 'primeng/tabview';
+import { SeverityUtils } from '../utils/severity.utils';
 
 
 @Component({
@@ -31,17 +32,24 @@ export class HomeConfigAuditReportsComponent {
     return this.localShowDistinctValues;
   }
 
-  configAuditReportSummaryDtos: ConfigAuditReportSummaryDto[] = [];
+  configAuditReportSummaryDtos: ConfigAuditReportSummaryDto[] | null = null;
   namespaceNames: string[] = [];
   kinds: string[] = [];
   severities: number[] = [];
   carSeveritySummaries: CarSeveritySummary[] = [];
 
+  severitesSummariesNamespace: SeveritiesSummary[] = [];
+  severitesSummariesKind: SeveritiesSummary[] = [];
+  barchartDataNsByNs: PrimeNgHorizontalBarChartData | null = null;
+  barchartDataNsBySev: PrimeNgHorizontalBarChartData | null = null;
+  barchartDataKindByNs: PrimeNgHorizontalBarChartData | null = null;
+  barchartDataKindBySev: PrimeNgHorizontalBarChartData | null = null;
+
   isCarDetailsDialogVisible: boolean = false;
 
   private localShowDistinctValues: boolean = true;
 
-  constructor(private configAuditReportService: ConfigAuditReportService, public severityHelperService: SeverityHelperService) {
+  constructor(private configAuditReportService: ConfigAuditReportService) {
     console.log("constructor - car");
     this.configAuditReportService.getConfigAuditReportSumaryDtos()
       .subscribe({
@@ -58,6 +66,9 @@ export class HomeConfigAuditReportsComponent {
   }
 
   private getArraysFromDtos() {
+    if (!this.configAuditReportSummaryDtos) {
+      return;
+    }
     const result = this.configAuditReportSummaryDtos.reduce((acc, item) => {
       if (item.namespaceName && !acc.namespaceNames.includes(item.namespaceName)) {
         acc.namespaceNames.push(item.namespaceName);
@@ -78,10 +89,13 @@ export class HomeConfigAuditReportsComponent {
   }
 
   private computeStatistics() {
-    const groupedSum = this.configAuditReportSummaryDtos
+    if (!this.configAuditReportSummaryDtos) {
+      return;
+    }
+    const groupedSumForCarSeverities = this.configAuditReportSummaryDtos
       .filter(dto => dto.namespaceName === "")
       .reduce((acc, item) => {
-        const severityName: string = this.severityHelperService.getCapitalizedName(item.severityId!);
+        const severityName: string = SeverityUtils.getCapitalizedName(item.severityId!);
         if (!acc[severityName]) {
           acc[severityName] = 0;
         }
@@ -89,7 +103,35 @@ export class HomeConfigAuditReportsComponent {
         return acc;
       }, {} as Record<string, number>);
 
-    this.carSeveritySummaries = Object.keys(groupedSum).map(key => ({ severityName: key, count: groupedSum[key] }))
+    this.carSeveritySummaries = Object.keys(groupedSumForCarSeverities).map(key => ({ severityName: key, count: groupedSumForCarSeverities[key] }))
+
+    const summaryMap: { [key: string]: SeveritiesSummary } = {};
+    this.configAuditReportSummaryDtos
+      .filter(dto => dto.namespaceName !== "")
+      .forEach(item => {
+        if (!summaryMap[item.namespaceName!]) {
+          summaryMap[item.namespaceName!] = {
+            namespaceName: item.namespaceName,
+            details: [],
+            isTotal: false
+          };
+        }
+        const existingDetail = summaryMap[item.namespaceName!].details!.find(detail => detail.id === item.severityId);
+        if (existingDetail) {
+          existingDetail.totalCount! += item.totalCount ?? 0;
+          existingDetail.distinctCount! += item.distinctCount ?? 0;
+        } else {
+          summaryMap[item.namespaceName!].details!.push({
+            id: item.severityId,
+            totalCount: item.totalCount,
+            distinctCount: item.distinctCount
+          });
+        }
+      });
+
+    this.severitesSummariesNamespace = Object.values(summaryMap);
+    this.barchartDataNsByNs = PrimeNgChartUtils.getDataForHorizontalBarChartByNamespace(this.severitesSummariesNamespace, this.showDistinctValues);
+    this.barchartDataNsBySev = PrimeNgChartUtils.getDataForHorizontalBarChartBySeverity(this.severitesSummariesNamespace, this.showDistinctValues);
   }
 
   onCarsMore(_event: MouseEvent) {
@@ -104,6 +146,9 @@ export class HomeConfigAuditReportsComponent {
   }
 
   getCountFromConfigAuditReportSummaryDtos(namespaceName: string, kind: string, severityId: number): string {
+    if (!this.configAuditReportSummaryDtos) {
+      return "";
+    }
     const result = this.configAuditReportSummaryDtos
       .filter(dto => dto.namespaceName === namespaceName)
       .filter(dto => dto.kind === kind)
@@ -114,5 +159,13 @@ export class HomeConfigAuditReportsComponent {
     else {
       return "0";
     }
+  }
+
+  severityWrappergetCapitalizedName(severityId: number): string {
+    return SeverityUtils.getCapitalizedName(severityId);
+  }
+
+  severityWrappergetgetCssColor(severityId: number): string {
+    return SeverityUtils.getCssColor(severityId);
   }
 }

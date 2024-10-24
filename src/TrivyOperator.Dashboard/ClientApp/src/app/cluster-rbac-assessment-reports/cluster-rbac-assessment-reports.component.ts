@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 
 import { GenericMasterDetailComponent } from '../generic-master-detail/generic-master-detail.component'
 import { ClusterRbacAssessmentReportService } from '../../api/services/cluster-rbac-assessment-report.service'
-import { SeverityHelperService } from '../services/severity-helper.service';
 import { ClusterRbacAssessmentReportDto } from '../../api/models/cluster-rbac-assessment-report-dto'
 import { SeverityDto } from '../../api/models/severity-dto';
 import { TrivyFilterData, TrivyTableColumn, TrivyTableOptions } from '../trivy-table/trivy-table.types';
@@ -16,7 +15,6 @@ import { TrivyFilterData, TrivyTableColumn, TrivyTableOptions } from '../trivy-t
 })
 export class ClusterRbacAssessmentReportsComponent {
   public dataDtos: ClusterRbacAssessmentReportDto[] = [];
-  public severityDtos: SeverityDto[] | null = [];
   public activeNamespaces: string[] | null = [];
 
   public mainTableColumns: TrivyTableColumn[] = [];
@@ -27,7 +25,7 @@ export class ClusterRbacAssessmentReportsComponent {
   public detailsTableColumns: TrivyTableColumn[] = [];
   public detailsTableOptions: TrivyTableOptions;
 
-  constructor(private dataDtoService: ClusterRbacAssessmentReportService, public severityHelperService: SeverityHelperService) {
+  constructor(private dataDtoService: ClusterRbacAssessmentReportService) {
     dataDtoService.getClusterRbacAssessmentReportDtos()
       .subscribe({
         next: (res) => this.onGetDataDtos(res),

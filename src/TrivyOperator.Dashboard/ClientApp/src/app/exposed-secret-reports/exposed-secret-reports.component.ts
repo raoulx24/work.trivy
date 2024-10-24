@@ -3,11 +3,11 @@ import { CommonModule } from '@angular/common';
 
 import { GenericMasterDetailComponent } from '../generic-master-detail/generic-master-detail.component'
 import { ExposedSecretReportImageDto } from '../../api/models/exposed-secret-report-image-dto'
+import { SeverityUtils } from '../utils/severity.utils'
 import { SeverityDto } from '../../api/models/severity-dto';
 import { TrivyExpandTableOptions, TrivyFilterData, TrivyTableCellCustomOptions, TrivyTableColumn, TrivyTableOptions } from '../trivy-table/trivy-table.types';
 import { ExposedSecretReportService } from '../../api/services/exposed-secret-report.service'
 import { GetExposedSecretReportImageDtos$Params } from '../../api/fn/exposed-secret-report/get-exposed-secret-report-image-dtos'
-import { SeverityHelperService } from '../services/severity-helper.service';
 
 import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
@@ -23,7 +23,6 @@ import { TableModule } from 'primeng/table';
 export class ExposedSecretReportsComponent {
   public dataDtos: ExposedSecretReportImageDto[] = [];
   public selectedVulnerabilityReportDto: ExposedSecretReportImageDto | null = null;
-  public severityDtos: SeverityDto[] | null = [];
   public activeNamespaces: string[] | null = [];
 
   public mainTableColumns: TrivyTableColumn[] = [];
@@ -37,7 +36,7 @@ export class ExposedSecretReportsComponent {
 
   public isImageUsageDialogVisible: boolean = false;
 
-  constructor(private dataDtoService: ExposedSecretReportService, public severityHelperService: SeverityHelperService) {
+  constructor(private dataDtoService: ExposedSecretReportService) {
     dataDtoService.getExposedSecretReportImageDtos()
       .subscribe({
         next: (res) => this.onGetDataDtos(res),
@@ -145,7 +144,7 @@ export class ExposedSecretReportsComponent {
   }
 
   onRefreshRequested(event: TrivyFilterData) {
-    let excludedSeverities = this.severityHelperService.getSeverityIds()
+    let excludedSeverities = SeverityUtils.getSeverityIds()
       .filter(severityId => !event.selectedSeverityIds.includes(severityId)) || [];
 
     let params: GetExposedSecretReportImageDtos$Params = {

@@ -12,7 +12,7 @@ import { Table, TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 
 import { Column, ExportColumn, TrivyFilterData, TrivyTableColumn, TrivyTableOptions, TrivyExpandTableOptions, TrivyTableCellCustomOptions } from "./trivy-table.types";
-import { SeverityHelperService } from "../services/severity-helper.service"
+import { SeverityUtils } from "../utils/severity.utils"
 import { SemaphoreStatusHelperService } from "../services/semaphore-status-helper.service"
 import { SeverityDto } from "../../api/models/severity-dto"
 import { PrimengTableStateUtil } from "../utils/primeng-table-state.util"
@@ -88,10 +88,9 @@ export class TrivyTableComponent<TData> implements OnInit {
   }
 
   public isTableVisible: boolean = true;
-  public severityDtos?: SeverityDto[] | null | undefined;
+  public severityDtos: SeverityDto[] = SeverityUtils.severityDtos;
 
-  constructor(public severityHelper: SeverityHelperService, public semaphoreStatusHelper: SemaphoreStatusHelperService) {
-    severityHelper.getSeverityDtos().then(result => this.onGetSeverities(result));
+  constructor(public semaphoreStatusHelper: SemaphoreStatusHelperService) {
   }
 
   ngOnInit() {
@@ -100,12 +99,8 @@ export class TrivyTableComponent<TData> implements OnInit {
       this.csvFileName = savedCsvFileName;
     }
     this.tableStateKey = LocalStorageUtils.trivyTableKeyPrefix + this.trivyTableOptions.stateKey;
-  }
-
-  onGetSeverities(severityDtos: SeverityDto[]) {
-    this.severityDtos = severityDtos;
-    this.filterSeverityOptions = severityDtos.map(x => x.id);
-    this.filterRefreshSeverities = [...severityDtos];
+    this.filterSeverityOptions = this.severityDtos.map(x => x.id);
+    this.filterRefreshSeverities = [...this.severityDtos];
   }
 
   public onTableClearSelected() {
@@ -244,6 +239,18 @@ export class TrivyTableComponent<TData> implements OnInit {
     PrimengTableStateUtil.clearTableSelection(tableState);
     PrimengTableStateUtil.clearTableExpandedRows(tableState);
     localStorage.setItem(this.tableStateKey, JSON.stringify(tableState));
+  }
+
+  severityWrappergetNames(severityIds: number[], maxDisplay?: number | undefined): string {
+    return SeverityUtils.getNames(severityIds, maxDisplay);
+  }
+
+  severityWrappergetName(severityId: number): string {
+    return SeverityUtils.getName(severityId);
+  }
+
+  severityWrappergetCssColor(severityId: number): string {
+    return SeverityUtils.getCssColor(severityId)
   }
 }
 

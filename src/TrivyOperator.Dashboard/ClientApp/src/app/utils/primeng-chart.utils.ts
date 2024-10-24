@@ -1,4 +1,4 @@
-import { SeverityHelperService } from '../services/severity-helper.service'
+import { SeverityUtils } from './severity.utils'
 import { ColorHelper } from './color.utils'
 
 export type PrimeNgPieChartData = {
@@ -35,50 +35,43 @@ export interface SeveritiesSummary {
 }
 
 export class PrimeNgChartUtils {
-  private _severityHelperService: SeverityHelperService;
-
-  constructor(severityHelperService: SeverityHelperService) {
-    this._severityHelperService = severityHelperService;
-  }
-
   public getDataForPieChart(severitiesSummary: SeveritiesSummary[], title: string = 'generic'): PrimeNgPieChartData[] {
     let pieChartData: PrimeNgPieChartData[] = [];
-    this._severityHelperService.getSeverityDtos().then(severityDtos => {
-      let severityLabels: string[] = [];
-      let cssColors: string[] = [];
-      let cssColorHovers: string[] = [];
-      severityDtos.forEach(x => {
-        severityLabels.push(x.name);
-        cssColors.push(this._severityHelperService.getCssColor(x.id));
-        cssColorHovers.push(this._severityHelperService.getCssColorHover(x.id));
-      });
-      severitiesSummary.filter(x => !x.isTotal).forEach(severitySummary => {
-        let values: number[] = [];
-        if (severitySummary.details != null) {
+    const severityDtos = SeverityUtils.severityDtos;
+    let severityLabels: string[] = [];
+    let cssColors: string[] = [];
+    let cssColorHovers: string[] = [];
+    severityDtos.forEach(x => {
+      severityLabels.push(x.name);
+      cssColors.push(SeverityUtils.getCssColor(x.id));
+      cssColorHovers.push(SeverityUtils.getCssColorHover(x.id));
+    });
+    severitiesSummary.filter(x => !x.isTotal).forEach(severitySummary => {
+      let values: number[] = [];
+      if (severitySummary.details != null) {
 
-          severitySummary.details
-            .sort((a, b) => a.id! - b.id!)
-            .forEach(x => { values.push(x.distinctCount!); });
-        }
-        let chartData: PrimeNgPieChartData = {
-          labels: severityLabels,
-          datasets: [
-            {
-              data: values,
-              backgroundColor: cssColors,
-              hoverBackgroundColor: cssColorHovers,
-            }
-          ],
-          title: severitySummary.namespaceName ? severitySummary.namespaceName : title,
-        };
-        pieChartData.push(chartData);
-      });
+        severitySummary.details
+          .sort((a, b) => a.id! - b.id!)
+          .forEach(x => { values.push(x.distinctCount!); });
+      }
+      let chartData: PrimeNgPieChartData = {
+        labels: severityLabels,
+        datasets: [
+          {
+            data: values,
+            backgroundColor: cssColors,
+            hoverBackgroundColor: cssColorHovers,
+          }
+        ],
+        title: severitySummary.namespaceName ? severitySummary.namespaceName : title,
+      };
+      pieChartData.push(chartData);
     });
 
     return pieChartData;
   }
 
-  public async getDataForHorizontalBarChartByNamespace(severitiesSummary: SeveritiesSummary[], distinct: boolean): Promise<PrimeNgHorizontalBarChartData> {
+  public static getDataForHorizontalBarChartByNamespace(severitiesSummary: SeveritiesSummary[], distinct: boolean): PrimeNgHorizontalBarChartData {
     // TODO make required everything in severitiesDto and severitiesSummaryDto
     let chartData: PrimeNgHorizontalBarChartData = {
       datasets: [],
@@ -86,18 +79,18 @@ export class PrimeNgChartUtils {
       title: 'a title',
     };
     severitiesSummary.filter(x => !x.isTotal).forEach(x => { chartData.labels.push(x.namespaceName!); });
-    let severities = await this._severityHelperService.getSeverityDtos();
+    const severities = severitiesSummary[0].details!.map(x => x.id);
     severities.forEach(severity => {
       let totalVulnerabilities: number[] = [];
       severitiesSummary.filter(x => !x.isTotal).forEach(severitySummary => {
-        let severityDetail = severitySummary.details!.filter(x => x.id! == severity!.id!)[0];
+        let severityDetail = severitySummary.details!.filter(x => x.id! == severity)[0];
         totalVulnerabilities.push(distinct ? severityDetail.distinctCount! : severityDetail.totalCount!);
       });
       chartData.datasets.push({
-        label: this._severityHelperService.getCapitalizedString(severity.name!),
+        label: SeverityUtils.getCapitalizedName(severity!),
         data: totalVulnerabilities,
-        backgroundColor: this._severityHelperService.getCssColor(severity.id!),
-        hoverBackgroundColor: this._severityHelperService.getCssColorHover(severity.id!),
+        backgroundColor: SeverityUtils.getCssColor(severity!),
+        hoverBackgroundColor: SeverityUtils.getCssColorHover(severity!),
         hidden: false,
       });
     });
@@ -105,20 +98,20 @@ export class PrimeNgChartUtils {
     return chartData;
   }
 
-  public async getDataForHorizontalBarChartBySeverity(severitiesSummary: SeveritiesSummary[], distinct: boolean): Promise<PrimeNgHorizontalBarChartData> {
+  public static getDataForHorizontalBarChartBySeverity(severitiesSummary: SeveritiesSummary[], distinct: boolean): PrimeNgHorizontalBarChartData {
     // TODO make required everything in severitiesDto and severitiesSummaryDto
     let chartData: PrimeNgHorizontalBarChartData = {
       datasets: [],
       labels: [],
       title: 'a title',
     };
-    let severities = await this._severityHelperService.getSeverityDtos();
+    const severities = severitiesSummary[0].details!.map(x => x.id);
     let namespacesCounter: number = 0;
-    severities.forEach(x => { chartData.labels.push(this._severityHelperService.getCapitalizedString(x.name)); });
+    severities.forEach(x => { chartData.labels.push(SeverityUtils.getCapitalizedName(x!)); });
     severitiesSummary.filter(x => !x.isTotal).forEach(severitySummary => {
       let totalVulnerabilities: number[] = [];
       severities.forEach(severity => {
-        let severityDetail = severitySummary.details!.filter(x => x.id! == severity!.id!)[0];
+        let severityDetail = severitySummary.details!.filter(x => x.id == severity)[0];
         totalVulnerabilities.push(distinct ? severityDetail.distinctCount! : severityDetail.totalCount!);
       });
       let color: string = ColorHelper.rainbow(severitiesSummary.length, namespacesCounter);

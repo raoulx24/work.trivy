@@ -50,6 +50,7 @@ public class ConfigAuditReportService(IConcurrentCache<string, IList<ConfigAudit
     public Task<IEnumerable<ConfigAuditReportSummaryDto>> GetConfigAuditReportSummaryDtos()
     {
         var valuesByNs = cache
+            .Where(kvp => kvp.Value.Any())
             .SelectMany(kvp => kvp.Value
             .Select(car => car.ToConfigAuditReportDto())
             .SelectMany(dto => dto.Details.Select(detail => new
@@ -97,6 +98,7 @@ public class ConfigAuditReportService(IConcurrentCache<string, IList<ConfigAudit
             .SelectMany(kind => allSeverities, (kind, severityId) => new { kind, severityId });
 
         var valueTotals = cache
+            .Where(kvp => kvp.Value.Any())
             .SelectMany(kvp => kvp.Value
                 .Select(car => car.ToConfigAuditReportDto())
                 .SelectMany(dto => dto.Details.Select(detail => new
