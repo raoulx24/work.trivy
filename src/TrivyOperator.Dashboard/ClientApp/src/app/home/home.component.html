@@ -1,36 +1,13 @@
 <h3>Home</h3>
 <p-tabView [scrollable]="true" >
   <p-tabPanel header="Vulnerability Reports">
-    <app-home-vulnerability-reports />
+    <app-home-vulnerability-reports [showDistinctValues]="showDistinctValues"/>
   </p-tabPanel>
   <p-tabPanel header="Config Audit Reports">
-    <app-home-config-audit-reports />
+    <app-home-config-audit-reports [showDistinctValues]="showDistinctValues"/>
   </p-tabPanel>
+  <div class="flex row text-sm align-items-center pb-1 pt-3">
+    <p-inputSwitch inputId="distinctSwitch" [(ngModel)]="showDistinctValues"/>
+    <label for="switch1" class="ml-2">Distinct values</label>
+  </div>
 </p-tabView>
-<!--<p-panel header="Overview"
-         [toggleable]="false">
-  
-  <p-carousel [value]="slides"
-              [numVisible]="1"
-              [numScroll]="1"
-              [autoplayInterval]="10000">
-    <ng-template let-slide pTemplate="item">
-      <div class="custom-slide">
-        <ng-container [ngSwitch]="slide">
-          <div *ngSwitchCase="'vr'">
-            <app-home-vulnerability-reports />
-          </div>
-          <div *ngSwitchCase="'car'">
-            <app-home-config-audit-reports />
-          </div>
-          <div *ngSwitchCase="'lorem'">
-            <h4 style="text-align: center;">Lorem ipsum</h4>
-            <p>
-              Lorem ipsum odor amet, consectetuer adipiscing elit. Ligula justo curabitur tristique dui tristique per euismod. Mattis tellus interdum dignissim felis semper primis in nulla. At facilisi interdum phasellus cras taciti mattis congue nam. Velit rhoncus adipiscing conubia torquent egestas lobortis. Dictumst fames ex habitasse urna, lorem gravida pellentesque lectus diam? Pellentesque nibh mus erat facilisi facilisis ut etiam. Lectus tempus nibh penatibus per lacinia nascetur. Bibendum elementum metus aliquam nam sapien lobortis bibendum platea. Placerat adipiscing non gravida curabitur natoque sagittis libero magna.
-            </p>
-          </div>
-        </ng-container>
-      </div>
-    </ng-template>
-  </p-carousel>
-</p-panel>-->

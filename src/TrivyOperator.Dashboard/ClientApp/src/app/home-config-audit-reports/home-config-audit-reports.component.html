@@ -21,11 +21,7 @@
       <div class="flex row mb-5 text-sm justify-content-end -ml-1">
         <p-button label="More on Severities..." [text]="true" size="small" (onClick)="onCarsMore($event)" />
       </div>
-      <div class="flex row text-sm align-items-center pb-1 absolute bottom-0 left-0.5">
-        <p-inputSwitch inputId="distinctSwitch" [(ngModel)]="showDistinctValues"
-                       (onChange)="onDistinctSwitch($event)"></p-inputSwitch>
-        <label for="switch1" class="ml-2">Distinct values</label>
-      </div>
+      
     </div>
 
     <div class="hide-on-small lg:col-9 h-full justify-content-center">
@@ -64,17 +60,23 @@
         <tr>
           <ng-container *ngFor="let severityId of severities">
             <ng-container *ngFor="let kind of kinds">
-              <th class="text-right">{{ kind }}</th>
+              <th class="text-right" style="width: 90px; min-width: 75px;">{{ kind }}</th>
             </ng-container>
           </ng-container>
         </tr>
       </ng-template>
-      <ng-template pTemplate="body" let-severitiesByNsSummary>
+      <ng-template pTemplate="body" let-item>
         <tr>
-          <td pFrozenColumn>{{ namespaceNames }}</td>
+          <td pFrozenColumn>{{ item }}</td>
           <ng-container *ngFor="let severityId of severities">
             <ng-container *ngFor="let kind of kinds">
-              <td class="text-right">{{ kind }}</td>
+              <td class="text-right w-9rem">
+                <ng-container *ngIf="getCountFromConfigAuditReportSummaryDtos(item, kind, severityId) as result">
+                  <p-tag *ngIf="result !== '0'" [value]="result"
+                         [rounded]="true"
+                         [style]="{ background: severityHelperService.getCssColor(severityId) }" />
+                </ng-container>
+              </td>
             </ng-container>
           </ng-container>
         </tr>

@@ -1,6 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 
 import { ConfigAuditReportService } from '../../api/services/config-audit-report.service'
 import { ConfigAuditReportSummaryDto } from '../../api/models/config-audit-report-summary-dto'
@@ -10,20 +9,28 @@ import { CarSeveritySummary } from './home-config-audit-reports.types'
 import { ButtonModule } from 'primeng/button';
 import { ChartModule } from 'primeng/chart';
 import { DialogModule } from 'primeng/dialog';
-import { InputSwitchModule } from 'primeng/inputswitch';
 import { TableModule } from 'primeng/table';
+import { TagModule } from 'primeng/tag';
 import { TabViewModule } from 'primeng/tabview';
 
 
 @Component({
   selector: 'app-home-config-audit-reports',
   standalone: true,
-  imports: [CommonModule, FormsModule, ButtonModule, ChartModule, DialogModule, InputSwitchModule, TableModule, TabViewModule],
+  imports: [CommonModule, ButtonModule, ChartModule, DialogModule, TableModule, TabViewModule, TagModule],
   templateUrl: './home-config-audit-reports.component.html',
   styleUrl: './home-config-audit-reports.component.scss'
 })
 
 export class HomeConfigAuditReportsComponent {
+  @Input() set showDistinctValues(value: boolean) {
+    this.localShowDistinctValues = value;
+    this.onDistinctSwitch();
+  }
+  get showDistinctValues(): boolean {
+    return this.localShowDistinctValues;
+  }
+
   configAuditReportSummaryDtos: ConfigAuditReportSummaryDto[] = [];
   namespaceNames: string[] = [];
   kinds: string[] = [];
@@ -32,7 +39,7 @@ export class HomeConfigAuditReportsComponent {
 
   isCarDetailsDialogVisible: boolean = false;
 
-  showDistinctValues: boolean = true;
+  private localShowDistinctValues: boolean = true;
 
   constructor(private configAuditReportService: ConfigAuditReportService, public severityHelperService: SeverityHelperService) {
     console.log("constructor - car");
@@ -85,25 +92,27 @@ export class HomeConfigAuditReportsComponent {
     this.carSeveritySummaries = Object.keys(groupedSum).map(key => ({ severityName: key, count: groupedSum[key] }))
   }
 
-  onDistinctSwitch(_event: any) {
-    this.computeStatistics();
-  }
-
   onCarsMore(_event: MouseEvent) {
     console.log("mama");
     this.isCarDetailsDialogVisible = true;
   }
 
-  getCountFromConfigAuditReportSummaryDtos(namespaceName: string, kind: string, severityId: number): number {
+  onDistinctSwitch() {
+    if (this.configAuditReportSummaryDtos) {
+      this.computeStatistics();
+    }
+  }
+
+  getCountFromConfigAuditReportSummaryDtos(namespaceName: string, kind: string, severityId: number): string {
     const result = this.configAuditReportSummaryDtos
       .filter(dto => dto.namespaceName === namespaceName)
       .filter(dto => dto.kind === kind)
       .find(dto => dto.severityId === severityId);
     if (result) {
-      return this.showDistinctValues ? result.distinctCount ?? 0 : result.totalCount ?? 0;
+      return (this.showDistinctValues ? result.distinctCount ?? 0 : result.totalCount ?? 0).toString();
     }
     else {
-      return 0;
+      return "0";
     }
   }
 }
