@@ -1,1 +1,86 @@
-<p>home-config-audit-reports works!</p>
+<div class="row" style="height:70vh">
+  <div class="grid flex">
+    <div class="col-12 lg:col-3 h-full">
+      <h4 class="text-center">Config Audit Reports Statistics</h4>
+      <div class="flex row">
+        <p-table [value]="carSeveritySummaries" styleClass="p-datatable-sm text-sm" ngClass="w-full">
+          <ng-template pTemplate="header">
+            <tr>
+              <th style="width: 50%; max-width: 75%;">Severity</th>
+              <th style="width: 25%; max-width: 25%;" class="text-right">Count</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-severity>
+            <tr>
+              <td style="width: 50%; max-width: 75%;">{{ severity.severityName }}</td>
+              <td style="width: 25%; max-width: 25%;" class="text-right">{{ severity.count }}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+      <div class="flex row mb-5 text-sm justify-content-end -ml-1">
+        <p-button label="More on Severities..." [text]="true" size="small" (onClick)="onCarsMore($event)" />
+      </div>
+      <div class="flex row text-sm align-items-center pb-1 absolute bottom-0 left-0.5">
+        <p-inputSwitch inputId="distinctSwitch" [(ngModel)]="showDistinctValues"
+                       (onChange)="onDistinctSwitch($event)"></p-inputSwitch>
+        <label for="switch1" class="ml-2">Distinct values</label>
+      </div>
+    </div>
+
+    <div class="hide-on-small lg:col-9 h-full justify-content-center">
+      <div class="flex justify-content-center">
+        <p-tabView [style]="{ 'width': '60vw' }">
+          <p-tabPanel header="Config Audits by Namespace">
+          </p-tabPanel>
+          <p-tabPanel header="Config Audits by Severity">
+          </p-tabPanel>
+        </p-tabView>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p-dialog header="Config Audit Reports Details"
+          [modal]="true"
+          [(visible)]="isCarDetailsDialogVisible"
+          closable="true"
+          closeOnEscape="true"
+          dismissableMask="true"
+          resizable="true"
+          [contentStyle]="{ 'height': '60vh'}"
+          [style]="{ width: '90vw' }">
+
+  <div *ngIf="configAuditReportSummaryDtos" style="height: 55vh">
+    <p-table [value]="namespaceNames"
+             styleClass="p-datatable-sm text-sm">
+      <ng-template pTemplate="header">
+        <tr>
+          <th rowspan="2" pFrozenColumn>Namespace</th>
+          <ng-container *ngFor="let severityId of severities">
+            <th [attr.colspan]="kinds.length" class="text-center">{{severityHelperService.getCapitalizedName(severityId)}}</th>
+          </ng-container>
+        </tr>
+        <tr>
+          <ng-container *ngFor="let severityId of severities">
+            <ng-container *ngFor="let kind of kinds">
+              <th class="text-right">{{ kind }}</th>
+            </ng-container>
+          </ng-container>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-severitiesByNsSummary>
+        <tr>
+          <td pFrozenColumn>{{ namespaceNames }}</td>
+          <ng-container *ngFor="let severityId of severities">
+            <ng-container *ngFor="let kind of kinds">
+              <td class="text-right">{{ kind }}</td>
+            </ng-container>
+          </ng-container>
+        </tr>
+      </ng-template>
+    </p-table>
+
+  </div>
+
+</p-dialog>
