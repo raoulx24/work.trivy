@@ -44,10 +44,10 @@
           closeOnEscape="true"
           dismissableMask="true"
           resizable="true"
-          [contentStyle]="{ 'height': '60vh'}"
+          [contentStyle]="{ 'height': '70vh'}"
           [style]="{ width: '90vw' }">
 
-  <div *ngIf="configAuditReportSummaryDtos" style="height: 55vh">
+  <div *ngIf="configAuditReportSummaryDtos" style="height: 65vh">
     <p-table [value]="namespaceNames"
              styleClass="p-datatable-sm text-sm"
              [scrollable]="true" scrollDirection="both">
@@ -81,6 +81,21 @@
             </ng-container>
           </ng-container>
         </tr>
+      </ng-template>
+      <ng-template pTemplate="footer" let-footerItem>
+        <td pFrozenColumn class="font-bold p-2">Total</td>
+        <ng-container *ngFor="let severityId of severities">
+          <ng-container *ngFor="let kind of kinds">
+            <td class="text-center w-9rem">
+              <ng-container *ngIf="getCountFromConfigAuditReportSummaryDtos('', kind, severityId) as result">
+                <p-tag *ngIf="result !== '0'" [value]="result"
+                       [rounded]="true"
+                       [style]="{ background: severityWrappergetgetCssColor(severityId) }" />
+              </ng-container>
+            </td>
+          </ng-container>
+        </ng-container>
+
       </ng-template>
     </p-table>
 
