@@ -49,7 +49,8 @@
 
   <div *ngIf="configAuditReportSummaryDtos" style="height: 55vh">
     <p-table [value]="namespaceNames"
-             styleClass="p-datatable-sm text-sm">
+             styleClass="p-datatable-sm text-sm"
+             [scrollable]="true" scrollDirection="both">
       <ng-template pTemplate="header">
         <tr>
           <th rowspan="2" pFrozenColumn>Namespace</th>
