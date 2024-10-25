@@ -81,6 +81,32 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
+  /api/cluster-rbac-assessment-reports/summary:
+    get:
+      tags:
+        - ClusterRbacAssessmentReport
+      operationId: GetClusterRbacAssessmentReportSummaryDtos
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ClusterRbacAssessmentReportSummaryDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
   /api/config-audit-reports:
     get:
       tags:
@@ -691,6 +717,19 @@ components:
           items:
             $ref: '#/components/schemas/ClusterRbacAssessmentReportDetailDto'
           nullable: true
+      additionalProperties: false
+    ClusterRbacAssessmentReportSummaryDto:
+      type: object
+      properties:
+        severityId:
+          type: integer
+          format: int32
+        totalCount:
+          type: integer
+          format: int32
+        distinctCount:
+          type: integer
+          format: int32
       additionalProperties: false
     ConfigAuditReportDenormalizedDto:
       type: object

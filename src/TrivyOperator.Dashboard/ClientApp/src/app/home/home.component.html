@@ -1,13 +1,16 @@
 <h3>Home</h3>
-<p-tabView [scrollable]="true" >
+<p-tabView [scrollable]="true">
   <p-tabPanel header="Vulnerability Reports">
-    <app-home-vulnerability-reports [showDistinctValues]="showDistinctValues"/>
+    <app-home-vulnerability-reports [showDistinctValues]="showDistinctValues" />
   </p-tabPanel>
   <p-tabPanel header="Config Audit Reports">
-    <app-home-config-audit-reports [showDistinctValues]="showDistinctValues"/>
+    <app-home-config-audit-reports [showDistinctValues]="showDistinctValues" />
+  </p-tabPanel>
+  <p-tabPanel header="Cluster RBAC Assessment Reports">
+    <app-home-cluster-rbac-assessment-reports [showDistinctValues]="showDistinctValues" />
   </p-tabPanel>
   <div class="flex row text-sm align-items-center pb-1 pt-3">
-    <p-inputSwitch inputId="distinctSwitch" [(ngModel)]="showDistinctValues"/>
+    <p-inputSwitch inputId="distinctSwitch" [(ngModel)]="showDistinctValues" />
     <label for="switch1" class="ml-2">Distinct values</label>
   </div>
 </p-tabView>

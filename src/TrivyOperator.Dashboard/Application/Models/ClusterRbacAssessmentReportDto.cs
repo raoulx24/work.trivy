@@ -48,6 +48,13 @@ public class ClusterRbacAssessmentReportDenormalizedDto
     public string Title { get; init; } = string.Empty;
 }
 
+public class ClusterRbacAssessmentReportSummaryDto
+{
+    public int SeverityId { get; init; } = 0;
+    public int TotalCount { get; init; } = 0;
+    public int DistinctCount { get; init; } = 0;
+}
+
 public static class ClusterRbacAssessmentReportCrExtensions
 {
     public static ClusterRbacAssessmentReportDto ToClusterRbacAssessmentReportDto(this ClusterRbacAssessmentReportCr clusterRbacAssessmentReportCr)

@@ -1,0 +1,25 @@
+<div class="row" style="height:70vh">
+  <div class="grid flex">
+    <div class="col-12 lg:col-3 h-full">
+      <h4 class="text-center">Cluster RBAC Assessment Reports Statistics</h4>
+        <p-table [value]="clusterRbacAssessmentReportSummaryDtos" styleClass="p-datatable-sm text-sm" ngClass="w-full">
+          <ng-template pTemplate="header">
+            <tr>
+              <th style="width: 50%; max-width: 75%;">Severity</th>
+              <th style="width: 25%; max-width: 25%;" class="text-right">Count</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-severity>
+            <tr>
+              <td style="width: 50%; max-width: 75%;">{{ severityWrappergetCapitalizedName(severity.severityId) }}</td>
+              <td style="width: 25%; max-width: 25%;" class="text-right">
+                {{ showDistinctValues ? severity.distinctCount : severity.totalCount }}
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    <div class="hide-on-small lg:col-9 h-full justify-content-center">
+    </div>
+  </div>
+</div>

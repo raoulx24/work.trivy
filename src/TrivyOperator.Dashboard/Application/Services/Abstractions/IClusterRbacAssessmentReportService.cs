@@ -5,4 +5,5 @@ public interface IClusterRbacAssessmentReportService
 {
     Task<IList<ClusterRbacAssessmentReportDenormalizedDto>> GetClusterRbacAssessmentReportDenormalizedDtos();
     Task<IList<ClusterRbacAssessmentReportDto>> GetClusterRbacAssessmentReportDtos();
+    public Task<IList<ClusterRbacAssessmentReportSummaryDto>> GetClusterRbacAssessmentReportSummaryDtos();
 }

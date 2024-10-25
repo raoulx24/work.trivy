@@ -10,4 +10,7 @@ public class ClusterRbacAssessmentReportNullService() : IClusterRbacAssessmentRe
 
     public Task<IList<ClusterRbacAssessmentReportDenormalizedDto>> GetClusterRbacAssessmentReportDenormalizedDtos()
     { return Task.FromResult<IList<ClusterRbacAssessmentReportDenormalizedDto>>([]); }
+
+    public Task<IList<ClusterRbacAssessmentReportSummaryDto>> GetClusterRbacAssessmentReportSummaryDtos()
+    { return Task.FromResult<IList<ClusterRbacAssessmentReportSummaryDto>>([]); }
 }
