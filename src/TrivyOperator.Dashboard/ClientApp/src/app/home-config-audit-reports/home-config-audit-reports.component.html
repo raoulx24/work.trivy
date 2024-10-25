@@ -33,7 +33,7 @@
           <div class="custom-slide">
             <ng-container [ngSwitch]="slide">
               <div *ngSwitchCase="'nsByNs'">
-                <h4 style="text-align: center;">Config Audits by Namespace</h4>
+                <h4 style="text-align: center;">Config Audits - Severity by Namespace</h4>
                 <div *ngIf="barchartDataNsByNs" class="flex justify-content-center">
                   <p-chart type="bar"
                            [data]="barchartDataNsByNs"
@@ -43,10 +43,29 @@
                 </div>
               </div>
               <div *ngSwitchCase="'nsBySev'">
-                <h4 style="text-align: center;">Config Audits by Severity</h4>
+                <h4 style="text-align: center;">Config Audits - Namespace by Severity</h4>
                 <div *ngIf="barchartDataNsBySev" class="flex justify-content-center">
                   <p-chart type="bar"
                            [data]="barchartDataNsBySev"
+                           [options]="horizontalBarChartOption"
+                           height="60vh" width="60vw" />
+                </div>
+              </div>
+              <div *ngSwitchCase="'kindByNs'">
+                <h4 style="text-align: center;">Config Audits - Severity by Kinds</h4>
+                <div *ngIf="barchartDataKindByNs" class="flex justify-content-center">
+                  <p-chart type="bar"
+                           [data]="barchartDataKindByNs"
+                           [options]="horizontalBarChartOption"
+                           height="60vh" width="60vw"
+                           class="justify-content-center" />
+                </div>
+              </div>
+              <div *ngSwitchCase="'kindBySev'">
+                <h4 style="text-align: center;">Config Audits - Kinds by Severity</h4>
+                <div *ngIf="barchartDataKindBySev" class="flex justify-content-center">
+                  <p-chart type="bar"
+                           [data]="barchartDataKindBySev"
                            [options]="horizontalBarChartOption"
                            height="60vh" width="60vw" />
                 </div>

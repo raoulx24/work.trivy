@@ -38,7 +38,7 @@ export class HomeConfigAuditReportsComponent {
   severities: number[] = [];
   carSeveritySummaries: CarSeveritySummary[] = [];
 
-  public slides: string[] = ["nsByNs", "nsBySev"];
+  public slides: string[] = ["nsByNs", "nsBySev", "kindByNs", "kindBySev"];
 
   severitesSummariesNamespace: SeveritiesSummary[] = [];
   severitesSummariesKind: SeveritiesSummary[] = [];
@@ -65,7 +65,8 @@ export class HomeConfigAuditReportsComponent {
     this.configAuditReportSummaryDtos = dtos;
 
     this.getArraysFromDtos();
-    this.computeStatistics();
+    this.computeStatisticsByNs();
+    this.computeStatisticsByKind();
     this.horizontalBarChartOption = PrimeNgChartUtils.getHorizontalBarChartOption();
   }
 
@@ -92,7 +93,53 @@ export class HomeConfigAuditReportsComponent {
     this.severities = severities.sort((a, b) => a - b);
   }
 
-  private computeStatistics() {
+  private computeStatisticsByNs() {
+    if (!this.configAuditReportSummaryDtos) {
+      return;
+    }
+    const groupedSumForCarSeverities = this.configAuditReportSummaryDtos
+      .filter(dto => dto.namespaceName === "")
+      .reduce((acc, item) => {
+        const severityName: string = SeverityUtils.getCapitalizedName(item.severityId!);
+        if (!acc[severityName]) {
+          acc[severityName] = 0;
+        }
+        acc[severityName] += this.showDistinctValues ? item.distinctCount ?? 0 : item.totalCount ?? 0;
+        return acc;
+      }, {} as Record<string, number>);
+
+    this.carSeveritySummaries = Object.keys(groupedSumForCarSeverities).map(key => ({ severityName: key, count: groupedSumForCarSeverities[key] }))
+
+    const summaryMap: { [key: string]: SeveritiesSummary } = {};
+    this.configAuditReportSummaryDtos
+      .filter(dto => dto.namespaceName !== "")
+      .forEach(item => {
+        if (!summaryMap[item.kind!]) {
+          summaryMap[item.kind!] = {
+            namespaceName: item.kind,
+            details: [],
+            isTotal: false
+          };
+        }
+        const existingDetail = summaryMap[item.kind!].details!.find(detail => detail.id === item.severityId);
+        if (existingDetail) {
+          existingDetail.totalCount! += item.totalCount ?? 0;
+          existingDetail.distinctCount! += item.distinctCount ?? 0;
+        } else {
+          summaryMap[item.kind!].details!.push({
+            id: item.severityId,
+            totalCount: item.totalCount,
+            distinctCount: item.distinctCount
+          });
+        }
+      });
+
+    this.severitesSummariesNamespace = Object.values(summaryMap);
+    this.barchartDataKindByNs = PrimeNgChartUtils.getDataForHorizontalBarChartByNamespace(this.severitesSummariesNamespace, this.showDistinctValues);
+    this.barchartDataKindBySev = PrimeNgChartUtils.getDataForHorizontalBarChartBySeverity(this.severitesSummariesNamespace, this.showDistinctValues);
+  }
+
+  private computeStatisticsByKind() {
     if (!this.configAuditReportSummaryDtos) {
       return;
     }
@@ -145,7 +192,8 @@ export class HomeConfigAuditReportsComponent {
 
   onDistinctSwitch() {
     if (this.configAuditReportSummaryDtos) {
-      this.computeStatistics();
+      this.computeStatisticsByNs();
+      this.computeStatisticsByKind();
     }
   }
 
