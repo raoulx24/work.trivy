@@ -7,18 +7,18 @@ import { CarSeveritySummary } from './home-config-audit-reports.types'
 import { PrimeNgChartUtils, PrimeNgHorizontalBarChartData, SeveritiesSummary } from '../utils/primeng-chart.utils'
 
 import { ButtonModule } from 'primeng/button';
+import { CarouselModule } from 'primeng/carousel';
 import { ChartModule } from 'primeng/chart';
 import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
-import { TabViewModule } from 'primeng/tabview';
 import { SeverityUtils } from '../utils/severity.utils';
 
 
 @Component({
   selector: 'app-home-config-audit-reports',
   standalone: true,
-  imports: [CommonModule, ButtonModule, ChartModule, DialogModule, TableModule, TabViewModule, TagModule],
+  imports: [CommonModule, ButtonModule, CarouselModule, ChartModule, DialogModule, TableModule, TagModule],
   templateUrl: './home-config-audit-reports.component.html',
   styleUrl: './home-config-audit-reports.component.scss'
 })
@@ -38,12 +38,15 @@ export class HomeConfigAuditReportsComponent {
   severities: number[] = [];
   carSeveritySummaries: CarSeveritySummary[] = [];
 
+  public slides: string[] = ["nsByNs", "nsBySev"];
+
   severitesSummariesNamespace: SeveritiesSummary[] = [];
   severitesSummariesKind: SeveritiesSummary[] = [];
   barchartDataNsByNs: PrimeNgHorizontalBarChartData | null = null;
   barchartDataNsBySev: PrimeNgHorizontalBarChartData | null = null;
   barchartDataKindByNs: PrimeNgHorizontalBarChartData | null = null;
   barchartDataKindBySev: PrimeNgHorizontalBarChartData | null = null;
+  public horizontalBarChartOption: any;
 
   isCarDetailsDialogVisible: boolean = false;
 
@@ -63,6 +66,7 @@ export class HomeConfigAuditReportsComponent {
 
     this.getArraysFromDtos();
     this.computeStatistics();
+    this.horizontalBarChartOption = PrimeNgChartUtils.getHorizontalBarChartOption();
   }
 
   private getArraysFromDtos() {

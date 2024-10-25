@@ -25,14 +25,37 @@
     </div>
 
     <div class="hide-on-small lg:col-9 h-full justify-content-center">
-      <div class="flex justify-content-center">
-        <p-tabView [style]="{ 'width': '60vw' }">
-          <p-tabPanel header="Config Audits by Namespace">
-          </p-tabPanel>
-          <p-tabPanel header="Config Audits by Severity">
-          </p-tabPanel>
-        </p-tabView>
-      </div>
+      <p-carousel [value]="slides"
+                  [numVisible]="1"
+                  [numScroll]="1"
+                  [autoplayInterval]="10000">
+        <ng-template let-slide pTemplate="item">
+          <div class="custom-slide">
+            <ng-container [ngSwitch]="slide">
+              <div *ngSwitchCase="'nsByNs'">
+                <h4 style="text-align: center;">Config Audits by Namespace</h4>
+                <div *ngIf="barchartDataNsByNs" class="flex justify-content-center">
+                  <p-chart type="bar"
+                           [data]="barchartDataNsByNs"
+                           [options]="horizontalBarChartOption"
+                           height="60vh" width="60vw"
+                           class="justify-content-center" />
+                </div>
+              </div>
+              <div *ngSwitchCase="'nsBySev'">
+                <h4 style="text-align: center;">Config Audits by Severity</h4>
+                <div *ngIf="barchartDataNsBySev" class="flex justify-content-center">
+                  <p-chart type="bar"
+                           [data]="barchartDataNsBySev"
+                           [options]="horizontalBarChartOption"
+                           height="60vh" width="60vw" />
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </ng-template>
+      </p-carousel>
+
     </div>
   </div>
 </div>
