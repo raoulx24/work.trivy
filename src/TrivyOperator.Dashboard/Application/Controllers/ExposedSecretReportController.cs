@@ -67,4 +67,14 @@ public class ExposedSecretReportController(
 
         return Ok(exposedSecretReportImageDtos);
     }
+
+    [HttpGet("summary", Name = "GetExposedSecretReportSummaryDtos")]
+    [ProducesResponseType<IEnumerable<EsSeveritiesByNsSummaryDto>>(StatusCodes.Status200OK)]
+    [Produces("application/json")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status500InternalServerError)]
+    public async Task<IEnumerable<EsSeveritiesByNsSummaryDto>> GetExposedSecretReportSummaryDtos()
+    {
+        return await exposedSecretReportService.GetExposedSecretReportSummaryDtos();
+    }
 }

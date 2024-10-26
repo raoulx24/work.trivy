@@ -69,4 +69,89 @@ public class ExposedSecretReportService(IConcurrentCache<string, IList<ExposedSe
 
         return Task.FromResult(exposedSecretReportImageDtos);
     }
+
+    public Task<IEnumerable<EsSeveritiesByNsSummaryDto>> GetExposedSecretReportSummaryDtos()
+    {
+        List<EsSeveritiesByNsSummaryDto> summaryDtos = [];
+        List<EsSeveritiesByNsSummaryDetailDto> detailDtos = [];
+        EsSeveritiesByNsSummaryDto summaryDto;
+        int[] severityIds = Enum.GetValues(typeof(TrivySeverity)).Cast<int>().Where(x => x < 4).ToArray();
+        summaryDtos = cache
+            .Where(kvp => kvp.Value.Any())
+            .SelectMany(kvp => kvp.Value
+                .SelectMany(es => (es.Report?.Secrets ?? [])
+                    .Select(esd => new { es.Metadata.NamespaceProperty, esd.Severity, esd.RuleId })))
+            .GroupBy(item => new { item.NamespaceProperty, item.Severity })
+            .Select(group => new
+            {
+                namespaceName = group.Key.NamespaceProperty,
+                trivySeverityId = group.Key.Severity,
+                totalCount = group.Count(),
+                distinctCount = group.Select(item => item.RuleId).Distinct().Count(),
+            })
+            .GroupBy(x => x.namespaceName)
+            .SelectMany(g => severityIds.Select(SeverityId => new
+            {
+                NamespaceName = g.Key,
+                SeverityId,
+                TotalCount = g.FirstOrDefault(x => (int)x.trivySeverityId == SeverityId)?.totalCount ?? 0,
+                DistinctCount = g.FirstOrDefault(x => (int)x.trivySeverityId == SeverityId)?.distinctCount ?? 0,
+            }))
+            .GroupBy(last => last.NamespaceName)
+            .Select(summaryGroup =>
+            {
+                EsSeveritiesByNsSummaryDto essns = new()
+                {
+                    Uid = Guid.NewGuid(),
+                    NamespaceName = summaryGroup.Key,
+                    Details = summaryGroup.Select(detail => {
+                        EsSeveritiesByNsSummaryDetailDto detailDto = new()
+                        {
+                            Id = detail.SeverityId,
+                            TotalCount = detail.TotalCount,
+                            DistinctCount = detail.DistinctCount,
+                        };
+                        return detailDto;
+                    }).ToList(),
+                    IsTotal = false,
+                };
+                return essns;
+            }).ToList();
+        detailDtos = cache
+            .Where(kvp => kvp.Value.Any())
+            .SelectMany(kvp => kvp.Value
+                .SelectMany(es => (es.Report?.Secrets ?? [])
+                    .Select(esd => new { esd.Severity, esd.RuleId })))
+            .GroupBy(item => item.Severity)
+            .Select(group => new
+            {
+                trivySeverityId = (int)group.Key,
+                totalCount = group.Count(),
+                distinctCount = group.Select(item => item.RuleId).Distinct().Count(),
+            })
+            .GroupJoin(
+            severityIds, left => left.trivySeverityId, right => right,
+            (left, groupedJoin) => new { left.trivySeverityId, left.totalCount, left.distinctCount, found = groupedJoin.Any() })
+            .Select(result =>
+            {
+                EsSeveritiesByNsSummaryDetailDto detailDto = new()
+                {
+                    Id = result.trivySeverityId,
+                    TotalCount = result.found ? result.totalCount : 0,
+                    DistinctCount = result.found ? result.distinctCount : 0,
+                };
+                return detailDto;
+            }).ToList();
+        summaryDto = new()
+        {
+            Uid = Guid.NewGuid(),
+            NamespaceName = string.Empty,
+            Details = detailDtos,
+            IsTotal = true,
+        };
+        summaryDtos.Add(summaryDto);
+
+        return Task.FromResult<IEnumerable<EsSeveritiesByNsSummaryDto>>([.. summaryDtos.OrderBy(x => x.NamespaceName)]);
+
+    }
 }

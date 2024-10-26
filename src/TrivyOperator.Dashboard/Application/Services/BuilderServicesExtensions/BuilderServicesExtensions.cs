@@ -86,6 +86,7 @@ public static class BuilderServicesExtensions
         bool? useServices = configuration.GetValue<bool?>("TrivyUseConfigAuditReport");
         if (useServices == null || !(bool)useServices)
         {
+            services.AddScoped<IExposedSecretReportService, ExposedSecretReportNullService>();
             return;
         }
         services.AddSingleton<

@@ -342,6 +342,32 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
+  /api/exposed-secret-reports/summary:
+    get:
+      tags:
+        - ExposedSecretReport
+      operationId: GetExposedSecretReportSummaryDtos
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EsSeveritiesByNsSummaryDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
   /api/kubernetes-namespaces:
     get:
       tags:
@@ -855,6 +881,39 @@ components:
         distinctCount:
           type: integer
           format: int32
+      additionalProperties: false
+    EsSeveritiesByNsSummaryDetailDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        totalCount:
+          type: integer
+          format: int32
+        distinctCount:
+          type: integer
+          format: int32
+      additionalProperties: false
+    EsSeveritiesByNsSummaryDto:
+      required:
+        - isTotal
+        - namespaceName
+      type: object
+      properties:
+        uid:
+          type: string
+          format: uuid
+        namespaceName:
+          minLength: 1
+          type: string
+        isTotal:
+          type: boolean
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/EsSeveritiesByNsSummaryDetailDto'
+          nullable: true
       additionalProperties: false
     ExposedSecretReportDenormalizedDto:
       type: object

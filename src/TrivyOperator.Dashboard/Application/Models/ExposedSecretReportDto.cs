@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Runtime.CompilerServices;
 using TrivyOperator.Dashboard.Domain.Trivy.ExposedSecretReport;
 using TrivyOperator.Dashboard.Domain.Trivy.VulnerabilityReport;
 
@@ -76,6 +77,23 @@ public class ExposedSecretReportDenormalizedDto
     public int SeverityId { get; init; }
     public string Target { get; init; } = string.Empty;
     public string Title { get; init; } = string.Empty;
+}
+
+public class EsSeveritiesByNsSummaryDto
+{
+    public Guid Uid { get; init; }
+    [Required]
+    public string NamespaceName { get; init; } = string.Empty;
+    [Required]
+    public bool IsTotal { get; init; } = false;
+    public List<EsSeveritiesByNsSummaryDetailDto> Details { get; init; } = [];
+}
+
+public class EsSeveritiesByNsSummaryDetailDto
+{
+    public int Id { get; init; } = 0;
+    public int TotalCount { get; init; } = 0;
+    public int DistinctCount { get; init; } = 0;
 }
 
 public static class ExposedSecretReportCrExtensions
