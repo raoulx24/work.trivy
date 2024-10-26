@@ -27,7 +27,7 @@ public static class BuilderServicesExtensions
     {
         services.AddSingleton<IConcurrentCache<string, IList<V1Namespace>>, ConcurrentCache<string, IList<V1Namespace>>>();
         services.AddSingleton<IBackgroundQueue<V1Namespace>, BackgroundQueue<V1Namespace>>();
-        if (string.IsNullOrWhiteSpace(configuration.GetSection("Kubernetes").GetValue<String>("NamespaceList")))
+        if (string.IsNullOrWhiteSpace(configuration.GetValue<String>("NamespaceList")))
         {
             services.AddSingleton<IClusterScopedWatcher<V1Namespace>, NamespaceWatcher>();
         }

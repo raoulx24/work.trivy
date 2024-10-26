@@ -79,12 +79,12 @@ export class PrimeNgChartUtils {
       title: 'a title',
     };
     severitiesSummary.filter(x => !x.isTotal).forEach(x => { chartData.labels.push(x.namespaceName!); });
-    const severities = severitiesSummary[0].details!.map(x => x.id);
+    const severities = severitiesSummary[0].details!.map(x => x.id).sort((a, b) => a! - b!);
     severities.forEach(severity => {
       let totalVulnerabilities: number[] = [];
       severitiesSummary.filter(x => !x.isTotal).forEach(severitySummary => {
-        let severityDetail = severitySummary.details!.filter(x => x.id! == severity)[0];
-        totalVulnerabilities.push(distinct ? severityDetail.distinctCount! : severityDetail.totalCount!);
+        let severityDetail = severitySummary.details!.find(x => x.id! == severity);
+        totalVulnerabilities.push(distinct ? severityDetail?.distinctCount ?? 0 : severityDetail?.totalCount ?? 0);
       });
       chartData.datasets.push({
         label: SeverityUtils.getCapitalizedName(severity!),
@@ -105,14 +105,14 @@ export class PrimeNgChartUtils {
       labels: [],
       title: 'a title',
     };
-    const severities = severitiesSummary[0].details!.map(x => x.id);
+    const severities = severitiesSummary[0].details!.map(x => x.id).sort((a, b) => a! - b!);
     let namespacesCounter: number = 0;
     severities.forEach(x => { chartData.labels.push(SeverityUtils.getCapitalizedName(x!)); });
     severitiesSummary.filter(x => !x.isTotal).forEach(severitySummary => {
       let totalVulnerabilities: number[] = [];
       severities.forEach(severity => {
-        let severityDetail = severitySummary.details!.filter(x => x.id == severity)[0];
-        totalVulnerabilities.push(distinct ? severityDetail.distinctCount! : severityDetail.totalCount!);
+        let severityDetail = severitySummary.details!.find(x => x.id == severity);
+        totalVulnerabilities.push(distinct ? severityDetail?.distinctCount ?? 0 : severityDetail?.totalCount ?? 0);
       });
       let color: string = ColorHelper.rainbow(severitiesSummary.length, namespacesCounter);
       chartData.datasets.push({

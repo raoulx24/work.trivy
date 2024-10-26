@@ -9,6 +9,9 @@
   <p-tabPanel header="Cluster RBAC Assessment Reports">
     <app-home-cluster-rbac-assessment-reports [showDistinctValues]="showDistinctValues" />
   </p-tabPanel>
+  <p-tabPanel header="Exposed Secret Reports">
+    <app-home-exposed-secret-reports [showDistinctValues]="showDistinctValues" />
+  </p-tabPanel>
   <div class="flex row text-sm align-items-center pb-1 pt-3">
     <p-inputSwitch inputId="distinctSwitch" [(ngModel)]="showDistinctValues" />
     <label for="switch1" class="ml-2">Distinct values</label>

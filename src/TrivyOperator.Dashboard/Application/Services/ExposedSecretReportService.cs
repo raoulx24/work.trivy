@@ -117,31 +117,27 @@ public class ExposedSecretReportService(IConcurrentCache<string, IList<ExposedSe
                 };
                 return essns;
             }).ToList();
-        detailDtos = cache
+        var totalSumary = cache
             .Where(kvp => kvp.Value.Any())
             .SelectMany(kvp => kvp.Value
                 .SelectMany(es => (es.Report?.Secrets ?? [])
                     .Select(esd => new { esd.Severity, esd.RuleId })))
             .GroupBy(item => item.Severity)
-            .Select(group => new
+            .Select(group => new EsSeveritiesByNsSummaryDetailDto
             {
-                trivySeverityId = (int)group.Key,
-                totalCount = group.Count(),
-                distinctCount = group.Select(item => item.RuleId).Distinct().Count(),
-            })
-            .GroupJoin(
-            severityIds, left => left.trivySeverityId, right => right,
-            (left, groupedJoin) => new { left.trivySeverityId, left.totalCount, left.distinctCount, found = groupedJoin.Any() })
-            .Select(result =>
-            {
-                EsSeveritiesByNsSummaryDetailDto detailDto = new()
+                Id = (int)group.Key,
+                TotalCount = group.Count(),
+                DistinctCount = group.Select(item => item.RuleId).Distinct().Count(),
+            });
+
+        detailDtos = totalSumary
+            .Concat(severityIds
+                .Where(id => !totalSumary.Any(x => x.Id == id))
+                .Select(id => new EsSeveritiesByNsSummaryDetailDto 
                 {
-                    Id = result.trivySeverityId,
-                    TotalCount = result.found ? result.totalCount : 0,
-                    DistinctCount = result.found ? result.distinctCount : 0,
-                };
-                return detailDto;
-            }).ToList();
+                    Id = id, TotalCount = 0, DistinctCount = 0, 
+                })
+            ).ToList();
         summaryDto = new()
         {
             Uid = Guid.NewGuid(),
