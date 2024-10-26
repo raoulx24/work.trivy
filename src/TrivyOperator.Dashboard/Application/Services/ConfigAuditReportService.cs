@@ -99,11 +99,9 @@ public class ConfigAuditReportService(IConcurrentCache<string, IList<ConfigAudit
 
         var valueTotals = cache
             .Where(kvp => kvp.Value.Any())
-            .SelectMany(kvp => kvp.Value
-                .Select(car => car.ToConfigAuditReportDto())
+            .SelectMany(kvp => kvp.Value.Select(car => car.ToConfigAuditReportDto()))
                 .SelectMany(dto => dto.Details.Select(detail => new
                 {
-                    NamespaceName = kvp.Key,
                     Kind = dto.ResourceKind,
                     detail.SeverityId,
                     detail.CheckId
@@ -115,7 +113,7 @@ public class ConfigAuditReportService(IConcurrentCache<string, IList<ConfigAudit
                     severityId = group.Key.SeverityId,
                     totalCount = group.Count(),
                     distinctCount = group.Select(x => x.CheckId).Distinct().Count()
-                }));
+                });
 
         List<ConfigAuditReportSummaryDto> resultsTotal = allConbinationsForTotals
             .GroupJoin(
