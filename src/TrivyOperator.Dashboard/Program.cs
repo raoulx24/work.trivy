@@ -13,6 +13,7 @@ using ILogger = Microsoft.Extensions.Logging.ILogger;
 using TrivyOperator.Dashboard.Utils;
 using TrivyOperator.Dashboard.Application.Services.BuilderServicesExtensions;
 using TrivyOperator.Dashboard.Application.Hubs;
+using TrivyOperator.Dashboard.Application.Services.Abstractions;
 
 Directory.SetCurrentDirectory(AppContext.BaseDirectory);
 
@@ -88,6 +89,7 @@ builder.Services.AddClusterRbacAssessmentReportServices(configuration.GetSection
 builder.Services.AddConfigAuditReportServices(configuration.GetSection("Kubernetes"));
 builder.Services.AddExposedSecretReportServices(configuration.GetSection("Kubernetes"));
 builder.Services.AddVulnerabilityReportServices(configuration.GetSection("Kubernetes"));
+builder.Services.AddScoped<IBackendSettingsService, BackendSettingsService>();
 
 #endregion
 
