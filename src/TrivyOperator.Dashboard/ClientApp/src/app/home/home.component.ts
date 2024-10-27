@@ -2,15 +2,15 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
+import { MainAppInitService } from '../services/main-app-init.service';
+
 import { HomeVulnerabilityReportsComponent } from '../home-vulnerability-reports/home-vulnerability-reports.component'
 import { HomeConfigAuditReportsComponent } from '../home-config-audit-reports/home-config-audit-reports.component'
 import { HomeClusterRbacAssessmentReportsComponent } from '../home-cluster-rbac-assessment-reports/home-cluster-rbac-assessment-reports.component'
 import { HomeExposedSecretReportsComponent } from '../home-exposed-secret-reports/home-exposed-secret-reports.component'
 
 import { InputSwitchModule } from 'primeng/inputswitch';
-
 import { TabViewModule } from 'primeng/tabview';
-
 
 @Component({
   selector: 'app-home',
@@ -27,4 +27,9 @@ import { TabViewModule } from 'primeng/tabview';
 
 export class HomeComponent {
   showDistinctValues: boolean = true;
+  enabledTrivyReports: string[] = ["crar", "car", "esr", "vr"];
+
+  constructor(mainAppInitService: MainAppInitService) {
+    this.enabledTrivyReports = mainAppInitService.backendSettingsDto?.enabledTrivyReports ?? this.enabledTrivyReports;
+  }
 }

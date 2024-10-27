@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { provideHttpClient } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
@@ -17,6 +17,7 @@ import { MenubarModule } from 'primeng/menubar';
 import { TagModule } from 'primeng/tag';
 
 import { TrivyTableComponent } from './trivy-table/trivy-table.component';
+import { MainAppInitService, initializeAppFactory } from './services/main-app-init.service'
 
 
 @NgModule({
@@ -47,10 +48,13 @@ import { TrivyTableComponent } from './trivy-table/trivy-table.component';
     ButtonModule,
     MenubarModule,
     TagModule,
-
     TrivyTableComponent,
   ],
-  providers: [provideHttpClient()],
+  providers: [
+    provideHttpClient(),
+    MainAppInitService,
+    { provide: APP_INITIALIZER, useFactory: initializeAppFactory, deps: [MainAppInitService], multi: true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {

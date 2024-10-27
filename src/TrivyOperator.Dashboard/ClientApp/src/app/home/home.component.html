@@ -1,16 +1,20 @@
 <h3>Home</h3>
 <p-tabView [scrollable]="true">
-  <p-tabPanel header="Vulnerability Reports">
-    <app-home-vulnerability-reports [showDistinctValues]="showDistinctValues" />
+  <p-tabPanel [disabled]="!enabledTrivyReports.includes('vr')" header="Vulnerability Reports">
+    <app-home-vulnerability-reports *ngIf="enabledTrivyReports.includes('vr')"
+                                    [showDistinctValues]="showDistinctValues" />
   </p-tabPanel>
-  <p-tabPanel header="Config Audit Reports">
-    <app-home-config-audit-reports [showDistinctValues]="showDistinctValues" />
+  <p-tabPanel [disabled]="!enabledTrivyReports.includes('car')" header="Config Audit Reports">
+    <app-home-config-audit-reports *ngIf="enabledTrivyReports.includes('car')"
+                                   [showDistinctValues]="showDistinctValues" />
   </p-tabPanel>
-  <p-tabPanel header="Cluster RBAC Assessment Reports">
-    <app-home-cluster-rbac-assessment-reports [showDistinctValues]="showDistinctValues" />
+  <p-tabPanel [disabled]="!enabledTrivyReports.includes('crar')" header="Cluster RBAC Assessment Reports">
+    <app-home-cluster-rbac-assessment-reports *ngIf="enabledTrivyReports.includes('crar')"
+                                              [showDistinctValues]="showDistinctValues" />
   </p-tabPanel>
-  <p-tabPanel header="Exposed Secret Reports">
-    <app-home-exposed-secret-reports [showDistinctValues]="showDistinctValues" />
+  <p-tabPanel [disabled]="!enabledTrivyReports.includes('esr')" header="Exposed Secret Reports">
+    <app-home-exposed-secret-reports *ngIf="enabledTrivyReports.includes('esr')"
+                                     [showDistinctValues]="showDistinctValues" />
   </p-tabPanel>
   <div class="flex row text-sm align-items-center pb-1 pt-3">
     <p-inputSwitch inputId="distinctSwitch" [(ngModel)]="showDistinctValues" />

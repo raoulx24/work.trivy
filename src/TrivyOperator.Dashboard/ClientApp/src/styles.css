@@ -36,6 +36,16 @@ p-inputswitch .p-inputswitch-slider {
   border-radius: 30px;
 }
 
-  p-inputswitch .p-inputswitch-slider::before {
-    border-radius: 50%;
+p-inputswitch .p-inputswitch-slider::before {
+  border-radius: 50%;
+}
+
+.hide-on-small {
+  display: none;
+}
+
+@media (min-width: 992px) {
+  .hide-on-small {
+    display: block;
   }
+}

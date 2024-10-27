@@ -5,9 +5,9 @@ import { WatcherStateInfoService } from '../../api/services/watcher-state-info.s
 import { WatcherStateInfoDto } from '../../api/models/watcher-state-info-dto'
 import { Subscription } from 'rxjs';
 
-import { } from '../services/alerts.service'
 import { AlertsService } from '../services/alerts.service';
 import { AlertDto } from '../../api/models/alert-dto'
+import { MainAppInitService } from '../services/main-app-init.service';
 
 @Component({
   selector: 'app-nav-menu',
@@ -22,9 +22,11 @@ export class NavMenuComponent implements OnInit, OnDestroy {
 
   private alertSubscription!: Subscription;
   alerts: AlertDto[] = [];
+  enabledTrivyReports: string[] = ["crar", "car", "esr", "vr"];
 
-  constructor(private router: Router, private alertsService: AlertsService) {
+  constructor(private router: Router, private alertsService: AlertsService, mainAppInitService: MainAppInitService) {
     this.isDarkMode = this.getDarkMode();
+    this.enabledTrivyReports = mainAppInitService.backendSettingsDto?.enabledTrivyReports ?? this.enabledTrivyReports;
     this.items = [
       {
         label: 'Home',
@@ -34,6 +36,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
       {
         label: 'Vulnerabilities',
         icon: 'pi pi-tags',
+        disabled: !this.enabledTrivyReports.includes("vr"),
         items: [
           {
             label: 'Browse',
@@ -48,6 +51,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
       {
         label: 'Config Audits',
         icon: 'pi pi-clipboard',
+        disabled: !this.enabledTrivyReports.includes("car"),
         items: [
           {
             label: 'Browse',
@@ -62,6 +66,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
       {
         label: 'Cluster RBAC Assessments',
         icon: 'pi pi-building-columns',
+        disabled: !this.enabledTrivyReports.includes("crar"),
         items: [
           {
             label: 'Browse',
@@ -76,6 +81,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
       {
         label: 'Exposed Secrets',
         icon: 'pi pi-briefcase',
+        disabled: !this.enabledTrivyReports.includes("esr"),
         items: [
           {
             label: 'Browse',
