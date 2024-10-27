@@ -665,11 +665,20 @@ components:
     BackendSettingsDto:
       type: object
       properties:
-        enabledTrivyReports:
+        trivyReportConfigDtos:
           type: array
           items:
-            type: string
+            $ref: '#/components/schemas/BackendSettingsTrivyReportConfigDto'
           nullable: true
+      additionalProperties: false
+    BackendSettingsTrivyReportConfigDto:
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: true
+        enabled:
+          type: boolean
       additionalProperties: false
     ClusterRbacAssessmentReportDenormalizedDto:
       type: object

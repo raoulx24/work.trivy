@@ -2,7 +2,6 @@
 using TrivyOperator.Dashboard.Application.Models;
 using TrivyOperator.Dashboard.Application.Services.Abstractions;
 using TrivyOperator.Dashboard.Application.Services.Options;
-using TrivyOperator.Dashboard.Infrastructure.Clients;
 
 namespace TrivyOperator.Dashboard.Application.Services;
 
@@ -10,12 +9,32 @@ public class BackendSettingsService(IOptions<KubernetesOptions> options) : IBack
 {
     public Task<BackendSettingsDto> GetBackendSettings()
     {
-        List<string> backends = [];
-        if (options.Value.TrivyUseClusterRbacAssessmentReport ?? false) backends.Add("crar");
-        if (options.Value.TrivyUseConfigAuditReport ?? false) backends.Add("car");
-        if (options.Value.TrivyUseExposedSecretReport ?? false) backends.Add("esr");
-        if (options.Value.TrivyUseVulnerabilityReport ?? false) backends.Add("vr");
+        BackendSettingsDto backendSettingsDto = new()
+        {
+            TrivyReportConfigDtos = [] 
+        };
 
-        return Task.FromResult<BackendSettingsDto>(new() { EnabledTrivyReports = backends });
+        backendSettingsDto.TrivyReportConfigDtos.Add(new()
+        {
+            Id = "crar",
+            Enabled = options.Value.TrivyUseClusterRbacAssessmentReport ?? false,
+        });
+        backendSettingsDto.TrivyReportConfigDtos.Add(new()
+        {
+            Id = "car",
+            Enabled = options.Value.TrivyUseConfigAuditReport ?? false,
+        });
+        backendSettingsDto.TrivyReportConfigDtos.Add(new()
+        {
+            Id = "esr",
+            Enabled = options.Value.TrivyUseExposedSecretReport ?? false,
+        });
+        backendSettingsDto.TrivyReportConfigDtos.Add(new()
+        {
+            Id = "vr",
+            Enabled = options.Value.TrivyUseVulnerabilityReport ?? false,
+        });
+
+        return Task.FromResult<BackendSettingsDto>(backendSettingsDto);
     }
 }

@@ -2,5 +2,11 @@
 
 public class BackendSettingsDto
 {
-    public IEnumerable<string> EnabledTrivyReports { get; init; } = [];
+    public List<BackendSettingsTrivyReportConfigDto> TrivyReportConfigDtos { get; init; } = [];
+}
+
+public class BackendSettingsTrivyReportConfigDto
+{
+    public string Id { get; init; } = string.Empty;
+    public bool Enabled { get; init; } = false;
 }

@@ -30,6 +30,6 @@ export class HomeComponent {
   enabledTrivyReports: string[] = ["crar", "car", "esr", "vr"];
 
   constructor(mainAppInitService: MainAppInitService) {
-    this.enabledTrivyReports = mainAppInitService.backendSettingsDto?.enabledTrivyReports ?? this.enabledTrivyReports;
+    this.enabledTrivyReports = mainAppInitService.backendSettingsDto?.trivyReportConfigDtos?.filter(x => x.enabled).map(x => x.id ?? "") ?? this.enabledTrivyReports;
   }
 }

@@ -26,7 +26,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
 
   constructor(private router: Router, private alertsService: AlertsService, mainAppInitService: MainAppInitService) {
     this.isDarkMode = this.getDarkMode();
-    this.enabledTrivyReports = mainAppInitService.backendSettingsDto?.enabledTrivyReports ?? this.enabledTrivyReports;
+    this.enabledTrivyReports = mainAppInitService.backendSettingsDto?.trivyReportConfigDtos?.filter(x => x.enabled).map(x => x.id ?? "") ?? this.enabledTrivyReports;
     this.items = [
       {
         label: 'Home',
