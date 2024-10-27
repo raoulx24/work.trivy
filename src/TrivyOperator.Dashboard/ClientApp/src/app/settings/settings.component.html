@@ -76,7 +76,7 @@
       </div>
       <p-button icon="pi pi-file-check" label="Update Names" size="small" text
                 [disabled]="csvFileNames.length == 0"
-                (onClick)="onupdateCsvFileNames($event)" />
+                (onClick)="onUpdateCsvFileNames($event)" />
       <ng-template pTemplate="footer">
         <p class="text-sm">
           <i class="pi pi-info-circle"></i>
@@ -99,7 +99,7 @@
         </ng-template>
         <ng-template let-item pTemplate="body">
           <tr>
-            <td style="width: 200px; min-width: 200px">{{ item.id }}</td>
+            <td style="width: 200px; min-width: 200px">{{ item.name }}</td>
             <td style="width: 60px; min-width: 60px">
               <p-checkbox [(ngModel)]="item.backendEnabled"
                           [disabled]="true"
@@ -121,9 +121,9 @@
         <ng-template pTemplate="footer">
           <tr>
             <td colspan="6">
-              <p-button icon="pi pi-check-square" label="Save" size="small" text
-                        [disabled]="trivyReportConfigs.length == 0"
-                        (onClick)="onClearTableStatesSelected($event)" />
+              <p-button icon="pi pi-check-square" label="Save - not implemented" size="small" text
+                        [disabled]="true"
+                        (onClick)="onUpdateTrivyReportsStates($event)" />
             </td>
           </tr>
         </ng-template>
@@ -131,7 +131,7 @@
       <ng-template pTemplate="footer">
         <p class="text-sm">
           <i class="pi pi-info-circle"></i>
-          <b> Hint:</b> Use the options to check and disable app sections related to Trivy Reports.
+          <b> Hint:</b> Use the options to enable/disable app sections related to Trivy Reports. Only Frontend ones are editable.
         </p>
       </ng-template>
     </p-panel>

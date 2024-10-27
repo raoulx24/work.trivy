@@ -21,6 +21,7 @@ export interface SavedCsvFileName {
 
 export interface TrivyReportConfig {
   id: string,
+  name: string,
   backendEnabled: boolean,
   frontendEnabled: boolean,
 }

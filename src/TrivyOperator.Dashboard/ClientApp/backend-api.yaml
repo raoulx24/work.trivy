@@ -677,6 +677,9 @@ components:
         id:
           type: string
           nullable: true
+        name:
+          type: string
+          nullable: true
         enabled:
           type: boolean
       additionalProperties: false

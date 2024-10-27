@@ -33,7 +33,7 @@ export class SettingsComponent {
     this.loadTrivyReportsStates();
   }
 
-  onClearTableStatesSelected(event: MouseEvent) {
+  onClearTableStatesSelected(_event: MouseEvent) {
     this.clearTablesOptions.forEach(option => {
       let tableStateJson = localStorage.getItem(option.dataKey);
       if (tableStateJson) {
@@ -61,7 +61,7 @@ export class SettingsComponent {
     this.loadTableOptions();
   }
 
-  onClearTableStatesAll(event: MouseEvent) {
+  onClearTableStatesAll(_event: MouseEvent) {
     this.clearTablesOptions.forEach(option => {
       let tableStateJson = localStorage.getItem(option.dataKey);
       if (tableStateJson) {
@@ -71,10 +71,14 @@ export class SettingsComponent {
     this.loadTableOptions();
   }
 
-  onupdateCsvFileNames(_event: MouseEvent) {
+  onUpdateCsvFileNames(_event: MouseEvent) {
     this.csvFileNames.forEach(x => {
       localStorage.setItem(x.dataKey, x.savedCsvName);
     })
+  }
+
+  onUpdateTrivyReportsStates(_event: MouseEvent) {
+
   }
 
   private loadTableOptions() {
@@ -100,6 +104,12 @@ export class SettingsComponent {
   }
 
   private loadTrivyReportsStates() {
-    this.trivyReportConfigs = this.mainAppInitService.backendSettingsDto?.trivyReportConfigDtos?.map(x => ({ id: x.id ?? "", backendEnabled: x.enabled ?? false, frontendEnabled: false })) ?? [];
+    this.trivyReportConfigs = this.mainAppInitService.backendSettingsDto?.trivyReportConfigDtos?.map(x =>
+    ({
+      id: x.id ?? "",
+      name: x.name ?? "",
+      backendEnabled: x.enabled ?? false,
+      frontendEnabled: x.enabled ?? false,
+    })) ?? [];
   }
 }
