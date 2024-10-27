@@ -6,7 +6,7 @@ namespace TrivyOperator.Dashboard.Application.Controllers;
 
 [ApiController]
 [Route("api/watcher-state-infos")]
-public class WatcherStateInfoController(IWatcherStateInfoService watcherStateInfoService, ILogger<WatcherStateInfoController> logger)
+public class WatcherStateInfoController(IWatcherStateInfoService watcherStateInfoService)
     : ControllerBase
 {
     [HttpGet(Name = "GetWatcherStateInfos")]

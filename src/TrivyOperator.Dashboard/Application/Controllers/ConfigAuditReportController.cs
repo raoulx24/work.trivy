@@ -8,8 +8,7 @@ namespace TrivyOperator.Dashboard.Application.Controllers;
 [ApiController]
 [Route("api/config-audit-reports")]
 public class ConfigAuditReportController(
-    IConfigAuditReportService configAuditReportService,
-    ILogger<ConfigAuditReportController> logger): ControllerBase
+    IConfigAuditReportService configAuditReportService): ControllerBase
 {
     [HttpGet(Name = "GetConfigAuditReportDtos")]
     [ProducesResponseType<IEnumerable<ConfigAuditReportDto>>(StatusCodes.Status200OK)]

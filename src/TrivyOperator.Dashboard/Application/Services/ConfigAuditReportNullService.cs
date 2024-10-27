@@ -3,7 +3,7 @@ using TrivyOperator.Dashboard.Application.Services.Abstractions;
 
 namespace TrivyOperator.Dashboard.Application.Services;
 
-public class ConfigAuditReportNullService(ILogger<ConfigAuditReportNullService> logger) : IConfigAuditReportService
+public class ConfigAuditReportNullService() : IConfigAuditReportService
 {
     public Task<IEnumerable<ConfigAuditReportDto>> GetConfigAuditReportDtos(string? namespaceName = null, IEnumerable<int>? excludedSeverities = null)
     { return Task.FromResult<IEnumerable<ConfigAuditReportDto>>([]); }

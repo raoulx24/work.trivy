@@ -7,7 +7,7 @@ using TrivyOperator.Dashboard.Infrastructure.Abstractions;
 
 namespace TrivyOperator.Dashboard.Application.Services;
 
-public class ConfigAuditReportService(IConcurrentCache<string, IList<ConfigAuditReportCr>> cache, ILogger<ConfigAuditReportService> logger) : IConfigAuditReportService
+public class ConfigAuditReportService(IConcurrentCache<string, IList<ConfigAuditReportCr>> cache) : IConfigAuditReportService
 {
     public Task<IEnumerable<ConfigAuditReportDto>> GetConfigAuditReportDtos(string? namespaceName = null, IEnumerable<int>? excludedSeverities = null)
     {

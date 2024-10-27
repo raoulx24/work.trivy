@@ -6,7 +6,7 @@ using TrivyOperator.Dashboard.Infrastructure.Abstractions;
 
 namespace TrivyOperator.Dashboard.Application.Services;
 
-public class ExposedSecretReportService(IConcurrentCache<string, IList<ExposedSecretReportCr>> cache, ILogger<ExposedSecretReportService> logger) : IExposedSecretReportService
+public class ExposedSecretReportService(IConcurrentCache<string, IList<ExposedSecretReportCr>> cache) : IExposedSecretReportService
 {
     public Task<IEnumerable<ExposedSecretReportDto>> GetExposedSecretReportDtos(string? namespaceName = null, IEnumerable<int>? excludedSeverities = null)
     {

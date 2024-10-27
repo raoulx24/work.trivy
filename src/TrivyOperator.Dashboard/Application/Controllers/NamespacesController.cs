@@ -5,7 +5,7 @@ namespace TrivyOperator.Dashboard.Application.Controllers;
 
 [ApiController]
 [Route("api/kubernetes-namespaces")]
-public class NamespacesController(INamespaceService kubernetesNamespaceService, ILogger<NamespacesController> logger)
+public class NamespacesController(INamespaceService kubernetesNamespaceService)
     : ControllerBase
 {
     [HttpGet(Name = "getAllNamespaces")]

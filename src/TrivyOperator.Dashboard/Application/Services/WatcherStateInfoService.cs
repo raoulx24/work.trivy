@@ -5,7 +5,7 @@ using TrivyOperator.Dashboard.Infrastructure.Abstractions;
 
 namespace TrivyOperator.Dashboard.Application.Services;
 
-public class WatcherStateInfoService(IConcurrentCache<string, WatcherStateInfo> cache, ILogger<WatcherStateInfoService> logger)
+public class WatcherStateInfoService(IConcurrentCache<string, WatcherStateInfo> cache)
     : IWatcherStateInfoService
 {
     public Task<IList<WatcherStateInfoDto>> GetWatcherStateInfos()

@@ -9,8 +9,7 @@ namespace TrivyOperator.Dashboard.Application.Services.Watchers;
 
 public class StaticNamespaceWatcher(
     IBackgroundQueue<V1Namespace> backgroundQueue,
-    IKubernetesNamespaceDomainService kubernetesNamespaceDomainService,
-    ILogger<StaticNamespaceWatcher> logger) : IClusterScopedWatcher<V1Namespace>
+    IKubernetesNamespaceDomainService kubernetesNamespaceDomainService) : IClusterScopedWatcher<V1Namespace>
 {
     public async void Add(CancellationToken cancellationToken, IKubernetesObject<V1ObjectMeta>? sourceKubernetesObjects)
     {

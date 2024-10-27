@@ -8,8 +8,7 @@ namespace TrivyOperator.Dashboard.Application.Controllers;
 [ApiController]
 [Route("api/cluster-rbac-assessment-reports")]
 public class ClusterRbacAssessmentReportController(
-    IClusterRbacAssessmentReportService clusterRbacAssessmentReportService,
-    ILogger<ClusterRbacAssessmentReportController> logger): ControllerBase
+    IClusterRbacAssessmentReportService clusterRbacAssessmentReportService): ControllerBase
 {
     [HttpGet(Name = "GetClusterRbacAssessmentReportDtos")]
     [ProducesResponseType<IEnumerable<ClusterRbacAssessmentReportDto>>(StatusCodes.Status200OK)]

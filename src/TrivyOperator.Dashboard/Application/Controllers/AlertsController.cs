@@ -6,7 +6,7 @@ namespace TrivyOperator.Dashboard.Application.Controllers;
 
 [ApiController]
 [Route("api/alerts")]
-public class AlertsController(IAlertsService alertsService, ILogger<AlertsController> logger)
+public class AlertsController(IAlertsService alertsService)
     : ControllerBase
 {
     [HttpGet(Name = "GetAlerts")]

@@ -8,8 +8,7 @@ namespace TrivyOperator.Dashboard.Application.Controllers;
 [ApiController]
 [Route("api/exposed-secret-reports")]
 public class ExposedSecretReportController(
-    IExposedSecretReportService exposedSecretReportService,
-    ILogger<ExposedSecretReportController> logger): ControllerBase
+    IExposedSecretReportService exposedSecretReportService): ControllerBase
 {
     [HttpGet(Name = "GetExposedSecretReportDtos")]
     [ProducesResponseType<IEnumerable<ExposedSecretReportDto>>(StatusCodes.Status200OK)]
