@@ -9,9 +9,10 @@ import { InputTextModule } from 'primeng/inputtext';
 import { PanelModule } from 'primeng/panel';
 import { TableModule } from 'primeng/table';
 
-import { ClearTablesOptions, SavedCsvFileName } from './settings.types'
+import { ClearTablesOptions, SavedCsvFileName, TrivyReportConfig } from './settings.types'
 import { PrimengTableStateUtil } from '../utils/primeng-table-state.util'
 import { LocalStorageUtils } from '../utils/local-storage.utils'
+import { MainAppInitService } from '../services/main-app-init.service';
 
 @Component({
   selector: 'app-settings',
@@ -23,11 +24,13 @@ import { LocalStorageUtils } from '../utils/local-storage.utils'
 export class SettingsComponent {
   public clearTablesOptions: ClearTablesOptions[] = [];
   public csvFileNames: SavedCsvFileName[] = [];
+  public trivyReportConfigs: TrivyReportConfig[] = [];
 
 
-  constructor() {
+  constructor(private mainAppInitService: MainAppInitService) {
     this.loadTableOptions();
     this.loadCsvFileNames();
+    this.loadTrivyReportsStates();
   }
 
   onClearTableStatesSelected(event: MouseEvent) {
@@ -68,7 +71,7 @@ export class SettingsComponent {
     this.loadTableOptions();
   }
 
-  onupdateCsvFileNames(event: MouseEvent) {
+  onupdateCsvFileNames(_event: MouseEvent) {
     this.csvFileNames.forEach(x => {
       localStorage.setItem(x.dataKey, x.savedCsvName);
     })
@@ -94,5 +97,9 @@ export class SettingsComponent {
           savedCsvName: localStorage.getItem(x) ?? "",
         }
       });
+  }
+
+  private loadTrivyReportsStates() {
+    this.trivyReportConfigs = this.mainAppInitService.backendSettingsDto?.trivyReportConfigDtos?.map(x => ({ id: x.id ?? "", backendEnabled: x.enabled ?? false, frontendEnabled: false })) ?? [];
   }
 }

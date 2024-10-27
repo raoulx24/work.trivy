@@ -85,4 +85,56 @@
       </ng-template>
     </p-panel>
   </div>
+  <div class="col-12 md:col-6">
+    <p-panel header="Trivy Reports States" class="h-full">
+      <p-table [tableStyle]=""
+               [value]="trivyReportConfigs"
+               styleClass="p-datatable-sm text-sm">
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 200px; min-width: 200px">Trivy Report</th>
+            <th style="width: 60px; min-width: 60px">Backend</th>
+            <th style="width: 60px; min-width: 60px">Frontend</th>
+          </tr>
+        </ng-template>
+        <ng-template let-item pTemplate="body">
+          <tr>
+            <td style="width: 200px; min-width: 200px">{{ item.id }}</td>
+            <td style="width: 60px; min-width: 60px">
+              <p-checkbox [(ngModel)]="item.backendEnabled"
+                          [disabled]="true"
+                          binary="true"></p-checkbox>
+            </td>
+            <td style="width: 60px; min-width: 60px">
+              <p-checkbox [(ngModel)]="item.frontendEnabled"
+                          [disabled]="!item.backendEnabled"
+                          binary="true"></p-checkbox>
+            </td>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="6" class="font-italic text-color-secondary text-sm text-center">
+              No data: no Trivy Report Configs found...
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="footer">
+          <tr>
+            <td colspan="6">
+              <p-button icon="pi pi-check-square" label="Save" size="small" text
+                        [disabled]="trivyReportConfigs.length == 0"
+                        (onClick)="onClearTableStatesSelected($event)" />
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+      <ng-template pTemplate="footer">
+        <p class="text-sm">
+          <i class="pi pi-info-circle"></i>
+          <b> Hint:</b> Use the options to check and disable app sections related to Trivy Reports.
+        </p>
+      </ng-template>
+    </p-panel>
+  </div>
+
 </div>
