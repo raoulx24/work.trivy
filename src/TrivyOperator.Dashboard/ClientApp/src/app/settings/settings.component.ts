@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { ButtonModule } from 'primeng/button';
@@ -13,6 +13,7 @@ import { ClearTablesOptions, SavedCsvFileName, TrivyReportConfig } from './setti
 import { PrimengTableStateUtil } from '../utils/primeng-table-state.util'
 import { LocalStorageUtils } from '../utils/local-storage.utils'
 import { MainAppInitService } from '../services/main-app-init.service';
+import { BackendSettingsDto } from '../../api/models/backend-settings-dto';
 
 @Component({
   selector: 'app-settings',
@@ -21,16 +22,22 @@ import { MainAppInitService } from '../services/main-app-init.service';
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.scss'
 })
-export class SettingsComponent {
+export class SettingsComponent implements OnInit {
   public clearTablesOptions: ClearTablesOptions[] = [];
   public csvFileNames: SavedCsvFileName[] = [];
   public trivyReportConfigs: TrivyReportConfig[] = [];
 
 
   constructor(private mainAppInitService: MainAppInitService) {
+  }
+
+  ngOnInit() {
     this.loadTableOptions();
     this.loadCsvFileNames();
-    this.loadTrivyReportsStates();
+    this.mainAppInitService.backendSettingsDto$.subscribe(updatedBackendSettingsDto => {
+      this.loadTrivyReportsStates(updatedBackendSettingsDto);
+    });
+    
   }
 
   onClearTableStatesSelected(_event: MouseEvent) {
@@ -78,7 +85,7 @@ export class SettingsComponent {
   }
 
   onUpdateTrivyReportsStates(_event: MouseEvent) {
-
+    this.mainAppInitService.updateBackendSettingsTrivyReportConfigDto(this.trivyReportConfigs.filter(x => x.frontendEnabled).map(x => x.id));
   }
 
   private loadTableOptions() {
@@ -103,12 +110,13 @@ export class SettingsComponent {
       });
   }
 
-  private loadTrivyReportsStates() {
-    this.trivyReportConfigs = this.mainAppInitService.backendSettingsDto?.trivyReportConfigDtos?.map(x =>
+  private loadTrivyReportsStates(backendSettingsDto: BackendSettingsDto) {
+    const defaultBackedSettings = this.mainAppInitService.defaultBackendSettingsDto ?? {trivyReportConfigDtos: []}
+    this.trivyReportConfigs = backendSettingsDto.trivyReportConfigDtos?.map(x =>
     ({
       id: x.id ?? "",
       name: x.name ?? "",
-      backendEnabled: x.enabled ?? false,
+      backendEnabled: defaultBackedSettings.trivyReportConfigDtos?.find(def => def.id === x.id)?.enabled ?? false,
       frontendEnabled: x.enabled ?? false,
     })) ?? [];
   }

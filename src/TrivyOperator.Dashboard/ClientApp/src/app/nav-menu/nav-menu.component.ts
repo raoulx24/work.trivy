@@ -24,9 +24,52 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   alerts: AlertDto[] = [];
   enabledTrivyReports: string[] = ["crar", "car", "esr", "vr"];
 
-  constructor(private router: Router, private alertsService: AlertsService, mainAppInitService: MainAppInitService) {
+  constructor(private router: Router, private alertsService: AlertsService, private mainAppInitService: MainAppInitService) {
+  }
+
+  ngOnInit() {
     this.isDarkMode = this.getDarkMode();
-    this.enabledTrivyReports = mainAppInitService.backendSettingsDto?.trivyReportConfigDtos?.filter(x => x.enabled).map(x => x.id ?? "") ?? this.enabledTrivyReports;
+    this.alertSubscription = this.alertsService.alerts$.subscribe((alerts: AlertDto[]) => {
+      this.onNewAlerts(alerts);
+    });
+    this.mainAppInitService.backendSettingsDto$.subscribe(updatedBackendSettingsDto => {
+      this.enabledTrivyReports = updatedBackendSettingsDto.trivyReportConfigDtos?.filter(x => x.enabled).map(x => x.id ?? "") ?? this.enabledTrivyReports;
+      this.setMenu();
+    });
+  }
+
+  ngOnDestroy() {
+    this.alertSubscription.unsubscribe();
+  }
+
+  public switchLightDarkMode() {
+    this.isDarkMode = !this.isDarkMode;
+    const primengThemeLink = document.getElementById("primeng-theme") as HTMLLinkElement | null;
+    if (primengThemeLink == null) {
+      return;
+    }
+    primengThemeLink.href = this.isDarkMode ? "primeng-dark.css" : "primeng-light.css";
+  }
+
+  public onAlertsClick() {
+    this.router.navigate(['/watcher-states']);
+  }
+
+  public onAboutClick() {
+    this.router.navigate(['/about']);
+  }
+
+  private getDarkMode(): boolean {
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+
+  private onNewAlerts(alerts: AlertDto[]) {
+    this.alerts = alerts;
+
+    this.alertsCount = alerts ? alerts.length : 0;
+  }
+
+  private setMenu() {
     this.items = [
       {
         label: 'Home',
@@ -108,42 +151,6 @@ export class NavMenuComponent implements OnInit, OnDestroy {
         ]
       }
     ];
-  }
 
-  ngOnInit() {
-    this.alertSubscription = this.alertsService.alerts$.subscribe((alerts: AlertDto[]) => {
-      this.onNewAlerts(alerts);
-    });
-  }
-
-  ngOnDestroy() {
-    this.alertSubscription.unsubscribe();
-  }
-
-  public switchLightDarkMode() {
-    this.isDarkMode = !this.isDarkMode;
-    const primengThemeLink = document.getElementById("primeng-theme") as HTMLLinkElement | null;
-    if (primengThemeLink == null) {
-      return;
-    }
-    primengThemeLink.href = this.isDarkMode ? "primeng-dark.css" : "primeng-light.css";
-  }
-
-  public onAlertsClick() {
-    this.router.navigate(['/watcher-states']);
-  }
-
-  public onAboutClick() {
-    this.router.navigate(['/about']);
-  }
-
-  private getDarkMode(): boolean {
-    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-  }
-
-  private onNewAlerts(alerts: AlertDto[]) {
-    this.alerts = alerts;
-
-    this.alertsCount = alerts ? alerts.length : 0;
   }
 }

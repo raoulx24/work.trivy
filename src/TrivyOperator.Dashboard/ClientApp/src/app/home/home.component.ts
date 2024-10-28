@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -25,11 +25,16 @@ import { TabViewModule } from 'primeng/tabview';
   styleUrl: './home.component.scss',
 })
 
-export class HomeComponent {
+export class HomeComponent implements OnInit {
   showDistinctValues: boolean = true;
   enabledTrivyReports: string[] = ["crar", "car", "esr", "vr"];
 
-  constructor(mainAppInitService: MainAppInitService) {
-    this.enabledTrivyReports = mainAppInitService.backendSettingsDto?.trivyReportConfigDtos?.filter(x => x.enabled).map(x => x.id ?? "") ?? this.enabledTrivyReports;
+  constructor(private mainAppInitService: MainAppInitService) {
+  }
+
+  ngOnInit() {
+    this.mainAppInitService.backendSettingsDto$.subscribe(updatedBackendSettingsDto => {
+      this.enabledTrivyReports = updatedBackendSettingsDto.trivyReportConfigDtos?.filter(x => x.enabled).map(x => x.id ?? "") ?? this.enabledTrivyReports;
+    });
   }
 }
