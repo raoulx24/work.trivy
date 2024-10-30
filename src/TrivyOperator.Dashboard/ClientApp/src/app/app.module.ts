@@ -19,6 +19,8 @@ import { TagModule } from 'primeng/tag';
 import { TrivyTableComponent } from './trivy-table/trivy-table.component';
 import { MainAppInitService, initializeAppFactory } from './services/main-app-init.service'
 
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+
 
 @NgModule({
   declarations: [
@@ -49,6 +51,7 @@ import { MainAppInitService, initializeAppFactory } from './services/main-app-in
     MenubarModule,
     TagModule,
     TrivyTableComponent,
+    FontAwesomeModule,
   ],
   providers: [
     provideHttpClient(),

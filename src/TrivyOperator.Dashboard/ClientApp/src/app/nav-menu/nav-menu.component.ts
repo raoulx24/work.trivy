@@ -9,6 +9,12 @@ import { AlertsService } from '../services/alerts.service';
 import { AlertDto } from '../../api/models/alert-dto'
 import { MainAppInitService } from '../services/main-app-init.service';
 
+import { faHouse, faShieldHalved, faClipboardList, faUserShield, faKey, faGears, IconDefinition } from '@fortawesome/free-solid-svg-icons'
+
+interface TrivyMenuItem extends MenuItem {
+  faIcon: IconDefinition | null | undefined;
+}
+
 @Component({
   selector: 'app-nav-menu',
   templateUrl: './nav-menu.component.html',
@@ -16,7 +22,7 @@ import { MainAppInitService } from '../services/main-app-init.service';
 })
 
 export class NavMenuComponent implements OnInit, OnDestroy {
-  items!: MenuItem[];
+  items: TrivyMenuItem[] = [];
   alertsCount: number = 0;
   isDarkMode!: boolean;
 
@@ -24,7 +30,16 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   alerts: AlertDto[] = [];
   enabledTrivyReports: string[] = ["crar", "car", "esr", "vr"];
 
+  
+  faHouse = faHouse;
+  faShieldHalved = faShieldHalved;
+  faClipboardList = faClipboardList;
+  faUserShield = faUserShield;
+  faKey = faKey;
+  faGears = faGears;
+  
   constructor(private router: Router, private alertsService: AlertsService, private mainAppInitService: MainAppInitService) {
+    
   }
 
   ngOnInit() {
@@ -73,12 +88,12 @@ export class NavMenuComponent implements OnInit, OnDestroy {
     this.items = [
       {
         label: 'Home',
-        icon: 'pi pi-home',
+        faIcon: faHouse,
         command: () => { this.router.navigate(['/']); },
       },
       {
         label: 'Vulnerabilities',
-        icon: 'pi pi-tags',
+        faIcon: this.faShieldHalved,
         disabled: !this.enabledTrivyReports.includes("vr"),
         items: [
           {
@@ -93,7 +108,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
       },
       {
         label: 'Config Audits',
-        icon: 'pi pi-clipboard',
+        faIcon: faClipboardList,
         disabled: !this.enabledTrivyReports.includes("car"),
         items: [
           {
@@ -108,7 +123,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
       },
       {
         label: 'Cluster RBAC Assessments',
-        icon: 'pi pi-building-columns',
+        faIcon: faUserShield,
         disabled: !this.enabledTrivyReports.includes("crar"),
         items: [
           {
@@ -123,7 +138,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
       },
       {
         label: 'Exposed Secrets',
-        icon: 'pi pi-briefcase',
+        faIcon: faKey,
         disabled: !this.enabledTrivyReports.includes("esr"),
         items: [
           {
@@ -138,7 +153,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
       },
       {
         label: 'System',
-        icon: 'pi pi-cog',
+        faIcon: faGears,
         items: [
           {
             label: 'Watcher States',
@@ -153,4 +168,5 @@ export class NavMenuComponent implements OnInit, OnDestroy {
     ];
 
   }
+
 }
