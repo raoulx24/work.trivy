@@ -11,8 +11,13 @@
     "prebuild": "node build/preBuild.js",
     "update-endpoints:local": "curl -L http://localhost:5032/swagger/v1/swagger.yaml -o backend-api.yaml",
     "sme": "ng build --source-map=true --named-chunks==true && source-map-explorer dist/**/*.js",
-    "lint": "eslint",
-    "lint:fix": "eslint --fix"
+    "prettier:cli": "prettier '**/*.{css,scss,md,yml,json,js,ts,xml,html}'",
+    "prettier:check": "npm run prettier:cli -- --check",
+    "prettier:fix": "npm run prettier:cli -- --write",
+    "eslint:check": "eslint",
+    "eslint:fix": "eslint --fix",
+    "lint": "npm run eslint:check && npm run prettier:check",
+    "lint:fix": "npm run eslint:fix && npm run prettier:fix"
   },
   "private": true,
   "dependencies": {
@@ -62,6 +67,10 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "^2.1.0",
     "ng-openapi-gen": "^0.52.0",
+    "prettier": "^3.3.3",
+    "prettier-plugin-multiline-arrays": "^3.0.6",
+    "prettier-plugin-organize-attributes": "^1.0.0",
+    "prettier-plugin-organize-imports": "^4.1.0",
     "source-map-explorer": "^2.5.3",
     "typescript": "^5.5.4"
   },
