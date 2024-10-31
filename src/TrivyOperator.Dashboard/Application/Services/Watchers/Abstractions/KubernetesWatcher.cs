@@ -31,7 +31,7 @@ public abstract class
 
     protected readonly Dictionary<string, TaskWithCts> Watchers = [];
 
-    public void Add(CancellationToken cancellationToken, IKubernetesObject<V1ObjectMeta>? sourceKubernetesObject = null)
+    public Task Add(CancellationToken cancellationToken, IKubernetesObject<V1ObjectMeta>? sourceKubernetesObject = null)
     {
         string watcherKey = GetNamespaceFromSourceEvent(sourceKubernetesObject);
         Logger.LogInformation(
@@ -48,6 +48,8 @@ public abstract class
         };
 
         Watchers.Add(watcherKey, watcherWithCts);
+
+        return Task.CompletedTask;
     }
 
     protected async Task CreateWatch(

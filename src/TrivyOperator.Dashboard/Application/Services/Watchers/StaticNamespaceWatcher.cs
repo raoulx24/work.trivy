@@ -11,7 +11,7 @@ public class StaticNamespaceWatcher(
     IBackgroundQueue<V1Namespace> backgroundQueue,
     IKubernetesNamespaceDomainService kubernetesNamespaceDomainService) : IClusterScopedWatcher<V1Namespace>
 {
-    public async void Add(CancellationToken cancellationToken, IKubernetesObject<V1ObjectMeta>? sourceKubernetesObjects)
+    public async Task Add(CancellationToken cancellationToken, IKubernetesObject<V1ObjectMeta>? sourceKubernetesObjects)
     {
         List<string> kubernetesNamespaces = await kubernetesNamespaceDomainService.GetKubernetesNamespaces();
         foreach (string kubernetesNamespace in kubernetesNamespaces)
