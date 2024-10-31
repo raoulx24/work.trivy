@@ -3,9 +3,9 @@ export class LocalStorageUtils {
   public static readonly trivyTableKeyPrefix: string = "trivyTable.";
 
   public static getKeysWithPrefix(prefix: string): string[] {
-    let keys: string[] = [];
+    const keys: string[] = [];
     for (let i = 0; i < localStorage.length; i++) {
-      let key = localStorage.key(i);
+      const key = localStorage.key(i);
       if (key && key.startsWith(prefix)) {
         keys.push(key);
       }

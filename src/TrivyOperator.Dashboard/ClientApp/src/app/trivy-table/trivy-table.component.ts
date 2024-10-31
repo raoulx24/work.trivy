@@ -94,7 +94,7 @@ export class TrivyTableComponent<TData> implements OnInit {
   }
 
   ngOnInit() {
-    let savedCsvFileName = localStorage.getItem(LocalStorageUtils.csvFileNameKeyPrefix + this.csvStoragekey);
+    const savedCsvFileName = localStorage.getItem(LocalStorageUtils.csvFileNameKeyPrefix + this.csvStoragekey);
     if (savedCsvFileName) {
       this.csvFileName = savedCsvFileName;
     }
@@ -134,7 +134,7 @@ export class TrivyTableComponent<TData> implements OnInit {
   }
 
   onFilterData() {
-    let event: TrivyFilterData = {
+    const event: TrivyFilterData = {
       namespaceName: this.filterRefreshActiveNamespace,
       selectedSeverityIds: this.filterRefreshSeverities?.map(x => x.id) ?? [],
     }
@@ -159,17 +159,17 @@ export class TrivyTableComponent<TData> implements OnInit {
   // there is an NG0100 error from here
 
   public onClearSortFilters() {
-    let currentFilters = JSON.parse(JSON.stringify(this.trivyTable.filters));
+    const currentFilters = JSON.parse(JSON.stringify(this.trivyTable.filters));
     PrimengTableStateUtil.clearFilters(this.trivyTable.filters);
     this.trivyTable.clear();
     this.filterSelectedActiveNamespaces = [];
     this.filterSelectedSeverityIds = [];
     if (this.trivyTableOptions.stateKey) {
-      let tableState = localStorage.getItem(this.trivyTableOptions.stateKey);
+      const tableState = localStorage.getItem(this.trivyTableOptions.stateKey);
       if (!tableState) {
         return;
       }
-      let tableStateJson = JSON.parse(tableState);
+      const tableStateJson = JSON.parse(tableState);
       PrimengTableStateUtil.clearTableFilters(tableStateJson);
       PrimengTableStateUtil.clearTableMultiSort(tableStateJson);
       localStorage.setItem(this.trivyTableOptions.stateKey, JSON.stringify(tableStateJson));
@@ -188,12 +188,12 @@ export class TrivyTableComponent<TData> implements OnInit {
     this.expandedRows = {};
     this.anyRowExpanded = false;
     if (this.trivyTableOptions.stateKey) {
-      let tableState = localStorage.getItem(this.trivyTableOptions.stateKey);
+      const tableState = localStorage.getItem(this.trivyTableOptions.stateKey);
       if (!tableState) {
         return;
       }
 
-      let tableStateJson = JSON.parse(tableState);
+      const tableStateJson = JSON.parse(tableState);
       if (tableStateJson.hasOwnProperty('expandedRowKeys')) {
         delete tableStateJson.expandedRowKeys;
       }
@@ -231,25 +231,29 @@ export class TrivyTableComponent<TData> implements OnInit {
     if (!this.tableStateKey) {
       return;
     }
-    let tableStateJson = localStorage.getItem(this.tableStateKey);
+    const tableStateJson = localStorage.getItem(this.tableStateKey);
     if (!tableStateJson) {
       return;
     }
-    let tableState = JSON.parse(tableStateJson);
+    const tableState = JSON.parse(tableStateJson);
     PrimengTableStateUtil.clearTableSelection(tableState);
     PrimengTableStateUtil.clearTableExpandedRows(tableState);
     localStorage.setItem(this.tableStateKey, JSON.stringify(tableState));
   }
 
-  severityWrappergetNames(severityIds: number[], maxDisplay?: number | undefined): string {
+  severityWrapperGetNames(severityIds: number[], maxDisplay?: number | undefined): string {
     return SeverityUtils.getNames(severityIds, maxDisplay);
   }
 
-  severityWrappergetName(severityId: number): string {
+  severityWrapperGetName(severityId: number): string {
     return SeverityUtils.getName(severityId);
   }
 
-  severityWrappergetCssColor(severityId: number): string {
+  severityWrapperGetCapitalizedName(severityId: number): string {
+    return SeverityUtils.getCapitalizedName(severityId);
+  }
+
+  severityWrapperGetCssColor(severityId: number): string {
     return SeverityUtils.getCssColor(severityId)
   }
 }

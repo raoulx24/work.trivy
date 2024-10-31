@@ -42,7 +42,7 @@ export class HomeClusterRbacAssessmentReportsComponent {
   onDistinctSwitch() {
   }
 
-  severityWrappergetCapitalizedName(severityId: number): string {
+  severityWrapperGetCapitalizedName(severityId: number): string {
     return SeverityUtils.getCapitalizedName(severityId);
   }
 }

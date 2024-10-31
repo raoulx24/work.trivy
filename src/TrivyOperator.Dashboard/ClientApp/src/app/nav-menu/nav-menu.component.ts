@@ -30,6 +30,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   alerts: AlertDto[] = [];
   enabledTrivyReports: string[] = ["crar", "car", "esr", "vr"];
 
+  sidebarVisible = false;
   
   faHouse = faHouse;
   faShieldHalved = faShieldHalved;
@@ -89,20 +90,23 @@ export class NavMenuComponent implements OnInit, OnDestroy {
       {
         label: 'Home',
         faIcon: faHouse,
-        command: () => { this.router.navigate(['/']); },
+        command: () => { this.router.navigate(['/']); this.sidebarVisible = false; },
       },
       {
         label: 'Vulnerabilities',
         faIcon: this.faShieldHalved,
         disabled: !this.enabledTrivyReports.includes("vr"),
+        expanded: true,
         items: [
           {
             label: 'Browse',
-            command: () => { this.router.navigate(['/vulnerability-reports']); },
+            disabled: !this.enabledTrivyReports.includes("vr"),
+            command: () => { this.router.navigate(['/vulnerability-reports']); this.sidebarVisible = false; },
           },
           {
             label: 'Detailed',
-            command: () => { this.router.navigate(['/vulnerability-reports-detailed']); },
+            disabled: !this.enabledTrivyReports.includes("vr"),
+            command: () => { this.router.navigate(['/vulnerability-reports-detailed']); this.sidebarVisible = false; },
           }
         ],
       },
@@ -110,14 +114,17 @@ export class NavMenuComponent implements OnInit, OnDestroy {
         label: 'Config Audits',
         faIcon: faClipboardList,
         disabled: !this.enabledTrivyReports.includes("car"),
+        expanded: true,
         items: [
           {
             label: 'Browse',
-            command: () => { this.router.navigate(['/config-audit-reports']); },
+            disabled: !this.enabledTrivyReports.includes("car"),
+            command: () => { this.router.navigate(['/config-audit-reports']); this.sidebarVisible = false; },
           },
           {
             label: 'Detailed',
-            command: () => { this.router.navigate(['/config-audit-reports-detailed']); },
+            disabled: !this.enabledTrivyReports.includes("car"),
+            command: () => { this.router.navigate(['/config-audit-reports-detailed']); this.sidebarVisible = false; },
           }
         ],
       },
@@ -125,14 +132,17 @@ export class NavMenuComponent implements OnInit, OnDestroy {
         label: 'Cluster RBAC Assessments',
         faIcon: faUserShield,
         disabled: !this.enabledTrivyReports.includes("crar"),
+        expanded: true,
         items: [
           {
             label: 'Browse',
-            command: () => { this.router.navigate(['/cluster-rbac-assessment-reports']); },
+            disabled: !this.enabledTrivyReports.includes("crar"),
+            command: () => { this.router.navigate(['/cluster-rbac-assessment-reports']); this.sidebarVisible = false; },
           },
           {
             label: 'Detailed',
-            command: () => { this.router.navigate(['/cluster-rbac-assessment-reports-detailed']); },
+            disabled: !this.enabledTrivyReports.includes("crar"),
+            command: () => { this.router.navigate(['/cluster-rbac-assessment-reports-detailed']); this.sidebarVisible = false; },
           }
         ],
       },
@@ -140,28 +150,32 @@ export class NavMenuComponent implements OnInit, OnDestroy {
         label: 'Exposed Secrets',
         faIcon: faKey,
         disabled: !this.enabledTrivyReports.includes("esr"),
+        expanded: true,
         items: [
           {
             label: 'Browse',
-            command: () => { this.router.navigate(['/exposed-secret-reports']); },
+            disabled: !this.enabledTrivyReports.includes("esr"),
+            command: () => { this.router.navigate(['/exposed-secret-reports']); this.sidebarVisible = false; },
           },
           {
             label: 'Detailed',
-            command: () => { this.router.navigate(['/exposed-secret-reports-detailed']); },
+            disabled: !this.enabledTrivyReports.includes("esr"),
+            command: () => { this.router.navigate(['/exposed-secret-reports-detailed']); this.sidebarVisible = false; },
           }
         ],
       },
       {
         label: 'System',
         faIcon: faGears,
+        expanded: true,
         items: [
           {
             label: 'Watcher States',
-            command: () => { this.router.navigate(['/watcher-states']); },
+            command: () => { this.router.navigate(['/watcher-states']); this.sidebarVisible = false; },
           },
           {
             label: 'Settings',
-            command: () => { this.router.navigate(['/settings']); },
+            command: () => { this.router.navigate(['/settings']); this.sidebarVisible = false; },
           }
         ]
       }
@@ -169,4 +183,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
 
   }
 
+  openSidebar() {
+    this.sidebarVisible = true;
+  }
 }

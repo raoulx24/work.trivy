@@ -14,7 +14,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BadgeModule } from 'primeng/badge';
 import { ButtonModule } from 'primeng/button';
 import { MenubarModule } from 'primeng/menubar';
+import { PanelMenuModule } from 'primeng/panelmenu';
+import { SidebarModule } from 'primeng/sidebar';
 import { TagModule } from 'primeng/tag';
+import { TieredMenuModule } from 'primeng/tieredmenu';
 
 import { TrivyTableComponent } from './trivy-table/trivy-table.component';
 import { MainAppInitService, initializeAppFactory } from './services/main-app-init.service'
@@ -49,6 +52,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     BadgeModule,
     ButtonModule,
     MenubarModule,
+    PanelMenuModule,
+    SidebarModule,
     TagModule,
     TrivyTableComponent,
     FontAwesomeModule,

@@ -103,11 +103,11 @@ export class HomeExposedSecretReportsComponent {
     this.isMoreESDetailsModalVisible = true;
   }
 
-  severityWrappergetCapitalizedName(severityId: number): string {
+  severityWrapperGetCapitalizedName(severityId: number): string {
     return SeverityUtils.getCapitalizedName(severityId);
   }
 
-  severityWrappergetgetCssColor(severityId: number): string {
+  severityWrapperGetCssColor(severityId: number): string {
     return SeverityUtils.getCssColor(severityId);
   }
 

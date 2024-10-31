@@ -134,10 +134,10 @@ export class ConfigAuditReportsComponent {
   }
 
   public onRefreshRequested(event: TrivyFilterData) {
-    let excludedSeverities = SeverityUtils.getSeverityIds()
+    const excludedSeverities = SeverityUtils.getSeverityIds()
       .filter(severityId => !event.selectedSeverityIds.includes(severityId)) || [];
 
-    let params: GetConfigAuditReportDtos$Params = {
+    const params: GetConfigAuditReportDtos$Params = {
       namespaceName: event.namespaceName ?? undefined,
       excludedSeverities: excludedSeverities.length > 0 ? excludedSeverities.join(",") : undefined,
     }

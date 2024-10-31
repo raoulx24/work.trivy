@@ -42,13 +42,13 @@ export class SettingsComponent implements OnInit {
 
   onClearTableStatesSelected(_event: MouseEvent) {
     this.clearTablesOptions.forEach(option => {
-      let tableStateJson = localStorage.getItem(option.dataKey);
+      const tableStateJson = localStorage.getItem(option.dataKey);
       if (tableStateJson) {
         if (option.all) {
           localStorage.removeItem(option.dataKey);
         }
         else {
-          let tableState = JSON.parse(tableStateJson);
+          const tableState = JSON.parse(tableStateJson);
           if (option.filters) {
             PrimengTableStateUtil.clearTableFilters(tableState);
           }
@@ -70,7 +70,7 @@ export class SettingsComponent implements OnInit {
 
   onClearTableStatesAll(_event: MouseEvent) {
     this.clearTablesOptions.forEach(option => {
-      let tableStateJson = localStorage.getItem(option.dataKey);
+      const tableStateJson = localStorage.getItem(option.dataKey);
       if (tableStateJson) {
         localStorage.removeItem(option.dataKey);
       }

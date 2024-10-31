@@ -213,11 +213,11 @@ export class HomeConfigAuditReportsComponent {
     }
   }
 
-  severityWrappergetCapitalizedName(severityId: number): string {
+  severityWrapperGetCapitalizedName(severityId: number): string {
     return SeverityUtils.getCapitalizedName(severityId);
   }
 
-  severityWrappergetgetCssColor(severityId: number): string {
+  severityWrapperGetGetCssColor(severityId: number): string {
     return SeverityUtils.getCssColor(severityId);
   }
 }

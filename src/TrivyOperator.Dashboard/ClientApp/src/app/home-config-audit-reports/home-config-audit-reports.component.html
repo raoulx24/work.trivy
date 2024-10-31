@@ -97,7 +97,7 @@
         <tr>
           <th rowspan="2" pFrozenColumn>Namespace</th>
           <ng-container *ngFor="let severityId of severities">
-            <th [attr.colspan]="kinds.length" class="text-center">{{ severityWrappergetCapitalizedName(severityId) }}</th>
+            <th [attr.colspan]="kinds.length" class="text-center">{{ severityWrapperGetCapitalizedName(severityId) }}</th>
           </ng-container>
         </tr>
         <tr>
@@ -117,7 +117,7 @@
                 <ng-container *ngIf="getCountFromConfigAuditReportSummaryDtos(item, kind, severityId) as result">
                   <p-tag *ngIf="result !== '0'" [value]="result"
                          [rounded]="true"
-                         [style]="{ background: severityWrappergetgetCssColor(severityId) }" />
+                         [style]="{ background: severityWrapperGetGetCssColor(severityId) }" />
                 </ng-container>
               </td>
             </ng-container>
@@ -132,7 +132,7 @@
               <ng-container *ngIf="getCountFromConfigAuditReportSummaryDtos('', kind, severityId) as result">
                 <p-tag *ngIf="result !== '0'" [value]="result"
                        [rounded]="true"
-                       [style]="{ background: severityWrappergetgetCssColor(severityId) }" />
+                       [style]="{ background: severityWrapperGetGetCssColor(severityId) }" />
               </ng-container>
             </td>
           </ng-container>

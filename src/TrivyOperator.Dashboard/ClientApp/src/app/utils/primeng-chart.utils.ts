@@ -36,25 +36,25 @@ export interface SeveritiesSummary {
 
 export class PrimeNgChartUtils {
   public getDataForPieChart(severitiesSummary: SeveritiesSummary[], title: string = 'generic'): PrimeNgPieChartData[] {
-    let pieChartData: PrimeNgPieChartData[] = [];
+    const pieChartData: PrimeNgPieChartData[] = [];
     const severityDtos = SeverityUtils.severityDtos;
-    let severityLabels: string[] = [];
-    let cssColors: string[] = [];
-    let cssColorHovers: string[] = [];
+    const severityLabels: string[] = [];
+    const cssColors: string[] = [];
+    const cssColorHovers: string[] = [];
     severityDtos.forEach(x => {
       severityLabels.push(x.name);
       cssColors.push(SeverityUtils.getCssColor(x.id));
       cssColorHovers.push(SeverityUtils.getCssColorHover(x.id));
     });
     severitiesSummary.filter(x => !x.isTotal).forEach(severitySummary => {
-      let values: number[] = [];
+      const values: number[] = [];
       if (severitySummary.details != null) {
 
         severitySummary.details
           .sort((a, b) => a.id! - b.id!)
           .forEach(x => { values.push(x.distinctCount!); });
       }
-      let chartData: PrimeNgPieChartData = {
+      const chartData: PrimeNgPieChartData = {
         labels: severityLabels,
         datasets: [
           {
@@ -73,7 +73,7 @@ export class PrimeNgChartUtils {
 
   public static getDataForHorizontalBarChartByNamespace(severitiesSummary: SeveritiesSummary[], distinct: boolean): PrimeNgHorizontalBarChartData {
     // TODO make required everything in severitiesDto and severitiesSummaryDto
-    let chartData: PrimeNgHorizontalBarChartData = {
+    const chartData: PrimeNgHorizontalBarChartData = {
       datasets: [],
       labels: [],
       title: 'a title',
@@ -81,9 +81,9 @@ export class PrimeNgChartUtils {
     severitiesSummary.filter(x => !x.isTotal).forEach(x => { chartData.labels.push(x.namespaceName!); });
     const severities = severitiesSummary[0].details!.map(x => x.id).sort((a, b) => a! - b!);
     severities.forEach(severity => {
-      let totalVulnerabilities: number[] = [];
+      const totalVulnerabilities: number[] = [];
       severitiesSummary.filter(x => !x.isTotal).forEach(severitySummary => {
-        let severityDetail = severitySummary.details!.find(x => x.id! == severity);
+        const severityDetail = severitySummary.details!.find(x => x.id! == severity);
         totalVulnerabilities.push(distinct ? severityDetail?.distinctCount ?? 0 : severityDetail?.totalCount ?? 0);
       });
       chartData.datasets.push({
@@ -100,7 +100,7 @@ export class PrimeNgChartUtils {
 
   public static getDataForHorizontalBarChartBySeverity(severitiesSummary: SeveritiesSummary[], distinct: boolean): PrimeNgHorizontalBarChartData {
     // TODO make required everything in severitiesDto and severitiesSummaryDto
-    let chartData: PrimeNgHorizontalBarChartData = {
+    const chartData: PrimeNgHorizontalBarChartData = {
       datasets: [],
       labels: [],
       title: 'a title',
@@ -109,12 +109,12 @@ export class PrimeNgChartUtils {
     let namespacesCounter: number = 0;
     severities.forEach(x => { chartData.labels.push(SeverityUtils.getCapitalizedName(x!)); });
     severitiesSummary.filter(x => !x.isTotal).forEach(severitySummary => {
-      let totalVulnerabilities: number[] = [];
+      const totalVulnerabilities: number[] = [];
       severities.forEach(severity => {
-        let severityDetail = severitySummary.details!.find(x => x.id == severity);
+        const severityDetail = severitySummary.details!.find(x => x.id == severity);
         totalVulnerabilities.push(distinct ? severityDetail?.distinctCount ?? 0 : severityDetail?.totalCount ?? 0);
       });
-      let color: string = ColorHelper.rainbow(severitiesSummary.length, namespacesCounter);
+      const color: string = ColorHelper.rainbow(severitiesSummary.length, namespacesCounter);
       chartData.datasets.push({
         label: severitySummary.namespaceName!,
         data: totalVulnerabilities,

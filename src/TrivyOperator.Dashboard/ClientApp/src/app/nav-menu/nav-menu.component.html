@@ -1,13 +1,10 @@
-<!--<p-menubar [model]="items" />-->
-<p-menubar [model]="items">
-  <ng-template pTemplate="start"> <img src="assets/logo_AL.ico" alt="logo" height="50" class="mr-2"> </ng-template>
-  <ng-template pTemplate="item" let-item let-root="root">
-    <a pRipple class="flex align-items-center p-menuitem-link">
-      <fa-icon *ngIf="item.faIcon" [icon]="item.faIcon" icon=""></fa-icon>
-      <span class="ml-2">{{ item.label }}</span>
-      <p-badge *ngIf="item.badge" [ngClass]="{ 'ml-auto': !root, 'ml-2': root }" [value]="item.badge" />
-      <!--<i *ngIf="item.items" [ngClass]="['pi', root ? 'pi-angle-down ml-2' : 'pi-angle-right ml-auto']"></i>-->
-    </a>
+<p-menubar>
+  <ng-template pTemplate="start">
+    <div class="flex align-items-center gap-3">
+      <p-button icon="pi pi-bars" [text]="true" [raised]="true" (click)="openSidebar()" />
+      <img src="assets/logo_AL.ico" alt="logo" height="45">
+      <h3>Trivy Dashboard</h3>
+    </div>
   </ng-template>
   <ng-template pTemplate="end">
     <div class="flex align-items-center gap-3">
@@ -21,3 +18,15 @@
     </div>
   </ng-template>
 </p-menubar>
+<p-sidebar [(visible)]="sidebarVisible" [baseZIndex]="10000" [showCloseIcon]="false">
+  <h4>Menu</h4>
+  <p-panelMenu [model]="items" styleClass="w-full">
+    <ng-template pTemplate="item" let-item let-root="root">
+      <a pRipple class="flex align-items-center cursor-pointer text-color px-3 py-2">
+        <fa-icon *ngIf="item.faIcon" [icon]="item.faIcon" icon=""></fa-icon>
+        <span class="ml-2">{{ item.label }}</span>
+        <p-badge *ngIf="item.badge" [ngClass]="{ 'ml-auto': !root, 'ml-2': root }" [value]="item.badge" />
+      </a>
+    </ng-template>
+  </p-panelMenu>
+</p-sidebar>

@@ -57,7 +57,7 @@ export class SeverityUtils {
   }
 
   public static getCapitalizedName(severityId: number): string {
-    let severityName = SeverityUtils.getName(severityId).toLowerCase();
+    const severityName = SeverityUtils.getName(severityId).toLowerCase();
     return SeverityUtils.getCapitalizedString(severityName);
   }
 
@@ -81,11 +81,9 @@ export class SeverityUtils {
       return `${severityIds.length} selected`
     }
     else {
-      let selectedSeverityNames: string[] = [];
-      severityIds.forEach((x) => { selectedSeverityNames.push(SeverityUtils.getName(x)); });
+      const selectedSeverityNames: string[] = [];
+      severityIds.sort((a, b) => a - b).forEach((x) => { selectedSeverityNames.push(SeverityUtils.getCapitalizedName(x)); });
       return selectedSeverityNames.join(", ");
     }
   }
-
-  
 }

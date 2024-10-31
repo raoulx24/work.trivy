@@ -144,10 +144,10 @@ export class ExposedSecretReportsComponent {
   }
 
   onRefreshRequested(event: TrivyFilterData) {
-    let excludedSeverities = SeverityUtils.getSeverityIds()
+    const excludedSeverities = SeverityUtils.getSeverityIds()
       .filter(severityId => !event.selectedSeverityIds.includes(severityId)) || [];
 
-    let params: GetExposedSecretReportImageDtos$Params = {
+    const params: GetExposedSecretReportImageDtos$Params = {
       namespaceName: event.namespaceName ?? undefined,
       excludedSeverities: excludedSeverities.length > 0 ? excludedSeverities.join(",") : undefined,
     }
@@ -185,7 +185,7 @@ export class ExposedSecretReportsComponent {
             celValue = dto.imageRepository!;
             break;
           case 1:
-            let resourceNames: string[] = dto!.resources!.map(x => x.name!);
+            const resourceNames: string[] = dto!.resources!.map(x => x.name!);
             let narrowedResourceNames: string;
             let narrowedResourceNamesLink: string | null = null;
             if (resourceNames.length > 2) {
