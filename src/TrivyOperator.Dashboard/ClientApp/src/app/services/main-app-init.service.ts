@@ -13,6 +13,8 @@ export class MainAppInitService {
 
   defaultBackendSettingsDto: BackendSettingsDto | null = null;
 
+  isDarkMode: boolean = false;
+
   constructor(private backendSettingsService: BackendSettingsService) {
   }
 
@@ -21,7 +23,9 @@ export class MainAppInitService {
       this.backendSettingsService.getBackendSettings().subscribe({
         next: (res) => {
           this.defaultBackendSettingsDto = res;
-          this.mergeBackendSettingsDto(res)
+          this.mergeBackendSettingsDto(res);
+          this.isDarkMode = this.getDarkMode();
+          this.setDarkMode();
           resolve();
         },
         error: (err) => {
@@ -47,6 +51,41 @@ export class MainAppInitService {
     localStorage.setItem('backendSettings.trivyReportConfig.defaultsPreviousSession',
       (this.defaultBackendSettingsDto?.trivyReportConfigDtos?.filter(x => x.enabled).map(x => x.id) ?? []).join(','));
   }
+
+  switchLightDarkMode() {
+    this.isDarkMode = !this.isDarkMode;
+    this.setDarkMode();
+  }
+
+  private getDarkMode(): boolean {
+    return this.getBoolValue(localStorage.getItem('mainSettings.isDarkMode'))
+      ?? (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  }
+
+  private setDarkMode() {
+    const primengThemeLink = document.getElementById("primeng-theme") as HTMLLinkElement | null;
+    if (primengThemeLink == null) {
+      return;
+    }
+    primengThemeLink.href = this.isDarkMode ? "primeng-dark.css" : "primeng-light.css";
+    localStorage.setItem('mainSettings.isDarkMode', this.isDarkMode.toString())
+  }
+
+  private getBoolValue(value: string | null): boolean | null {
+    // Convert string to lower case for case-insensitive comparison
+    switch (value?.toLowerCase().trim()) {
+      case "true":
+      case "yes":
+      case "1":
+        return true;
+      case "false":
+      case "no":
+      case "0":
+        return false;
+      default:
+        return null;
+    }
+  };
 
   private mergeBackendSettingsDto(backendSettingsDto: BackendSettingsDto) {
     const previousItems: string[] = localStorage

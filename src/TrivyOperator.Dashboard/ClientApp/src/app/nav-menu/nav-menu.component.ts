@@ -24,13 +24,13 @@ interface TrivyMenuItem extends MenuItem {
 export class NavMenuComponent implements OnInit, OnDestroy {
   items: TrivyMenuItem[] = [];
   alertsCount: number = 0;
-  isDarkMode!: boolean;
+  get isDarkMode(): boolean { return this.mainAppInitService.isDarkMode; }
 
   private alertSubscription!: Subscription;
   alerts: AlertDto[] = [];
   enabledTrivyReports: string[] = ["crar", "car", "esr", "vr"];
 
-  sidebarVisible = false;
+  isSidebarVisible = false;
   
   faHouse = faHouse;
   faShieldHalved = faShieldHalved;
@@ -39,12 +39,10 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   faKey = faKey;
   faGears = faGears;
   
-  constructor(private router: Router, private alertsService: AlertsService, private mainAppInitService: MainAppInitService) {
-    
+  constructor(public router: Router, private alertsService: AlertsService, private mainAppInitService: MainAppInitService) {
   }
 
   ngOnInit() {
-    this.isDarkMode = this.getDarkMode();
     this.alertSubscription = this.alertsService.alerts$.subscribe((alerts: AlertDto[]) => {
       this.onNewAlerts(alerts);
     });
@@ -59,20 +57,11 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   }
 
   public switchLightDarkMode() {
-    this.isDarkMode = !this.isDarkMode;
-    const primengThemeLink = document.getElementById("primeng-theme") as HTMLLinkElement | null;
-    if (primengThemeLink == null) {
-      return;
-    }
-    primengThemeLink.href = this.isDarkMode ? "primeng-dark.css" : "primeng-light.css";
+    this.mainAppInitService.switchLightDarkMode();
   }
 
   public onAlertsClick() {
     this.router.navigate(['/watcher-states']);
-  }
-
-  public onAboutClick() {
-    this.router.navigate(['/about']);
   }
 
   private getDarkMode(): boolean {
@@ -90,7 +79,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
       {
         label: 'Home',
         faIcon: faHouse,
-        command: () => { this.router.navigate(['/']); this.sidebarVisible = false; },
+        command: () => { this.router.navigate(['/']); this.isSidebarVisible = false; },
       },
       {
         label: 'Vulnerabilities',
@@ -101,12 +90,12 @@ export class NavMenuComponent implements OnInit, OnDestroy {
           {
             label: 'Browse',
             disabled: !this.enabledTrivyReports.includes("vr"),
-            command: () => { this.router.navigate(['/vulnerability-reports']); this.sidebarVisible = false; },
+            command: () => { this.router.navigate(['/vulnerability-reports']); this.isSidebarVisible = false; },
           },
           {
             label: 'Detailed',
             disabled: !this.enabledTrivyReports.includes("vr"),
-            command: () => { this.router.navigate(['/vulnerability-reports-detailed']); this.sidebarVisible = false; },
+            command: () => { this.router.navigate(['/vulnerability-reports-detailed']); this.isSidebarVisible = false; },
           }
         ],
       },
@@ -119,12 +108,12 @@ export class NavMenuComponent implements OnInit, OnDestroy {
           {
             label: 'Browse',
             disabled: !this.enabledTrivyReports.includes("car"),
-            command: () => { this.router.navigate(['/config-audit-reports']); this.sidebarVisible = false; },
+            command: () => { this.router.navigate(['/config-audit-reports']); this.isSidebarVisible = false; },
           },
           {
             label: 'Detailed',
             disabled: !this.enabledTrivyReports.includes("car"),
-            command: () => { this.router.navigate(['/config-audit-reports-detailed']); this.sidebarVisible = false; },
+            command: () => { this.router.navigate(['/config-audit-reports-detailed']); this.isSidebarVisible = false; },
           }
         ],
       },
@@ -137,12 +126,12 @@ export class NavMenuComponent implements OnInit, OnDestroy {
           {
             label: 'Browse',
             disabled: !this.enabledTrivyReports.includes("crar"),
-            command: () => { this.router.navigate(['/cluster-rbac-assessment-reports']); this.sidebarVisible = false; },
+            command: () => { this.router.navigate(['/cluster-rbac-assessment-reports']); this.isSidebarVisible = false; },
           },
           {
             label: 'Detailed',
             disabled: !this.enabledTrivyReports.includes("crar"),
-            command: () => { this.router.navigate(['/cluster-rbac-assessment-reports-detailed']); this.sidebarVisible = false; },
+            command: () => { this.router.navigate(['/cluster-rbac-assessment-reports-detailed']); this.isSidebarVisible = false; },
           }
         ],
       },
@@ -155,12 +144,12 @@ export class NavMenuComponent implements OnInit, OnDestroy {
           {
             label: 'Browse',
             disabled: !this.enabledTrivyReports.includes("esr"),
-            command: () => { this.router.navigate(['/exposed-secret-reports']); this.sidebarVisible = false; },
+            command: () => { this.router.navigate(['/exposed-secret-reports']); this.isSidebarVisible = false; },
           },
           {
             label: 'Detailed',
             disabled: !this.enabledTrivyReports.includes("esr"),
-            command: () => { this.router.navigate(['/exposed-secret-reports-detailed']); this.sidebarVisible = false; },
+            command: () => { this.router.navigate(['/exposed-secret-reports-detailed']); this.isSidebarVisible = false; },
           }
         ],
       },
@@ -171,12 +160,16 @@ export class NavMenuComponent implements OnInit, OnDestroy {
         items: [
           {
             label: 'Watcher States',
-            command: () => { this.router.navigate(['/watcher-states']); this.sidebarVisible = false; },
+            command: () => { this.router.navigate(['/watcher-states']); this.isSidebarVisible = false; },
           },
           {
             label: 'Settings',
-            command: () => { this.router.navigate(['/settings']); this.sidebarVisible = false; },
-          }
+            command: () => { this.router.navigate(['/settings']); this.isSidebarVisible = false; },
+          },
+          {
+            label: 'About',
+            command: () => { this.router.navigate(['/about']); this.isSidebarVisible = false; },
+          },
         ]
       }
     ];
@@ -184,6 +177,6 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   }
 
   openSidebar() {
-    this.sidebarVisible = true;
+    this.isSidebarVisible = true;
   }
 }

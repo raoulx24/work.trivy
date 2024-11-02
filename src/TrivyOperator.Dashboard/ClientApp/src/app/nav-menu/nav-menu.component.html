@@ -2,7 +2,7 @@
   <ng-template pTemplate="start">
     <div class="flex align-items-center gap-3">
       <p-button icon="pi pi-bars" [text]="true" [raised]="true" (click)="openSidebar()" />
-      <img src="assets/logo_AL.ico" alt="logo" height="45">
+      <img src="assets/logo_AL.ico" alt="logo" height="45" (click)="router.navigate(['/'])">
       <h3>Trivy Dashboard</h3>
     </div>
   </ng-template>
@@ -12,13 +12,12 @@
         <p-button label="" icon="pi pi-bell" [rounded]="true" [text]="true" [raised]="true" (click)="onAlertsClick()" />
         <span class="p-badge p-badge-danger text-xs">{{ alertsCount }}</span>
       </div>
-      <p-button icon="pi pi-info-circle" [rounded]="true" [text]="true" [raised]="true" (click)="onAboutClick()" />
       <p-button *ngIf="isDarkMode" icon="pi pi-sun" [rounded]="true" [text]="true" [raised]="true" (click)="switchLightDarkMode()"></p-button>
       <p-button *ngIf="!isDarkMode" icon="pi pi-moon" [rounded]="true" [text]="true" [raised]="true" (click)="switchLightDarkMode()"></p-button>
     </div>
   </ng-template>
 </p-menubar>
-<p-sidebar [(visible)]="sidebarVisible" [baseZIndex]="10000" [showCloseIcon]="false">
+<p-sidebar [(visible)]="isSidebarVisible" [baseZIndex]="10000" [showCloseIcon]="false">
   <h4>Menu</h4>
   <p-panelMenu [model]="items" styleClass="w-full">
     <ng-template pTemplate="item" let-item let-root="root">
