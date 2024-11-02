@@ -1,0 +1,92 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trivy-operator-dashboard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: trivy-operator-dashboard
+      app.kubernetes.io/name: trivy-operator-dashboard
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: web
+        app.kubernetes.io/instance: trivy-operator-dashboard
+        app.kubernetes.io/name: trivy-operator-dashboard
+        app.kubernetes.io/part-of: trivy-operator
+        app.kubernetes.io/version: "0.9"
+    spec:
+      containers:
+      - name: trivy-operator-dashboard
+        env:
+        - name: ASPNETCORE_URLS
+          value: http://+:8900
+        image: ghcr.io/raoulx24/trivydashboard:latest
+        ports:
+        - containerPort: 8900
+          name: api-http
+          protocol: TCP
+        resources:
+          limits:
+            cpu: "1"
+            memory: 384Mi
+          requests:
+            cpu: 100m
+            memory: 384Mi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: trivy-operator-dashboard-cluster-ip
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/instance: trivy-operator-dashboard
+    app.kubernetes.io/name: trivy-operator-dashboard
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: api-http
+
+---
+# kubectl create secret tls trivy-operator-dashboard-tls-secret --cert=path/to/cert/file --key=path/to/key/file
+apiVersion: v1
+metadata:
+  name: trivy-operator-dashboard-tls-secret
+kind: Secret
+data:
+  tls.crt: ''
+  tls.key: ''
+type: kubernetes.io/tls
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: trivy-operator-dashboard-ingress
+spec:
+  # use your own ingress class name
+  ingressClassName: nginx
+  rules:
+    # use your real FQDN
+  - host: a.fqdn                       
+    http:
+      paths:
+      - backend:
+          service:
+            name: trivy-operator-dashboard-cluster-ip
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    # use your real FQDN
+    - a.fqdn
+    secretName: trivy-operator-dashboard-tls-secret
+
+
+
