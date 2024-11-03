@@ -134,7 +134,7 @@ public class ConfigAuditReportService(IConcurrentCache<string, IList<ConfigAudit
                         Kind = combo.kind,
                         SeverityId = combo.severityId,
                         TotalCount = countGroupArray.FirstOrDefault()?.totalCount ?? 0,
-                        DistinctCount = countGroupArray?.FirstOrDefault()?.distinctCount ?? 0,
+                        DistinctCount = countGroupArray.FirstOrDefault()?.distinctCount ?? 0,
                     };
                 })
             .ToList();

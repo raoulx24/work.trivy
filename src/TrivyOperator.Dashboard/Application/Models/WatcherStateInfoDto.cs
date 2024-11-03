@@ -20,11 +20,11 @@ public static class WatcherStateInfoExtensions
             ? new WatcherStateInfoDto()
             : new WatcherStateInfoDto
             {
-                KubernetesObjectType = watcherStateInfo.WatchedKubernetesObjectType.Name ?? string.Empty,
+                KubernetesObjectType = watcherStateInfo.WatchedKubernetesObjectType.Name,
                 NamespaceName = watcherStateInfo.NamespaceName,
-                Status = watcherStateInfo.Status.ToString() ?? "Unknown",
-                MitigationMessage = GetMitigationMessage(watcherStateInfo!),
-                LastException = watcherStateInfo?.LastException?.Message ?? string.Empty,
+                Status = watcherStateInfo.Status.ToString(),
+                MitigationMessage = GetMitigationMessage(watcherStateInfo),
+                LastException = watcherStateInfo.LastException?.Message ?? string.Empty,
             };
 
     private static string GetMitigationMessage(WatcherStateInfo watcherStateInfo)

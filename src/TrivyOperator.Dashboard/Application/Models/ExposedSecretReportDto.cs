@@ -102,7 +102,7 @@ public static class ExposedSecretReportCrExtensions
     public static ExposedSecretReportDto ToExposedSecretReportDto(this ExposedSecretReportCr exposedSecretReportCr)
     {
         List<ExposedSecretReportDetailDto> exposedSecretReportDetailDtos = [];
-        foreach (Secret secret in exposedSecretReportCr?.Report?.Secrets ?? [])
+        foreach (Secret secret in exposedSecretReportCr.Report?.Secrets ?? [])
         {
             ExposedSecretReportDetailDto exposedSecretReportDetailDto = new()
             {
@@ -118,43 +118,43 @@ public static class ExposedSecretReportCrExtensions
 
         ExposedSecretReportDto exposedSecretReportDto = new()
         {
-            Uid = new Guid(exposedSecretReportCr?.Metadata?.Uid ?? string.Empty),
+            Uid = new Guid(exposedSecretReportCr.Metadata.Uid ?? string.Empty),
             ResourceName =
-                exposedSecretReportCr?.Metadata?.Labels != null &&
+                exposedSecretReportCr.Metadata.Labels != null &&
                 exposedSecretReportCr.Metadata.Labels.TryGetValue(
                     "trivy-operator.resource.name",
                     out string? resourceName)
                     ? resourceName
                     : string.Empty,
             ResourceNamespace =
-                exposedSecretReportCr?.Metadata?.Labels != null &&
+                exposedSecretReportCr.Metadata.Labels != null &&
                 exposedSecretReportCr.Metadata.Labels.TryGetValue(
                     "trivy-operator.resource.namespace",
                     out string? resourceNamespace)
                     ? resourceNamespace
                     : string.Empty,
             ResourceKind =
-                exposedSecretReportCr?.Metadata?.Labels != null &&
+                exposedSecretReportCr.Metadata.Labels != null &&
                 exposedSecretReportCr.Metadata.Labels.TryGetValue(
                     "trivy-operator.resource.kind",
                     out string? resourceKind)
                     ? resourceKind
                     : string.Empty,
             ResourceContainerName =
-                exposedSecretReportCr?.Metadata?.Labels != null &&
+                exposedSecretReportCr.Metadata.Labels != null &&
                 exposedSecretReportCr.Metadata.Labels.TryGetValue(
                     "trivy-operator.container.name",
                     out string? resourceContainerName)
                     ? resourceContainerName
                     : string.Empty,
-            ImageName = exposedSecretReportCr?.Report?.Artifact?.Repository ?? string.Empty,
-            ImageTag = exposedSecretReportCr?.Report?.Artifact?.Tag ?? string.Empty,
-            ImageDigest = exposedSecretReportCr?.Report?.Artifact?.Digest ?? string.Empty,
-            ImageRepository = exposedSecretReportCr?.Report?.Registry?.Server ?? string.Empty,
-            CriticalCount = exposedSecretReportCr?.Report?.Summary?.CriticalCount ?? 0,
-            HighCount = exposedSecretReportCr?.Report?.Summary?.HighCount ?? 0,
-            MediumCount = exposedSecretReportCr?.Report?.Summary?.MediumCount ?? 0,
-            LowCount = exposedSecretReportCr?.Report?.Summary?.LowCount ?? 0,
+            ImageName = exposedSecretReportCr.Report?.Artifact?.Repository ?? string.Empty,
+            ImageTag = exposedSecretReportCr.Report?.Artifact?.Tag ?? string.Empty,
+            ImageDigest = exposedSecretReportCr.Report?.Artifact?.Digest ?? string.Empty,
+            ImageRepository = exposedSecretReportCr.Report?.Registry?.Server ?? string.Empty,
+            CriticalCount = exposedSecretReportCr.Report?.Summary?.CriticalCount ?? 0,
+            HighCount = exposedSecretReportCr.Report?.Summary?.HighCount ?? 0,
+            MediumCount = exposedSecretReportCr.Report?.Summary?.MediumCount ?? 0,
+            LowCount = exposedSecretReportCr.Report?.Summary?.LowCount ?? 0,
             Details = [.. exposedSecretReportDetailDtos],
         };
 
@@ -162,13 +162,13 @@ public static class ExposedSecretReportCrExtensions
     }
 
     public static ExposedSecretReportImageDto ToExposedSecretReportImageDto(
-        this IGrouping<string?, ExposedSecretReportCr> groupedExposedSecretReportCR,
+        this IGrouping<string?, ExposedSecretReportCr> groupedExposedSecretReportCr,
         IEnumerable<int>? excludedSeverities = null)
     {
         excludedSeverities ??= [];
         int[] excludedSeveritiesArray = excludedSeverities.ToArray();
         List<ExposedSecretReportImageResourceDto> eseirDtos = [];
-        foreach (ExposedSecretReportCr vr in groupedExposedSecretReportCR)
+        foreach (ExposedSecretReportCr vr in groupedExposedSecretReportCr)
         {
             ExposedSecretReportImageResourceDto eseirDto = new()
             {
@@ -187,8 +187,8 @@ public static class ExposedSecretReportCrExtensions
             eseirDtos.Add(eseirDto);
         }
 
-        ExposedSecretReportCr? latestExposedSecretReportCr = groupedExposedSecretReportCR
-            ?.OrderByDescending(x => x.Report?.UpdateTimestamp)
+        ExposedSecretReportCr? latestExposedSecretReportCr = groupedExposedSecretReportCr
+            .OrderByDescending(x => x.Report?.UpdateTimestamp)
             .FirstOrDefault();
         List<ExposedSecretReportDetailDto> exposedSecretReportDetailDtos = [];
         foreach (Secret? secret in latestExposedSecretReportCr?.Report?.Secrets ?? [])
@@ -210,9 +210,9 @@ public static class ExposedSecretReportCrExtensions
 
         ExposedSecretReportImageDto exposedSecretReportImageDto = new()
         {
-            Uid = new Guid(latestExposedSecretReportCr?.Metadata?.Uid ?? string.Empty),
+            Uid = new Guid(latestExposedSecretReportCr?.Metadata.Uid ?? string.Empty),
             ResourceNamespace =
-                latestExposedSecretReportCr?.Metadata?.Labels != null &&
+                latestExposedSecretReportCr?.Metadata.Labels != null &&
                 latestExposedSecretReportCr.Metadata.Labels.TryGetValue(
                     "trivy-operator.resource.namespace",
                     out string? resourceNamespace)
@@ -236,7 +236,7 @@ public static class ExposedSecretReportCrExtensions
         this ExposedSecretReportCr exposedSecretReportCr)
     {
         List<ExposedSecretReportDenormalizedDto> exposedSecretReportDenormalizedDtos = [];
-        foreach (Secret secret in exposedSecretReportCr?.Report?.Secrets ?? [])
+        foreach (Secret secret in exposedSecretReportCr.Report?.Secrets ?? [])
         {
             ExposedSecretReportDenormalizedDto exposedSecretReportDenormalizedDto = new()
             {

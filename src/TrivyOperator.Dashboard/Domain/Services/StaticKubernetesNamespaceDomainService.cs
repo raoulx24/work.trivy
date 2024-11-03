@@ -14,7 +14,9 @@ public class StaticKubernetesNamespaceDomainService(
 
         if (string.IsNullOrWhiteSpace(configKubernetesNamespaces))
         {
-            throw new ArgumentNullException("Provided parameter Kubernetes.NamespaceList is null or whitespace.");
+            throw new ArgumentNullException(
+                "Provided parameter Kubernetes.NamespaceList is null or whitespace.",
+                (Exception?)null);
         }
 
         List<string> kubernetesNamespaces = configKubernetesNamespaces.Split(',').Select(x => x.Trim()).ToList();

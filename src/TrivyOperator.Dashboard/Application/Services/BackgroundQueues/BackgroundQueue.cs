@@ -35,7 +35,7 @@ public class BackgroundQueue<TKubernetesObject> : IBackgroundQueue<TKubernetesOb
             "Queueing Event {watcherEventType} - {kubernetesObjectType} - {kubernetesObjectName}",
             watcherEvent.WatcherEventType,
             typeof(TKubernetesObject).Name,
-            watcherEvent.KubernetesObject?.Metadata?.Name);
+            watcherEvent.KubernetesObject.Metadata?.Name);
         await queue.Writer.WriteAsync(watcherEvent);
     }
 
@@ -46,7 +46,7 @@ public class BackgroundQueue<TKubernetesObject> : IBackgroundQueue<TKubernetesOb
             "Dequeued Event {watcherEventType} - {kubernetesObjectType} - {kubernetesObjectName}",
             watcherEvent.WatcherEventType,
             typeof(TKubernetesObject).Name,
-            watcherEvent.KubernetesObject?.Metadata?.Name);
+            watcherEvent.KubernetesObject.Metadata?.Name);
 
         return watcherEvent;
     }

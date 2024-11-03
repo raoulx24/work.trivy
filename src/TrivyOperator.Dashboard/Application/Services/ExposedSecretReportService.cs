@@ -87,8 +87,8 @@ public class ExposedSecretReportService(IConcurrentCache<string, IList<ExposedSe
 
     public Task<IEnumerable<EsSeveritiesByNsSummaryDto>> GetExposedSecretReportSummaryDtos()
     {
-        List<EsSeveritiesByNsSummaryDto> summaryDtos = [];
-        List<EsSeveritiesByNsSummaryDetailDto> detailDtos = [];
+        List<EsSeveritiesByNsSummaryDto> summaryDtos;
+        List<EsSeveritiesByNsSummaryDetailDto> detailDtos;
         EsSeveritiesByNsSummaryDto summaryDto;
         int[] severityIds = Enum.GetValues(typeof(TrivySeverity)).Cast<int>().Where(x => x < 4).ToArray();
         summaryDtos = cache.Where(kvp => kvp.Value.Any())

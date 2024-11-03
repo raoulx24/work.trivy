@@ -58,7 +58,7 @@ public static class ClusterRbacAssessmentReportCrExtensions
         this ClusterRbacAssessmentReportCr clusterRbacAssessmentReportCr)
     {
         List<ClusterRbacAssessmentReportDetailDto> clusterRbacAssessmentReportDetailDtos = [];
-        foreach (Check check in clusterRbacAssessmentReportCr?.Report?.Checks ?? [])
+        foreach (Check check in clusterRbacAssessmentReportCr.Report?.Checks ?? [])
         {
             ClusterRbacAssessmentReportDetailDto clusterRbacAssessmentReportDetailDto = new()
             {
@@ -76,18 +76,18 @@ public static class ClusterRbacAssessmentReportCrExtensions
 
         ClusterRbacAssessmentReportDto clusterRbacAssessmentReportDto = new()
         {
-            Uid = new Guid(clusterRbacAssessmentReportCr?.Metadata?.Uid ?? string.Empty),
+            Uid = new Guid(clusterRbacAssessmentReportCr.Metadata.Uid ?? string.Empty),
             ResourceName =
-                clusterRbacAssessmentReportCr?.Metadata?.Annotations != null &&
+                clusterRbacAssessmentReportCr.Metadata.Annotations != null &&
                 clusterRbacAssessmentReportCr.Metadata.Annotations.TryGetValue(
                     "trivy-operator.resource.name",
                     out string? resourceName)
                     ? resourceName
                     : string.Empty,
-            CriticalCount = clusterRbacAssessmentReportCr?.Report?.Summary?.CriticalCount ?? 0,
-            HighCount = clusterRbacAssessmentReportCr?.Report?.Summary?.HighCount ?? 0,
-            MediumCount = clusterRbacAssessmentReportCr?.Report?.Summary?.MediumCount ?? 0,
-            LowCount = clusterRbacAssessmentReportCr?.Report?.Summary?.LowCount ?? 0,
+            CriticalCount = clusterRbacAssessmentReportCr.Report?.Summary?.CriticalCount ?? 0,
+            HighCount = clusterRbacAssessmentReportCr.Report?.Summary?.HighCount ?? 0,
+            MediumCount = clusterRbacAssessmentReportCr.Report?.Summary?.MediumCount ?? 0,
+            LowCount = clusterRbacAssessmentReportCr.Report?.Summary?.LowCount ?? 0,
             Details = [.. clusterRbacAssessmentReportDetailDtos],
         };
 
@@ -98,7 +98,7 @@ public static class ClusterRbacAssessmentReportCrExtensions
         this ClusterRbacAssessmentReportCr clusterRbacAssessmentReportCr)
     {
         List<ClusterRbacAssessmentReportDenormalizedDto> clusterRbacAssessmentReportDetailDtos = [];
-        foreach (Check check in clusterRbacAssessmentReportCr?.Report?.Checks ?? [])
+        foreach (Check check in clusterRbacAssessmentReportCr.Report?.Checks ?? [])
         {
             ClusterRbacAssessmentReportDenormalizedDto clusterRbacAssessmentReportDenormalizedDto = new()
             {

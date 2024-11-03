@@ -58,7 +58,7 @@ public static class ConfigAuditReportCrExtensions
     public static ConfigAuditReportDto ToConfigAuditReportDto(this ConfigAuditReportCr configAuditReportCr)
     {
         List<ConfigAuditReportDetailDto> configAuditReportDetailDtos = [];
-        foreach (Check check in configAuditReportCr?.Report?.Checks ?? [])
+        foreach (Check check in configAuditReportCr.Report?.Checks ?? [])
         {
             ConfigAuditReportDetailDto configAuditReportDetailDto = new()
             {
@@ -76,32 +76,32 @@ public static class ConfigAuditReportCrExtensions
 
         ConfigAuditReportDto configAuditReportDto = new()
         {
-            Uid = new Guid(configAuditReportCr?.Metadata?.Uid ?? string.Empty),
+            Uid = new Guid(configAuditReportCr.Metadata.Uid ?? string.Empty),
             ResourceName =
-                configAuditReportCr?.Metadata?.Labels != null &&
+                configAuditReportCr.Metadata.Labels != null &&
                 configAuditReportCr.Metadata.Labels.TryGetValue(
                     "trivy-operator.resource.name",
                     out string? resourceName)
                     ? resourceName
                     : string.Empty,
             ResourceNamespace =
-                configAuditReportCr?.Metadata?.Labels != null &&
+                configAuditReportCr.Metadata.Labels != null &&
                 configAuditReportCr.Metadata.Labels.TryGetValue(
                     "trivy-operator.resource.namespace",
                     out string? resourceNamespace)
                     ? resourceNamespace
                     : string.Empty,
             ResourceKind =
-                configAuditReportCr?.Metadata?.Labels != null &&
+                configAuditReportCr.Metadata.Labels != null &&
                 configAuditReportCr.Metadata.Labels.TryGetValue(
                     "trivy-operator.resource.kind",
                     out string? resourceKind)
                     ? resourceKind
                     : string.Empty,
-            CriticalCount = configAuditReportCr?.Report?.Summary?.CriticalCount ?? 0,
-            HighCount = configAuditReportCr?.Report?.Summary?.HighCount ?? 0,
-            MediumCount = configAuditReportCr?.Report?.Summary?.MediumCount ?? 0,
-            LowCount = configAuditReportCr?.Report?.Summary?.LowCount ?? 0,
+            CriticalCount = configAuditReportCr.Report?.Summary?.CriticalCount ?? 0,
+            HighCount = configAuditReportCr.Report?.Summary?.HighCount ?? 0,
+            MediumCount = configAuditReportCr.Report?.Summary?.MediumCount ?? 0,
+            LowCount = configAuditReportCr.Report?.Summary?.LowCount ?? 0,
             Details = [.. configAuditReportDetailDtos],
         };
 
@@ -117,7 +117,7 @@ public static class ConfigAuditReportCrExtensions
         }
 
         List<ConfigAuditReportDenormalizedDto> configAuditReportDenormalizedDtos = [];
-        foreach (Check check in configAuditReportCr?.Report?.Checks ?? [])
+        foreach (Check check in configAuditReportCr.Report?.Checks ?? [])
         {
             ConfigAuditReportDenormalizedDto configAuditReportDenormalizedDto = new()
             {
