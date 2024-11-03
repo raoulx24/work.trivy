@@ -12,14 +12,11 @@ public class AlertDto
 
 public static class AlertExtensions
 {
-    public static AlertDto ToAlertDto(this Alert alert, string emitter)
+    public static AlertDto ToAlertDto(this Alert alert, string emitter) => new()
     {
-        return new()
-        {
-            Emiter = emitter ?? string.Empty,
-            EmitterKey = alert.EmitterKey ?? string.Empty,
-            Message = alert.Message ?? string.Empty,
-            Severity = alert.Severity,
-        };
-    }
+        Emiter = emitter ?? string.Empty,
+        EmitterKey = alert.EmitterKey ?? string.Empty,
+        Message = alert.Message ?? string.Empty,
+        Severity = alert.Severity,
+    };
 }

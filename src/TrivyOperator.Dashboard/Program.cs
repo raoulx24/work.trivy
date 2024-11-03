@@ -5,15 +5,15 @@ using Serilog.Extensions.Logging;
 using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using TrivyOperator.Dashboard.Application.Hubs;
 using TrivyOperator.Dashboard.Application.Services;
+using TrivyOperator.Dashboard.Application.Services.Abstractions;
+using TrivyOperator.Dashboard.Application.Services.BuilderServicesExtensions;
 using TrivyOperator.Dashboard.Application.Services.Options;
 using TrivyOperator.Dashboard.Infrastructure.Abstractions;
 using TrivyOperator.Dashboard.Infrastructure.Clients;
-using ILogger = Microsoft.Extensions.Logging.ILogger;
 using TrivyOperator.Dashboard.Utils;
-using TrivyOperator.Dashboard.Application.Services.BuilderServicesExtensions;
-using TrivyOperator.Dashboard.Application.Hubs;
-using TrivyOperator.Dashboard.Application.Services.Abstractions;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 Directory.SetCurrentDirectory(AppContext.BaseDirectory);
 
@@ -172,9 +172,15 @@ static void TaskSchedulerUnobservedTaskException(object? sender, UnobservedTaskE
     e.SetObserved();
 }
 
-static void OnStarted() => Logger?.LogInformation("OnStarted has been called.");
+static void OnStarted()
+{
+    Logger?.LogInformation("OnStarted has been called.");
+}
 
-static void OnStopping() => Logger?.LogInformation("OnStopping has been called.");
+static void OnStopping()
+{
+    Logger?.LogInformation("OnStopping has been called.");
+}
 
 static void OnStopped()
 {

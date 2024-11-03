@@ -1,7 +1,6 @@
 ﻿using k8s;
 using k8s.Models;
 using TrivyOperator.Dashboard.Application.Services.BackgroundQueues.Abstractions;
-using TrivyOperator.Dashboard.Application.Services.WatcherStates;
 using TrivyOperator.Dashboard.Application.Services.WatcherEvents.Abstractions;
 using TrivyOperator.Dashboard.Infrastructure.Abstractions;
 
@@ -45,7 +44,8 @@ public abstract class
         {
             Metadata = new V1ObjectMeta
             {
-                Name = "fakeObject", NamespaceProperty = GetNamespaceFromSourceEvent(sourceKubernetesObject),
+                Name = "fakeObject",
+                NamespaceProperty = GetNamespaceFromSourceEvent(sourceKubernetesObject),
             },
         };
         TKubernetesWatcherEvent watcherEvent =

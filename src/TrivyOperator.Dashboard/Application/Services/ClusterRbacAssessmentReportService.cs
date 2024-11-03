@@ -6,12 +6,12 @@ using TrivyOperator.Dashboard.Infrastructure.Abstractions;
 
 namespace TrivyOperator.Dashboard.Application.Services;
 
-public class ClusterRbacAssessmentReportService(IConcurrentCache<string, IList<ClusterRbacAssessmentReportCr>> cache) : IClusterRbacAssessmentReportService
+public class ClusterRbacAssessmentReportService(IConcurrentCache<string, IList<ClusterRbacAssessmentReportCr>> cache)
+    : IClusterRbacAssessmentReportService
 {
     public Task<IList<ClusterRbacAssessmentReportDto>> GetClusterRbacAssessmentReportDtos()
     {
-        List<ClusterRbacAssessmentReportDto> result = cache
-            .SelectMany(kvp => kvp.Value)
+        List<ClusterRbacAssessmentReportDto> result = cache.SelectMany(kvp => kvp.Value)
             .Select(cr => cr.ToClusterRbacAssessmentReportDto())
             .ToList();
 
@@ -20,8 +20,7 @@ public class ClusterRbacAssessmentReportService(IConcurrentCache<string, IList<C
 
     public Task<IList<ClusterRbacAssessmentReportDenormalizedDto>> GetClusterRbacAssessmentReportDenormalizedDtos()
     {
-        List<ClusterRbacAssessmentReportDenormalizedDto> result = cache
-            .SelectMany(kvp => kvp.Value)
+        List<ClusterRbacAssessmentReportDenormalizedDto> result = cache.SelectMany(kvp => kvp.Value)
             .SelectMany(cr => cr.ToClusterRbacAssessmentReportDenormalizedDtos())
             .ToList();
 
@@ -32,20 +31,19 @@ public class ClusterRbacAssessmentReportService(IConcurrentCache<string, IList<C
     {
         int[] allSeverities = Enum.GetValues(typeof(TrivySeverity)).Cast<int>().Where(x => x < 4).ToArray();
 
-        IEnumerable<ClusterRbacAssessmentReportSummaryDto> actualValues = cache
-            .SelectMany(kvp => kvp.Value)
+        IEnumerable<ClusterRbacAssessmentReportSummaryDto> actualValues = cache.SelectMany(kvp => kvp.Value)
             //.Where(crar => crar.Report != null)
             .SelectMany(crar => crar.Report?.Checks ?? Enumerable.Empty<Check>())
             .GroupBy(key => key.Severity)
-            .Select(group => new ClusterRbacAssessmentReportSummaryDto
-            {
-                SeverityId = (int)group.Key,
-                TotalCount = group.Count(),
-                DistinctCount = group.Select(x => x.CheckId).Distinct().Count(),
-            });
+            .Select(
+                group => new ClusterRbacAssessmentReportSummaryDto
+                {
+                    SeverityId = (int)group.Key,
+                    TotalCount = group.Count(),
+                    DistinctCount = group.Select(x => x.CheckId).Distinct().Count(),
+                });
 
-        List<ClusterRbacAssessmentReportSummaryDto> result = allSeverities
-            .GroupJoin(
+        List<ClusterRbacAssessmentReportSummaryDto> result = allSeverities.GroupJoin(
                 actualValues,
                 left => left,
                 right => right.SeverityId,
@@ -54,8 +52,8 @@ public class ClusterRbacAssessmentReportService(IConcurrentCache<string, IList<C
                     SeverityId = left,
                     TotalCount = group.FirstOrDefault()?.TotalCount ?? 0,
                     DistinctCount = group.FirstOrDefault()?.DistinctCount ?? 0,
-                }
-            ).ToList();
+                })
+            .ToList();
 
         return Task.FromResult<IList<ClusterRbacAssessmentReportSummaryDto>>(result);
     }

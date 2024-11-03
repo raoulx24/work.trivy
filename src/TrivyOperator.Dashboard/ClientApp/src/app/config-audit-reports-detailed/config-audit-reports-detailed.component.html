@@ -1,11 +1,13 @@
 <h3>Config Audit Reports Detailed</h3>
-<app-trivy-table [dataDtos]="dataDtos"
-                 [activeNamespaces]="activeNamespaces"
-                 [exportColumns]="exportColumns"
-                 [trivyTableColumns]="trivyTableColumns"
-                 [trivyTableOptions]="trivyTableOptions"
-                 (refreshRequested)="getTableDataDtos()"
-                 tableHeight="82vh"
-                 [isLoading]="isLoading"
-                 csvStoragekey="Config Audit Reports"
-                 csvFileName="Config Audit Reports" />
+<app-trivy-table
+  csvFileName="Config Audit Reports"
+  csvStoragekey="Config Audit Reports"
+  tableHeight="82vh"
+  [activeNamespaces]="activeNamespaces"
+  [dataDtos]="dataDtos"
+  [exportColumns]="exportColumns"
+  [isLoading]="isLoading"
+  [trivyTableColumns]="trivyTableColumns"
+  [trivyTableOptions]="trivyTableOptions"
+  (refreshRequested)="getTableDataDtos()"
+/>

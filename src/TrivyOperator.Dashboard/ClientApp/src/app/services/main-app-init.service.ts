@@ -1,22 +1,21 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-import { BackendSettingsService } from '../../api/services/backend-settings.service'
-import { BackendSettingsDto } from '../../api/models/backend-settings-dto'
+import { BackendSettingsDto } from '../../api/models/backend-settings-dto';
+import { BackendSettingsService } from '../../api/services/backend-settings.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MainAppInitService {
-  private backendSettingsDtoSubject: BehaviorSubject<BackendSettingsDto> = new BehaviorSubject<BackendSettingsDto>({trivyReportConfigDtos: []});
+  defaultBackendSettingsDto: BackendSettingsDto | null = null;
+  isDarkMode: boolean = false;
+  private backendSettingsDtoSubject: BehaviorSubject<BackendSettingsDto> = new BehaviorSubject<BackendSettingsDto>({
+    trivyReportConfigDtos: [],
+  });
   backendSettingsDto$ = this.backendSettingsDtoSubject.asObservable();
 
-  defaultBackendSettingsDto: BackendSettingsDto | null = null;
-
-  isDarkMode: boolean = false;
-
-  constructor(private backendSettingsService: BackendSettingsService) {
-  }
+  constructor(private backendSettingsService: BackendSettingsService) {}
 
   initializeApp(): Promise<void> {
     return new Promise((resolve, reject) => {
@@ -31,25 +30,30 @@ export class MainAppInitService {
         error: (err) => {
           console.error(err);
           reject(err);
-        }
+        },
       });
     });
   }
 
   updateBackendSettingsTrivyReportConfigDto(newIds: string[]) {
-    const newTrivyReportConfig = (this.defaultBackendSettingsDto ?? { trivyReportConfigDtos: [] })
-      .trivyReportConfigDtos?.map(dto => {
-        if (dto.enabled) {
-          return { ...dto, enabled: newIds.includes(dto.id ?? "") };
-        }
-        return dto;
-      });
+    const newTrivyReportConfig = (
+      this.defaultBackendSettingsDto ?? { trivyReportConfigDtos: [] }
+    ).trivyReportConfigDtos?.map((dto) => {
+      if (dto.enabled) {
+        return { ...dto, enabled: newIds.includes(dto.id ?? '') };
+      }
+      return dto;
+    });
 
     // const clone = JSON.parse(JSON.stringify(original)) as typeof original;
     this.backendSettingsDtoSubject.next({ trivyReportConfigDtos: newTrivyReportConfig });
     localStorage.setItem('backendSettings.trivyReportConfig', newIds.join(','));
-    localStorage.setItem('backendSettings.trivyReportConfig.defaultsPreviousSession',
-      (this.defaultBackendSettingsDto?.trivyReportConfigDtos?.filter(x => x.enabled).map(x => x.id) ?? []).join(','));
+    localStorage.setItem(
+      'backendSettings.trivyReportConfig.defaultsPreviousSession',
+      (this.defaultBackendSettingsDto?.trivyReportConfigDtos?.filter((x) => x.enabled).map((x) => x.id) ?? []).join(
+        ',',
+      ),
+    );
   }
 
   switchLightDarkMode() {
@@ -58,44 +62,48 @@ export class MainAppInitService {
   }
 
   private getDarkMode(): boolean {
-    return this.getBoolValue(localStorage.getItem('mainSettings.isDarkMode'))
-      ?? (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    return (
+      this.getBoolValue(localStorage.getItem('mainSettings.isDarkMode')) ??
+      (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)
+    );
   }
 
   private setDarkMode() {
-    const primengThemeLink = document.getElementById("primeng-theme") as HTMLLinkElement | null;
+    const primengThemeLink = document.getElementById('primeng-theme') as HTMLLinkElement | null;
     if (primengThemeLink == null) {
       return;
     }
-    primengThemeLink.href = this.isDarkMode ? "primeng-dark.css" : "primeng-light.css";
-    localStorage.setItem('mainSettings.isDarkMode', this.isDarkMode.toString())
+    primengThemeLink.href = this.isDarkMode ? 'primeng-dark.css' : 'primeng-light.css';
+    localStorage.setItem('mainSettings.isDarkMode', this.isDarkMode.toString());
   }
 
   private getBoolValue(value: string | null): boolean | null {
     // Convert string to lower case for case-insensitive comparison
     switch (value?.toLowerCase().trim()) {
-      case "true":
-      case "yes":
-      case "1":
+      case 'true':
+      case 'yes':
+      case '1':
         return true;
-      case "false":
-      case "no":
-      case "0":
+      case 'false':
+      case 'no':
+      case '0':
         return false;
       default:
         return null;
     }
-  };
+  }
 
   private mergeBackendSettingsDto(backendSettingsDto: BackendSettingsDto) {
-    const previousItems: string[] = localStorage
-      .getItem('backendSettings.trivyReportConfig.defaultsPreviousSession')?.split(',') ?? []
-    const itemsToAdd = (backendSettingsDto.trivyReportConfigDtos?.filter(x => x.enabled)?.map(x => x.id ?? "") ?? [])
-      .filter(x => !previousItems.includes(x));
-    const savedItems: string[] = localStorage
-      .getItem('backendSettings.trivyReportConfig')?.split(',') ??
-      (backendSettingsDto.trivyReportConfigDtos?.filter(x => x.enabled).map(x => x.id ?? "") ?? []);
-    const mergedItems = [...savedItems, ...itemsToAdd.filter(item => !savedItems.includes(item))];
+    const previousItems: string[] =
+      localStorage.getItem('backendSettings.trivyReportConfig.defaultsPreviousSession')?.split(',') ?? [];
+    const itemsToAdd = (
+      backendSettingsDto.trivyReportConfigDtos?.filter((x) => x.enabled)?.map((x) => x.id ?? '') ?? []
+    ).filter((x) => !previousItems.includes(x));
+    const savedItems: string[] =
+      localStorage.getItem('backendSettings.trivyReportConfig')?.split(',') ??
+      backendSettingsDto.trivyReportConfigDtos?.filter((x) => x.enabled).map((x) => x.id ?? '') ??
+      [];
+    const mergedItems = [...savedItems, ...itemsToAdd.filter((item) => !savedItems.includes(item))];
     this.updateBackendSettingsTrivyReportConfigDto(mergedItems);
   }
 }

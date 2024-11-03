@@ -41,6 +41,7 @@
                 "inject": false
               },
               "src/styles.css"
+
             ],
             "scripts": []
           },

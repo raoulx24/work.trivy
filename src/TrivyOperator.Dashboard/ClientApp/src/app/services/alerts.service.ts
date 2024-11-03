@@ -4,11 +4,11 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
 import { ApiConfiguration } from '../../api/api-configuration';
 
-import { AlertDto } from '../../api/models/alert-dto'
-import { RetryPolicyUtils } from '../utils/retry-policy.utils'
+import { AlertDto } from '../../api/models/alert-dto';
+import { RetryPolicyUtils } from '../utils/retry-policy.utils';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AlertsService {
   private hubConnection!: HubConnection;
@@ -16,15 +16,17 @@ export class AlertsService {
   public alerts$: Observable<AlertDto[]> = this.alertsSubject.asObservable();
 
   private retryPolicy = new RetryPolicyUtils();
-  private readonly hubPath: string = "/alerts-hub";
-  private hubUrl: string = "";
+  private readonly hubPath: string = '/alerts-hub';
+  private hubUrl: string = '';
 
   constructor(private apiConfiguration: ApiConfiguration) {
-    this.hubUrl = apiConfiguration.rootUrl
-      ? new URL(this.hubPath, apiConfiguration.rootUrl).toString()
-      : this.hubPath;
+    this.hubUrl = apiConfiguration.rootUrl ? new URL(this.hubPath, apiConfiguration.rootUrl).toString() : this.hubPath;
     this.startConnection();
     this.addEventListeners();
+  }
+
+  getAlerts(): AlertDto[] {
+    return this.alertsSubject.value;
   }
 
   private startConnection() {
@@ -36,7 +38,7 @@ export class AlertsService {
       })
       .configureLogging(LogLevel.Information)
       .withAutomaticReconnect({
-        nextRetryDelayInMilliseconds: () => this.retryPolicy.nextDelayMs()
+        nextRetryDelayInMilliseconds: () => this.retryPolicy.nextDelayMs(),
       })
       .build();
 
@@ -45,17 +47,17 @@ export class AlertsService {
       .then(() => {
         this.retryPolicy.resetCounter();
       })
-      .catch(err => {
+      .catch((err) => {
         console.error('Connection error ', err);
         this.retryConnection();
       });
 
-    this.hubConnection.onreconnecting(error => {
+    this.hubConnection.onreconnecting((error) => {
       console.warn(`Connection lost due to ${error}. Reconnecting...`);
       this.alertsSubject.next([]);
     });
 
-    this.hubConnection.onreconnected(connectionId => {
+    this.hubConnection.onreconnected((connectionId) => {
       this.retryPolicy.resetCounter();
     });
 
@@ -64,7 +66,7 @@ export class AlertsService {
 
   private retryConnection() {
     setTimeout(() => {
-      this.hubConnection.start().catch(err => {
+      this.hubConnection.start().catch((err) => {
         console.error('Retry connection error', err);
         this.retryConnection();
       });
@@ -75,7 +77,7 @@ export class AlertsService {
     this.hubConnection.on('ReceiveAddedAlert', (alert: AlertDto) => {
       this.addAlert(alert);
     });
-    
+
     this.hubConnection.on('ReceiveRemovedAlert', (alert: AlertDto) => {
       this.removeAlert(alert);
     });
@@ -87,11 +89,9 @@ export class AlertsService {
   }
 
   private removeAlert(alert: AlertDto) {
-    const currentAlerts = this.alertsSubject.value.filter(a => a.emiter != alert.emiter && a.emitterKey !== alert.emitterKey);
+    const currentAlerts = this.alertsSubject.value.filter(
+      (a) => a.emiter != alert.emiter && a.emitterKey !== alert.emitterKey,
+    );
     this.alertsSubject.next(currentAlerts);
-  }
-
-  getAlerts(): AlertDto[] {
-    return this.alertsSubject.value;
   }
 }

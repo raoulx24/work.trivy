@@ -7,8 +7,7 @@ namespace TrivyOperator.Dashboard.Application.Controllers;
 
 [ApiController]
 [Route("api/config-audit-reports")]
-public class ConfigAuditReportController(
-    IConfigAuditReportService configAuditReportService): ControllerBase
+public class ConfigAuditReportController(IConfigAuditReportService configAuditReportService) : ControllerBase
 {
     [HttpGet(Name = "GetConfigAuditReportDtos")]
     [ProducesResponseType<IEnumerable<ConfigAuditReportDto>>(StatusCodes.Status200OK)]
@@ -24,7 +23,8 @@ public class ConfigAuditReportController(
             return BadRequest();
         }
 
-        IEnumerable<ConfigAuditReportDto> configAuditReportImageDtos = await configAuditReportService.GetConfigAuditReportDtos(namespaceName, excludedSeverityIds);
+        IEnumerable<ConfigAuditReportDto> configAuditReportImageDtos =
+            await configAuditReportService.GetConfigAuditReportDtos(namespaceName, excludedSeverityIds);
         return Ok(configAuditReportImageDtos);
     }
 
@@ -33,28 +33,22 @@ public class ConfigAuditReportController(
     [Produces("application/json")]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status500InternalServerError)]
-    public async Task<IEnumerable<ConfigAuditReportDenormalizedDto>> GetDenormalized()
-    {
-        return await configAuditReportService.GetConfigAuditReportDenormalizedDtos();
-    }
+    public async Task<IEnumerable<ConfigAuditReportDenormalizedDto>> GetDenormalized() =>
+        await configAuditReportService.GetConfigAuditReportDenormalizedDtos();
 
     [HttpGet("active-namespaces", Name = "GetConfigAuditReportActiveNamespaces")]
     [ProducesResponseType<IEnumerable<string>>(StatusCodes.Status200OK)]
     [Produces("application/json")]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status500InternalServerError)]
-    public async Task<IEnumerable<string>> GetActiveNamespaces()
-    {
-        return await configAuditReportService.GetActiveNamespaces();
-    }
+    public async Task<IEnumerable<string>> GetActiveNamespaces() =>
+        await configAuditReportService.GetActiveNamespaces();
 
     [HttpGet("summary", Name = "GetConfigAuditReportSumaryDtos")]
     [ProducesResponseType<IEnumerable<ConfigAuditReportSummaryDto>>(StatusCodes.Status200OK)]
     [Produces("application/json")]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status500InternalServerError)]
-    public async Task<IEnumerable<ConfigAuditReportSummaryDto>> GetConfigAuditReportSumaryDtos()
-    {
-        return await configAuditReportService.GetConfigAuditReportSummaryDtos();
-    }
+    public async Task<IEnumerable<ConfigAuditReportSummaryDto>> GetConfigAuditReportSumaryDtos() =>
+        await configAuditReportService.GetConfigAuditReportSummaryDtos();
 }

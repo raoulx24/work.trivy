@@ -7,11 +7,14 @@ using TrivyOperator.Dashboard.Domain.Trivy.ConfigAuditReport;
 using TrivyOperator.Dashboard.Domain.Trivy.CustomResources.Abstractions;
 
 namespace TrivyOperator.Dashboard.Application.Services.CacheWatcherEventHandlers;
+
 public class ConfigAuditReportCacheWatcherEventHandler(
     ICacheRefresh<ConfigAuditReportCr, IBackgroundQueue<ConfigAuditReportCr>> cacheRefresh,
     INamespacedWatcher<ConfigAuditReportCr> kubernetesWatcher,
     ILogger<ConfigAuditReportCacheWatcherEventHandler> logger)
     : NamespacedCacheWatcherEventHandler<IBackgroundQueue<ConfigAuditReportCr>,
-        ICacheRefresh<ConfigAuditReportCr, IBackgroundQueue<ConfigAuditReportCr>>,
-        WatcherEvent<ConfigAuditReportCr>, INamespacedWatcher<ConfigAuditReportCr>, ConfigAuditReportCr,
-        CustomResourceList<ConfigAuditReportCr>>(cacheRefresh, kubernetesWatcher, logger);
+        ICacheRefresh<ConfigAuditReportCr, IBackgroundQueue<ConfigAuditReportCr>>, WatcherEvent<ConfigAuditReportCr>,
+        INamespacedWatcher<ConfigAuditReportCr>, ConfigAuditReportCr, CustomResourceList<ConfigAuditReportCr>>(
+        cacheRefresh,
+        kubernetesWatcher,
+        logger);

@@ -14,7 +14,7 @@ public class VarUtils
     public static List<int>? GetExcludedSeverityIdsFromStringList(string? excludedSeverities)
     {
         List<int> excludedSeverityIds = [];
-        List<int> knownSeverityIds = [.. ((int[])Enum.GetValues(typeof(TrivySeverity)))];
+        List<int> knownSeverityIds = [.. (int[])Enum.GetValues(typeof(TrivySeverity))];
         string[] excldedStringSeverities;
 
         if (!string.IsNullOrWhiteSpace(excludedSeverities))
@@ -28,13 +28,13 @@ public class VarUtils
                     {
                         return null;
                     }
+
                     excludedSeverityIds.Add(vulnerabilityId);
                 }
                 else
                 {
                     return null;
                 }
-
             }
         }
 

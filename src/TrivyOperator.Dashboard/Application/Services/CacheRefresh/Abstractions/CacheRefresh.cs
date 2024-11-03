@@ -11,8 +11,7 @@ public class CacheRefresh<TKubernetesObject, TBackgroundQueue>(
     TBackgroundQueue backgroundQueue,
     IConcurrentCache<string, IList<TKubernetesObject>> cache,
     ILogger<CacheRefresh<TKubernetesObject, TBackgroundQueue>> logger)
-    : ICacheRefresh<TKubernetesObject, TBackgroundQueue>
-    where TKubernetesObject : IKubernetesObject<V1ObjectMeta>
+    : ICacheRefresh<TKubernetesObject, TBackgroundQueue> where TKubernetesObject : IKubernetesObject<V1ObjectMeta>
     where TBackgroundQueue : IBackgroundQueue<TKubernetesObject>
 {
     protected Task? CacheRefreshTask;
@@ -52,13 +51,15 @@ public class CacheRefresh<TKubernetesObject, TBackgroundQueue>(
                 case WatchEventType.Modified:
                     ProcessModifiedEvent(watcherEvent, cancellationToken);
                     break;
-                //default:
-                //    break;
+                    //default:
+                    //    break;
             }
         }
     }
 
-    protected virtual void ProcessAddEvent(IWatcherEvent<TKubernetesObject> watcherEvent, CancellationToken cancellationToken)
+    protected virtual void ProcessAddEvent(
+        IWatcherEvent<TKubernetesObject> watcherEvent,
+        CancellationToken cancellationToken)
     {
         string watcherKey = VarUtils.GetCacheRefreshKey(watcherEvent.KubernetesObject);
         string eventKubernetesObjectName = watcherEvent.KubernetesObject.Metadata.Name;
@@ -85,7 +86,7 @@ public class CacheRefresh<TKubernetesObject, TBackgroundQueue>(
         }
         else // first time, the cache is really empty
         {
-            cache.TryAdd(watcherKey, new List<TKubernetesObject> { watcherEvent.KubernetesObject });
+            cache.TryAdd(watcherKey, [watcherEvent.KubernetesObject]);
         }
     }
 
@@ -125,10 +126,12 @@ public class CacheRefresh<TKubernetesObject, TBackgroundQueue>(
             watcherKey);
         // TODO Clarify cache[key] vs cache.Remove and cache.Add
         cache.TryRemove(watcherKey, out _);
-        cache.TryAdd(watcherKey, new List<TKubernetesObject>());
+        cache.TryAdd(watcherKey, []);
     }
 
-    protected virtual void ProcessModifiedEvent(IWatcherEvent<TKubernetesObject> watcherEvent, CancellationToken cancellationToken)
+    protected virtual void ProcessModifiedEvent(
+        IWatcherEvent<TKubernetesObject> watcherEvent,
+        CancellationToken cancellationToken)
     {
         logger.LogDebug("ProcessModifiedEvent - redirecting to ProcessAddEvent.");
         ProcessAddEvent(watcherEvent, cancellationToken);

@@ -1,19 +1,19 @@
 <h3>About Trivy Dashboard</h3>
 
 <div class="pb-3">
-  <p-panel header="Trivy Dashboard" [toggleable]="true" class="mb-3">
+  <p-panel header="Trivy Dashboard" class="mb-3" [toggleable]="true">
     <div class="grid">
-      <div class="col-fixed" style="width: 300px;">
-        <img src="assets/logo.blurred.png" style="width: 100%;">
+      <div style="width: 300px" class="col-fixed">
+        <img src="assets/logo.blurred.png" style="width: 100%" />
       </div>
       <div class="col">
         <h5>Intro</h5>
         <p>
           Welcome to the Trivy Operator Dashboard, a comprehensive security management tool for Kubernetes environments.
           Built on top of the powerful Trivy Operator from Aqua Security, this dashboard provides insights into your
-          cluster's security posture. It offers detailed insights on vulnerability scans, policy validation scans and other ones.
-          With an intuitive and user-friendly interface, you can easily monitor, detect, and respond to security threats,
-          ensuring your Kubernetes environment remains robust and secure.
+          cluster's security posture. It offers detailed insights on vulnerability scans, policy validation scans and
+          other ones. With an intuitive and user-friendly interface, you can easily monitor, detect, and respond to
+          security threats, ensuring your Kubernetes environment remains robust and secure.
         </p>
       </div>
     </div>
@@ -26,29 +26,32 @@
           <li>Cluster RBAC Assessment Reports</li>
           <li>Exposed Secret Reports</li>
         </ul>
-        <p>All of them consists in dashboards (for view on a glance), browse and inspect findings (with table filters, sorts), export data.</p>
+        <p>
+          All of them consists in dashboards (for view on a glance), browse and inspect findings (with table filters,
+          sorts), export data.
+        </p>
         <p>This app is fully operational, with new features currently in development. Stay tuned for more updates!</p>
         <p>More info on <a href="https://github.com/raoulx24/work.trivy">GitHub page</a>.</p>
       </div>
     </div>
-
   </p-panel>
 </div>
 
 <p-panel header="Trivy Operator" [toggleable]="true">
   <div class="grid">
-    <div class="col-fixed" style="width: 300px;">
-      <img src="assets/trivy-operator-logo.png" style="width: 100%; filter: invert(1)">
+    <div style="width: 300px" class="col-fixed">
+      <img src="assets/trivy-operator-logo.png" style="width: 100%; filter: invert(1)" />
     </div>
     <div class="col">
       <h5>Intro</h5>
       <p>
         The Trivy Operator leverages <a href="https://github.com/aquasecurity/trivy">Trivy</a> to continuously scan your
-        Kubernetes cluster for security issues. The scans are summarised in security reports as Kubernetes <a href="https://aquasecurity.github.io/trivy-operator/latest/docs/crds/">Custom Resource Definitions</a>, which become
-        accessible through the Kubernetes API. The Operator does this by watching Kubernetes for state changes and
-        automatically triggering security scans in response. For example, a vulnerability scan is initiated when a new Pod is
-        created.
-        This way, users can find and view the risks that relate to different resources in a <code>Kubernetes-native</code>
+        Kubernetes cluster for security issues. The scans are summarised in security reports as Kubernetes
+        <a href="https://aquasecurity.github.io/trivy-operator/latest/docs/crds/">Custom Resource Definitions</a>, which
+        become accessible through the Kubernetes API. The Operator does this by watching Kubernetes for state changes
+        and automatically triggering security scans in response. For example, a vulnerability scan is initiated when a
+        new Pod is created. This way, users can find and view the risks that relate to different resources in a
+        <code>Kubernetes-native</code>
         way.
       </p>
     </div>
@@ -57,14 +60,14 @@
     <div class="col">
       <h5>In-cluster Security Scans</h5>
       <p>
-        The Trivy Operator automatically generates and updates security reports. These reports are generated in response to
-        new workload and other changes on a Kubernetes cluster, generating the following reports:
+        The Trivy Operator automatically generates and updates security reports. These reports are generated in response
+        to new workload and other changes on a Kubernetes cluster, generating the following reports:
       </p>
       <ul>
         <li>Vulnerability Scans: Automated vulnerability scanning for Kubernetes workloads.</li>
         <li>
-          ConfigAudit Scans: Automated configuration audits for Kubernetes resources with predefined rules or custom Open
-          Policy Agent (OPA) policies.
+          ConfigAudit Scans: Automated configuration audits for Kubernetes resources with predefined rules or custom
+          Open Policy Agent (OPA) policies.
         </li>
         <li>
           Exposed Secret Scans: Automated secret scans which find and detail the location of exposed Secrets within your
@@ -98,9 +101,9 @@
         You can install the Trivy-operator Operator with
         <a href="https://aquasecurity.github.io/trivy-operator/latest/getting-started/installation/kubectl/">
           Static YAML Manifests
-        </a> and follow the
-        <a href="https://aquasecurity.github.io/trivy-operator/latest/">Getting Started</a> guide to see how
-        vulnerability and configuration audit reports are generated automatically.
+        </a>
+        and follow the <a href="https://aquasecurity.github.io/trivy-operator/latest/">Getting Started</a> guide to see
+        how vulnerability and configuration audit reports are generated automatically.
       </p>
     </div>
   </div>

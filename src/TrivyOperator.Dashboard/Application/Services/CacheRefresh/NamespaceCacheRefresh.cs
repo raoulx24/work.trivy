@@ -21,8 +21,8 @@ public class NamespaceCacheRefresh(
         CancellationToken cancellationToken)
     {
         base.ProcessAddEvent(watcherEvent, cancellationToken);
-        foreach (INamespacedCacheWatcherEventHandler knwcs in
-                 ServiceProvider.GetServices<INamespacedCacheWatcherEventHandler>())
+        foreach (INamespacedCacheWatcherEventHandler knwcs in ServiceProvider
+                     .GetServices<INamespacedCacheWatcherEventHandler>())
         {
             knwcs.Start(cancellationToken, watcherEvent.KubernetesObject);
         }
@@ -31,8 +31,8 @@ public class NamespaceCacheRefresh(
     protected override void ProcessDeleteEvent(IWatcherEvent<V1Namespace> watcherEvent)
     {
         base.ProcessDeleteEvent(watcherEvent);
-        foreach (INamespacedCacheWatcherEventHandler knwcs in
-                 ServiceProvider.GetServices<INamespacedCacheWatcherEventHandler>())
+        foreach (INamespacedCacheWatcherEventHandler knwcs in ServiceProvider
+                     .GetServices<INamespacedCacheWatcherEventHandler>())
         {
             knwcs.Stop(watcherEvent.KubernetesObject);
         }

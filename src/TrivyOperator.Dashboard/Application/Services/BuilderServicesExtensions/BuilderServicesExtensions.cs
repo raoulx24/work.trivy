@@ -1,23 +1,23 @@
-﻿using TrivyOperator.Dashboard.Application.Services.BackgroundQueues.Abstractions;
+﻿using k8s.Models;
+using TrivyOperator.Dashboard.Application.Services.Abstractions;
+using TrivyOperator.Dashboard.Application.Services.Alerts;
 using TrivyOperator.Dashboard.Application.Services.BackgroundQueues;
+using TrivyOperator.Dashboard.Application.Services.BackgroundQueues.Abstractions;
+using TrivyOperator.Dashboard.Application.Services.CacheRefresh;
 using TrivyOperator.Dashboard.Application.Services.CacheRefresh.Abstractions;
-using TrivyOperator.Dashboard.Application.Services.CacheWatcherEventHandlers.Abstractions;
 using TrivyOperator.Dashboard.Application.Services.CacheWatcherEventHandlers;
-using TrivyOperator.Dashboard.Application.Services.Watchers.Abstractions;
+using TrivyOperator.Dashboard.Application.Services.CacheWatcherEventHandlers.Abstractions;
 using TrivyOperator.Dashboard.Application.Services.Watchers;
-using TrivyOperator.Dashboard.Domain.Trivy.VulnerabilityReport;
-using TrivyOperator.Dashboard.Infrastructure.Abstractions;
-using TrivyOperator.Dashboard.Infrastructure.Services;
+using TrivyOperator.Dashboard.Application.Services.Watchers.Abstractions;
+using TrivyOperator.Dashboard.Application.Services.WatcherStates;
+using TrivyOperator.Dashboard.Domain.Services;
+using TrivyOperator.Dashboard.Domain.Services.Abstractions;
 using TrivyOperator.Dashboard.Domain.Trivy.ClusterRbacAssessmentReport;
 using TrivyOperator.Dashboard.Domain.Trivy.ConfigAuditReport;
 using TrivyOperator.Dashboard.Domain.Trivy.ExposedSecretReport;
-using k8s.Models;
-using TrivyOperator.Dashboard.Application.Services.CacheRefresh;
-using TrivyOperator.Dashboard.Domain.Services.Abstractions;
-using TrivyOperator.Dashboard.Domain.Services;
-using TrivyOperator.Dashboard.Application.Services.WatcherStates;
-using TrivyOperator.Dashboard.Application.Services.Abstractions;
-using TrivyOperator.Dashboard.Application.Services.Alerts;
+using TrivyOperator.Dashboard.Domain.Trivy.VulnerabilityReport;
+using TrivyOperator.Dashboard.Infrastructure.Abstractions;
+using TrivyOperator.Dashboard.Infrastructure.Services;
 
 namespace TrivyOperator.Dashboard.Application.Services.BuilderServicesExtensions;
 
@@ -25,9 +25,10 @@ public static class BuilderServicesExtensions
 {
     public static void AddV1NamespaceServices(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddSingleton<IConcurrentCache<string, IList<V1Namespace>>, ConcurrentCache<string, IList<V1Namespace>>>();
+        services
+            .AddSingleton<IConcurrentCache<string, IList<V1Namespace>>, ConcurrentCache<string, IList<V1Namespace>>>();
         services.AddSingleton<IBackgroundQueue<V1Namespace>, BackgroundQueue<V1Namespace>>();
-        if (string.IsNullOrWhiteSpace(configuration.GetValue<String>("NamespaceList")))
+        if (string.IsNullOrWhiteSpace(configuration.GetValue<string>("NamespaceList")))
         {
             services.AddSingleton<IClusterScopedWatcher<V1Namespace>, NamespaceWatcher>();
         }
@@ -36,12 +37,15 @@ public static class BuilderServicesExtensions
             services.AddSingleton<IKubernetesNamespaceDomainService, StaticKubernetesNamespaceDomainService>();
             services.AddSingleton<IClusterScopedWatcher<V1Namespace>, StaticNamespaceWatcher>();
         }
+
         services.AddSingleton<ICacheRefresh<V1Namespace, IBackgroundQueue<V1Namespace>>, NamespaceCacheRefresh>();
         services.AddSingleton<IClusterScopedCacheWatcherEventHandler, NamespaceCacheWatcherEventHandler>();
         services.AddScoped<INamespaceService, NamespaceService>();
     }
 
-    public static void AddClusterRbacAssessmentReportServices(this IServiceCollection services, IConfiguration configuration)
+    public static void AddClusterRbacAssessmentReportServices(
+        this IServiceCollection services,
+        IConfiguration configuration)
     {
         bool? useServices = configuration.GetValue<bool?>("TrivyUseClusterRbacAssessmentReport");
         if (useServices == null || !(bool)useServices)
@@ -49,15 +53,20 @@ public static class BuilderServicesExtensions
             services.AddScoped<IClusterRbacAssessmentReportService, ClusterRbacAssessmentReportNullService>();
             return;
         }
+
         services.AddSingleton<
             IConcurrentCache<string, IList<ClusterRbacAssessmentReportCr>>,
             ConcurrentCache<string, IList<ClusterRbacAssessmentReportCr>>>();
-        services.AddSingleton<IBackgroundQueue<ClusterRbacAssessmentReportCr>, BackgroundQueue<ClusterRbacAssessmentReportCr>>();
-        services.AddSingleton<IClusterScopedWatcher<ClusterRbacAssessmentReportCr>, ClusterRbacAssessmentReportWatcher>();
+        services
+            .AddSingleton<IBackgroundQueue<ClusterRbacAssessmentReportCr>,
+                BackgroundQueue<ClusterRbacAssessmentReportCr>>();
+        services
+            .AddSingleton<IClusterScopedWatcher<ClusterRbacAssessmentReportCr>, ClusterRbacAssessmentReportWatcher>();
         services.AddSingleton<
-            ICacheRefresh<ClusterRbacAssessmentReportCr, IBackgroundQueue<ClusterRbacAssessmentReportCr>>,
-            CacheRefresh<ClusterRbacAssessmentReportCr, IBackgroundQueue<ClusterRbacAssessmentReportCr>>>();
-        services.AddSingleton<IClusterScopedCacheWatcherEventHandler, ClusterRbacAssessmentReportWatcherCacheSomething>();
+            ICacheRefresh<ClusterRbacAssessmentReportCr, IBackgroundQueue<ClusterRbacAssessmentReportCr>>, CacheRefresh<
+                ClusterRbacAssessmentReportCr, IBackgroundQueue<ClusterRbacAssessmentReportCr>>>();
+        services
+            .AddSingleton<IClusterScopedCacheWatcherEventHandler, ClusterRbacAssessmentReportWatcherCacheSomething>();
         services.AddScoped<IClusterRbacAssessmentReportService, ClusterRbacAssessmentReportService>();
     }
 
@@ -69,6 +78,7 @@ public static class BuilderServicesExtensions
             services.AddScoped<IConfigAuditReportService, ConfigAuditReportNullService>();
             return;
         }
+
         services.AddSingleton<
             IConcurrentCache<string, IList<ConfigAuditReportCr>>,
             ConcurrentCache<string, IList<ConfigAuditReportCr>>>();
@@ -89,6 +99,7 @@ public static class BuilderServicesExtensions
             services.AddScoped<IExposedSecretReportService, ExposedSecretReportNullService>();
             return;
         }
+
         services.AddSingleton<
             IConcurrentCache<string, IList<ExposedSecretReportCr>>,
             ConcurrentCache<string, IList<ExposedSecretReportCr>>>();
@@ -109,6 +120,7 @@ public static class BuilderServicesExtensions
             services.AddScoped<IVulnerabilityReportService, VulnerabilityReportNullService>();
             return;
         }
+
         services.AddSingleton<
             IConcurrentCache<string, IList<VulnerabilityReportCr>>,
             ConcurrentCache<string, IList<VulnerabilityReportCr>>>();

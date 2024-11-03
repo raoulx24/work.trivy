@@ -1,22 +1,21 @@
 export class PrimengTableStateUtil {
-
   public static clearTableFilters(tableState: any) {
     this.clearFilters(tableState.filters);
   }
 
   public static clearFilters(tableFilters: any): any {
-    for (let filter in tableFilters) {
+    for (const filter in tableFilters) {
       if (tableFilters[filter] && tableFilters[filter].length > 0) {
         tableFilters[filter] = [tableFilters[filter][0]];
         tableFilters[filter].forEach((item: any) => {
-          if (item.matchMode === "in") {
+          if (item.matchMode === 'in') {
             item.value = [];
           } else {
-            item.value = "";
+            item.value = '';
           }
         });
       }
-    };
+    }
   }
 
   public static clearTableMultiSort(tableState: any) {
@@ -24,7 +23,7 @@ export class PrimengTableStateUtil {
   }
 
   public static clearTableColumnWidths(tableState: any) {
-    tableState.columnWidths = "";
+    tableState.columnWidths = '';
   }
 
   public static clearTableColumnOrder(tableState: any) {

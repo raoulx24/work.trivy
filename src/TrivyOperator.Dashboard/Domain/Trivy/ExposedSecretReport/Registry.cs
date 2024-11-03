@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Hosting.Server;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace TrivyOperator.Dashboard.Domain.Trivy.ExposedSecretReport;
 

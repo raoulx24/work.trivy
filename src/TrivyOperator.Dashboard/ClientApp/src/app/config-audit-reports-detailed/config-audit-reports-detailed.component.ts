@@ -1,20 +1,19 @@
 import { Component } from '@angular/core';
 
-import { ConfigAuditReportService } from '../../api/services/config-audit-report.service'
-import { ConfigAuditReportDenormalizedDto } from '../../api/models/config-audit-report-denormalized-dto'
+import { ConfigAuditReportDenormalizedDto } from '../../api/models/config-audit-report-denormalized-dto';
 import { SeverityDto } from '../../api/models/severity-dto';
+import { ConfigAuditReportService } from '../../api/services/config-audit-report.service';
 
 import { TrivyTableComponent } from '../trivy-table/trivy-table.component';
-import { ExportColumn, TrivyTableColumn, TrivyTableOptions } from "../trivy-table/trivy-table.types";
-import { TrivyTableUtils } from '../utils/trivy-table.utils'
-
+import { ExportColumn, TrivyTableColumn, TrivyTableOptions } from '../trivy-table/trivy-table.types';
+import { TrivyTableUtils } from '../utils/trivy-table.utils';
 
 @Component({
   selector: 'app-config-audit-reports-detailed',
   standalone: true,
   imports: [TrivyTableComponent],
   templateUrl: './config-audit-reports-detailed.component.html',
-  styleUrl: './config-audit-reports-detailed.component.scss'
+  styleUrl: './config-audit-reports-detailed.component.scss',
 })
 export class ConfigAuditReportsDetailedComponent {
   public dataDtos?: ConfigAuditReportDenormalizedDto[] | null;
@@ -22,7 +21,7 @@ export class ConfigAuditReportsDetailedComponent {
   public activeNamespaces: string[] = [];
   public isLoading: boolean = false;
 
-  public csvFileName: string = "Config.Audit.Reports";
+  public csvFileName: string = 'Config.Audit.Reports';
 
   public exportColumns: ExportColumn[];
 
@@ -34,54 +33,94 @@ export class ConfigAuditReportsDetailedComponent {
 
     this.trivyTableColumns = [
       {
-        field: "resourceNamespace", header: "NS",
-        isFiltrable: true, isSortable: true, multiSelectType: "namespaces",
-        style: "width: 130px; max-width: 130px;", renderType: "standard",
+        field: 'resourceNamespace',
+        header: 'NS',
+        isFiltrable: true,
+        isSortable: true,
+        multiSelectType: 'namespaces',
+        style: 'width: 130px; max-width: 130px;',
+        renderType: 'standard',
       },
       {
-        field: "resourceName", header: "Name",
-        isFiltrable: true, isSortable: true, multiSelectType: "none",
-        style: "width: 240px; max-width: 240px; white-space: normal;", renderType: "standard",
+        field: 'resourceName',
+        header: 'Name',
+        isFiltrable: true,
+        isSortable: true,
+        multiSelectType: 'none',
+        style: 'width: 240px; max-width: 240px; white-space: normal;',
+        renderType: 'standard',
       },
       {
-        field: "resourceKind", header: "Kind",
-        isFiltrable: true, isSortable: true, multiSelectType: "none",
-        style: "width: 100px; max-width: 100px;", renderType: "standard",
+        field: 'resourceKind',
+        header: 'Kind',
+        isFiltrable: true,
+        isSortable: true,
+        multiSelectType: 'none',
+        style: 'width: 100px; max-width: 100px;',
+        renderType: 'standard',
       },
       {
-        field: "severityId", header: "Sev",
-        isFiltrable: true, isSortable: true, multiSelectType: "severities",
-        style: "width: 90px; max-width: 90px;", renderType: "severityBadge",
+        field: 'severityId',
+        header: 'Sev',
+        isFiltrable: true,
+        isSortable: true,
+        multiSelectType: 'severities',
+        style: 'width: 90px; max-width: 90px;',
+        renderType: 'severityBadge',
       },
       {
-        field: "category", header: "Category",
-        isFiltrable: true, isSortable: true, multiSelectType: "none",
-        style: "width: 140px; max-width: 140px; white-space: normal;", renderType: "standard",
+        field: 'category',
+        header: 'Category',
+        isFiltrable: true,
+        isSortable: true,
+        multiSelectType: 'none',
+        style: 'width: 140px; max-width: 140px; white-space: normal;',
+        renderType: 'standard',
       },
       {
-        field: "checkId", header: "Id",
-        isFiltrable: true, isSortable: true, multiSelectType: "none",
-        style: "width: 95px; max-width: 95px; white-space: normal;", renderType: "standard",
+        field: 'checkId',
+        header: 'Id',
+        isFiltrable: true,
+        isSortable: true,
+        multiSelectType: 'none',
+        style: 'width: 95px; max-width: 95px; white-space: normal;',
+        renderType: 'standard',
       },
       {
-        field: "title", header: "Title",
-        isFiltrable: true, isSortable: true, multiSelectType: "none",
-        style: "width: 180px; max-width: 180px; white-space: normal;", renderType: "standard",
+        field: 'title',
+        header: 'Title',
+        isFiltrable: true,
+        isSortable: true,
+        multiSelectType: 'none',
+        style: 'width: 180px; max-width: 180px; white-space: normal;',
+        renderType: 'standard',
       },
       {
-        field: "description", header: "Description",
-        isFiltrable: true, isSortable: true, multiSelectType: "none",
-        style: "width: 360px; max-width: 360px; white-space: normal;", renderType: "standard",
+        field: 'description',
+        header: 'Description',
+        isFiltrable: true,
+        isSortable: true,
+        multiSelectType: 'none',
+        style: 'width: 360px; max-width: 360px; white-space: normal;',
+        renderType: 'standard',
       },
       {
-        field: "remediation", header: "Remediation",
-        isFiltrable: true, isSortable: true, multiSelectType: "none",
-        style: "width: 360px; max-width: 360px; white-space: normal;", renderType: "standard",
+        field: 'remediation',
+        header: 'Remediation',
+        isFiltrable: true,
+        isSortable: true,
+        multiSelectType: 'none',
+        style: 'width: 360px; max-width: 360px; white-space: normal;',
+        renderType: 'standard',
       },
       {
-        field: "messages", header: "Messages",
-        isFiltrable: true, isSortable: true, multiSelectType: "none",
-        style: "width: 500px; max-width: 500px; white-space: normal;", renderType: "multiline",
+        field: 'messages',
+        header: 'Messages',
+        isFiltrable: true,
+        isSortable: true,
+        multiSelectType: 'none',
+        style: 'width: 500px; max-width: 500px; white-space: normal;',
+        renderType: 'multiline',
       },
     ];
     this.trivyTableOptions = {
@@ -92,27 +131,25 @@ export class ConfigAuditReportsDetailedComponent {
       isRefreshFiltrable: false,
       isFooterVisible: true,
       tableSelectionMode: null,
-      tableStyle: { 'width': '2200px' },
-      stateKey: "Config Audit Reports Detailed",
+      tableStyle: { width: '2200px' },
+      stateKey: 'Config Audit Reports Detailed',
       dataKey: null,
       rowExpansionRender: null,
-      extraClasses: "",
+      extraClasses: '',
     };
     this.exportColumns = TrivyTableUtils.convertFromTableColumnToExportColumn(this.trivyTableColumns);
   }
 
   public getTableDataDtos() {
     this.isLoading = true;
-    this.dataDtoService.getConfigAuditReportDenormalizedDto()
-      .subscribe({
-        next: (res) => this.onGetDataDtos(res),
-        error: (err) => console.error(err)
-      });
-    this.dataDtoService.getConfigAuditReportActiveNamespaces()
-      .subscribe({
-        next: (res) => this.onGetActiveNamespaces(res),
-        error: (err) => console.error(err)
-      })
+    this.dataDtoService.getConfigAuditReportDenormalizedDto().subscribe({
+      next: (res) => this.onGetDataDtos(res),
+      error: (err) => console.error(err),
+    });
+    this.dataDtoService.getConfigAuditReportActiveNamespaces().subscribe({
+      next: (res) => this.onGetActiveNamespaces(res),
+      error: (err) => console.error(err),
+    });
   }
 
   onGetDataDtos(dtos: ConfigAuditReportDenormalizedDto[]) {
@@ -121,6 +158,6 @@ export class ConfigAuditReportsDetailedComponent {
   }
 
   onGetActiveNamespaces(dtos: string[]) {
-    this.activeNamespaces = dtos.sort((x, y) => x > y ? 1 : -1);
+    this.activeNamespaces = dtos.sort((x, y) => (x > y ? 1 : -1));
   }
 }

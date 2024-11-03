@@ -1,61 +1,61 @@
-const angularEslint = require("@angular-eslint/eslint-plugin");
-const angularEslintTemplate = require("@angular-eslint/eslint-plugin-template");
-const typescriptPlugin = require("@typescript-eslint/eslint-plugin");
-const html = require("eslint-plugin-html");
-const parser = require("@typescript-eslint/parser");
+const angularEslint = require('@angular-eslint/eslint-plugin');
+const angularEslintTemplate = require('@angular-eslint/eslint-plugin-template');
+const typescriptPlugin = require('@typescript-eslint/eslint-plugin');
+const html = require('eslint-plugin-html');
+const parser = require('@typescript-eslint/parser');
 
 module.exports = [
   {
-    ignores: ["dist", "node_modules"],
+    ignores: ['dist', 'node_modules'],
   },
   {
-    files: ["**/*.ts"],
+    files: ['**/*.ts'],
     languageOptions: {
       parser,
       parserOptions: {
-        project: ["**/tsconfig.json"],
+        project: ['**/tsconfig.json'],
         createDefaultProgram: true,
       },
     },
     plugins: {
-      "@angular-eslint": angularEslint,
-      "@typescript-eslint": typescriptPlugin,
+      '@angular-eslint': angularEslint,
+      '@typescript-eslint': typescriptPlugin,
     },
     rules: {
-      "@angular-eslint/component-selector": [
-        "error",
+      '@angular-eslint/component-selector': [
+        'error',
         {
-          prefix: "app",
-          style: "kebab-case",
-          type: "element",
+          prefix: 'app',
+          style: 'kebab-case',
+          type: 'element',
         },
       ],
-      "@angular-eslint/directive-selector": [
-        "error",
+      '@angular-eslint/directive-selector': [
+        'error',
         {
-          prefix: "app",
-          style: "camelCase",
-          type: "attribute",
+          prefix: 'app',
+          style: 'camelCase',
+          type: 'attribute',
         },
       ],
-      "@typescript-eslint/no-empty-function": [
-        "error",
+      '@typescript-eslint/no-empty-function': [
+        'error',
         {
-          allow: ["arrowFunctions"],
+          allow: ['arrowFunctions'],
         },
       ],
-      "prefer-const": "error",
-      "no-var": "error",
+      'prefer-const': 'error',
+      'no-var': 'error',
     },
   },
   {
-    files: ["**/*.html"],
+    files: ['**/*.html'],
     languageOptions: {
-      parser: require("@angular-eslint/template-parser"),
+      parser: require('@angular-eslint/template-parser'),
     },
     plugins: {
       html: html,
-      "@angular-eslint/template": angularEslintTemplate,
+      '@angular-eslint/template': angularEslintTemplate,
     },
     rules: {},
   },

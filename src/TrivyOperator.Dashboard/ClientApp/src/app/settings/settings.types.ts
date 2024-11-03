@@ -1,6 +1,6 @@
 export class ClearTablesOptions {
-  dataKey: string = "";
-  description: string = "";
+  dataKey: string = '';
+  description: string = '';
   filters: boolean = false;
   sort: boolean = false;
   columnWidths: boolean = false;
@@ -14,14 +14,14 @@ export class ClearTablesOptions {
 }
 
 export interface SavedCsvFileName {
-  dataKey: string,
-  description: string,
-  savedCsvName: string,
+  dataKey: string;
+  description: string;
+  savedCsvName: string;
 }
 
 export interface TrivyReportConfig {
-  id: string,
-  name: string,
-  backendEnabled: boolean,
-  frontendEnabled: boolean,
+  id: string;
+  name: string;
+  backendEnabled: boolean;
+  frontendEnabled: boolean;
 }

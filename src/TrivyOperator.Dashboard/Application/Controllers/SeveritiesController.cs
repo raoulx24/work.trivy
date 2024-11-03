@@ -6,8 +6,7 @@ namespace TrivyOperator.Dashboard.Application.Controllers;
 
 [ApiController]
 [Route("api/severities")]
-public class SeveritiesController()
-    : ControllerBase
+public class SeveritiesController : ControllerBase
 {
     [HttpGet(Name = "getSeverities")]
     [ProducesResponseType<IEnumerable<SeverityDto>>(StatusCodes.Status200OK)]
@@ -19,7 +18,7 @@ public class SeveritiesController()
         List<SeverityDto> severityDtos = [];
         foreach (int severityId in Enum.GetValues(typeof(TrivySeverity)))
         {
-            SeverityDto severityDto = new() { Id = severityId, Name = ((TrivySeverity) severityId).ToString() };
+            SeverityDto severityDto = new() { Id = severityId, Name = ((TrivySeverity)severityId).ToString() };
             severityDtos.Add(severityDto);
         }
 

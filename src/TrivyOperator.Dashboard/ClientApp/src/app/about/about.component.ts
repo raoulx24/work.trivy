@@ -7,8 +7,6 @@ import { PanelModule } from 'primeng/panel';
   standalone: true,
   imports: [PanelModule],
   templateUrl: './about.component.html',
-  styleUrl: './about.component.scss'
+  styleUrl: './about.component.scss',
 })
-export class AboutComponent {
-
-}
+export class AboutComponent {}

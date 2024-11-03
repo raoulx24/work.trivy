@@ -10,7 +10,7 @@ namespace TrivyOperator.Dashboard.Infrastructure.Clients;
 public class KubernetesClientFactory : IKubernetesClientFactory
 {
     private readonly Kubernetes kubernetesClient;
-    private ILogger logger;
+    private readonly ILogger logger;
 
     static KubernetesClientFactory()
     {
@@ -20,7 +20,7 @@ public class KubernetesClientFactory : IKubernetesClientFactory
     public KubernetesClientFactory(IOptions<KubernetesOptions> options, ILogger<KubernetesClientFactory> logger)
     {
         this.logger = logger;
-        
+
         string? kubeConfigFileName = options.Value.KubeConfigFileName;
         if (!string.IsNullOrWhiteSpace(kubeConfigFileName))
         {

@@ -2,6 +2,7 @@
 using TrivyOperator.Dashboard.Application.Services.Alerts;
 
 namespace TrivyOperator.Dashboard.Application.Services.Abstractions;
+
 public interface IAlertsService
 {
     Task AddAlert(string emitter, Alert alert);

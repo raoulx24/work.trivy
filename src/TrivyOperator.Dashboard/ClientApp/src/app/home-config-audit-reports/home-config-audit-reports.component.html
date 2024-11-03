@@ -1,146 +1,157 @@
-<div class="row" style="height:70vh">
+<div style="height: 70vh" class="row">
   <div class="grid flex">
     <div class="col-12 lg:col-3 h-full">
       <h4 class="text-center">Config Audit Reports Statistics</h4>
       <div class="flex row">
-        <p-table [value]="carSeveritySummaries" styleClass="p-datatable-sm text-sm" ngClass="w-full">
+        <p-table ngClass="w-full" styleClass="p-datatable-sm text-sm" [value]="carSeveritySummaries">
           <ng-template pTemplate="header">
             <tr>
-              <th style="width: 50%; max-width: 75%;">Severity</th>
-              <th style="width: 25%; max-width: 25%;" class="text-right">Count</th>
+              <th style="width: 50%; max-width: 75%">Severity</th>
+              <th style="width: 25%; max-width: 25%" class="text-right">Count</th>
             </tr>
           </ng-template>
-          <ng-template pTemplate="body" let-severity>
+          <ng-template let-severity pTemplate="body">
             <tr>
-              <td style="width: 50%; max-width: 75%;">{{ severity.severityName }}</td>
-              <td style="width: 25%; max-width: 25%;" class="text-right">{{ severity.count }}</td>
+              <td style="width: 50%; max-width: 75%">{{ severity.severityName }}</td>
+              <td style="width: 25%; max-width: 25%" class="text-right">{{ severity.count }}</td>
             </tr>
           </ng-template>
         </p-table>
       </div>
       <div class="flex row mb-5 text-sm justify-content-end -ml-1">
-        <p-button label="More on Severities..." [text]="true" size="small" (onClick)="onCarsMore($event)" />
+        <p-button label="More on Severities..." size="small" [text]="true" (onClick)="onCarsMore($event)" />
       </div>
-      
     </div>
 
     <div class="hide-on-small lg:col-9 h-full justify-content-center">
-      <p-carousel [value]="slides"
-                  [numVisible]="1"
-                  [numScroll]="1"
-                  [autoplayInterval]="10000">
+      <p-carousel [autoplayInterval]="10000" [numScroll]="1" [numVisible]="1" [value]="slides">
         <ng-template let-slide pTemplate="item">
           <div class="custom-slide">
             <ng-container [ngSwitch]="slide">
               <div *ngSwitchCase="'nsByNs'">
-                <h4 style="text-align: center;">Config Audits - Severity by Namespace</h4>
+                <h4 style="text-align: center">Config Audits - Severity by Namespace</h4>
                 <div *ngIf="barchartDataNsByNs" class="flex justify-content-center">
-                  <p-chart type="bar"
-                           [data]="barchartDataNsByNs"
-                           [options]="horizontalBarChartOption"
-                           height="60vh" width="60vw"
-                           class="justify-content-center" />
+                  <p-chart
+                    height="60vh"
+                    type="bar"
+                    width="60vw"
+                    class="justify-content-center"
+                    [data]="barchartDataNsByNs"
+                    [options]="horizontalBarChartOption"
+                  />
                 </div>
               </div>
               <div *ngSwitchCase="'nsBySev'">
-                <h4 style="text-align: center;">Config Audits - Namespace by Severity</h4>
+                <h4 style="text-align: center">Config Audits - Namespace by Severity</h4>
                 <div *ngIf="barchartDataNsBySev" class="flex justify-content-center">
-                  <p-chart type="bar"
-                           [data]="barchartDataNsBySev"
-                           [options]="horizontalBarChartOption"
-                           height="60vh" width="60vw" />
+                  <p-chart
+                    height="60vh"
+                    type="bar"
+                    width="60vw"
+                    [data]="barchartDataNsBySev"
+                    [options]="horizontalBarChartOption"
+                  />
                 </div>
               </div>
               <div *ngSwitchCase="'kindByNs'">
-                <h4 style="text-align: center;">Config Audits - Severity by Kinds</h4>
+                <h4 style="text-align: center">Config Audits - Severity by Kinds</h4>
                 <div *ngIf="barchartDataKindByNs" class="flex justify-content-center">
-                  <p-chart type="bar"
-                           [data]="barchartDataKindByNs"
-                           [options]="horizontalBarChartOption"
-                           height="60vh" width="60vw"
-                           class="justify-content-center" />
+                  <p-chart
+                    height="60vh"
+                    type="bar"
+                    width="60vw"
+                    class="justify-content-center"
+                    [data]="barchartDataKindByNs"
+                    [options]="horizontalBarChartOption"
+                  />
                 </div>
               </div>
               <div *ngSwitchCase="'kindBySev'">
-                <h4 style="text-align: center;">Config Audits - Kinds by Severity</h4>
+                <h4 style="text-align: center">Config Audits - Kinds by Severity</h4>
                 <div *ngIf="barchartDataKindBySev" class="flex justify-content-center">
-                  <p-chart type="bar"
-                           [data]="barchartDataKindBySev"
-                           [options]="horizontalBarChartOption"
-                           height="60vh" width="60vw" />
+                  <p-chart
+                    height="60vh"
+                    type="bar"
+                    width="60vw"
+                    [data]="barchartDataKindBySev"
+                    [options]="horizontalBarChartOption"
+                  />
                 </div>
               </div>
             </ng-container>
           </div>
         </ng-template>
       </p-carousel>
-
     </div>
   </div>
 </div>
 
-<p-dialog header="Config Audit Reports Details"
-          [modal]="true"
-          [(visible)]="isCarDetailsDialogVisible"
-          closable="true"
-          closeOnEscape="true"
-          dismissableMask="true"
-          resizable="true"
-          [contentStyle]="{ 'height': '70vh'}"
-          [style]="{ width: '90vw' }">
-
+<p-dialog
+  closable="true"
+  closeOnEscape="true"
+  dismissableMask="true"
+  header="Config Audit Reports Details"
+  resizable="true"
+  [contentStyle]="{ height: '70vh' }"
+  [modal]="true"
+  [style]="{ width: '90vw' }"
+  [(visible)]="isCarDetailsDialogVisible"
+>
   <div *ngIf="configAuditReportSummaryDtos" style="height: 65vh">
-    <p-table [value]="namespaceNames"
-             styleClass="p-datatable-sm text-sm"
-             [scrollable]="true" scrollDirection="both">
+    <p-table scrollDirection="both" styleClass="p-datatable-sm text-sm" [scrollable]="true" [value]="namespaceNames">
       <ng-template pTemplate="header">
         <tr>
-          <th rowspan="2" pFrozenColumn>Namespace</th>
+          <th pFrozenColumn rowspan="2">Namespace</th>
           <ng-container *ngFor="let severityId of severities">
-            <th [attr.colspan]="kinds.length" class="text-center">{{ severityWrapperGetCapitalizedName(severityId) }}</th>
+            <th class="text-center" [attr.colspan]="kinds.length">
+              {{ severityWrapperGetCapitalizedName(severityId) }}
+            </th>
           </ng-container>
         </tr>
         <tr>
           <ng-container *ngFor="let severityId of severities">
             <ng-container *ngFor="let kind of kinds">
-              <th class="text-center" style="width: 90px; min-width: 75px;">{{ kind }}</th>
+              <th style="width: 90px; min-width: 75px" class="text-center">{{ kind }}</th>
             </ng-container>
           </ng-container>
         </tr>
       </ng-template>
-      <ng-template pTemplate="body" let-item>
+      <ng-template let-item pTemplate="body">
         <tr>
           <td pFrozenColumn>{{ item }}</td>
           <ng-container *ngFor="let severityId of severities">
             <ng-container *ngFor="let kind of kinds">
               <td class="text-center w-9rem">
                 <ng-container *ngIf="getCountFromConfigAuditReportSummaryDtos(item, kind, severityId) as result">
-                  <p-tag *ngIf="result !== '0'" [value]="result"
-                         [rounded]="true"
-                         [style]="{ background: severityWrapperGetGetCssColor(severityId) }" />
+                  <p-tag
+                    *ngIf="result !== '0'"
+                    [rounded]="true"
+                    [style]="{ background: severityWrapperGetGetCssColor(severityId) }"
+                    [value]="result"
+                  />
                 </ng-container>
               </td>
             </ng-container>
           </ng-container>
         </tr>
       </ng-template>
-      <ng-template pTemplate="footer" let-footerItem>
+      <ng-template let-footerItem pTemplate="footer">
         <td pFrozenColumn class="font-bold p-2">Total</td>
         <ng-container *ngFor="let severityId of severities">
           <ng-container *ngFor="let kind of kinds">
             <td class="text-center w-9rem">
               <ng-container *ngIf="getCountFromConfigAuditReportSummaryDtos('', kind, severityId) as result">
-                <p-tag *ngIf="result !== '0'" [value]="result"
-                       [rounded]="true"
-                       [style]="{ background: severityWrapperGetGetCssColor(severityId) }" />
+                <p-tag
+                  *ngIf="result !== '0'"
+                  [rounded]="true"
+                  [style]="{ background: severityWrapperGetGetCssColor(severityId) }"
+                  [value]="result"
+                />
               </ng-container>
             </td>
           </ng-container>
         </ng-container>
-
       </ng-template>
     </p-table>
-
   </div>
-
 </p-dialog>

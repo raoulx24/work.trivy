@@ -1,27 +1,41 @@
 <p-menubar>
   <ng-template pTemplate="start">
     <div class="flex align-items-center gap-3">
-      <p-button icon="pi pi-bars" [text]="true" [raised]="true" (click)="openSidebar()" />
-      <img src="assets/logo_AL.ico" alt="logo" height="45" (click)="router.navigate(['/'])" style="cursor: pointer">
+      <p-button icon="pi pi-bars" [raised]="true" [text]="true" (click)="openSidebar()" />
+      <img alt="logo" height="45" src="assets/logo_AL.ico" style="cursor: pointer" (click)="router.navigate(['/'])" />
       <h4>Trivy Operator Dashboard</h4>
     </div>
   </ng-template>
   <ng-template pTemplate="end">
     <div class="flex align-items-center gap-3">
       <div *ngIf="alertsCount" class="p-overlay-badge">
-        <p-button label="" icon="pi pi-bell" [rounded]="true" [text]="true" [raised]="true" (click)="onAlertsClick()" />
+        <p-button icon="pi pi-bell" label="" [raised]="true" [rounded]="true" [text]="true" (click)="onAlertsClick()" />
         <span class="p-badge p-badge-danger text-xs">{{ alertsCount }}</span>
       </div>
-      <p-button *ngIf="isDarkMode" icon="pi pi-sun" [rounded]="true" [text]="true" [raised]="true" (click)="switchLightDarkMode()"></p-button>
-      <p-button *ngIf="!isDarkMode" icon="pi pi-moon" [rounded]="true" [text]="true" [raised]="true" (click)="switchLightDarkMode()"></p-button>
+      <p-button
+        *ngIf="isDarkMode"
+        icon="pi pi-sun"
+        [raised]="true"
+        [rounded]="true"
+        [text]="true"
+        (click)="switchLightDarkMode()"
+      ></p-button>
+      <p-button
+        *ngIf="!isDarkMode"
+        icon="pi pi-moon"
+        [raised]="true"
+        [rounded]="true"
+        [text]="true"
+        (click)="switchLightDarkMode()"
+      ></p-button>
     </div>
   </ng-template>
 </p-menubar>
-<p-sidebar [(visible)]="isSidebarVisible" [baseZIndex]="10000" [showCloseIcon]="false">
-  <p-panelMenu [model]="items" styleClass="w-full">
-    <ng-template pTemplate="item" let-item let-root="root">
+<p-sidebar [baseZIndex]="10000" [showCloseIcon]="false" [(visible)]="isSidebarVisible">
+  <p-panelMenu styleClass="w-full" [model]="items">
+    <ng-template let-item let-root="root" pTemplate="item">
       <a pRipple class="flex align-items-center cursor-pointer text-color px-3 py-2">
-        <fa-icon *ngIf="item.faIcon" [icon]="item.faIcon" icon=""></fa-icon>
+        <fa-icon *ngIf="item.faIcon" icon="" [icon]="item.faIcon"></fa-icon>
         <span class="ml-2">{{ item.label }}</span>
         <p-badge *ngIf="item.badge" [ngClass]="{ 'ml-auto': !root, 'ml-2': root }" [value]="item.badge" />
       </a>

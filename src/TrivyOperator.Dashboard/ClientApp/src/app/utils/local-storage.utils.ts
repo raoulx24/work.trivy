@@ -1,6 +1,6 @@
 export class LocalStorageUtils {
-  public static readonly csvFileNameKeyPrefix: string = "csvFileName.";
-  public static readonly trivyTableKeyPrefix: string = "trivyTable.";
+  public static readonly csvFileNameKeyPrefix: string = 'csvFileName.';
+  public static readonly trivyTableKeyPrefix: string = 'trivyTable.';
 
   public static getKeysWithPrefix(prefix: string): string[] {
     const keys: string[] = [];

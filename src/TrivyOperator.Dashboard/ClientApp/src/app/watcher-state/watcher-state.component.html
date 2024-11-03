@@ -1,7 +1,9 @@
 <h3>Watchers Status</h3>
-<app-trivy-table [dataDtos]="watcherStateInfoDtos!"
-                 [trivyTableColumns]="trivyTableColumns"
-                 [trivyTableOptions]="trivyTableOptions"
-                 (refreshRequested)="getTableDataDtos()"
-                 tableHeight="82vh"
-                 [isLoading]="isLoading" />
+<app-trivy-table
+  tableHeight="82vh"
+  [dataDtos]="watcherStateInfoDtos!"
+  [isLoading]="isLoading"
+  [trivyTableColumns]="trivyTableColumns"
+  [trivyTableOptions]="trivyTableOptions"
+  (refreshRequested)="getTableDataDtos()"
+/>

@@ -3,17 +3,17 @@ using TrivyOperator.Dashboard.Application.Services.Abstractions;
 
 namespace TrivyOperator.Dashboard.Application.Services;
 
-public class ConfigAuditReportNullService() : IConfigAuditReportService
+public class ConfigAuditReportNullService : IConfigAuditReportService
 {
-    public Task<IEnumerable<ConfigAuditReportDto>> GetConfigAuditReportDtos(string? namespaceName = null, IEnumerable<int>? excludedSeverities = null)
-    { return Task.FromResult<IEnumerable<ConfigAuditReportDto>>([]); }
+    public Task<IEnumerable<ConfigAuditReportDto>> GetConfigAuditReportDtos(
+        string? namespaceName = null,
+        IEnumerable<int>? excludedSeverities = null) => Task.FromResult<IEnumerable<ConfigAuditReportDto>>([]);
 
-    public Task<IList<ConfigAuditReportDenormalizedDto>> GetConfigAuditReportDenormalizedDtos(string? namespaceName = null)
-    { return Task.FromResult<IList<ConfigAuditReportDenormalizedDto>>([]); }
+    public Task<IList<ConfigAuditReportDenormalizedDto>> GetConfigAuditReportDenormalizedDtos(
+        string? namespaceName = null) => Task.FromResult<IList<ConfigAuditReportDenormalizedDto>>([]);
 
-    public Task<IEnumerable<string>> GetActiveNamespaces()
-    { return Task.FromResult<IEnumerable<string>>([]); }
+    public Task<IEnumerable<string>> GetActiveNamespaces() => Task.FromResult<IEnumerable<string>>([]);
 
-    public Task<IEnumerable<ConfigAuditReportSummaryDto>> GetConfigAuditReportSummaryDtos()
-    { return Task.FromResult<IEnumerable<ConfigAuditReportSummaryDto>>([]); }
+    public Task<IEnumerable<ConfigAuditReportSummaryDto>> GetConfigAuditReportSummaryDtos() =>
+        Task.FromResult<IEnumerable<ConfigAuditReportSummaryDto>>([]);
 }

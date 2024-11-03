@@ -3,8 +3,8 @@ using k8s.Autorest;
 using k8s.Models;
 using System.Net;
 using TrivyOperator.Dashboard.Application.Services.BackgroundQueues.Abstractions;
-using TrivyOperator.Dashboard.Application.Services.WatcherStates;
 using TrivyOperator.Dashboard.Application.Services.WatcherEvents.Abstractions;
+using TrivyOperator.Dashboard.Application.Services.WatcherStates;
 using TrivyOperator.Dashboard.Infrastructure.Abstractions;
 using TrivyOperator.Dashboard.Utils;
 
@@ -15,9 +15,8 @@ public abstract class
         IKubernetesClientFactory kubernetesClientFactory,
         TBackgroundQueue backgroundQueue,
         IServiceProvider serviceProvider,
-        ILogger<KubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TBackgroundQueue, TKubernetesWatcherEvent>> logger)
-    : IKubernetesWatcher<TKubernetesObject>
-    where TKubernetesObject : IKubernetesObject<V1ObjectMeta>
+        ILogger<KubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TBackgroundQueue, TKubernetesWatcherEvent>>
+            logger) : IKubernetesWatcher<TKubernetesObject> where TKubernetesObject : IKubernetesObject<V1ObjectMeta>
     where TKubernetesObjectList : IItems<TKubernetesObject>
     where TKubernetesWatcherEvent : IWatcherEvent<TKubernetesObject>, new()
     where TBackgroundQueue : IBackgroundQueue<TKubernetesObject>
@@ -74,31 +73,30 @@ public abstract class
                 {
                     if (isRecoveringfromError || isFreshStart)
                     {
-                        using var scope = serviceProvider.CreateScope();
-                        var watcherState = scope.ServiceProvider.GetRequiredService<IWatcherState>();
+                        using IServiceScope scope = serviceProvider.CreateScope();
+                        IWatcherState watcherState = scope.ServiceProvider.GetRequiredService<IWatcherState>();
                         await watcherState.ProcessWatcherSuccess(typeof(TKubernetesObject), watcherKey);
                         isRecoveringfromError = false;
                         isFreshStart = false;
                     }
+
                     TKubernetesWatcherEvent kubernetesWatcherEvent =
                         new() { KubernetesObject = item, WatcherEventType = type };
                     await BackgroundQueue.QueueBackgroundWorkItemAsync(kubernetesWatcherEvent);
                 }
             }
-            catch (HttpOperationException hoe) when (
-                hoe.Response.StatusCode == HttpStatusCode.Unauthorized ||
-                hoe.Response.StatusCode == HttpStatusCode.Forbidden ||
-                hoe.Response.StatusCode == HttpStatusCode.NotFound
-                )
+            catch (HttpOperationException hoe) when (hoe.Response.StatusCode is HttpStatusCode.Unauthorized or
+                                                     HttpStatusCode.Forbidden or
+                                                     HttpStatusCode.NotFound)
             {
-                using var scope = serviceProvider.CreateScope();
-                var watcherState = scope.ServiceProvider.GetRequiredService<IWatcherState>();
+                using IServiceScope scope = serviceProvider.CreateScope();
+                IWatcherState watcherState = scope.ServiceProvider.GetRequiredService<IWatcherState>();
                 await watcherState.ProcessWatcherError(typeof(TKubernetesObject), watcherKey, hoe);
             }
             catch (TaskCanceledException)
             {
-                using var scope = serviceProvider.CreateScope();
-                var watcherState = scope.ServiceProvider.GetRequiredService<IWatcherState>();
+                using IServiceScope scope = serviceProvider.CreateScope();
+                IWatcherState watcherState = scope.ServiceProvider.GetRequiredService<IWatcherState>();
                 await watcherState.ProcessWatcherCancel(typeof(TKubernetesObject), watcherKey);
             }
             catch (Exception ex)
@@ -119,15 +117,9 @@ public abstract class
         }
     }
 
-    protected string GetNamespaceFromSourceEvent(IKubernetesObject<V1ObjectMeta>? sourceKubernetesObject)
-    {
-        if (sourceKubernetesObject is V1Namespace)
-        {
-            return sourceKubernetesObject.Metadata.Name;
-        }
-
-        return VarUtils.GetCacheRefreshKey(sourceKubernetesObject);
-    }
+    protected string GetNamespaceFromSourceEvent(IKubernetesObject<V1ObjectMeta>? sourceKubernetesObject) => sourceKubernetesObject is V1Namespace
+            ? sourceKubernetesObject.Metadata.Name
+            : VarUtils.GetCacheRefreshKey(sourceKubernetesObject);
 
     protected abstract Task<HttpOperationResponse<TKubernetesObjectList>> GetKubernetesObjectWatchList(
         IKubernetesObject<V1ObjectMeta>? sourceKubernetesObject,

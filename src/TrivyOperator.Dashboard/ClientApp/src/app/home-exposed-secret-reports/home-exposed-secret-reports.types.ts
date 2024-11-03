@@ -1,4 +1,4 @@
 export interface EsTableSummary {
-  severityId: number,
-  count: number,
+  severityId: number;
+  count: number;
 }

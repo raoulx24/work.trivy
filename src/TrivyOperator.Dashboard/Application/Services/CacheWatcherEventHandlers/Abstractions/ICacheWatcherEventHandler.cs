@@ -5,7 +5,5 @@ namespace TrivyOperator.Dashboard.Application.Services.CacheWatcherEventHandlers
 
 public interface ICacheWatcherEventHandler
 {
-    void Start(
-        CancellationToken cancellationToken,
-        IKubernetesObject<V1ObjectMeta>? sourceKubernetesObject = null);
+    void Start(CancellationToken cancellationToken, IKubernetesObject<V1ObjectMeta>? sourceKubernetesObject = null);
 }

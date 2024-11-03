@@ -15,9 +15,7 @@ public class BackgroundQueue<TKubernetesObject> : IBackgroundQueue<TKubernetesOb
     private readonly IOptions<BackgroundQueueOptions> options;
     private readonly Channel<IWatcherEvent<TKubernetesObject>> queue;
 
-    public BackgroundQueue(
-        IOptions<BackgroundQueueOptions> options,
-        ILogger<BackgroundQueue<TKubernetesObject>> logger)
+    public BackgroundQueue(IOptions<BackgroundQueueOptions> options, ILogger<BackgroundQueue<TKubernetesObject>> logger)
     {
         this.options = options;
         this.logger = logger;

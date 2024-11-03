@@ -1,10 +1,12 @@
 <h3>Cluster RBAC Assessment Reports</h3>
 
-<app-generic-master-detail [dataDtos]="dataDtos"
-                           [activeNamespaces]="activeNamespaces"
-                           [mainTableColumns]="mainTableColumns"
-                           [mainTableOptions]="mainTableOptions"
-                           [isMainTableLoading]="isMainTableLoading"
-                           [detailsTableColumns]="detailsTableColumns"
-                           [detailsTableOptions]="detailsTableOptions"
-                           (refreshRequested)="onRefreshRequested($event)" />
+<app-generic-master-detail
+  [activeNamespaces]="activeNamespaces"
+  [dataDtos]="dataDtos"
+  [detailsTableColumns]="detailsTableColumns"
+  [detailsTableOptions]="detailsTableOptions"
+  [isMainTableLoading]="isMainTableLoading"
+  [mainTableColumns]="mainTableColumns"
+  [mainTableOptions]="mainTableOptions"
+  (refreshRequested)="onRefreshRequested($event)"
+/>

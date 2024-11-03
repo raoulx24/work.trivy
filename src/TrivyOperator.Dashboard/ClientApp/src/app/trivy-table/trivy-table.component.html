@@ -1,152 +1,260 @@
 <div class="trivy-table" [ngClass]="getExtraClasses()">
-  <p-table #trivyTable
-           [columns]="trivyTableColumns"
-           [value]="dataDtos!"
-           [scrollable]="true"
-           scrollHeight="flex"
-           [virtualScroll]="true"
-           [virtualScrollItemSize]="46"
-           [resizableColumns]="true"
-           columnResizeMode="expand"
-           [reorderableColumns]="true"
-           styleClass="p-datatable-sm text-sm"
-           [ngStyle]="{'flex-grow': '1', 'display': 'flex', 'flex-direction': 'column'}"
-           [tableStyle]="trivyTableOptions!.tableStyle"
-           sortMode="multiple"
-           [autoLayout]="true"
-           [loading]="isLoading"
-           [selectionMode]="trivyTableOptions!.tableSelectionMode"
-           [(selection)]="selectedDataDtos"
-           [exportFilename]="csvFileName"
-           (selectionChange)="onSelectionChange($event)"
-           [stateKey]="tableStateKey"
-           stateStorage="local"
-           (onStateSave)="onTableStateSave()"
-           dataKey="{{ trivyTableOptions!.dataKey }}"
-           [expandedRowKeys]="expandedRows"
-           (onRowExpand)="onRowExpandCollapse($event)"
-           (onRowCollapse)="onRowExpandCollapse($event)" >
-
+  <p-table
+    #trivyTable
+    columnResizeMode="expand"
+    dataKey="{{ trivyTableOptions!.dataKey }}"
+    scrollHeight="flex"
+    sortMode="multiple"
+    stateStorage="local"
+    styleClass="p-datatable-sm text-sm"
+    [autoLayout]="true"
+    [columns]="trivyTableColumns"
+    [expandedRowKeys]="expandedRows"
+    [exportFilename]="csvFileName"
+    [loading]="isLoading"
+    [ngStyle]="{ 'flex-grow': '1', display: 'flex', 'flex-direction': 'column' }"
+    [reorderableColumns]="true"
+    [resizableColumns]="true"
+    [scrollable]="true"
+    [selectionMode]="trivyTableOptions!.tableSelectionMode"
+    [stateKey]="tableStateKey"
+    [tableStyle]="trivyTableOptions!.tableStyle"
+    [value]="dataDtos!"
+    [virtualScroll]="true"
+    [virtualScrollItemSize]="46"
+    [(selection)]="selectedDataDtos"
+    (onRowCollapse)="onRowExpandCollapse($event)"
+    (onRowExpand)="onRowExpandCollapse($event)"
+    (onStateSave)="onTableStateSave()"
+    (selectionChange)="onSelectionChange($event)"
+  >
     <ng-template pTemplate="caption">
       <div>
-        <p-button *ngIf="trivyTableOptions!.isRefreshVisible" text
-                  [label]="'Refresh' + (trivyTableOptions.isRefreshFiltrable ? '/Filter...' : '')" icon="pi pi-refresh" size="small"
-                  (onClick)="onFilterRefresh($event)" />
-        <p-button *ngIf="trivyTableOptions!.isClearSelectionVisible" text
-                  label="Clear Selected" icon="pi pi-list" size="small"
-                  [disabled]="!isTableRowSelected()" (onClick)="onTableClearSelected()" />
-        <p-button *ngIf="trivyTableOptions!.dataKey" text
-                  label="Collapse All" icon="pi pi-expand" size="small"
-                  [disabled]="!anyRowExpanded" (onClick)="onTableCollapseAll()" />
-        <p-button *ngIf="trivyTableOptions!.isResetFiltersVisible" text
-                  label="Clear Sort/Filters" icon="pi pi-filter" size="small"
-                  [disabled]="!isTableFilteredOrSorted()" (onClick)="onClearSortFilters()" />
-        <p-button *ngIf="trivyTableOptions!.isExportCsvVisible" text
-                  label="Export to CSV" icon="pi pi-file-excel" size="small"
-                  (onClick)="csvExportOp.toggle($event)" />
+        <p-button
+          *ngIf="trivyTableOptions!.isRefreshVisible"
+          icon="pi pi-refresh"
+          size="small"
+          text
+          [label]="'Refresh' + (trivyTableOptions.isRefreshFiltrable ? '/Filter...' : '')"
+          (onClick)="onFilterRefresh($event)"
+        />
+        <p-button
+          *ngIf="trivyTableOptions!.isClearSelectionVisible"
+          icon="pi pi-list"
+          label="Clear Selected"
+          size="small"
+          text
+          [disabled]="!isTableRowSelected()"
+          (onClick)="onTableClearSelected()"
+        />
+        <p-button
+          *ngIf="trivyTableOptions!.dataKey"
+          icon="pi pi-expand"
+          label="Collapse All"
+          size="small"
+          text
+          [disabled]="!anyRowExpanded"
+          (onClick)="onTableCollapseAll()"
+        />
+        <p-button
+          *ngIf="trivyTableOptions!.isResetFiltersVisible"
+          icon="pi pi-filter"
+          label="Clear Sort/Filters"
+          size="small"
+          text
+          [disabled]="!isTableFilteredOrSorted()"
+          (onClick)="onClearSortFilters()"
+        />
+        <p-button
+          *ngIf="trivyTableOptions!.isExportCsvVisible"
+          icon="pi pi-file-excel"
+          label="Export to CSV"
+          size="small"
+          text
+          (onClick)="csvExportOp.toggle($event)"
+        />
       </div>
     </ng-template>
-    <ng-template pTemplate="header" let-columns>
+    <ng-template let-columns pTemplate="header">
       <tr>
-        <th *ngIf="trivyTableOptions!.rowExpansionRender" style="width:50px"></th>
-        <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.isSortable ? col.field : null" style="{{ col.style }}">
+        <th *ngIf="trivyTableOptions!.rowExpansionRender" style="width: 50px"></th>
+        <th
+          *ngFor="let col of columns"
+          pReorderableColumn
+          pResizableColumn
+          style="{{ col.style }}"
+          [pSortableColumn]="col.isSortable ? col.field : null"
+        >
           {{ col.header }}
           <p-sortIcon *ngIf="col.isSortable" field="{{ col.field }}" />
-          <p-columnFilter *ngIf="col.isFiltrable && col.multiSelectType==='none'" type="text" field="{{ col.field }}" display="menu" />
-          <p-columnFilter *ngIf="col.isFiltrable && col.multiSelectType==='namespaces'" field="{{ col.field }}" matchMode="in" display="menu" [showMatchModes]="false" [showOperator]="false" [showAddButton]="false">
-            <ng-template pTemplate="filter" let-filter="filterCallback">
-              <p-multiSelect [(ngModel)]="filterSelectedActiveNamespaces"
-                             [options]="activeNamespaces!"
-                             placeholder="Any"
-                             (onChange)="filter($event.value)"
-                             optionLabel=""
-                             [style]="{'width':'300px'}"
-                             styleClass="text-sm">
+          <p-columnFilter
+            *ngIf="col.isFiltrable && col.multiSelectType === 'none'"
+            display="menu"
+            field="{{ col.field }}"
+            type="text"
+          />
+          <p-columnFilter
+            *ngIf="col.isFiltrable && col.multiSelectType === 'namespaces'"
+            display="menu"
+            field="{{ col.field }}"
+            matchMode="in"
+            [showAddButton]="false"
+            [showMatchModes]="false"
+            [showOperator]="false"
+          >
+            <ng-template let-filter="filterCallback" pTemplate="filter">
+              <p-multiSelect
+                optionLabel=""
+                placeholder="Any"
+                styleClass="text-sm"
+                [options]="activeNamespaces!"
+                [style]="{ width: '300px' }"
+                [(ngModel)]="filterSelectedActiveNamespaces"
+                (onChange)="filter($event.value)"
+              >
               </p-multiSelect>
               <ng-template let-option pTemplate="item">
                 <div [class]="'text-sm'">{{ option }}</div>
               </ng-template>
             </ng-template>
           </p-columnFilter>
-          <p-columnFilter *ngIf="col.isFiltrable && col.multiSelectType==='severities'" field="{{ col.field }}" matchMode="in" display="menu" [showMatchModes]="false" [showOperator]="false" [showAddButton]="false">
-            <ng-template pTemplate="filter" let-filter="filterCallback">
-              <p-multiSelect [(ngModel)]="filterSelectedSeverityIds"
-                             [options]="filterSeverityOptions"
-                             placeholder="Any"
-                             (onChange)="filter($event.value)"
-                             optionLabel="name"
-                             styleClass="text-sm"
-                             [filter]="false"
-                             [showToggleAll]="false"
-                             [showHeader]="false">
+          <p-columnFilter
+            *ngIf="col.isFiltrable && col.multiSelectType === 'severities'"
+            display="menu"
+            field="{{ col.field }}"
+            matchMode="in"
+            [showAddButton]="false"
+            [showMatchModes]="false"
+            [showOperator]="false"
+          >
+            <ng-template let-filter="filterCallback" pTemplate="filter">
+              <p-multiSelect
+                optionLabel="name"
+                placeholder="Any"
+                styleClass="text-sm"
+                [filter]="false"
+                [options]="filterSeverityOptions"
+                [showHeader]="false"
+                [showToggleAll]="false"
+                [(ngModel)]="filterSelectedSeverityIds"
+                (onChange)="filter($event.value)"
+              >
                 <ng-template let-severityIds pTemplate="selectedItems">
                   <div>{{ severityWrapperGetNames(severityIds, 2) }}</div>
                 </ng-template>
                 <ng-template let-option pTemplate="item">
-                  <div [style]="{'font-size':'14px'}" class="flex align-items-center gap-2">{{ severityWrapperGetCapitalizedName(option) }}</div>
+                  <div class="flex align-items-center gap-2" [style]="{ 'font-size': '14px' }">
+                    {{ severityWrapperGetCapitalizedName(option) }}
+                  </div>
                 </ng-template>
               </p-multiSelect>
-
             </ng-template>
           </p-columnFilter>
         </th>
       </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex" let-expanded="expanded">
-      <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex" style="height:46px">
-        <td *ngIf="trivyTableOptions!.dataKey" style="max-width:50px">
-          <p-button type="button" styleClass="p-0" size="small" pRipple [pRowToggler]="rowData"
-                    [text]="true" [rounded]="true" [plain]="true"
-                    [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
+    <ng-template let-columns="columns" let-expanded="expanded" let-rowData let-rowIndex="rowIndex" pTemplate="body">
+      <tr style="height: 46px" [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+        <td *ngIf="trivyTableOptions!.dataKey" style="max-width: 50px">
+          <p-button
+            pRipple
+            size="small"
+            styleClass="p-0"
+            type="button"
+            [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+            [plain]="true"
+            [pRowToggler]="rowData"
+            [rounded]="true"
+            [text]="true"
+          />
         </td>
         <td *ngFor="let col of columns" style="{{ col.style }}">
-          <a *ngIf="col.renderType=='standard'">{{ rowData[col.field] }}</a>
-          <a *ngIf="col.renderType=='date'">{{ rowData[col.field] | date: 'yyyy-MM-dd' }}</a>
-          <div *ngIf="col.renderType=='imageNameTag'">
+          <a *ngIf="col.renderType == 'standard'">{{ rowData[col.field] }}</a>
+          <a *ngIf="col.renderType == 'date'">{{ rowData[col.field] | date: 'yyyy-MM-dd' }}</a>
+          <div *ngIf="col.renderType == 'imageNameTag'">
             <a>{{ rowData[col.field] }}:{{ rowData[col.extraFields[0]] }}</a>
-            <p-tag *ngIf="rowData[col.extraFields[1]]" value="EOSL" [rounded]="true"
-                   [style]="{ 'margin-left':'10px', background: severityWrapperGetCssColor(1) }" />
+            <p-tag
+              *ngIf="rowData[col.extraFields[1]]"
+              value="EOSL"
+              [rounded]="true"
+              [style]="{ 'margin-left': '10px', background: severityWrapperGetCssColor(1) }"
+            />
           </div>
-          <a *ngIf="col.renderType=='link'" href="{{ rowData[col.extraFields[0]] }}" target="_blank">{{ rowData[col.field] }}</a>
-          <p-tag *ngIf="col.renderType=='severityBadge'" [rounded]="true" [value]="severityWrapperGetCapitalizedName(rowData[col.field])"
-                 [style]="{ background: severityWrapperGetCssColor(rowData[col.field]) }" />
-          <div *ngIf="col.renderType=='severityMultiTags'" style="display: flex; justify-content: space-between">
-            <p-tag [value]="rowData[col.field]" [rounded]="true" [style]="{ background: severityWrapperGetCssColor(0) }" />
+          <a *ngIf="col.renderType == 'link'" href="{{ rowData[col.extraFields[0]] }}" target="_blank">{{
+            rowData[col.field]
+          }}</a>
+          <p-tag
+            *ngIf="col.renderType == 'severityBadge'"
+            [rounded]="true"
+            [style]="{ background: severityWrapperGetCssColor(rowData[col.field]) }"
+            [value]="severityWrapperGetCapitalizedName(rowData[col.field])"
+          />
+          <div *ngIf="col.renderType == 'severityMultiTags'" style="display: flex; justify-content: space-between">
+            <p-tag
+              [rounded]="true"
+              [style]="{ background: severityWrapperGetCssColor(0) }"
+              [value]="rowData[col.field]"
+            />
             <div *ngFor="let extraField of col.extraFields; let i = index">
-              <p-tag [value]="rowData[col.extraFields[i]]" [rounded]="true" [style]="{ background: severityWrapperGetCssColor(i+1) }" />
+              <p-tag
+                [rounded]="true"
+                [style]="{ background: severityWrapperGetCssColor(i + 1) }"
+                [value]="rowData[col.extraFields[i]]"
+              />
             </div>
           </div>
-          <p-tag *ngIf="col.renderType=='eosl' && rowData[col.field]" [value]="'true'" icon="pi pi-exclamation-circle" [rounded]="true"
-                 [style]="{ background: severityWrapperGetCssColor(1) }" />
-          <p-tag *ngIf="col.renderType=='semaphore'" [value]="rowData[col.field]" [rounded]="true"
-                 [style]="{ background: semaphoreStatusHelper.getCssColor(rowData[col.field]) }" />
-          <span *ngIf="col.renderType=='multiline'" [innerHTML]="rowData[col.field].join('<br>')"></span>
+          <p-tag
+            *ngIf="col.renderType == 'eosl' && rowData[col.field]"
+            icon="pi pi-exclamation-circle"
+            [rounded]="true"
+            [style]="{ background: severityWrapperGetCssColor(1) }"
+            [value]="'true'"
+          />
+          <p-tag
+            *ngIf="col.renderType == 'semaphore'"
+            [rounded]="true"
+            [style]="{ background: semaphoreStatusHelper.getCssColor(rowData[col.field]) }"
+            [value]="rowData[col.field]"
+          />
+          <span *ngIf="col.renderType == 'multiline'" [innerHTML]="rowData[col.field].join('<br>')"></span>
         </td>
       </tr>
     </ng-template>
-    <ng-template *ngIf="trivyTableOptions!.rowExpansionRender" pTemplate="rowexpansion" let-rowData>
+    <ng-template *ngIf="trivyTableOptions!.rowExpansionRender" let-rowData pTemplate="rowexpansion">
       <tr>
         <td [attr.colspan]="trivyTableColumns.length + 1">
           <div *ngIf="trivyTableOptions!.rowExpansionRender == 'table'" class="pl-3">
-            <p-table [value]="[{}]"
-                     styleClass="text-sm p-datatable-sm">
+            <p-table styleClass="text-sm p-datatable-sm" [value]="[{}]">
               <ng-template *ngIf="trivyExpandTableOptions.isHeaderVisible" pTemplate="header">
                 <tr>
-                  <th *ngFor="let col of trivyExpandTableOptions.columnsArray" style="{{ trivyExpandTableFunction(rowData, 'row', col).style }}">
+                  <th
+                    *ngFor="let col of trivyExpandTableOptions.columnsArray"
+                    style="{{ trivyExpandTableFunction(rowData, 'row', col).style }}"
+                  >
                     {{ trivyExpandTableFunction(rowData, 'header', col).value }}
                   </th>
                 </tr>
               </ng-template>
               <ng-template pTemplate="body">
-                <tr *ngFor="let row of trivyExpandTableOptions.rowsArray;">
-                  <td *ngFor="let col of trivyExpandTableOptions.columnsArray" style="{{ trivyExpandTableFunction(rowData, 'row', col, row).style }}">
+                <tr *ngFor="let row of trivyExpandTableOptions.rowsArray">
+                  <td
+                    *ngFor="let col of trivyExpandTableOptions.columnsArray"
+                    style="{{ trivyExpandTableFunction(rowData, 'row', col, row).style }}"
+                  >
                     <a>{{ trivyExpandTableFunction(rowData, 'row', col, row).value }}</a>
-                    <p-button *ngIf="trivyExpandTableFunction(rowData, 'row', col, row).buttonLink"
-                              label="{{ trivyExpandTableFunction(rowData, 'row', col, row).buttonLink }}" [text]="true" size="small"
-                              (onClick)="onTrivyDetailsTableCallback(rowData)" />
-                    <p-tag *ngIf="trivyExpandTableFunction(rowData, 'row', col, row).badge"
-                           [rounded]="true" [value]="trivyExpandTableFunction(rowData, 'row', col, row).badge"
-                           [style]="{ 'margin-left': '10px', background: severityWrapperGetCssColor(1) }" />
+                    <p-button
+                      *ngIf="trivyExpandTableFunction(rowData, 'row', col, row).buttonLink"
+                      label="{{ trivyExpandTableFunction(rowData, 'row', col, row).buttonLink }}"
+                      size="small"
+                      [text]="true"
+                      (onClick)="onTrivyDetailsTableCallback(rowData)"
+                    />
+                    <p-tag
+                      *ngIf="trivyExpandTableFunction(rowData, 'row', col, row).badge"
+                      [rounded]="true"
+                      [style]="{ 'margin-left': '10px', background: severityWrapperGetCssColor(1) }"
+                      [value]="trivyExpandTableFunction(rowData, 'row', col, row).badge"
+                    />
                   </td>
                 </tr>
               </ng-template>
@@ -160,33 +268,41 @@
     </ng-template>
     <ng-template *ngIf="trivyTableOptions!.isFooterVisible" pTemplate="summary">
       <div>
-        Total <p-tag [rounded]="true" value="{{ trivyTableTotalRecords }}" /> | Filtered <p-tag [rounded]="true" value="{{ trivyTableFilteredRecords }}" />
+        Total
+        <p-tag value="{{ trivyTableTotalRecords }}" [rounded]="true" />
+        | Filtered
+        <p-tag value="{{ trivyTableFilteredRecords }}" [rounded]="true" />
       </div>
     </ng-template>
   </p-table>
 
-  <p-overlayPanel #csvExportOp [dismissable]="true" (onShow)="onOverlayToogle()" (onHide)="onOverlayToogle()">
+  <p-overlayPanel #csvExportOp [dismissable]="true" (onHide)="onOverlayToogle()" (onShow)="onOverlayToogle()">
     <div style="width: 300px">
       <div class="field">
         <label for="csvFileName" class="text-sm">CSV File Name</label>
-        <input pInputText id="csvFileName" [(ngModel)]="csvFileName" 
-               class="text-sm w-full">
+        <input id="csvFileName" pInputText class="text-sm w-full" [(ngModel)]="csvFileName" />
       </div>
       <div class="grid">
         <div class="col-6">
-          <p-button label="Export Filtered"
-                    icon="pi pi-filter"
-                    size="small"
-                    [disabled]="!trivyTable.filteredValue"
-                    (onClick)="onExportToCsv('filtered')"
-                    [style]="{'width': '100%'}" text />
+          <p-button
+            icon="pi pi-filter"
+            label="Export Filtered"
+            size="small"
+            text
+            [disabled]="!trivyTable.filteredValue"
+            [style]="{ width: '100%' }"
+            (onClick)="onExportToCsv('filtered')"
+          />
         </div>
         <div class="col-6">
-          <p-button label="Export All"
-                    icon="pi pi-align-justify"
-                    size="small"
-                    (onClick)="onExportToCsv('all')"
-                    [style]="{'width': '100%'}" text />
+          <p-button
+            icon="pi pi-align-justify"
+            label="Export All"
+            size="small"
+            text
+            [style]="{ width: '100%' }"
+            (onClick)="onExportToCsv('all')"
+          />
         </div>
         <!--<div class="col">
       <p-button label="Export Selected"
@@ -200,21 +316,25 @@
     </div>
   </p-overlayPanel>
 
-  <p-overlayPanel *ngIf="filterRefreshSeverities"
-                  #serverFilterDataOp
-                  [dismissable]="true"
-                  [showTransitionOptions]="'0.3s ease-in'"
-                  [hideTransitionOptions]="'0.3s ease-out'"
-                  (onShow)="onOverlayToogle()"
-                  (onHide)="onOverlayToogle()">
+  <p-overlayPanel
+    *ngIf="filterRefreshSeverities"
+    #serverFilterDataOp
+    [dismissable]="true"
+    [hideTransitionOptions]="'0.3s ease-out'"
+    [showTransitionOptions]="'0.3s ease-in'"
+    (onHide)="onOverlayToogle()"
+    (onShow)="onOverlayToogle()"
+  >
     <div class="flex-column gap-3 w-15rem">
       <div class="row w-full tex-xs">
-        <p-dropdown [options]="activeNamespaces!"
-                    [(ngModel)]="filterRefreshActiveNamespace"
-                    [checkmark]="true"
-                    [showClear]="true"
-                    placeholder="Select a Namespace"
-                    styleClass="w-full text-sm" />
+        <p-dropdown
+          placeholder="Select a Namespace"
+          styleClass="w-full text-sm"
+          [checkmark]="true"
+          [options]="activeNamespaces!"
+          [showClear]="true"
+          [(ngModel)]="filterRefreshActiveNamespace"
+        />
       </div>
       <hr />
 
@@ -223,11 +343,13 @@
         <div>
           <div class="flex-column gap-0 mt-2">
             <div *ngFor="let severityDto of severityDtos" class="field-checkbox mb-2 text-sm">
-              <p-checkbox [(ngModel)]="filterRefreshSeverities"
-                          [label]="severityWrapperGetCapitalizedName(severityDto.id)"
-                          name="group"
-                          [value]="severityDto"
-                          styleClass="ml-2"/>
+              <p-checkbox
+                name="group"
+                styleClass="ml-2"
+                [label]="severityWrapperGetCapitalizedName(severityDto.id)"
+                [value]="severityDto"
+                [(ngModel)]="filterRefreshSeverities"
+              />
             </div>
           </div>
         </div>
@@ -235,11 +357,13 @@
       <hr />
       <div class="row">
         <div class="col">
-          <p-button label="Refresh/Filter"
-                    icon="pi pi-refresh"
-                    size="small"
-                    (onClick)="onFilterData()"
-                    styleClass="w-full" />
+          <p-button
+            icon="pi pi-refresh"
+            label="Refresh/Filter"
+            size="small"
+            styleClass="w-full"
+            (onClick)="onFilterData()"
+          />
         </div>
       </div>
     </div>

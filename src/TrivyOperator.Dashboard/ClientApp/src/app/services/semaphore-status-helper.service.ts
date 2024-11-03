@@ -1,8 +1,10 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 
-@Injectable({ providedIn: 'root', })
+@Injectable({ providedIn: 'root' })
 export class SemaphoreStatusHelperService {
-  private get colorIntensity(): number { return 400; }
+  private get colorIntensity(): number {
+    return 400;
+  }
 
   public getCssColor(statusName: string): string {
     const documentStyle = getComputedStyle(document.documentElement);
@@ -13,13 +15,13 @@ export class SemaphoreStatusHelperService {
 
   public getColor(statusName: string): string {
     switch (statusName.toLowerCase()) {
-      case "green":
+      case 'green':
         return 'green';
-      case "yellow":
+      case 'yellow':
         return 'yellow';
-      case "red":
+      case 'red':
         return 'red';
-      case "unknown":
+      case 'unknown':
         return 'blue';
       default:
         return 'blue';

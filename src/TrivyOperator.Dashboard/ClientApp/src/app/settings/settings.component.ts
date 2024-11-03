@@ -9,45 +9,50 @@ import { InputTextModule } from 'primeng/inputtext';
 import { PanelModule } from 'primeng/panel';
 import { TableModule } from 'primeng/table';
 
-import { ClearTablesOptions, SavedCsvFileName, TrivyReportConfig } from './settings.types'
-import { PrimengTableStateUtil } from '../utils/primeng-table-state.util'
-import { LocalStorageUtils } from '../utils/local-storage.utils'
-import { MainAppInitService } from '../services/main-app-init.service';
 import { BackendSettingsDto } from '../../api/models/backend-settings-dto';
+import { MainAppInitService } from '../services/main-app-init.service';
+import { LocalStorageUtils } from '../utils/local-storage.utils';
+import { PrimengTableStateUtil } from '../utils/primeng-table-state.util';
+import { ClearTablesOptions, SavedCsvFileName, TrivyReportConfig } from './settings.types';
 
 @Component({
   selector: 'app-settings',
   standalone: true,
-  imports: [CommonModule, FormsModule, ButtonModule, CardModule, CheckboxModule, InputTextModule, PanelModule, TableModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ButtonModule,
+    CardModule,
+    CheckboxModule,
+    InputTextModule,
+    PanelModule,
+    TableModule,
+  ],
   templateUrl: './settings.component.html',
-  styleUrl: './settings.component.scss'
+  styleUrl: './settings.component.scss',
 })
 export class SettingsComponent implements OnInit {
   public clearTablesOptions: ClearTablesOptions[] = [];
   public csvFileNames: SavedCsvFileName[] = [];
   public trivyReportConfigs: TrivyReportConfig[] = [];
 
-
-  constructor(private mainAppInitService: MainAppInitService) {
-  }
+  constructor(private mainAppInitService: MainAppInitService) {}
 
   ngOnInit() {
     this.loadTableOptions();
     this.loadCsvFileNames();
-    this.mainAppInitService.backendSettingsDto$.subscribe(updatedBackendSettingsDto => {
+    this.mainAppInitService.backendSettingsDto$.subscribe((updatedBackendSettingsDto) => {
       this.loadTrivyReportsStates(updatedBackendSettingsDto);
     });
-    
   }
 
   onClearTableStatesSelected(_event: MouseEvent) {
-    this.clearTablesOptions.forEach(option => {
+    this.clearTablesOptions.forEach((option) => {
       const tableStateJson = localStorage.getItem(option.dataKey);
       if (tableStateJson) {
         if (option.all) {
           localStorage.removeItem(option.dataKey);
-        }
-        else {
+        } else {
           const tableState = JSON.parse(tableStateJson);
           if (option.filters) {
             PrimengTableStateUtil.clearTableFilters(tableState);
@@ -69,7 +74,7 @@ export class SettingsComponent implements OnInit {
   }
 
   onClearTableStatesAll(_event: MouseEvent) {
-    this.clearTablesOptions.forEach(option => {
+    this.clearTablesOptions.forEach((option) => {
       const tableStateJson = localStorage.getItem(option.dataKey);
       if (tableStateJson) {
         localStorage.removeItem(option.dataKey);
@@ -79,45 +84,45 @@ export class SettingsComponent implements OnInit {
   }
 
   onUpdateCsvFileNames(_event: MouseEvent) {
-    this.csvFileNames.forEach(x => {
+    this.csvFileNames.forEach((x) => {
       localStorage.setItem(x.dataKey, x.savedCsvName);
-    })
+    });
   }
 
   onUpdateTrivyReportsStates(_event: MouseEvent) {
-    this.mainAppInitService.updateBackendSettingsTrivyReportConfigDto(this.trivyReportConfigs.filter(x => x.frontendEnabled).map(x => x.id));
+    this.mainAppInitService.updateBackendSettingsTrivyReportConfigDto(
+      this.trivyReportConfigs.filter((x) => x.frontendEnabled).map((x) => x.id),
+    );
   }
 
   private loadTableOptions() {
-    this.clearTablesOptions = LocalStorageUtils
-      .getKeysWithPrefix(LocalStorageUtils.trivyTableKeyPrefix)
-      .sort((x, y) => x > y ? 1 : -1)
-      .map(x => {
-        return new ClearTablesOptions(x, x.slice(LocalStorageUtils.trivyTableKeyPrefix.length))
-      })
+    this.clearTablesOptions = LocalStorageUtils.getKeysWithPrefix(LocalStorageUtils.trivyTableKeyPrefix)
+      .sort((x, y) => (x > y ? 1 : -1))
+      .map((x) => {
+        return new ClearTablesOptions(x, x.slice(LocalStorageUtils.trivyTableKeyPrefix.length));
+      });
   }
 
   private loadCsvFileNames() {
-    this.csvFileNames = LocalStorageUtils
-      .getKeysWithPrefix(LocalStorageUtils.csvFileNameKeyPrefix)
-      .sort((x, y) => x > y ? 1 : -1)
-      .map(x => {
+    this.csvFileNames = LocalStorageUtils.getKeysWithPrefix(LocalStorageUtils.csvFileNameKeyPrefix)
+      .sort((x, y) => (x > y ? 1 : -1))
+      .map((x) => {
         return {
           dataKey: x,
           description: x.slice(LocalStorageUtils.csvFileNameKeyPrefix.length),
-          savedCsvName: localStorage.getItem(x) ?? "",
-        }
+          savedCsvName: localStorage.getItem(x) ?? '',
+        };
       });
   }
 
   private loadTrivyReportsStates(backendSettingsDto: BackendSettingsDto) {
-    const defaultBackedSettings = this.mainAppInitService.defaultBackendSettingsDto ?? {trivyReportConfigDtos: []}
-    this.trivyReportConfigs = backendSettingsDto.trivyReportConfigDtos?.map(x =>
-    ({
-      id: x.id ?? "",
-      name: x.name ?? "",
-      backendEnabled: defaultBackedSettings.trivyReportConfigDtos?.find(def => def.id === x.id)?.enabled ?? false,
-      frontendEnabled: x.enabled ?? false,
-    })) ?? [];
+    const defaultBackedSettings = this.mainAppInitService.defaultBackendSettingsDto ?? { trivyReportConfigDtos: [] };
+    this.trivyReportConfigs =
+      backendSettingsDto.trivyReportConfigDtos?.map((x) => ({
+        id: x.id ?? '',
+        name: x.name ?? '',
+        backendEnabled: defaultBackedSettings.trivyReportConfigDtos?.find((def) => def.id === x.id)?.enabled ?? false,
+        frontendEnabled: x.enabled ?? false,
+      })) ?? [];
   }
 }

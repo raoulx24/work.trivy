@@ -3,9 +3,7 @@
 <div class="grid align-items-start md:align-items-stretch">
   <div class="col-12 md:col-6">
     <p-panel header="Table States" class="h-full">
-      <p-table [tableStyle]=""
-               [value]="clearTablesOptions"
-               styleClass="p-datatable-sm text-sm">
+      <p-table styleClass="p-datatable-sm text-sm" [tableStyle]="" [value]="clearTablesOptions">
         <ng-template pTemplate="header">
           <tr>
             <th style="width: 200px; min-width: 200px">Table Name</th>
@@ -20,19 +18,19 @@
           <tr>
             <td style="width: 200px; min-width: 200px">{{ item.description }}</td>
             <td style="width: 60px; min-width: 60px">
-              <p-checkbox [(ngModel)]="item.filters" binary="true"></p-checkbox>
+              <p-checkbox binary="true" [(ngModel)]="item.filters"></p-checkbox>
             </td>
             <td style="width: 60px; min-width: 60px">
-              <p-checkbox [(ngModel)]="item.sort" binary="true"></p-checkbox>
+              <p-checkbox binary="true" [(ngModel)]="item.sort"></p-checkbox>
             </td>
             <td style="width: 60px; min-width: 60px">
-              <p-checkbox [(ngModel)]="item.columnWidths" binary="true"></p-checkbox>
+              <p-checkbox binary="true" [(ngModel)]="item.columnWidths"></p-checkbox>
             </td>
             <td style="width: 60px; min-width: 60px">
-              <p-checkbox [(ngModel)]="item.columnOrder" binary="true"></p-checkbox>
+              <p-checkbox binary="true" [(ngModel)]="item.columnOrder"></p-checkbox>
             </td>
             <td style="width: 60px; min-width: 60px">
-              <p-checkbox [(ngModel)]="item.all" binary="true"></p-checkbox>
+              <p-checkbox binary="true" [(ngModel)]="item.all"></p-checkbox>
             </td>
           </tr>
         </ng-template>
@@ -46,12 +44,22 @@
         <ng-template pTemplate="footer">
           <tr>
             <td colspan="6">
-              <p-button icon="pi pi-check-square" label="Clear Selected" size="small" text
-                        [disabled]="clearTablesOptions.length == 0"
-                        (onClick)="onClearTableStatesSelected($event)" />
-              <p-button icon="pi pi-trash" label="Clear All" size="small" text
-                        [disabled]="clearTablesOptions.length == 0"
-                        (onClick)="onClearTableStatesAll($event)" />
+              <p-button
+                icon="pi pi-check-square"
+                label="Clear Selected"
+                size="small"
+                text
+                [disabled]="clearTablesOptions.length == 0"
+                (onClick)="onClearTableStatesSelected($event)"
+              />
+              <p-button
+                icon="pi pi-trash"
+                label="Clear All"
+                size="small"
+                text
+                [disabled]="clearTablesOptions.length == 0"
+                (onClick)="onClearTableStatesAll($event)"
+              />
             </td>
           </tr>
         </ng-template>
@@ -59,7 +67,8 @@
       <ng-template pTemplate="footer">
         <p class="text-sm">
           <i class="pi pi-info-circle"></i>
-          <b> Hint:</b> Use the options to reset saved states of the tables. This will return the table to its default state.
+          <b> Hint:</b> Use the options to reset saved states of the tables. This will return the table to its default
+          state.
         </p>
       </ng-template>
     </p-panel>
@@ -68,15 +77,19 @@
     <p-panel header="CSV File Names" class="h-full">
       <div *ngFor="let file of csvFileNames" class="field">
         <label for="{{ file.dataKey }}" class="text-sm">{{ file.description }}</label>
-        <input pInputText id="{{ file.dataKey }}" [(ngModel)]="file.savedCsvName"
-               class="text-sm w-full">
+        <input id="{{ file.dataKey }}" pInputText class="text-sm w-full" [(ngModel)]="file.savedCsvName" />
       </div>
       <div *ngIf="csvFileNames.length == 0">
         <p class="font-italic text-color-secondary text-sm">No data: no CSV files saved...</p>
       </div>
-      <p-button icon="pi pi-file-check" label="Update Names" size="small" text
-                [disabled]="csvFileNames.length == 0"
-                (onClick)="onUpdateCsvFileNames($event)" />
+      <p-button
+        icon="pi pi-file-check"
+        label="Update Names"
+        size="small"
+        text
+        [disabled]="csvFileNames.length == 0"
+        (onClick)="onUpdateCsvFileNames($event)"
+      />
       <ng-template pTemplate="footer">
         <p class="text-sm">
           <i class="pi pi-info-circle"></i>
@@ -87,9 +100,7 @@
   </div>
   <div class="col-12 md:col-6">
     <p-panel header="Trivy Reports States" class="h-full">
-      <p-table [tableStyle]=""
-               [value]="trivyReportConfigs"
-               styleClass="p-datatable-sm text-sm">
+      <p-table styleClass="p-datatable-sm text-sm" [tableStyle]="" [value]="trivyReportConfigs">
         <ng-template pTemplate="header">
           <tr>
             <th style="width: 200px; min-width: 200px">Trivy Report</th>
@@ -101,16 +112,16 @@
           <tr>
             <td style="width: 200px; min-width: 200px">{{ item.name }}</td>
             <td style="width: 60px; min-width: 60px">
-              <p-checkbox [(ngModel)]="item.backendEnabled"
-                          [disabled]="true"
-                          binary="true"></p-checkbox>
+              <p-checkbox binary="true" [disabled]="true" [(ngModel)]="item.backendEnabled"></p-checkbox>
             </td>
             <td style="width: 60px; min-width: 60px">
-              <p-checkbox [(ngModel)]="item.frontendEnabled"
-                          [disabled]="!item.backendEnabled"
-                          binary="true"></p-checkbox>
-            </td>
-        </ng-template>
+              <p-checkbox
+                binary="true"
+                [disabled]="!item.backendEnabled"
+                [(ngModel)]="item.frontendEnabled"
+              ></p-checkbox>
+            </td></tr
+        ></ng-template>
         <ng-template pTemplate="emptymessage">
           <tr>
             <td colspan="6" class="font-italic text-color-secondary text-sm text-center">
@@ -121,8 +132,13 @@
         <ng-template pTemplate="footer">
           <tr>
             <td colspan="6">
-              <p-button icon="pi pi-check-square" label="Save" size="small" text
-                        (onClick)="onUpdateTrivyReportsStates($event)" />
+              <p-button
+                icon="pi pi-check-square"
+                label="Save"
+                size="small"
+                text
+                (onClick)="onUpdateTrivyReportsStates($event)"
+              />
             </td>
           </tr>
         </ng-template>
@@ -130,10 +146,10 @@
       <ng-template pTemplate="footer">
         <p class="text-sm">
           <i class="pi pi-info-circle"></i>
-          <b> Hint:</b> Use the options to enable/disable app sections related to Trivy Reports. Only Frontend ones are editable.
+          <b> Hint:</b> Use the options to enable/disable app sections related to Trivy Reports. Only Frontend ones are
+          editable.
         </p>
       </ng-template>
     </p-panel>
   </div>
-
 </div>

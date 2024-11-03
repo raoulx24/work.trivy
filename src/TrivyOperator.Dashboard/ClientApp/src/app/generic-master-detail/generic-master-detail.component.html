@@ -1,27 +1,31 @@
 <div class="row">
   <div class="grid flex">
     <div class="col-12 md:col-5 lg:col-4 p-1">
-      <app-trivy-table #mainTable
-                       [dataDtos]="dataDtos!"
-                       [activeNamespaces]="activeNamespaces"
-                       [trivyTableColumns]="mainTableColumns"
-                       [trivyTableOptions]="mainTableOptions"
-                       (selectedRowsChanged)="onMainTableSelectionChange($event)"
-                       (refreshRequested)="onRefreshRequested($event)"
-                       tableHeight="82vh"
-                       [isLoading]="isMainTableLoading"
-                       [trivyExpandTableOptions]="mainTableExpandTableOptions"
-                       [trivyExpandTableFunction]="mainTableExpandCellOptions"
-                       (trivyDetailsTableCallback)="onMainTableExpandCallback($event)" />
+      <app-trivy-table
+        #mainTable
+        tableHeight="82vh"
+        [activeNamespaces]="activeNamespaces"
+        [dataDtos]="dataDtos!"
+        [isLoading]="isMainTableLoading"
+        [trivyExpandTableFunction]="mainTableExpandCellOptions"
+        [trivyExpandTableOptions]="mainTableExpandTableOptions"
+        [trivyTableColumns]="mainTableColumns"
+        [trivyTableOptions]="mainTableOptions"
+        (refreshRequested)="onRefreshRequested($event)"
+        (selectedRowsChanged)="onMainTableSelectionChange($event)"
+        (trivyDetailsTableCallback)="onMainTableExpandCallback($event)"
+      />
     </div>
 
     <div class="col-12 md:col-7 lg:col-8 p-1">
-      <app-trivy-table class="row"
-                       [dataDtos]="selectedDataDto?.details"
-                       [activeNamespaces]="activeNamespaces"
-                       [trivyTableColumns]="detailsTableColumns"
-                       [trivyTableOptions]="detailsTableOptions"
-                       tableHeight="82vh" />
+      <app-trivy-table
+        tableHeight="82vh"
+        class="row"
+        [activeNamespaces]="activeNamespaces"
+        [dataDtos]="selectedDataDto?.details"
+        [trivyTableColumns]="detailsTableColumns"
+        [trivyTableOptions]="detailsTableOptions"
+      />
     </div>
   </div>
 </div>

@@ -6,5 +6,5 @@ public enum TrivySeverity
     HIGH,
     MEDIUM,
     LOW,
-    UNKNOWN
+    UNKNOWN,
 }

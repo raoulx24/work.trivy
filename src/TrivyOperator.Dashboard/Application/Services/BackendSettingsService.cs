@@ -9,36 +9,37 @@ public class BackendSettingsService(IOptions<KubernetesOptions> options) : IBack
 {
     public Task<BackendSettingsDto> GetBackendSettings()
     {
-        BackendSettingsDto backendSettingsDto = new()
-        {
-            TrivyReportConfigDtos = [] 
-        };
+        BackendSettingsDto backendSettingsDto = new() { TrivyReportConfigDtos = [] };
 
-        backendSettingsDto.TrivyReportConfigDtos.Add(new()
-        {
-            Id = "crar",
-            Name = "Cluster RBAC Assessment Report",
-            Enabled = options.Value.TrivyUseClusterRbacAssessmentReport ?? false,
-        });
-        backendSettingsDto.TrivyReportConfigDtos.Add(new()
-        {
-            Id = "car",
-            Name = "Config Audit Report",
-            Enabled = options.Value.TrivyUseConfigAuditReport ?? false,
-        });
-        backendSettingsDto.TrivyReportConfigDtos.Add(new()
-        {
-            Id = "esr",
-            Name = "Exposed Secret Report",
-            Enabled = options.Value.TrivyUseExposedSecretReport ?? false,
-        });
-        backendSettingsDto.TrivyReportConfigDtos.Add(new()
-        {
-            Id = "vr",
-            Name = "Vulnerability Report",
-            Enabled = options.Value.TrivyUseVulnerabilityReport ?? false,
-        });
+        backendSettingsDto.TrivyReportConfigDtos.Add(
+            new BackendSettingsTrivyReportConfigDto
+            {
+                Id = "crar",
+                Name = "Cluster RBAC Assessment Report",
+                Enabled = options.Value.TrivyUseClusterRbacAssessmentReport ?? false,
+            });
+        backendSettingsDto.TrivyReportConfigDtos.Add(
+            new BackendSettingsTrivyReportConfigDto
+            {
+                Id = "car",
+                Name = "Config Audit Report",
+                Enabled = options.Value.TrivyUseConfigAuditReport ?? false,
+            });
+        backendSettingsDto.TrivyReportConfigDtos.Add(
+            new BackendSettingsTrivyReportConfigDto
+            {
+                Id = "esr",
+                Name = "Exposed Secret Report",
+                Enabled = options.Value.TrivyUseExposedSecretReport ?? false,
+            });
+        backendSettingsDto.TrivyReportConfigDtos.Add(
+            new BackendSettingsTrivyReportConfigDto
+            {
+                Id = "vr",
+                Name = "Vulnerability Report",
+                Enabled = options.Value.TrivyUseVulnerabilityReport ?? false,
+            });
 
-        return Task.FromResult<BackendSettingsDto>(backendSettingsDto);
+        return Task.FromResult(backendSettingsDto);
     }
 }

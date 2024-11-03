@@ -1,24 +1,28 @@
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 
-import { GenericMasterDetailComponent } from '../generic-master-detail/generic-master-detail.component'
-import { ExposedSecretReportImageDto } from '../../api/models/exposed-secret-report-image-dto'
-import { SeverityUtils } from '../utils/severity.utils'
-import { SeverityDto } from '../../api/models/severity-dto';
-import { TrivyExpandTableOptions, TrivyFilterData, TrivyTableCellCustomOptions, TrivyTableColumn, TrivyTableOptions } from '../trivy-table/trivy-table.types';
-import { ExposedSecretReportService } from '../../api/services/exposed-secret-report.service'
-import { GetExposedSecretReportImageDtos$Params } from '../../api/fn/exposed-secret-report/get-exposed-secret-report-image-dtos'
+import { GetExposedSecretReportImageDtos$Params } from '../../api/fn/exposed-secret-report/get-exposed-secret-report-image-dtos';
+import { ExposedSecretReportImageDto } from '../../api/models/exposed-secret-report-image-dto';
+import { ExposedSecretReportService } from '../../api/services/exposed-secret-report.service';
+import { GenericMasterDetailComponent } from '../generic-master-detail/generic-master-detail.component';
+import {
+  TrivyExpandTableOptions,
+  TrivyFilterData,
+  TrivyTableCellCustomOptions,
+  TrivyTableColumn,
+  TrivyTableOptions,
+} from '../trivy-table/trivy-table.types';
+import { SeverityUtils } from '../utils/severity.utils';
 
 import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
 
-
 @Component({
   selector: 'app-exposed-secret-reports',
   standalone: true,
-  imports: [ CommonModule, GenericMasterDetailComponent, DialogModule, TableModule ],
+  imports: [CommonModule, GenericMasterDetailComponent, DialogModule, TableModule],
   templateUrl: './exposed-secret-reports.component.html',
-  styleUrl: './exposed-secret-reports.component.scss'
+  styleUrl: './exposed-secret-reports.component.scss',
 })
 export class ExposedSecretReportsComponent {
   public dataDtos: ExposedSecretReportImageDto[] = [];
@@ -37,34 +41,44 @@ export class ExposedSecretReportsComponent {
   public isImageUsageDialogVisible: boolean = false;
 
   constructor(private dataDtoService: ExposedSecretReportService) {
-    dataDtoService.getExposedSecretReportImageDtos()
-      .subscribe({
-        next: (res) => this.onGetDataDtos(res),
-        error: (err) => console.error(err)
-      });
-    dataDtoService.getExposedSecretReportActiveNamespaces()
-      .subscribe({
-        next: (res) => this.onGetActiveNamespaces(res),
-        error: (err) => console.error(err)
-      });
+    dataDtoService.getExposedSecretReportImageDtos().subscribe({
+      next: (res) => this.onGetDataDtos(res),
+      error: (err) => console.error(err),
+    });
+    dataDtoService.getExposedSecretReportActiveNamespaces().subscribe({
+      next: (res) => this.onGetActiveNamespaces(res),
+      error: (err) => console.error(err),
+    });
 
     this.mainTableColumns = [
       {
-        field: "resourceNamespace", header: "NS",
-        isFiltrable: true, isSortable: true, multiSelectType: "namespaces",
-        style: "width: 130px; max-width: 130px;", renderType: "standard",
+        field: 'resourceNamespace',
+        header: 'NS',
+        isFiltrable: true,
+        isSortable: true,
+        multiSelectType: 'namespaces',
+        style: 'width: 130px; max-width: 130px;',
+        renderType: 'standard',
       },
       {
-        field: "imageName", header: "Image Name - Tag",
-        isFiltrable: true, isSortable: true, multiSelectType: "none",
-        style: "white-space: normal;", renderType: "imageNameTag",
-        extraFields: ["imageTag", "imageEosl"],
+        field: 'imageName',
+        header: 'Image Name - Tag',
+        isFiltrable: true,
+        isSortable: true,
+        multiSelectType: 'none',
+        style: 'white-space: normal;',
+        renderType: 'imageNameTag',
+        extraFields: ['imageTag', 'imageEosl'],
       },
       {
-        field: "criticalCount", header: "Severity C / H / M / L",
-        isFiltrable: false, isSortable: false, multiSelectType: "none",
-        style: "width: 145px; max-width: 145px; ", renderType: "severityMultiTags",
-        extraFields: ["highCount", "mediumCount", "lowCount"],
+        field: 'criticalCount',
+        header: 'Severity C / H / M / L',
+        isFiltrable: false,
+        isSortable: false,
+        multiSelectType: 'none',
+        style: 'width: 145px; max-width: 145px; ',
+        renderType: 'severityMultiTags',
+        extraFields: ['highCount', 'mediumCount', 'lowCount'],
       },
     ];
     this.mainTableOptions = {
@@ -74,45 +88,69 @@ export class ExposedSecretReportsComponent {
       isRefreshVisible: true,
       isRefreshFiltrable: true,
       isFooterVisible: true,
-      tableSelectionMode: "single",
+      tableSelectionMode: 'single',
       tableStyle: {},
-      stateKey: "Exposed Secret Reports - Main",
-      dataKey: "uid",
-      rowExpansionRender: "table",
-      extraClasses: "trivy-half",
+      stateKey: 'Exposed Secret Reports - Main',
+      dataKey: 'uid',
+      rowExpansionRender: 'table',
+      extraClasses: 'trivy-half',
     };
     this.detailsTableColumns = [
       {
-        field: "severityId", header: "Sev",
-        isFiltrable: true, isSortable: true, multiSelectType: "severities",
-        style: "width: 90px; max-width: 90px;", renderType: "severityBadge",
+        field: 'severityId',
+        header: 'Sev',
+        isFiltrable: true,
+        isSortable: true,
+        multiSelectType: 'severities',
+        style: 'width: 90px; max-width: 90px;',
+        renderType: 'severityBadge',
       },
       {
-        field: "category", header: "Category",
-        isFiltrable: true, isSortable: true, multiSelectType: "none",
-        style: "width: 140px; max-width: 140px; white-space: normal;", renderType: "standard",
+        field: 'category',
+        header: 'Category',
+        isFiltrable: true,
+        isSortable: true,
+        multiSelectType: 'none',
+        style: 'width: 140px; max-width: 140px; white-space: normal;',
+        renderType: 'standard',
       },
       {
-        field: "ruleId", header: "Id",
-        isFiltrable: true, isSortable: true, multiSelectType: "none",
-        style: "width: 95px; max-width: 95px; white-space: normal;", renderType: "standard",
+        field: 'ruleId',
+        header: 'Id',
+        isFiltrable: true,
+        isSortable: true,
+        multiSelectType: 'none',
+        style: 'width: 95px; max-width: 95px; white-space: normal;',
+        renderType: 'standard',
       },
       {
-        field: "match", header: "Match",
-        isFiltrable: true, isSortable: true, multiSelectType: "none",
-        style: "width: 130px; max-width: 130px", renderType: "standard",
+        field: 'match',
+        header: 'Match',
+        isFiltrable: true,
+        isSortable: true,
+        multiSelectType: 'none',
+        style: 'width: 130px; max-width: 130px',
+        renderType: 'standard',
       },
       {
-        field: "target", header: "Target",
-        isFiltrable: true, isSortable: true, multiSelectType: "none",
-        style: "width: 130px; max-width: 130px", renderType: "standard",
+        field: 'target',
+        header: 'Target',
+        isFiltrable: true,
+        isSortable: true,
+        multiSelectType: 'none',
+        style: 'width: 130px; max-width: 130px',
+        renderType: 'standard',
       },
       {
-        field: "title", header: "Title",
-        isFiltrable: true, isSortable: false, multiSelectType: "none",
-        style: "min-with: 200px; white-space: normal;", renderType: "standard",
+        field: 'title',
+        header: 'Title',
+        isFiltrable: true,
+        isSortable: false,
+        multiSelectType: 'none',
+        style: 'min-with: 200px; white-space: normal;',
+        renderType: 'standard',
       },
-    ]
+    ];
     this.detailsTableOptions = {
       isClearSelectionVisible: false,
       isExportCsvVisible: false,
@@ -122,10 +160,10 @@ export class ExposedSecretReportsComponent {
       isFooterVisible: false,
       tableSelectionMode: null,
       tableStyle: {},
-      stateKey: "Exposed Secret Reports - Details",
+      stateKey: 'Exposed Secret Reports - Details',
       dataKey: null,
       rowExpansionRender: null,
-      extraClasses: "trivy-half",
+      extraClasses: 'trivy-half',
     };
     this.mainTableExpandTableOptions = new TrivyExpandTableOptions(false, 2, 2);
   }
@@ -135,7 +173,7 @@ export class ExposedSecretReportsComponent {
   }
 
   onGetActiveNamespaces(activeNamespaces: string[]) {
-    this.activeNamespaces = activeNamespaces.sort((x, y) => x > y ? 1 : -1);
+    this.activeNamespaces = activeNamespaces.sort((x, y) => (x > y ? 1 : -1));
   }
 
   onMainTableExpandCallback(dto: ExposedSecretReportImageDto) {
@@ -144,57 +182,60 @@ export class ExposedSecretReportsComponent {
   }
 
   onRefreshRequested(event: TrivyFilterData) {
-    const excludedSeverities = SeverityUtils.getSeverityIds()
-      .filter(severityId => !event.selectedSeverityIds.includes(severityId)) || [];
+    const excludedSeverities =
+      SeverityUtils.getSeverityIds().filter((severityId) => !event.selectedSeverityIds.includes(severityId)) || [];
 
     const params: GetExposedSecretReportImageDtos$Params = {
       namespaceName: event.namespaceName ?? undefined,
-      excludedSeverities: excludedSeverities.length > 0 ? excludedSeverities.join(",") : undefined,
-    }
+      excludedSeverities: excludedSeverities.length > 0 ? excludedSeverities.join(',') : undefined,
+    };
     this.isMainTableLoading = true;
-    this.dataDtoService.getExposedSecretReportImageDtos(params)
-      .subscribe({
-        next: (res) => this.onGetDataDtos(res),
-        error: (err) => console.error(err)
-      });
+    this.dataDtoService.getExposedSecretReportImageDtos(params).subscribe({
+      next: (res) => this.onGetDataDtos(res),
+      error: (err) => console.error(err),
+    });
   }
 
-  mainTableExpandCellOptions(dto: ExposedSecretReportImageDto, type: "header" | "row", colIndex: number, rowIndex?: number): TrivyTableCellCustomOptions {
+  mainTableExpandCellOptions(
+    dto: ExposedSecretReportImageDto,
+    type: 'header' | 'row',
+    colIndex: number,
+    rowIndex?: number,
+  ): TrivyTableCellCustomOptions {
     rowIndex ?? 0;
-    let celValue: string = "";
-    let celStyle: string = "";
+    let celValue: string = '';
+    let celStyle: string = '';
     let celBadge: string | undefined;
     let celButtonLink: string | undefined;
 
     switch (colIndex) {
       case 0:
-        celStyle = "width: 70px; min-width: 70px; height: 50px"
+        celStyle = 'width: 70px; min-width: 70px; height: 50px';
         switch (rowIndex) {
           case 0:
-            celValue = "Repository";
+            celValue = 'Repository';
             break;
           case 1:
-            celValue = "Used By";
+            celValue = 'Used By';
             break;
         }
         break;
       case 1:
-        celStyle = "white-space: normal; display: flex; align-items: center; height: 50px;"
+        celStyle = 'white-space: normal; display: flex; align-items: center; height: 50px;';
         switch (rowIndex) {
           case 0:
             celValue = dto.imageRepository!;
             break;
           case 1:
-            const resourceNames: string[] = dto!.resources!.map(x => x.name!);
+            const resourceNames: string[] = dto!.resources!.map((x) => x.name!);
             let narrowedResourceNames: string;
             let narrowedResourceNamesLink: string | null = null;
             if (resourceNames.length > 2) {
-              narrowedResourceNames = resourceNames[0] + ", " + resourceNames[1];
-              narrowedResourceNamesLink = " [+" + (resourceNames.length - 2) + "]";
-            }
-            else {
-              narrowedResourceNames = resourceNames.join(", ");
-              narrowedResourceNamesLink = "[...]"
+              narrowedResourceNames = resourceNames[0] + ', ' + resourceNames[1];
+              narrowedResourceNamesLink = ' [+' + (resourceNames.length - 2) + ']';
+            } else {
+              narrowedResourceNames = resourceNames.join(', ');
+              narrowedResourceNamesLink = '[...]';
             }
             celValue = narrowedResourceNames;
             celButtonLink = narrowedResourceNamesLink;
@@ -208,7 +249,7 @@ export class ExposedSecretReportsComponent {
       style: celStyle,
       badge: celBadge,
       buttonLink: celButtonLink,
-    }
+    };
   }
 
   getPanelHeaderText() {

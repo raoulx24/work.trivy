@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.DataProtection;
-using System.Text.Json.Serialization;
-using TrivyOperator.Dashboard.Domain.Trivy.VulnerabilityReport;
+﻿using System.Text.Json.Serialization;
 
 namespace TrivyOperator.Dashboard.Domain.Trivy.ExposedSecretReport;
 

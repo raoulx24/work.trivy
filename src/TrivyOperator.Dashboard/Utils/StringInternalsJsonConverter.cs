@@ -11,8 +11,6 @@ public class StringInternalsJsonConverter : JsonConverter<string>
         return string.IsNullOrWhiteSpace(value) ? string.Empty : string.Intern(value);
     }
 
-    public override void Write(Utf8JsonWriter writer, string value, JsonSerializerOptions options)
-    {
+    public override void Write(Utf8JsonWriter writer, string value, JsonSerializerOptions options) =>
         writer.WriteStringValue(value);
-    }
 }

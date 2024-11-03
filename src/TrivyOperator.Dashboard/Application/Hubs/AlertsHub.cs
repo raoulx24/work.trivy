@@ -4,8 +4,7 @@ using TrivyOperator.Dashboard.Application.Services.Abstractions;
 
 namespace TrivyOperator.Dashboard.Application.Hubs;
 
-public class AlertsHub(IAlertsService alertsService, 
-    ILogger<AlertsHub> logger) : Hub
+public class AlertsHub(IAlertsService alertsService, ILogger<AlertsHub> logger) : Hub
 {
     public override async Task OnConnectedAsync()
     {

@@ -1,5 +1,4 @@
-import { Severity } from "../../api/models";
-import { SeverityDto } from "../../api/models/severity-dto";
+import { SeverityDto } from '../../api/models/severity-dto';
 
 export class SeverityUtils {
   static severityDtos: SeverityDto[] = [
@@ -7,7 +6,7 @@ export class SeverityUtils {
     { id: 1, name: 'HIGH' },
     { id: 2, name: 'MEDIUM' },
     { id: 3, name: 'LOW' },
-    { id: 4, name: 'UNKNOWN' }, 
+    { id: 4, name: 'UNKNOWN' },
   ];
   private static colorIntensity: number = 400;
 
@@ -20,7 +19,7 @@ export class SeverityUtils {
 
   public static getCssColorHover(severityId: number): string {
     const documentStyle = getComputedStyle(document.documentElement);
-    const color: string = '--' + this.getColor(severityId) + '-' + (this.colorIntensity);
+    const color: string = '--' + this.getColor(severityId) + '-' + this.colorIntensity;
 
     return documentStyle.getPropertyValue(color);
   }
@@ -44,16 +43,16 @@ export class SeverityUtils {
 
   public static getName(severityId: number): string {
     if (SeverityUtils.severityDtos == null) {
-      return "";
+      return '';
     }
 
     for (let i = 0; i < SeverityUtils.severityDtos.length; i++) {
       if (SeverityUtils.severityDtos[i].id != null && SeverityUtils.severityDtos[i].id == severityId) {
-        return SeverityUtils.severityDtos[i].name ?? "";
+        return SeverityUtils.severityDtos[i].name ?? '';
       }
     }
 
-    return "";
+    return '';
   }
 
   public static getCapitalizedName(severityId: number): string {
@@ -63,11 +62,11 @@ export class SeverityUtils {
 
   public static getCapitalizedString(severityName: string): string {
     severityName = severityName.toLowerCase();
-    return severityName.length == 0 ? "" : severityName.charAt(0).toUpperCase() + severityName.slice(1);
+    return severityName.length == 0 ? '' : severityName.charAt(0).toUpperCase() + severityName.slice(1);
   }
 
   public static getSeverityIds(): number[] {
-    return SeverityUtils.severityDtos ? SeverityUtils.severityDtos.map(x => x.id).sort((a, b) => a - b) : [];
+    return SeverityUtils.severityDtos ? SeverityUtils.severityDtos.map((x) => x.id).sort((a, b) => a - b) : [];
   }
 
   public static getNames(severityIds: number[], maxDisplay?: number): string {
@@ -75,15 +74,18 @@ export class SeverityUtils {
     maxDisplay = maxDisplay ? maxDisplay : 0;
 
     if (severityIds.length == 0) {
-      return "Any"
+      return 'Any';
     }
     if (severityIds.length > maxDisplay) {
-      return `${severityIds.length} selected`
-    }
-    else {
+      return `${severityIds.length} selected`;
+    } else {
       const selectedSeverityNames: string[] = [];
-      severityIds.sort((a, b) => a - b).forEach((x) => { selectedSeverityNames.push(SeverityUtils.getCapitalizedName(x)); });
-      return selectedSeverityNames.join(", ");
+      severityIds
+        .sort((a, b) => a - b)
+        .forEach((x) => {
+          selectedSeverityNames.push(SeverityUtils.getCapitalizedName(x));
+        });
+      return selectedSeverityNames.join(', ');
     }
   }
 }

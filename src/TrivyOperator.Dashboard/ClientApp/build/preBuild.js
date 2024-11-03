@@ -11,7 +11,7 @@ async function generateApi() {
   // load the openapi-spec and resolve all $refs
   const RefParser = new $RefParser();
   const openApi = await RefParser.bundle(options.input, {
-    dereference: {circular: false},
+    dereference: { circular: false },
   });
   const ngOpenGen = new NgOpenApiGen(openApi, options);
   ngOpenGen.generate();
