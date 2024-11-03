@@ -12,12 +12,10 @@ public class BackgroundQueue<TKubernetesObject> : IBackgroundQueue<TKubernetesOb
     where TKubernetesObject : IKubernetesObject<V1ObjectMeta>
 {
     private readonly ILogger<BackgroundQueue<TKubernetesObject>> logger;
-    private readonly IOptions<BackgroundQueueOptions> options;
     private readonly Channel<IWatcherEvent<TKubernetesObject>> queue;
 
     public BackgroundQueue(IOptions<BackgroundQueueOptions> options, ILogger<BackgroundQueue<TKubernetesObject>> logger)
     {
-        this.options = options;
         this.logger = logger;
         BoundedChannelOptions boundedChannelOptions = new(options.Value.Capacity)
         {
