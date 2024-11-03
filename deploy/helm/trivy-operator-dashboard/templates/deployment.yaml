@@ -35,7 +35,6 @@ spec:
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         env:
-        kubernetes:
         - name: KUBERNETES__KUBECONFIGFILENAME
           value: {{ .Values.kubernetes.kubeConfigFileName }}
         - name: KUBERNETES__NAMESPACELIST

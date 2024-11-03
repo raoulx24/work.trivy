@@ -5,7 +5,7 @@ metadata:
   name: {{ include "trivy-operator-dashboard.fullname" . }}
 rules:
 - apiGroups: [""]
-  resources: ["*"]
+  resources: ["namespaces"]
   verbs: ["get", "watch", "list"]
 - apiGroups: ["aquasecurity.github.io"]
   resources: ["*"]

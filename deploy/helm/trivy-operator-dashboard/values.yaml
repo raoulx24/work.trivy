@@ -1,5 +1,4 @@
 # app related params
-
 logging:
   level: Information                                      # Debug, Information, Warning, Error
 
@@ -15,7 +14,7 @@ replicaCount: 1
 
 image:
   repository: ghcr.io/raoulx24/trivydashboard
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
   tag: "latest"
 
 imagePullSecrets: []
@@ -25,7 +24,6 @@ fullnameOverride: ""
 
 serviceAccount:
   create: true
-  automount: true
   annotations: {}
   name: ""
 
@@ -74,9 +72,10 @@ ingress:
 
 resources: {}
   # advised values
+  # requests:
   #   cpu: 100m
   #   memory: 384Mi
-  # requests:
+  # limits:
   #   cpu: 1000m
   #   memory: 384Mi
 
