@@ -14,8 +14,9 @@
     "prettier:cli": "prettier '**/*.{css,scss,md,yml,json,js,ts,xml,html}'",
     "prettier:check": "npm run prettier:cli -- --check",
     "prettier:fix": "npm run prettier:cli -- --write",
-    "eslint:check": "eslint",
-    "eslint:fix": "eslint --fix",
+    "eslint:cli": "eslint",
+    "eslint:check": "npm run eslint:cli",
+    "eslint:fix": "npm run eslint:cli -- --fix",
     "lint": "npm run eslint:check && npm run prettier:check",
     "lint:fix": "npm run eslint:fix && npm run prettier:fix"
   },
