@@ -15,7 +15,8 @@ public class WatcherStateInfoDto
 
 public static class WatcherStateInfoExtensions
 {
-    public static WatcherStateInfoDto ToWatcherStateInfoDto(this WatcherStateInfo watcherStateInfo) => watcherStateInfo == null
+    public static WatcherStateInfoDto ToWatcherStateInfoDto(this WatcherStateInfo? watcherStateInfo) =>
+        watcherStateInfo == null
             ? new WatcherStateInfoDto()
             : new WatcherStateInfoDto
             {
@@ -35,12 +36,17 @@ public static class WatcherStateInfoExtensions
 
         return watcherStateInfo.LastException is not HttpOperationException
             ? "Unknown mitigation"
-            : ((HttpOperationException)watcherStateInfo.LastException).Response.StatusCode == HttpStatusCode.Unauthorized
-            ? "Unauthorized: The kube config file does not provide a porper token"
-            : ((HttpOperationException)watcherStateInfo.LastException).Response.StatusCode == HttpStatusCode.Forbidden
-            ? "Forbidden: The k8s user is not allowed to perform the watch operation"
-            : ((HttpOperationException)watcherStateInfo.LastException).Response.StatusCode == HttpStatusCode.NotFound
-            ? "Not Found: The specified resource type does not exist in cluster (it might be that Trivy is not installed)"
-            : string.Empty;
+            :
+            ((HttpOperationException)watcherStateInfo.LastException).Response.StatusCode ==
+            HttpStatusCode.Unauthorized
+                ? "Unauthorized: The kube config file does not provide a porper token"
+                :
+                ((HttpOperationException)watcherStateInfo.LastException).Response.StatusCode == HttpStatusCode.Forbidden
+                    ?
+                    "Forbidden: The k8s user is not allowed to perform the watch operation"
+                    : ((HttpOperationException)watcherStateInfo.LastException).Response.StatusCode ==
+                      HttpStatusCode.NotFound
+                        ? "Not Found: The specified resource type does not exist in cluster (it might be that Trivy is not installed)"
+                        : string.Empty;
     }
 }

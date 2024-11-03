@@ -47,11 +47,15 @@ public class ClusterRbacAssessmentReportService(IConcurrentCache<string, IList<C
                 actualValues,
                 left => left,
                 right => right.SeverityId,
-                (left, group) => new ClusterRbacAssessmentReportSummaryDto
+                (left, group) =>
                 {
-                    SeverityId = left,
-                    TotalCount = group.FirstOrDefault()?.TotalCount ?? 0,
-                    DistinctCount = group.FirstOrDefault()?.DistinctCount ?? 0,
+                    ClusterRbacAssessmentReportSummaryDto[] groupArray = group.ToArray();
+                    return new ClusterRbacAssessmentReportSummaryDto
+                    {
+                        SeverityId = left,
+                        TotalCount = groupArray.FirstOrDefault()?.TotalCount ?? 0,
+                        DistinctCount = groupArray.FirstOrDefault()?.DistinctCount ?? 0,
+                    };
                 })
             .ToList();
 

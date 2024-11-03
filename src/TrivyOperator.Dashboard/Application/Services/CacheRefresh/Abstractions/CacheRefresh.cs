@@ -14,6 +14,7 @@ public class CacheRefresh<TKubernetesObject, TBackgroundQueue>(
     : ICacheRefresh<TKubernetesObject, TBackgroundQueue> where TKubernetesObject : IKubernetesObject<V1ObjectMeta>
     where TBackgroundQueue : IBackgroundQueue<TKubernetesObject>
 {
+    protected TBackgroundQueue backgroundQueue = backgroundQueue;
     protected Task? CacheRefreshTask;
 
     public void StartEventsProcessing(CancellationToken cancellationToken)
@@ -51,8 +52,8 @@ public class CacheRefresh<TKubernetesObject, TBackgroundQueue>(
                 case WatchEventType.Modified:
                     ProcessModifiedEvent(watcherEvent, cancellationToken);
                     break;
-                    //default:
-                    //    break;
+                //default:
+                //    break;
             }
         }
     }

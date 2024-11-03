@@ -166,6 +166,7 @@ public static class ExposedSecretReportCrExtensions
         IEnumerable<int>? excludedSeverities = null)
     {
         excludedSeverities ??= [];
+        int[] excludedSeveritiesArray = excludedSeverities.ToArray();
         List<ExposedSecretReportImageResourceDto> eseirDtos = [];
         foreach (ExposedSecretReportCr vr in groupedExposedSecretReportCR)
         {
@@ -192,7 +193,7 @@ public static class ExposedSecretReportCrExtensions
         List<ExposedSecretReportDetailDto> exposedSecretReportDetailDtos = [];
         foreach (Secret? secret in latestExposedSecretReportCr?.Report?.Secrets ?? [])
         {
-            if (!excludedSeverities.Contains((int)secret.Severity))
+            if (!excludedSeveritiesArray.Contains((int)secret.Severity))
             {
                 ExposedSecretReportDetailDto exposedSecretReportDetailDto = new()
                 {

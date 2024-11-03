@@ -14,8 +14,10 @@ public class ExposedSecretReportService(IConcurrentCache<string, IList<ExposedSe
         IEnumerable<int>? excludedSeverities = null)
     {
         excludedSeverities ??= [];
-        int[] incudedSeverities =
-            ((int[])Enum.GetValues(typeof(TrivySeverity))).ToList().Except(excludedSeverities).ToArray();
+        int[] excludedSeveritiesArray = excludedSeverities.ToArray();
+        int[] incudedSeverities = ((int[])Enum.GetValues(typeof(TrivySeverity))).ToList()
+            .Except(excludedSeveritiesArray)
+            .ToArray();
 
         IEnumerable<ExposedSecretReportDto> dtos = cache
             .Where(kvp => string.IsNullOrEmpty(namespaceName) || kvp.Key == namespaceName)
@@ -28,11 +30,11 @@ public class ExposedSecretReportService(IConcurrentCache<string, IList<ExposedSe
                                     incudedSeverities,
                                     vulnerability => vulnerability.SeverityId,
                                     id => id,
-                                    (vulnerability, id) => vulnerability)
+                                    (vulnerability, _) => vulnerability)
                                 .ToArray();
                             return dto;
                         })
-                    .Where(dto => !excludedSeverities.Any() || dto.Details.Length != 0));
+                    .Where(dto => !excludedSeveritiesArray.Any() || dto.Details.Length != 0));
 
         return Task.FromResult(dtos);
     }
@@ -57,8 +59,10 @@ public class ExposedSecretReportService(IConcurrentCache<string, IList<ExposedSe
         IEnumerable<int>? excludedSeverities = null)
     {
         excludedSeverities ??= [];
-        int[] incudedSeverities =
-            ((int[])Enum.GetValues(typeof(TrivySeverity))).ToList().Except(excludedSeverities).ToArray();
+        int[] excludedSeveritiesArray = excludedSeverities.ToArray();
+        int[] incudedSeverities = ((int[])Enum.GetValues(typeof(TrivySeverity))).ToList()
+            .Except(excludedSeveritiesArray)
+            .ToArray();
 
         IEnumerable<ExposedSecretReportImageDto> exposedSecretReportImageDtos = cache
             .Where(kvp => string.IsNullOrEmpty(namespaceName) || kvp.Key == namespaceName)
@@ -72,11 +76,11 @@ public class ExposedSecretReportService(IConcurrentCache<string, IList<ExposedSe
                                     incudedSeverities,
                                     vulnerability => vulnerability.SeverityId,
                                     id => id,
-                                    (vulnerability, id) => vulnerability)
+                                    (vulnerability, _) => vulnerability)
                                 .ToArray();
                             return esrDto;
                         })
-                    .Where(esrDto => !excludedSeverities.Any() || esrDto.Details.Length != 0));
+                    .Where(esrDto => !excludedSeveritiesArray.Any() || esrDto.Details.Length != 0));
 
         return Task.FromResult(exposedSecretReportImageDtos);
     }
@@ -136,7 +140,7 @@ public class ExposedSecretReportService(IConcurrentCache<string, IList<ExposedSe
                     return essns;
                 })
             .ToList();
-        IEnumerable<EsSeveritiesByNsSummaryDetailDto> totalSumary = cache.Where(kvp => kvp.Value.Any())
+        IEnumerable<EsSeveritiesByNsSummaryDetailDto> totalSummary = cache.Where(kvp => kvp.Value.Any())
             .SelectMany(
                 kvp => kvp.Value.SelectMany(
                     es => (es.Report?.Secrets ?? []).Select(esd => new { esd.Severity, esd.RuleId })))
@@ -147,18 +151,16 @@ public class ExposedSecretReportService(IConcurrentCache<string, IList<ExposedSe
                     Id = (int)group.Key,
                     TotalCount = group.Count(),
                     DistinctCount = group.Select(item => item.RuleId).Distinct().Count(),
-                });
+                })
+            .ToArray();
 
-        detailDtos = totalSumary.Concat(
-                severityIds.Where(id => !totalSumary.Any(x => x.Id == id))
+        detailDtos = totalSummary.Concat(
+                severityIds.Where(id => !totalSummary.Any(x => x.Id == id))
                     .Select(id => new EsSeveritiesByNsSummaryDetailDto { Id = id, TotalCount = 0, DistinctCount = 0 }))
             .ToList();
         summaryDto = new EsSeveritiesByNsSummaryDto
         {
-            Uid = Guid.NewGuid(),
-            NamespaceName = string.Empty,
-            Details = detailDtos,
-            IsTotal = true,
+            Uid = Guid.NewGuid(), NamespaceName = string.Empty, Details = detailDtos, IsTotal = true,
         };
         summaryDtos.Add(summaryDto);
 

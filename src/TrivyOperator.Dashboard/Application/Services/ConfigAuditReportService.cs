@@ -14,8 +14,10 @@ public class ConfigAuditReportService(IConcurrentCache<string, IList<ConfigAudit
         IEnumerable<int>? excludedSeverities = null)
     {
         excludedSeverities ??= [];
-        int[] incudedSeverities =
-            ((int[])Enum.GetValues(typeof(TrivySeverity))).ToList().Except(excludedSeverities).ToArray();
+        int[] excludedSeveritiesArray = excludedSeverities.ToArray();
+        int[] includedSeverities = ((int[])Enum.GetValues(typeof(TrivySeverity))).ToList()
+            .Except(excludedSeveritiesArray)
+            .ToArray();
 
         IEnumerable<ConfigAuditReportDto> dtos = cache
             .Where(kvp => string.IsNullOrEmpty(namespaceName) || kvp.Key == namespaceName)
@@ -25,14 +27,14 @@ public class ConfigAuditReportService(IConcurrentCache<string, IList<ConfigAudit
                         dto =>
                         {
                             dto.Details = dto.Details.Join(
-                                    incudedSeverities,
+                                    includedSeverities,
                                     vulnerability => vulnerability.SeverityId,
                                     id => id,
-                                    (vulnerability, id) => vulnerability)
+                                    (vulnerability, _) => vulnerability)
                                 .ToArray();
                             return dto;
                         })
-                    .Where(dto => !excludedSeverities.Any() || dto.Details.Length != 0));
+                    .Where(dto => !excludedSeveritiesArray.Any() || dto.Details.Length != 0));
 
         return Task.FromResult(dtos);
     }
@@ -61,10 +63,7 @@ public class ConfigAuditReportService(IConcurrentCache<string, IList<ConfigAudit
                         dto => dto.Details.Select(
                             detail => new
                             {
-                                NamespaceName = kvp.Key,
-                                Kind = dto.ResourceKind,
-                                detail.SeverityId,
-                                detail.CheckId,
+                                NamespaceName = kvp.Key, Kind = dto.ResourceKind, detail.SeverityId, detail.CheckId,
                             }))
                     .GroupBy(key => new { key.NamespaceName, key.Kind, key.SeverityId })
                     .Select(
@@ -75,39 +74,43 @@ public class ConfigAuditReportService(IConcurrentCache<string, IList<ConfigAudit
                             severityId = group.Key.SeverityId,
                             totalCount = group.Count(),
                             distinctCount = group.Select(x => x.CheckId).Distinct().Count(),
-                        }));
+                        }))
+            .ToArray();
 
         string[] allKinds = valuesByNs.Select(x => x.kind).Distinct().ToArray();
         int[] allSeverities = Enum.GetValues(typeof(TrivySeverity)).Cast<int>().Where(x => x < 4).ToArray();
 
         var allCombinationsWithNs = cache.Select(kvp => kvp.Key)
-            .SelectMany(ns => allKinds, (ns, kind) => new { ns, kind })
-            .SelectMany(nk => allSeverities, (nk, severityId) => new { nk.ns, nk.kind, severityId });
+            .SelectMany(_ => allKinds, (ns, kind) => new { ns, kind })
+            .SelectMany(_ => allSeverities, (nk, severityId) => new { nk.ns, nk.kind, severityId });
 
         List<ConfigAuditReportSummaryDto> configAuditReportSummaryDtos = allCombinationsWithNs.GroupJoin(
                 valuesByNs,
                 combo => new { combo.ns, combo.kind, combo.severityId },
                 count => new { count.ns, count.kind, count.severityId },
-                (combo, countGroup) => new ConfigAuditReportSummaryDto
+                (combo, countGroup) =>
                 {
-                    NamespaceName = combo.ns,
-                    Kind = combo.kind,
-                    SeverityId = combo.severityId,
-                    TotalCount = countGroup.FirstOrDefault()?.totalCount ?? 0,
-                    DistinctCount = countGroup.FirstOrDefault()?.distinctCount ?? 0,
+                    var countGroupArray = countGroup.ToArray();
+                    return new ConfigAuditReportSummaryDto
+                    {
+                        NamespaceName = combo.ns,
+                        Kind = combo.kind,
+                        SeverityId = combo.severityId,
+                        TotalCount = countGroupArray.FirstOrDefault()?.totalCount ?? 0,
+                        DistinctCount = countGroupArray.FirstOrDefault()?.distinctCount ?? 0,
+                    };
                 })
             .ToList();
         List<ConfigAuditReportSummaryDto> result = configAuditReportSummaryDtos;
 
         var allConbinationsForTotals = allKinds.SelectMany(
-            kind => allSeverities,
+            _ => allSeverities,
             (kind, severityId) => new { kind, severityId });
 
         var valueTotals = cache.Where(kvp => kvp.Value.Any())
             .SelectMany(kvp => kvp.Value.Select(car => car.ToConfigAuditReportDto()))
             .SelectMany(
-                dto => dto.Details.Select(
-                    detail => new { Kind = dto.ResourceKind, detail.SeverityId, detail.CheckId }))
+                dto => dto.Details.Select(detail => new { Kind = dto.ResourceKind, detail.SeverityId, detail.CheckId }))
             .GroupBy(key => new { key.Kind, key.SeverityId })
             .Select(
                 group => new
@@ -122,13 +125,17 @@ public class ConfigAuditReportService(IConcurrentCache<string, IList<ConfigAudit
                 valueTotals,
                 combo => new { combo.kind, combo.severityId },
                 count => new { count.kind, count.severityId },
-                (combo, countGroup) => new ConfigAuditReportSummaryDto
+                (combo, countGroup) =>
                 {
-                    NamespaceName = string.Empty,
-                    Kind = combo.kind,
-                    SeverityId = combo.severityId,
-                    TotalCount = countGroup.FirstOrDefault()?.totalCount ?? 0,
-                    DistinctCount = countGroup?.FirstOrDefault()?.distinctCount ?? 0,
+                    var countGroupArray = countGroup.ToArray();
+                    return new ConfigAuditReportSummaryDto
+                    {
+                        NamespaceName = string.Empty,
+                        Kind = combo.kind,
+                        SeverityId = combo.severityId,
+                        TotalCount = countGroupArray.FirstOrDefault()?.totalCount ?? 0,
+                        DistinctCount = countGroupArray?.FirstOrDefault()?.distinctCount ?? 0,
+                    };
                 })
             .ToList();
 
