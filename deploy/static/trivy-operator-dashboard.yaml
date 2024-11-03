@@ -1,3 +1,46 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: trivy-operator-dashboard-sa
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: trivy-operator-dashboard-role
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - "namespaces"
+  verbs:
+  - get
+  - watch
+  - list
+- apiGroups:
+  - aquasecurity.github.io
+  resources:
+  - "*"
+  verbs:
+  - get
+  - watch
+  - list
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: trivy-operator-dashboard-rolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: trivy-operator-dashboard-role
+subjects:
+- kind: ServiceAccount
+  name: trivy-operator-dashboard-sa
+  namespace: aNamespace                       # put here correct namespace name
+
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -34,6 +77,7 @@ spec:
           requests:
             cpu: 100m
             memory: 384Mi
+        serviceAccountName: trivy-operator-dashboard-sa
 
 ---
 apiVersion: v1

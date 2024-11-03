@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "trivy-operator-dashboard.fullname" . }}
+  labels:
+    {{- include "trivy-operator-dashboard.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "trivy-operator-dashboard.selectorLabels" . | nindent 4 }}
