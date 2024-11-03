@@ -1,19 +1,9 @@
-# Editor configuration, see http://editorconfig.org
+# Disable editor configuration for the ClientApp folder, rely on ESLint and Prettier
 root = true
 
 [*]
-charset = utf-8
-indent_style = space
-indent_size = 2
-insert_final_newline = true
-trim_trailing_whitespace = true
-
-[*.ts]
-quote_type = single
-
-[*.md]
-max_line_length = off
-trim_trailing_whitespace = false
-
-[*.{razor,cshtml}]
-charset = utf-8-bom
+charset = unset
+indent_style = unset
+indent_size = unset
+insert_final_newline = unset
+trim_trailing_whitespace = unset
