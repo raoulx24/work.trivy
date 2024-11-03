@@ -35,6 +35,21 @@ spec:
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         env:
+        kubernetes:
+        - name: KUBERNETES__KUBECONFIGFILENAME
+          value: {{ .Values.kubernetes.kubeConfigFileName }}
+        - name: KUBERNETES__NAMESPACELIST
+          value: {{ .Values.kubernetes.namespaceList }}
+        - name: KUBERNETES__TRIVYUSECLUSTERRBACASSESSMENTREPORT
+          value: {{ .Values.kubernetes.trivyUseClusterRbacAssessmentReport | quote }}
+        - name: KUBERNETES__TRIVYUSECONFIGAUDITREPORT
+          value: {{ .Values.kubernetes.trivyUseConfigAuditReport | quote }}
+        - name: KUBERNETES__TRIVYUSEEXPOSEDSECRETREPORT
+          value: {{ .Values.kubernetes.trivyUseExposedSecretReport | quote }}
+        - name: KUBERNETES__TRIVYUSEVULNERABILITYREPORT
+          value: {{ .Values.kubernetes.trivyUseVulnerabilityReport | quote }}
+        - name: SERILOG__MINIMUMLEVEL__DEFAULT
+          value: {{ .Values.logging.level }}
         - name: ASPNETCORE_URLS
           value: http://+:{{ .Values.service.port }}
         ports:

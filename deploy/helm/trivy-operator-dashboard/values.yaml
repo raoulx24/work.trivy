@@ -1,3 +1,16 @@
+# app related params
+
+logging:
+  level: Information                                      # Debug, Information, Warning, Error
+
+kubernetes:
+  kubeConfigFileName: ""                                  # path to custom kube config file. in k8s it should be empty
+  namespaceList: ""                                       # a list of namespaces, comma delimited
+  trivyUseClusterRbacAssessmentReport: true               # (in)activate Cluster RBAC Assessment Reports
+  trivyUseConfigAuditReport: true                         # (in)activate Config Audit Reports
+  trivyUseExposedSecretReport: true                       # (in)activate Exposed Secret Reports
+  trivyUseVulnerabilityReport: true                       # (in)activate Vulnerability Reports
+
 replicaCount: 1
 
 image:
