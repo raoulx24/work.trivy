@@ -33,10 +33,7 @@ clusterRBAC:
 podAnnotations: {}
 podLabels:
   app.kubernetes.io/component: web
-  app.kubernetes.io/instance: trivy-operator-dashboard
-  app.kubernetes.io/name: trivy-operator-dashboard
   app.kubernetes.io/part-of: trivy-operator
-  app.kubernetes.io/version: "0.9"
 
 podSecurityContext: {}
   # fsGroup: 2000
