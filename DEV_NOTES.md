@@ -1,6 +1,18 @@
 # Backend
 
+## Windows with Visual Studio
+- Install [Visual Studio 2022 version 17.11.5 or newer](https://visualstudio.microsoft.com/vs/):
+    - Select the following workloads:
+        - `ASP.NET and web development` workload.
+
 # Frontend
+
+## Windows with nvm
+- Install [nvm version 1.1.12](https://github.com/coreybutler/nvm-windows/releases/tag/1.1.12):
+  - Install Node.js LTS:
+    - `nvm install 22.11.0`.
+  - Use Node.js LTS:
+    - `nvm use 22.11.0`.
 
 ## Development server
 
