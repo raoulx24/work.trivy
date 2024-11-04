@@ -108,7 +108,18 @@
               "src/assets"
             ],
             "styles": [
+              {
+                "input": "src/primeng-dark.css",
+                "bundleName": "primeng-dark",
+                "inject": false
+              },
+              {
+                "input": "src/primeng-light.css",
+                "bundleName": "primeng-light",
+                "inject": false
+              },
               "src/styles.css"
+
             ],
             "scripts": []
           }
