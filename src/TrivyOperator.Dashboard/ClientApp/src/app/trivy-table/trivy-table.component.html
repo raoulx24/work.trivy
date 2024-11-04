@@ -169,10 +169,10 @@
           />
         </td>
         <td *ngFor="let col of columns" style="{{ col.style }}">
-          <a *ngIf="col.renderType == 'standard'" style="cursor:text">{{ rowData[col.field] }}</a>
-          <a *ngIf="col.renderType == 'date'" style="cursor:text">{{ rowData[col.field] | date: 'yyyy-MM-dd' }}</a>
-          <div *ngIf="col.renderType == 'imageNameTag'" style="cursor:text">
-            <a>{{ rowData[col.field] }}:{{ rowData[col.extraFields[0]] }}</a>
+          <span *ngIf="col.renderType == 'standard'">{{ rowData[col.field] }}</span>
+          <span *ngIf="col.renderType == 'date'">{{ rowData[col.field] | date: 'yyyy-MM-dd' }}</span>
+          <div *ngIf="col.renderType == 'imageNameTag'">
+            <span>{{ rowData[col.field] }}:{{ rowData[col.extraFields[0]] }}</span>
             <p-tag
               *ngIf="rowData[col.extraFields[1]]"
               value="EOSL"
