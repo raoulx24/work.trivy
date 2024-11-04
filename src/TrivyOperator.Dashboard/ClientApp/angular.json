@@ -31,16 +31,16 @@
             ],
             "styles": [
               {
-                "input": "src/primeng-dark.css",
+                "input": "src/primeng-dark.scss",
                 "bundleName": "primeng-dark",
                 "inject": false
               },
               {
-                "input": "src/primeng-light.css",
+                "input": "src/primeng-light.scss",
                 "bundleName": "primeng-light",
                 "inject": false
               },
-              "src/styles.css"
+              "src/styles.scss"
 
             ],
             "scripts": []
@@ -109,16 +109,16 @@
             ],
             "styles": [
               {
-                "input": "src/primeng-dark.css",
+                "input": "src/primeng-dark.scss",
                 "bundleName": "primeng-dark",
                 "inject": false
               },
               {
-                "input": "src/primeng-light.css",
+                "input": "src/primeng-light.scss",
                 "bundleName": "primeng-light",
                 "inject": false
               },
-              "src/styles.css"
+              "src/styles.scss"
 
             ],
             "scripts": []
@@ -151,6 +151,11 @@
           }
         }
       }
+    }
+  },
+  "schematics": {
+    "@schematics/angular:component": {
+      "style": "scss"
     }
   },
   "cli": {
