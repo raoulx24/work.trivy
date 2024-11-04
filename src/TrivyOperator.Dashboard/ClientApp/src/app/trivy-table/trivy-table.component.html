@@ -21,7 +21,7 @@
     [tableStyle]="trivyTableOptions!.tableStyle"
     [value]="dataDtos!"
     [virtualScroll]="true"
-    [virtualScrollItemSize]="46"
+    [virtualScrollItemSize]="50"
     [(selection)]="selectedDataDtos"
     (onRowCollapse)="onRowExpandCollapse($event)"
     (onRowExpand)="onRowExpandCollapse($event)"
@@ -154,7 +154,7 @@
       </tr>
     </ng-template>
     <ng-template let-columns="columns" let-expanded="expanded" let-rowData let-rowIndex="rowIndex" pTemplate="body">
-      <tr style="height: 46px" [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+      <tr style="height: 50px" [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
         <td *ngIf="trivyTableOptions!.dataKey" style="max-width: 50px">
           <p-button
             pRipple
@@ -169,7 +169,7 @@
           />
         </td>
         <td *ngFor="let col of columns" style="{{ col.style }}">
-          <span *ngIf="col.renderType == 'standard'">{{ rowData[col.field] }}</span>
+          <span *ngIf="col.renderType == 'standard'" class="truncate-ellipsis">{{ rowData[col.field] }}</span>
           <span *ngIf="col.renderType == 'date'">{{ rowData[col.field] | date: 'yyyy-MM-dd' }}</span>
           <div *ngIf="col.renderType == 'imageNameTag'">
             <span>{{ rowData[col.field] }}:{{ rowData[col.extraFields[0]] }}</span>
