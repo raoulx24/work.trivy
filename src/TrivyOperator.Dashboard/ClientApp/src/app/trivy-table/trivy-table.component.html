@@ -31,12 +31,23 @@
     <ng-template pTemplate="caption">
       <div>
         <p-button
-          *ngIf="trivyTableOptions!.isRefreshVisible"
+          *ngIf="trivyTableOptions!.isRefreshVisible && !trivyTableOptions!.isRefreshFiltrable"
           icon="pi pi-refresh"
           size="small"
           text
-          [label]="'Refresh' + (trivyTableOptions.isRefreshFiltrable ? '/Filter...' : '')"
+          raised
+          label="Refresh"
           (onClick)="onFilterRefresh($event)"
+        />
+        <p-splitButton #refreshSplitButton
+          *ngIf="trivyTableOptions!.isRefreshVisible && trivyTableOptions!.isRefreshFiltrable"
+          icon="pi pi-refresh"
+          size="small"
+          text
+          raised
+          label="Refresh"
+          (onClick)="onFilterRefresh($event)"
+          (onDropdownClick)="onFilterDropdownclick($event)"
         />
         <p-button
           *ngIf="trivyTableOptions!.isClearSelectionVisible"
@@ -53,6 +64,7 @@
           label="Collapse All"
           size="small"
           text
+          raised
           [disabled]="!anyRowExpanded"
           (onClick)="onTableCollapseAll()"
         />
@@ -62,6 +74,7 @@
           label="Clear Sort/Filters"
           size="small"
           text
+          raised
           [disabled]="!isTableFilteredOrSorted()"
           (onClick)="onClearSortFilters()"
         />
@@ -71,6 +84,7 @@
           label="Export to CSV"
           size="small"
           text
+          raised
           (onClick)="csvExportOp.toggle($event)"
         />
       </div>
@@ -304,14 +318,6 @@
             (onClick)="onExportToCsv('all')"
           />
         </div>
-        <!--<div class="col">
-      <p-button label="Export Selected"
-                icon="pi pi-list"
-                size="small"
-                [disabled]="!isTableRowSelected()"
-                (onClick)="trivyTable.exportCSV({ selectionOnly: true })"
-                [style]="{'width': '100%'}" />
-    </div>-->
       </div>
     </div>
   </p-overlayPanel>

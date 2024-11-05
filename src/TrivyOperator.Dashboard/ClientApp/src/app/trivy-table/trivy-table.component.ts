@@ -8,6 +8,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
+import { SplitButton, SplitButtonModule } from 'primeng/splitbutton';
 import { Table, TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 
@@ -37,6 +38,7 @@ import {
     InputTextModule,
     MultiSelectModule,
     OverlayPanelModule,
+    SplitButtonModule,
     TableModule,
     TagModule,
   ],
@@ -55,6 +57,7 @@ export class TrivyTableComponent<TData> implements OnInit {
   @ViewChild('trivyTable') trivyTable!: Table;
   @ViewChild('serverFilterDataOp') serverFilterDataOp?: OverlayPanel;
   @ViewChild('csvExportOp') csvExportOp?: OverlayPanel;
+  @ViewChild('refreshSplitButton') refreshSplitButton?: SplitButton;
 
   @Input() public tableHeight: string = '10vh';
   @Input() public isLoading: boolean = false;
@@ -141,12 +144,15 @@ export class TrivyTableComponent<TData> implements OnInit {
     }
   }
 
-  onFilterRefresh(event: MouseEvent) {
-    if (this.trivyTableOptions.isRefreshFiltrable) {
-      this.serverFilterDataOp?.toggle(event);
-    } else {
-      this.onFilterData();
+  onFilterRefresh(_event: MouseEvent) {
+    this.onFilterData();
+  }
+
+  onFilterDropdownclick(_event: Event) {
+    if (this.refreshSplitButton?.menu) {
+      setTimeout(() => { this.refreshSplitButton?.menu?.hide(); }, 0);
     }
+    this.serverFilterDataOp?.toggle(_event);
   }
 
   onFilterData() {

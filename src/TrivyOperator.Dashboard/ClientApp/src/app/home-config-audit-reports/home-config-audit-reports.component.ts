@@ -39,7 +39,6 @@ export class HomeConfigAuditReportsComponent {
   private localShowDistinctValues: boolean = true;
 
   constructor(private configAuditReportService: ConfigAuditReportService) {
-    console.log('constructor - car');
     this.configAuditReportService.getConfigAuditReportSumaryDtos().subscribe({
       next: (res) => this.onDtos(res),
       error: (err) => console.error(err),
@@ -56,7 +55,6 @@ export class HomeConfigAuditReportsComponent {
   }
 
   onCarsMore(_event: MouseEvent) {
-    console.log('mama');
     this.isCarDetailsDialogVisible = true;
   }
 

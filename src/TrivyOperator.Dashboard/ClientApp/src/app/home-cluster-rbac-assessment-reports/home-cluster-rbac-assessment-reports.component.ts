@@ -28,7 +28,6 @@ export class HomeClusterRbacAssessmentReportsComponent {
   private localShowDistinctValues: boolean = true;
 
   constructor(private clusterRbacAssessmentReportService: ClusterRbacAssessmentReportService) {
-    console.log('constructor - crar');
     this.clusterRbacAssessmentReportService.getClusterRbacAssessmentReportSummaryDtos().subscribe({
       next: (res) => this.onDtos(res),
       error: (err) => console.error(err),

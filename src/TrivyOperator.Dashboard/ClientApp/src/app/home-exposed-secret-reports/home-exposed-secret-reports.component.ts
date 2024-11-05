@@ -34,7 +34,6 @@ export class HomeExposedSecretReportsComponent {
   private localShowDistinctValues: boolean = true;
 
   constructor(private exposedSecretReportService: ExposedSecretReportService) {
-    console.log('constructor - esr');
     this.exposedSecretReportService.getExposedSecretReportSummaryDtos().subscribe({
       next: (res) => this.onDtos(res),
       error: (err) => console.error(err),
