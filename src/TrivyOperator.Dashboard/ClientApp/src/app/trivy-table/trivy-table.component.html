@@ -334,6 +334,7 @@
     <div class="flex-column gap-3 w-15rem">
       <div class="row w-full tex-xs">
         <p-dropdown
+          #filterNamespacesDropdown
           placeholder="Select a Namespace"
           styleClass="w-full text-sm"
           [checkmark]="true"
@@ -362,14 +363,25 @@
       </div>
       <hr />
       <div class="row">
-        <div class="col">
-          <p-button
-            icon="pi pi-refresh"
-            label="Refresh/Filter"
-            size="small"
-            styleClass="w-full"
-            (onClick)="onFilterData()"
-          />
+        <div class="grid">
+          <div class="col-6">
+            <p-button icon="pi pi-refresh"
+                      label="Refresh"
+                      size="small"
+                      styleClass="w-full"
+                      text
+                      raised
+                      (onClick)="onFilterData()" />
+          </div>
+          <div class="col-6">
+            <p-button icon="pi pi-replay"
+                      label="Reset"
+                      size="small"
+                      styleClass="w-full"
+                      text
+                      raised
+                      (onClick)="onFilterReset()" />
+          </div>
         </div>
       </div>
     </div>

@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
-import { DropdownModule } from 'primeng/dropdown';
+import { Dropdown, DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
@@ -58,6 +58,7 @@ export class TrivyTableComponent<TData> implements OnInit {
   @ViewChild('serverFilterDataOp') serverFilterDataOp?: OverlayPanel;
   @ViewChild('csvExportOp') csvExportOp?: OverlayPanel;
   @ViewChild('refreshSplitButton') refreshSplitButton?: SplitButton;
+  @ViewChild('filterNamespacesDropdown') filterNamespacesDropdown?: Dropdown;
 
   @Input() public tableHeight: string = '10vh';
   @Input() public isLoading: boolean = false;
@@ -162,6 +163,13 @@ export class TrivyTableComponent<TData> implements OnInit {
     };
     this.serverFilterDataOp?.hide();
     this.refreshRequested.emit(event);
+  }
+
+  onFilterReset() {
+    this.filterRefreshSeverities = [...this.severityDtos];
+    if (this.filterNamespacesDropdown) {
+      this.filterNamespacesDropdown.clear();
+    }
   }
 
   // there is an NG0100 error from here
