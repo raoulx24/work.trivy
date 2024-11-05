@@ -7,7 +7,7 @@ namespace TrivyOperator.Dashboard.Application.Controllers;
 [Route("api/kubernetes-namespaces")]
 public class NamespacesController(INamespaceService kubernetesNamespaceService) : ControllerBase
 {
-    [HttpGet(Name = "getAllNamespaces")]
+    [HttpGet(Name = "GetAllNamespaces")]
     [ProducesResponseType<IEnumerable<string>>(StatusCodes.Status200OK)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status500InternalServerError)]

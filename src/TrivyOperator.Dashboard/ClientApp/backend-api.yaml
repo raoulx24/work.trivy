@@ -33,7 +33,7 @@ paths:
     get:
       tags:
         - BackendSettings
-      operationId: getBackendSettings
+      operationId: GetBackendSettings
       responses:
         '200':
           description: OK
@@ -396,7 +396,7 @@ paths:
     get:
       tags:
         - Namespaces
-      operationId: getAllNamespaces
+      operationId: GetAllNamespaces
       responses:
         '200':
           description: OK
@@ -422,7 +422,7 @@ paths:
     get:
       tags:
         - Severities
-      operationId: getSeverities
+      operationId: GetSeverities
       responses:
         '200':
           description: OK

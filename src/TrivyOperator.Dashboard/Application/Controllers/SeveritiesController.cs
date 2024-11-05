@@ -8,7 +8,7 @@ namespace TrivyOperator.Dashboard.Application.Controllers;
 [Route("api/severities")]
 public class SeveritiesController : ControllerBase
 {
-    [HttpGet(Name = "getSeverities")]
+    [HttpGet(Name = "GetSeverities")]
     [ProducesResponseType<IEnumerable<SeverityDto>>(StatusCodes.Status200OK)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status500InternalServerError)]
