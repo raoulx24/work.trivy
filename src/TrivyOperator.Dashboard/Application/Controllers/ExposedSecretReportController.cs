@@ -11,7 +11,6 @@ public class ExposedSecretReportController(IExposedSecretReportService exposedSe
 {
     [HttpGet(Name = "GetExposedSecretReportDtos")]
     [ProducesResponseType<IEnumerable<ExposedSecretReportDto>>(StatusCodes.Status200OK)]
-    [Produces("application/json")]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Get([FromQuery] string? namespaceName, [FromQuery] string? excludedSeverities)
@@ -30,7 +29,6 @@ public class ExposedSecretReportController(IExposedSecretReportService exposedSe
 
     [HttpGet("denormalized", Name = "GetExposedSecretReportDenormalizedDto")]
     [ProducesResponseType<IEnumerable<ExposedSecretReportDenormalizedDto>>(StatusCodes.Status200OK)]
-    [Produces("application/json")]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status500InternalServerError)]
     public async Task<IEnumerable<ExposedSecretReportDenormalizedDto>> GetDenormalized() =>
@@ -38,7 +36,6 @@ public class ExposedSecretReportController(IExposedSecretReportService exposedSe
 
     [HttpGet("active-namespaces", Name = "GetExposedSecretReportActiveNamespaces")]
     [ProducesResponseType<IEnumerable<string>>(StatusCodes.Status200OK)]
-    [Produces("application/json")]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status500InternalServerError)]
     public async Task<IEnumerable<string>> GetActiveNamespaces() =>
@@ -46,7 +43,6 @@ public class ExposedSecretReportController(IExposedSecretReportService exposedSe
 
     [HttpGet("grouped-by-image", Name = "GetExposedSecretReportImageDtos")]
     [ProducesResponseType<IEnumerable<ExposedSecretReportImageDto>>(StatusCodes.Status200OK)]
-    [Produces("application/json")]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetGroupedByImage(
@@ -68,7 +64,6 @@ public class ExposedSecretReportController(IExposedSecretReportService exposedSe
 
     [HttpGet("summary", Name = "GetExposedSecretReportSummaryDtos")]
     [ProducesResponseType<IEnumerable<EsSeveritiesByNsSummaryDto>>(StatusCodes.Status200OK)]
-    [Produces("application/json")]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status500InternalServerError)]
     public async Task<IEnumerable<EsSeveritiesByNsSummaryDto>> GetExposedSecretReportSummaryDtos() =>

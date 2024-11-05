@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Http.Json;
-using Microsoft.AspNetCore.HttpOverrides;
+﻿using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Mvc;
 using Serilog;
 using Serilog.Extensions.Logging;
 using System.Runtime.InteropServices;
@@ -14,6 +14,7 @@ using TrivyOperator.Dashboard.Infrastructure.Abstractions;
 using TrivyOperator.Dashboard.Infrastructure.Clients;
 using TrivyOperator.Dashboard.Utils;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
+using JsonOptions = Microsoft.AspNetCore.Http.Json.JsonOptions;
 
 Directory.SetCurrentDirectory(AppContext.BaseDirectory);
 
@@ -50,7 +51,7 @@ builder.WebHost.UseShutdownTimeout(TimeSpan.FromSeconds(10));
 builder.WebHost.ConfigureKestrel(options => { options.AddServerHeader = false; });
 
 builder.Services.Configure<JsonOptions>(options => ConfigureJsonSerializerOptions(options.SerializerOptions));
-builder.Services.AddControllersWithViews()
+builder.Services.AddControllersWithViews(ConfigureMvcOptions)
     .AddJsonOptions(options => ConfigureJsonSerializerOptions(options.JsonSerializerOptions));
 builder.Services
     .AddHttpClient(); // see: https://docs.microsoft.com/en-us/dotnet/architecture/microservices/implement-resilient-applications/use-httpclientfactory-to-implement-resilient-http-requests
@@ -74,8 +75,6 @@ builder.Services.AddSignalR();
 
 builder.Services.AddAlertsServices();
 
-#region Kubernetes Related Services
-
 builder.Services.Configure<BackgroundQueueOptions>(configuration.GetSection("Queues"));
 builder.Services.Configure<KubernetesOptions>(configuration.GetSection("Kubernetes"));
 
@@ -90,8 +89,6 @@ builder.Services.AddConfigAuditReportServices(configuration.GetSection("Kubernet
 builder.Services.AddExposedSecretReportServices(configuration.GetSection("Kubernetes"));
 builder.Services.AddVulnerabilityReportServices(configuration.GetSection("Kubernetes"));
 builder.Services.AddScoped<IBackendSettingsService, BackendSettingsService>();
-
-#endregion
 
 WebApplication app = builder.Build();
 
@@ -140,12 +137,14 @@ static IConfiguration CreateConfiguration()
     return configurationBuilder.Build();
 }
 
-static void ConfigureJsonSerializerOptions(JsonSerializerOptions jsonSerializerOptions)
+static void ConfigureJsonSerializerOptions(JsonSerializerOptions options)
 {
-    jsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-    jsonSerializerOptions.Converters.Add(new DateTimeJsonConverter());
-    jsonSerializerOptions.Converters.Add(new DateTimeNullableJsonConverter());
+    options.Converters.Add(new JsonStringEnumConverter());
+    options.Converters.Add(new DateTimeJsonConverter());
+    options.Converters.Add(new DateTimeNullableJsonConverter());
 }
+
+static void ConfigureMvcOptions(MvcOptions options) => options.Filters.Add(new ProducesAttribute("application/json"));
 
 static void CurrentDomainUnhandledException(object sender, UnhandledExceptionEventArgs e)
 {

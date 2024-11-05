@@ -10,7 +10,6 @@ public class BackendSettingsController(IBackendSettingsService service) : Contro
 {
     [HttpGet(Name = "getBackendSettings")]
     [ProducesResponseType<BackendSettingsDto>(StatusCodes.Status200OK)]
-    [Produces("application/json")]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status500InternalServerError)]
     public async Task<BackendSettingsDto> GetBackendSettings() => await service.GetBackendSettings();

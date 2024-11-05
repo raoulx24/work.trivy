@@ -11,7 +11,6 @@ public class ConfigAuditReportController(IConfigAuditReportService configAuditRe
 {
     [HttpGet(Name = "GetConfigAuditReportDtos")]
     [ProducesResponseType<IEnumerable<ConfigAuditReportDto>>(StatusCodes.Status200OK)]
-    [Produces("application/json")]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Get([FromQuery] string? namespaceName, [FromQuery] string? excludedSeverities)
@@ -30,7 +29,6 @@ public class ConfigAuditReportController(IConfigAuditReportService configAuditRe
 
     [HttpGet("denormalized", Name = "GetConfigAuditReportDenormalizedDto")]
     [ProducesResponseType<IEnumerable<ConfigAuditReportDenormalizedDto>>(StatusCodes.Status200OK)]
-    [Produces("application/json")]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status500InternalServerError)]
     public async Task<IEnumerable<ConfigAuditReportDenormalizedDto>> GetDenormalized() =>
@@ -38,7 +36,6 @@ public class ConfigAuditReportController(IConfigAuditReportService configAuditRe
 
     [HttpGet("active-namespaces", Name = "GetConfigAuditReportActiveNamespaces")]
     [ProducesResponseType<IEnumerable<string>>(StatusCodes.Status200OK)]
-    [Produces("application/json")]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status500InternalServerError)]
     public async Task<IEnumerable<string>> GetActiveNamespaces() =>
@@ -46,7 +43,6 @@ public class ConfigAuditReportController(IConfigAuditReportService configAuditRe
 
     [HttpGet("summary", Name = "GetConfigAuditReportSumaryDtos")]
     [ProducesResponseType<IEnumerable<ConfigAuditReportSummaryDto>>(StatusCodes.Status200OK)]
-    [Produces("application/json")]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status500InternalServerError)]
     public async Task<IEnumerable<ConfigAuditReportSummaryDto>> GetConfigAuditReportSumaryDtos() =>

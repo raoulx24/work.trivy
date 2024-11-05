@@ -10,7 +10,6 @@ public class WatcherStateInfoController(IWatcherStateInfoService watcherStateInf
 {
     [HttpGet(Name = "GetWatcherStateInfos")]
     [ProducesResponseType<IEnumerable<WatcherStateInfoDto>>(StatusCodes.Status200OK)]
-    [Produces("application/json")]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status500InternalServerError)]
     public async Task<IEnumerable<WatcherStateInfoDto>> GetAll() =>

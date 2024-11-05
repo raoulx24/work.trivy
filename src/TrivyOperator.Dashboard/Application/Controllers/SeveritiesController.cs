@@ -10,7 +10,6 @@ public class SeveritiesController : ControllerBase
 {
     [HttpGet(Name = "getSeverities")]
     [ProducesResponseType<IEnumerable<SeverityDto>>(StatusCodes.Status200OK)]
-    [Produces("application/json")]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status500InternalServerError)]
     public Task<IEnumerable<SeverityDto>> GetAll()

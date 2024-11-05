@@ -11,7 +11,6 @@ public class ClusterRbacAssessmentReportController(
 {
     [HttpGet(Name = "GetClusterRbacAssessmentReportDtos")]
     [ProducesResponseType<IEnumerable<ClusterRbacAssessmentReportDto>>(StatusCodes.Status200OK)]
-    [Produces("application/json")]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status500InternalServerError)]
     public async Task<IEnumerable<ClusterRbacAssessmentReportDto>> Get() =>
@@ -19,7 +18,6 @@ public class ClusterRbacAssessmentReportController(
 
     [HttpGet("denormalized", Name = "GetClusterRbacAssessmentReportDenormalizedDto")]
     [ProducesResponseType<IEnumerable<ClusterRbacAssessmentReportDenormalizedDto>>(StatusCodes.Status200OK)]
-    [Produces("application/json")]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status500InternalServerError)]
     public async Task<IEnumerable<ClusterRbacAssessmentReportDenormalizedDto>> GetDenormalized() =>
@@ -27,7 +25,6 @@ public class ClusterRbacAssessmentReportController(
 
     [HttpGet("summary", Name = "GetClusterRbacAssessmentReportSummaryDtos")]
     [ProducesResponseType<IEnumerable<ClusterRbacAssessmentReportSummaryDto>>(StatusCodes.Status200OK)]
-    [Produces("application/json")]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status500InternalServerError)]
     public async Task<IEnumerable<ClusterRbacAssessmentReportSummaryDto>> GetClusterRbacAssessmentReportSummaryDtos() =>
