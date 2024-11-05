@@ -80,7 +80,7 @@ public class ConfigAuditReportService(IConcurrentCache<string, IList<ConfigAudit
         string[] allKinds = valuesByNs.Select(x => x.kind).Distinct().ToArray();
         int[] allSeverities = Enum.GetValues(typeof(TrivySeverity)).Cast<int>().Where(x => x < 4).ToArray();
 
-        var allCombinationsWithNs = cache.Select(kvp => kvp.Key)
+        var allCombinationsWithNs = cache.Where(kvp => kvp.Value.Any()).Select(kvp => kvp.Key)
             .SelectMany(_ => allKinds, (ns, kind) => new { ns, kind })
             .SelectMany(_ => allSeverities, (nk, severityId) => new { nk.ns, nk.kind, severityId });
 
