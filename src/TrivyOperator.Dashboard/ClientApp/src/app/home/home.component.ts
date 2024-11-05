@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { MainAppInitService } from '../services/main-app-init.service';
+import { LocalStorageUtils } from '../utils/local-storage.utils';
 
 import { HomeClusterRbacAssessmentReportsComponent } from '../home-cluster-rbac-assessment-reports/home-cluster-rbac-assessment-reports.component';
 import { HomeConfigAuditReportsComponent } from '../home-config-audit-reports/home-config-audit-reports.component';
@@ -10,7 +11,7 @@ import { HomeExposedSecretReportsComponent } from '../home-exposed-secret-report
 import { HomeVulnerabilityReportsComponent } from '../home-vulnerability-reports/home-vulnerability-reports.component';
 
 import { InputSwitchModule } from 'primeng/inputswitch';
-import { TabViewModule } from 'primeng/tabview';
+import { TabViewChangeEvent, TabViewModule } from 'primeng/tabview';
 
 @Component({
   selector: 'app-home',
@@ -29,8 +30,16 @@ import { TabViewModule } from 'primeng/tabview';
   styleUrl: './home.component.scss',
 })
 export class HomeComponent implements OnInit {
-  showDistinctValues: boolean = true;
+  get showDistinctValues() {
+    return this._showDistinctValues;
+  }
+  set showDistinctValues(value: boolean) {
+    this._showDistinctValues = value;
+    localStorage.setItem('home.showDistinctValues', value.toString());
+  }
+  private _showDistinctValues: boolean = true;
   enabledTrivyReports: string[] = ['crar', 'car', 'esr', 'vr'];
+  tabPageActiveIndex: number = 0;
 
   constructor(private mainAppInitService: MainAppInitService) {}
 
@@ -40,5 +49,12 @@ export class HomeComponent implements OnInit {
         updatedBackendSettingsDto.trivyReportConfigDtos?.filter((x) => x.enabled).map((x) => x.id ?? '') ??
         this.enabledTrivyReports;
     });
+
+    this.showDistinctValues = LocalStorageUtils.getBoolKeyValue('home.showDistinctValues') ?? true;
+    this.tabPageActiveIndex = LocalStorageUtils.getNumberKeyValue('home.tabPageActiveIndex') ?? 0;
+  }
+
+  onTabPageChange(event: TabViewChangeEvent) {
+    localStorage.setItem('home.tabPageActiveIndex', event.index.toString());
   }
 }

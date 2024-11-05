@@ -3,6 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 
 import { BackendSettingsDto } from '../../api/models/backend-settings-dto';
 import { BackendSettingsService } from '../../api/services/backend-settings.service';
+import { LocalStorageUtils } from '../utils/local-storage.utils'
 
 @Injectable({
   providedIn: 'root',
@@ -63,7 +64,7 @@ export class MainAppInitService {
 
   private getDarkMode(): boolean {
     return (
-      this.getBoolValue(localStorage.getItem('mainSettings.isDarkMode')) ??
+      LocalStorageUtils.getBoolKeyValue('mainSettings.isDarkMode') ??
       (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)
     );
   }
@@ -77,21 +78,7 @@ export class MainAppInitService {
     localStorage.setItem('mainSettings.isDarkMode', this.isDarkMode.toString());
   }
 
-  private getBoolValue(value: string | null): boolean | null {
-    // Convert string to lower case for case-insensitive comparison
-    switch (value?.toLowerCase().trim()) {
-      case 'true':
-      case 'yes':
-      case '1':
-        return true;
-      case 'false':
-      case 'no':
-      case '0':
-        return false;
-      default:
-        return null;
-    }
-  }
+  
 
   private mergeBackendSettingsDto(backendSettingsDto: BackendSettingsDto) {
     const previousItems: string[] =

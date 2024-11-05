@@ -49,6 +49,7 @@
                 label="Clear Selected"
                 size="small"
                 text
+                raised
                 [disabled]="clearTablesOptions.length == 0"
                 (onClick)="onClearTableStatesSelected($event)"
               />
@@ -57,6 +58,7 @@
                 label="Clear All"
                 size="small"
                 text
+                raised
                 [disabled]="clearTablesOptions.length == 0"
                 (onClick)="onClearTableStatesAll($event)"
               />
@@ -87,6 +89,7 @@
         label="Update Names"
         size="small"
         text
+        raised
         [disabled]="csvFileNames.length == 0"
         (onClick)="onUpdateCsvFileNames($event)"
       />
@@ -137,6 +140,7 @@
                 label="Save"
                 size="small"
                 text
+                raised
                 (onClick)="onUpdateTrivyReportsStates($event)"
               />
             </td>

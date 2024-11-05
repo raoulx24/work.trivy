@@ -303,6 +303,7 @@
             label="Export Filtered"
             size="small"
             text
+            raised
             [disabled]="!trivyTable.filteredValue"
             [style]="{ width: '100%' }"
             (onClick)="onExportToCsv('filtered')"
@@ -314,6 +315,7 @@
             label="Export All"
             size="small"
             text
+            raised
             [style]="{ width: '100%' }"
             (onClick)="onExportToCsv('all')"
           />
