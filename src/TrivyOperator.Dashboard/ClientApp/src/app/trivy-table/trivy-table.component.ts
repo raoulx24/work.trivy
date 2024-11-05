@@ -149,7 +149,7 @@ export class TrivyTableComponent<TData> implements OnInit {
     this.onFilterData();
   }
 
-  onFilterDropdownclick(_event: Event) {
+  onFilterDropdownClick(_event: Event) {
     if (this.refreshSplitButton?.menu) {
       setTimeout(() => { this.refreshSplitButton?.menu?.hide(); }, 0);
     }
