@@ -35,6 +35,6 @@ Main documentation of the app can be found [here](docs/main-doc.md)
 ## Acknowledgements
 
 I would like to give my sincere thanks to the following persons who have helped me to get here:
- - **Danut** - For his technical guidance and explanations. 
+ - **Dănuț** - For his technical guidance and explanations. 
  - **Florin** - For his insights regarding the app and endurance with its bugs.
  - **Alina** - My better half, for tolerating my long programming evenings.
