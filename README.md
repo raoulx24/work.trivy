@@ -26,7 +26,7 @@ Main documentation of the app can be found [here](docs/main-doc.md)
 
 ## More Info
 
-[Development Notes](DEV_NOTES.MD)
+[Development Notes](DEV_NOTES.md)
 
 [Contributing](CONTRIBUTING.md)
 
