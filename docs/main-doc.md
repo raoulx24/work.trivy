@@ -1,6 +1,6 @@
 # Trivy Operator Documentation
 
-## Trivy Repots
+## Trivy Reports
 
 All Trivy Reports can be seen in three ways, Overview mode (in Home), 
 Inspect mode (Browse) and Detailed. All of them are explained as follows.
