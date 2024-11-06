@@ -23,7 +23,7 @@ We'll review your suggestion and have a discussion about its potential inclusion
 
 When considering contributions, we're guided by several principles that align with the project's vision:
 
-- **Best Practices**: We want this sample to be canonical and reflect the best practices in the industry and in .NET.
+- **Best Practices**: We want this application to be canonical and reflect the best practices in the industry and in .NET and Angular.
 
 - **Selectivity in Tools and Libraries**: There is a rich ecosystem of tools, projects, and libraries out there, and we cannot use all of them in this sample. We would like this repo to reflect the use of a realistic set of technologies, not to be a showcase or example of every possible thing it could use.
 
