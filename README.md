@@ -1,12 +1,14 @@
 # Trivy Operator Dashboard
 
 <div align="center">
-  <img src="docs/imgs/logo.blurred.png" width="300">
+  <img src="docs/imgs/logo.blurred.png" width="500">
 </div>
 
 ## Intro
 
 Welcome to the Trivy Operator Dashboard, a comprehensive security management tool for Kubernetes environments. Built on top of the powerful Trivy Operator from Aqua Security, this dashboard provides insights into your cluster's security posture. It offers detailed insights on vulnerability scans, policy validation scans and other ones. With an intuitive and user-friendly interface, you can easily monitor, detect, and respond to security threats, ensuring your Kubernetes environment remains robust and secure.
+
+![](docs/imgs/combo.png)
 
 ## Features
 
