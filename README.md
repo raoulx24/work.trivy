@@ -16,7 +16,7 @@ The application exposes the following reports:
 - Cluster RBAC Assessment Reports
 - Exposed Secret Reports
 
-All of them consists in dashboards (for view on a glance), browse and inspect findings (with table filters, sorts), export data.
+All of them consists in dashboards (for view at a glance), browse and inspect findings (with table filters, sorts), export data.
 
 <img src="docs/imgs/app.gif">
 
