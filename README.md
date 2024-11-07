@@ -20,17 +20,17 @@ The application exposes the following reports:
 
 All of them consists in dashboards (for view at a glance), browse and inspect findings (with table filters, sorts), export data.
 
-<img src="docs/imgs/app.gif">
+![](docs/imgs/app.gif)
 
 This app is fully operational, with new features currently in development.
 
 ## Why we did it. The Story Behind Trivy Dashboard
 
-1. **Security is Paramount** In our professional life, our dedication to security led us to create Trivy Dashboard. We needed a comprehensive solution to monitor, manage, and mitigate risks that existing open-source options couldn't provide.
+1. **Security is Imperative** In our professional life, our dedication to security led us to create Trivy Dashboard. We needed a comprehensive solution to monitor, manage, and mitigate risks that existing open-source options couldn't provide.
 
-2. **Bridging the Open-Source Gap** None of the available open-source dashboards met our specific needs. We developed Trivy Dashboard to fill this gap, offering a powerful and versatile tool tailored to our unique challenges.
+2. **Bridging the Open-Source Gap** None of the available open-source dashboards met our specific needs. We developed Trivy Dashboard to fill this gap, offering a powerful and versatile tool tailored to our requirements.
 
-3. **DevOps Curiosity** As a DevOps person, my curiosity drove us to build Trivy Dashboard. This project allowed me to gain a deeper and intimate understanding of the development process, enhancing my skills and fostering continuous learning.
+3. **DevOps Curiosity** As a DevOps person, my curiosity drove me to start building Trivy Dashboard. This project allowed me to gain a deeper and intimate understanding of the development process, enhancing my skills and sustaining continuous learning.
 
 Trivy Dashboard represents our commitment to security, bridging open-source gaps, and our relentless curiosity as IT dev professionals. We are happy to share this journey with the community.
 
@@ -42,11 +42,31 @@ While we recognize the potential value these features could bring, our current a
 
 For now, our priority is to deliver the rest of the provided features by Trivy (such as ClusterComplianceReport, ClusterConfigAuditReport, ClusterInfraAssessmentReport and so on), in order to have a robust and reliable dashboard that meets our immediate needs and serves the community effectively.
 
+> **Note:** Given the sensitivity of the data being handled, we recommend implementing external authentication measures. Options include (and not limited to) basic authentication on ingress (not recommended, as a last resort) or, preferably, using [oauth2-proxy container](https://quay.io/repository/oauth2-proxy/oauth2-proxy) (project on [GitHub](https://github.com/oauth2-proxy/oauth2-proxy)) for enhanced security.
+
 ## Documentation
 
-Main documentation of the app can be found [here](docs/main-doc.md)
+[Main documentation](docs/main-doc.md)
 
-## More Info
+### Compatibility and Apps
+
+Tested under:
+
+| App name       | Version(s)              |
+|----------------|-------------------------|
+| Kubernetes     | 1.28 - 1.30; Linux; x64 |
+| Trivy Operator | 0.22                    |
+| Windows        | 10, 11; x64, arm64      |
+
+Browsers: tested mainly using Edge. Also tested on Chrome, FireFox and Opera.
+
+Recommended resolution: 1080p (1920x1080)
+> **Note on resolution:** although we are safe to state that it is an Business App (with lots of data to display), the app scales ok in both directions. On a phone the user experience may be less than optimal, but it is usable. On larger display, as it might be said, "the bigger, the better".
+
+### Known bugs
+- When a Dropdown Filter (such as Namespaces or Severities) gets cleared by its Clear button or by table's Clear Sort/Filters, the table displays unfiltered data, but the Filter still acts like is Filtering. It is a well known bug from Primeng.
+
+## For Community - More Info
 
 [Development Notes](DEV_NOTES.md)
 
