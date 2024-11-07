@@ -14,7 +14,7 @@ It is the "at a glance" page, where various statistics related to Trivy Reports 
 On the left are some tables related to various statistics **(1)**, and on the right (where applicable) are some graph **(2)** to give an idea how they stand.
 
 ![](imgs/vr-home.png)
-<br>*Main Overviev page*
+<br>*Main Overview page*
 
 Also, some other info can be seen here, by pressing the **More** buttons **(3)**.
 
