@@ -11,7 +11,7 @@ Inspect mode (Browse) and Detailed. All of them are explained as follows.
 
 It is the "at a glance" page, where various statistics related to Trivy Reports can be seen.
 
-On the left are some tables related to various statistics **(1)**, and on the right (where applicable) are some graph **(2)** to give an idea how they stand.
+On the left are some tables related to various statistics **(1)**, and on the right (where applicable) are some graphs **(2)** to give an idea how they stand.
 
 ![](imgs/vr-home.png)
 <br>*Main Overview page*
@@ -21,13 +21,13 @@ Also, some other info can be seen here, by pressing the **More** buttons **(3)**
 ![](imgs/vr-home-details.png)
 <br>*More on Severities*
 
-The **Distinct values** **(4)** is grouping same values in order to have an real feeling related to the reports; i.e. in Vulnerability Reports Statistics, the severities are shown as distinct (unique) ones, which means that if the same Vulnerability is found in many containers, it will be counted as one.
+The **Distinct values** **(4)** is grouping same values in order to have a real feeling related to the reports; i.e. in Vulnerability Reports Statistics, the severities are shown as distinct (unique) ones, which means that if the same Vulnerability is found in many containers, it will be counted as one.
 
 ### Inspect mode (Browse)
 
 It is the page where Reports are grouped in order to simplify their inspection. The layout is a classic master **(1)** - details **(2)** one.
 
-In Vulnerability Reports case, the master table **(1)** contains the images and the detail table **(2)** the related vulnerabilities. In order to avoid duplicates, all images that are the same are grouped, and their usage by Replicasets, Statefulsets, Jobs etc. can be seen by accessing **(7)**.
+In Vulnerability Reports case, the master table **(1)** contains the images and the detail table **(2)** the related vulnerabilities. To avoid duplicates, all images that are the same are grouped, and their usage by Replicasets, Statefulsets, Jobs etc. can be seen by accessing **(7)**.
 
 ![](imgs/vr-dark.png)
 <br>*Inspect (browse) page*
@@ -40,7 +40,7 @@ In all tables you can find various action buttons **(3)**, most of the columns c
 If **(9)** is a Split Button, then the popup can be used to filter the data directly from the server. This can be useful, as an example, if you are a dev and want to see only severities that are Critical, High and Medium from a specific namespace.
 
 ![](imgs/vr-filter.png)
-<br>*Server side filter*
+<br>*Server-side filter*
 
 ### Detailed
 
@@ -53,7 +53,7 @@ In this mode, all data is denormalized in a single large table, with all info fr
 
 ### Watcher States
 
-The backend uses kubernetes Watchers to get the changes in realtime. Their states (running, errors) can be seen here with remediation solutions.
+The backend uses Kubernetes Watchers to get the changes in real-time. Their states (running, errors) can be seen here with remediation solutions.
 
 ![](imgs/watcher-states.png)
 <br>*Watcher States*

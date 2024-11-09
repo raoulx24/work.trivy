@@ -51,6 +51,10 @@ spec:
           value: {{ .Values.logging.level }}
         - name: ASPNETCORE_URLS
           value: http://+:{{ .Values.service.port }}
+        {{- range .Values.extraEnvValues }}
+        - name: {{ .name }}
+          value: {{ .value | quote }}
+        {{- end }}
         ports:
         - name: http
           containerPort: {{ .Values.service.port }}

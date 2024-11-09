@@ -1,136 +1,176 @@
+---
+# Source: trivy-operator-dashboard/templates/serviceaccount.yaml
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: trivy-operator-dashboard-sa
-
+  name: trivy-operator-dashboard
+  labels:
+    helm.sh/chart: trivy-operator-dashboard-0.1.0
+    app.kubernetes.io/name: trivy-operator-dashboard
+    app.kubernetes.io/instance: trivy-operator-dashboard
+    app.kubernetes.io/version: "0.9"
+    app.kubernetes.io/managed-by: Helm
 ---
+# Source: trivy-operator-dashboard/templates/clusterrole.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: trivy-operator-dashboard-role
+  name: trivy-operator-dashboard
 rules:
-- apiGroups:
-  - ""
-  resources:
-  - "namespaces"
-  verbs:
-  - get
-  - watch
-  - list
-- apiGroups:
-  - aquasecurity.github.io
-  resources:
-  - "*"
-  verbs:
-  - get
-  - watch
-  - list
-
+- apiGroups: [""]
+  resources: ["namespaces"]
+  verbs: ["get", "watch", "list"]
+- apiGroups: ["aquasecurity.github.io"]
+  resources: ["*"]
+  verbs: ["get", "watch", "list"]
 ---
+# Source: trivy-operator-dashboard/templates/clusterrolebinding.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: trivy-operator-dashboard-rolebinding
+  name: trivy-operator-dashboard
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: trivy-operator-dashboard-role
+  name: trivy-operator-dashboard
 subjects:
 - kind: ServiceAccount
-  name: trivy-operator-dashboard-sa
-  namespace: aNamespace                       # put here correct namespace name
-
+  name: trivy-operator-dashboard
+  namespace: default
 ---
+# Source: trivy-operator-dashboard/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: trivy-operator-dashboard
+  labels:
+    helm.sh/chart: trivy-operator-dashboard-0.1.0
+    app.kubernetes.io/name: trivy-operator-dashboard
+    app.kubernetes.io/instance: trivy-operator-dashboard
+    app.kubernetes.io/version: "0.9"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8900
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: trivy-operator-dashboard
+    app.kubernetes.io/instance: trivy-operator-dashboard
+---
+# Source: trivy-operator-dashboard/templates/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: trivy-operator-dashboard
+  labels:
+    helm.sh/chart: trivy-operator-dashboard-0.1.0
+    app.kubernetes.io/name: trivy-operator-dashboard
+    app.kubernetes.io/instance: trivy-operator-dashboard
+    app.kubernetes.io/version: "0.9"
+    app.kubernetes.io/managed-by: Helm
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/instance: trivy-operator-dashboard
       app.kubernetes.io/name: trivy-operator-dashboard
+      app.kubernetes.io/instance: trivy-operator-dashboard
   template:
     metadata:
       labels:
-        app.kubernetes.io/component: web
-        app.kubernetes.io/instance: trivy-operator-dashboard
+        helm.sh/chart: trivy-operator-dashboard-0.1.0
         app.kubernetes.io/name: trivy-operator-dashboard
-        app.kubernetes.io/part-of: trivy-operator
+        app.kubernetes.io/instance: trivy-operator-dashboard
         app.kubernetes.io/version: "0.9"
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/component: web
+        app.kubernetes.io/part-of: trivy-operator
     spec:
+      serviceAccountName: trivy-operator-dashboard
+      securityContext:
+        {}
       containers:
       - name: trivy-operator-dashboard
+        securityContext:
+          {}
+        image: "ghcr.io/raoulx24/trivydashboard:latest"
+        imagePullPolicy: Always
         env:
+        - name: KUBERNETES__KUBECONFIGFILENAME
+          value: 
+        - name: KUBERNETES__NAMESPACELIST
+          value: 
+        - name: KUBERNETES__TRIVYUSECLUSTERRBACASSESSMENTREPORT
+          value: "true"
+        - name: KUBERNETES__TRIVYUSECONFIGAUDITREPORT
+          value: "true"
+        - name: KUBERNETES__TRIVYUSEEXPOSEDSECRETREPORT
+          value: "true"
+        - name: KUBERNETES__TRIVYUSEVULNERABILITYREPORT
+          value: "true"
+        - name: SERILOG__MINIMUMLEVEL__DEFAULT
+          value: Information
         - name: ASPNETCORE_URLS
           value: http://+:8900
-        image: ghcr.io/raoulx24/trivydashboard:latest
         ports:
-        - containerPort: 8900
-          name: api-http
+        - name: http
+          containerPort: 8900
           protocol: TCP
+        livenessProbe:
+          httpGet:
+            path: /
+            port: http
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
         resources:
-          limits:
-            cpu: "1"
-            memory: 384Mi
-          requests:
-            cpu: 100m
-            memory: 384Mi
-        serviceAccountName: trivy-operator-dashboard-sa
-
+          {}
 ---
-apiVersion: v1
-kind: Service
-metadata:
-  name: trivy-operator-dashboard-cluster-ip
-spec:
-  type: ClusterIP
-  selector:
-    app.kubernetes.io/instance: trivy-operator-dashboard
-    app.kubernetes.io/name: trivy-operator-dashboard
-  ports:
-  - name: http
-    port: 80
-    protocol: TCP
-    targetPort: api-http
-
----
-# kubectl create secret tls trivy-operator-dashboard-tls-secret --cert=path/to/cert/file --key=path/to/key/file
-apiVersion: v1
-metadata:
-  name: trivy-operator-dashboard-tls-secret
-kind: Secret
-data:
-  tls.crt: ''
-  tls.key: ''
-type: kubernetes.io/tls
-
----
+# Source: trivy-operator-dashboard/templates/ingress.yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: trivy-operator-dashboard-ingress
+  name: trivy-operator-dashboard
+  labels:
+    helm.sh/chart: trivy-operator-dashboard-0.1.0
+    app.kubernetes.io/name: trivy-operator-dashboard
+    app.kubernetes.io/instance: trivy-operator-dashboard
+    app.kubernetes.io/version: "0.9"
+    app.kubernetes.io/managed-by: Helm
 spec:
-  # use your own ingress class name
   ingressClassName: nginx
   rules:
-    # use your real FQDN
-  - host: a.fqdn                       
-    http:
-      paths:
-      - backend:
-          service:
-            name: trivy-operator-dashboard-cluster-ip
-            port:
-              number: 80
-        path: /
-        pathType: Prefix
-  tls:
-  - hosts:
-    # use your real FQDN
-    - a.fqdn
-    secretName: trivy-operator-dashboard-tls-secret
-
-
-
+    - host: "chart-example.local"
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: trivy-operator-dashboard
+                port:
+                  number: 8900
+---
+# Source: trivy-operator-dashboard/templates/tests/test-connection.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "trivy-operator-dashboard-test-connection"
+  labels:
+    helm.sh/chart: trivy-operator-dashboard-0.1.0
+    app.kubernetes.io/name: trivy-operator-dashboard
+    app.kubernetes.io/instance: trivy-operator-dashboard
+    app.kubernetes.io/version: "0.9"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args: ['trivy-operator-dashboard:8900']
+  restartPolicy: Never

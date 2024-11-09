@@ -10,6 +10,12 @@ kubernetes:
   trivyUseExposedSecretReport: true                       # (in)activate Exposed Secret Reports
   trivyUseVulnerabilityReport: true                       # (in)activate Vulnerability Reports
 
+# if needed extra environment values can be provided here
+extraEnvValues: []
+# - name: ENV1
+#   value: "value1"
+
+# other params
 replicaCount: 1
 
 image:
@@ -27,7 +33,7 @@ serviceAccount:
   annotations: {}
   name: ""
 
-clusterRBAC:
+clusterRbac:
   create: true
 
 podAnnotations: {}
