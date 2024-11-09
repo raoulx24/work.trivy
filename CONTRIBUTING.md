@@ -1,6 +1,6 @@
-# Contributing to TrivyOperator.Dashboard
+# Contributing to Trivy Operator Dashboard
 
-Thank you for your interest in contributing to TrivyOperator.Dashboard! We're excited to collaborate with you and see how together we can improve and evolve this application.
+Thank you for your interest in contributing to Trivy Operator Dashboard! We're excited to collaborate with you and see how together we can improve and evolve this application.
 
 ## Getting Started
 
@@ -12,7 +12,7 @@ Typos and other small fixes are important to us -— no contribution is too smal
 
 ## Have a Suggestion?
 
-If you have a suggestion on how to enhance TrivyOperator.Dashboard, please open an issue with the following details:
+If you have a suggestion on how to enhance Trivy Operator Dashboard, please open an issue with the following details:
 - A clear title and description of the suggestion
 - Any relevant examples or mockups
 - Indicate whether you're interested in implementing the feature yourself
