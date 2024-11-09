@@ -63,7 +63,7 @@ Tested under:
 Browsers: tested mainly using Edge. Also tested on Chrome, Firefox and Opera.
 
 Recommended resolution: 1080p (1920x1080)
-> **Note on resolution:** although we are safe to state that Trivy Operator Dashboard is a Business Application that handles and displays extensive datasets, the app scales ok in both directions. On a phone the user experience may be less than optimal, but it is usable. On larger display, as some might say, "the bigger, the better".
+> **Note on resolution:** although we are safe to state that Trivy Operator Dashboard is a Business Application (that handles and displays extensive datasets) and that it should be used on desktop or laptop monitors, the app scales ok in both directions. On a phone the user experience may be less than optimal, but it is usable. On larger display, as some might say, "the bigger, the better".
 
 ### Known bugs
 - When a Dropdown Filter (such as Namespaces or Severities) gets cleared by its Clear button or by table's Clear Sort/Filters, the table displays unfiltered data, but the Filter still acts like is Filtering. It is a well-known bug from Primeng.
