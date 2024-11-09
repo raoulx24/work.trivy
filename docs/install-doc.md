@@ -48,11 +48,19 @@ In helm values file, the following parameters are app related:
 
 ## Considerations
 
+### Resources (Requests/Limits)
+
 The app utilizes caching to deliver fast responses. By storing all data in memory, it significantly reduces the need for repetitive Kubernetes API queries, thereby enhancing performance and minimizing latency, without significant memory overhead. Even though the provided (and commented) resources values are more than enough for some hundreds of scaned images (educated guess is that 500 is a safe number), please do adjust the values based on your needs.
+
+### Running the App
 
 Although there are other means of running the app, such as a "thick client" on a desktop OS, split in frontend and backend, scaled, even in docker (if you insist), they are not in the scope of this document.
 
+### Kubernetes RBAC
+
 In the Kubernetes cluster, there are some other ways of combining RBAC rights. For instance, instead of cluster roles, simple namespaced roles can be created. This is a more restricted way of running the app and is pertinent to "multi-tenant clusters" (where same cluster is shared by distinct groups). Also, they are not in the scope of this document.
+
+### Logging - Serilog
 
 The logging component of the backend is based on Serilog ([GitHub project](https://github.com/serilog/serilog)). The file sink can be activated by using `extraEnvValues` from `values.yaml` file, like this:
 ```yaml

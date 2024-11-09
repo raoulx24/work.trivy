@@ -4,6 +4,9 @@
 # this powershell script is used to create custom kubeconfig based on the provided k8s Service Account (SA) name, its namespace and
 # kubeconfig out file name.
 # They sould already exist and will be retreived from the current config context
+# Normally, after 1.24, $secretName shouldn't exists and you have to create it. And only for testing purposes.
+# Please do read
+# https://gist.github.com/innovia/fbba8259042f71db98ea8d4ad19bd708?permalink_comment_id=4501051#gistcomment-4501051
 
 $serviceAccountName = ""  # the SA name. i.e. trivy-dashboard-sa
 $namespace = ""           # namespace where SA exists. i.e. default

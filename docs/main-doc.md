@@ -2,7 +2,7 @@
 
 ## Trivy Reports
 
-All Trivy Reports can be seen in three ways, Overview mode (in Home), 
+All Trivy Reports can be seen in three ways: Overview mode (in Home), 
 Inspect mode (Browse) and Detailed. All of them are explained as follows.
 
 > **Note:** All examples in this documentation are from Vulnerability Reports pages, as all Trivy Reports related pages are similar as layout and functionalities
