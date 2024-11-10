@@ -62,7 +62,20 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
+          
+      - name: Git Version
+        uses: codacy/git-version@2.4.0
+        with:
+          # The name of the release branch
+          release-branch: master
+          # The name of the dev branch
+          dev-branch: develop
+          # The prefix to use in the version
+          # prefix: # optional
+          # The paths to be used to calculate changes (comma-separated)
+          # log-paths: # optional, default is ./
+          
+      
       # Extract metadata (tags, labels) for Docker
       # https://github.com/docker/metadata-action
       - name: Extract Docker metadata
@@ -80,7 +93,9 @@ jobs:
           file: build/dockerfile
           context: .
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: |
+            ${{ steps.meta.outputs.tags }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.gitversion.outputs.version }}
           # tags: ${{ env.REGISTRY }}/raoulx24/trivydashboard:latest
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
