@@ -70,7 +70,7 @@ It consists in three main sections:
 ![](imgs/settings.png)
 <br>*Setting Page*
 
-### Dark/Ligt Mode
+### Dark/Light Mode
 
 The application fully supports Dark/Light mode; it can be changed on the fly at any desired moment, and it persisted between sessions. By default, the application uses the default one, provided by the browser/system.
 
