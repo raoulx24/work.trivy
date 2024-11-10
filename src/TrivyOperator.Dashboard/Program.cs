@@ -87,8 +87,6 @@ appLifetime.ApplicationStarted.Register(OnStarted);
 appLifetime.ApplicationStopping.Register(OnStopping);
 appLifetime.ApplicationStopped.Register(OnStopped);
 
-app.MapHub<AlertsHub>("/alerts-hub");
-
 // Configure the HTTP request pipeline. Middleware order: https://learn.microsoft.com/en-us/aspnet/core/fundamentals/middleware/?view=aspnetcore-8.0#middleware-order
 app.UseForwardedHeaders();
 if (!app.Environment.IsProduction())
@@ -114,6 +112,7 @@ if (!app.Environment.IsProduction())
 }
 
 app.MapControllers();
+app.MapHub<AlertsHub>("/alerts-hub");
 app.MapFallbackToFile("index.html");
 
 await app.RunAsync().ConfigureAwait(false);
