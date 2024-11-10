@@ -26,6 +26,8 @@ This app is fully operational, with new features currently in development.
 
 ## Why we did it. The Story Behind Trivy Operator Dashboard
 
+A few months ago, at the start of summer, two friends convened on a terrace. One voiced concerns about the labor-intensive process of manually parsing vulnerabilities. As they discussed the challenges, a pivotal question arose: "Should we do it? Why not?" This moment marked the beginning of this journey to streamline and automate the process. What we had in mind:
+
 1. **Security is Imperative:** In our professional life, our dedication to security led us to create Trivy Operator Dashboard. We needed a comprehensive solution to monitor, manage, and mitigate risks that existing open-source options couldn't provide.
 
 2. **Bridging the Open-Source Gap:** None of the available open-source dashboards met our specific needs. We developed Trivy Operator Dashboard to fill this gap, offering a powerful and versatile tool tailored to our requirements.
@@ -36,7 +38,7 @@ Trivy Operator Dashboard represents our commitment to security, bridging open-so
 
 ## Considerations
 
-Our goal with Trivy Operator Dashboard is to ensure that it excels in a singular focus: being an effective and efficient dashboard. We've had extensive internal discussions and, for the time being, we’ve decided not to include enterprise-grade features such as authentication/authorization, Trivy Reports history, email alerts, or direct configuration of the Trivy operator.
+Our goal with Trivy Operator Dashboard is to ensure that it excels in a singular focus: being an effective and efficient dashboard. We've had extensive internal discussions and, for the time being, we’ve decided not to include enterprise-grade features such as authentication/authorization, Trivy Reports history, email alerts, on-demand external image scan, or direct configuration of the Trivy operator.
 
 While we recognize the potential value these features could bring, our current aim is to maintain simplicity and focus on perfecting the core functionality of the dashboard. However, we remain open to the possibility of expanding its capabilities if the app gains significant traction and user demand increases.
 
