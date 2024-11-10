@@ -9,7 +9,7 @@ on:
   # schedule:
   #   - cron: '36 2 * * *'
   push:
-    # branches: [ "master" ]
+    branches: [ "master" ]
     # Publish semver tags as releases.
     tags: [ 'v*.*.*' ]
   pull_request:
@@ -64,6 +64,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
           
       - name: Git Version
+        id: gitversion
         uses: codacy/git-version@2.4.0
         with:
           # The name of the release branch
