@@ -62,7 +62,7 @@ In the Kubernetes cluster, there are some other ways of combining RBAC rights. F
 
 ### Logging - Serilog
 
-The logging component of the backend is based on Serilog ([GitHub project](https://github.com/serilog/serilog)). The file sink can be activated by using `extraEnvValues` from `values.yaml` file, like this:
+The logging component of the backend is based on [Serilog](https://github.com/serilog/serilog/blob/dev/README.md). The file sink can be activated by using `extraEnvValues` from `values.yaml` file, like this:
 ```yaml
 extraEnvValues:
 - name: SERILOG__WRITETO__1__NAME
