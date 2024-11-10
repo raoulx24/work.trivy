@@ -68,3 +68,11 @@ It consists in three main sections:
 - Trivy Reports States - here sections related to a Trivy Report can be (in)activated in the frontend (i.e. there is no need to use Config Audit Reports). Also, if inactivated in the backend, it will be shown here.
 
 ![](imgs/settings.png)
+<br>*Setting Page*
+
+### Dark/Ligt Mode
+
+The application fully supports Dark/Light mode; it can be changed on the fly at any desired moment, and it persisted between sessions. By default, the application uses the default one, provided by the browser/system.
+
+![](imgs/vr-combined.png)
+<br>*Dark/Light Mode*

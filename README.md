@@ -6,7 +6,7 @@
 
 ## Intro
 
-Welcome to the Trivy Operator Dashboard, a comprehensive security management tool for Kubernetes environments. Built on top of the powerful Trivy Operator from Aqua Security, this dashboard provides insights into your cluster's security posture. It offers detailed insights on vulnerability scans, policy validation scans and other ones. With an intuitive and user-friendly interface, you can easily monitor, detect, and respond to security threats, ensuring your Kubernetes environment remains robust and secure.
+Welcome to the Trivy Operator Dashboard, a comprehensive security management tool for Kubernetes environments. Built on top of the powerful [Trivy Operator](https://github.com/aquasecurity/trivy-operator) from [Aqua Security](https://www.aquasec.com), this dashboard provides insights into your cluster's security posture. It offers detailed insights on vulnerability scans, policy validation scans and other ones. With an intuitive and user-friendly interface, you can easily monitor, detect, and respond to security threats, ensuring your Kubernetes environment remains robust and secure.
 
 ![](docs/imgs/combo.png)
 
@@ -80,7 +80,11 @@ Recommended resolution: 1080p (1920x1080)
 
 ## Acknowledgements
 
-I would like to give my sincere thanks to the following persons who have helped me to get here:
+**Personal:** I would like to give my sincere thanks to the following persons who have helped me to get here:
  - **Dănuț** - For his technical guidance and explanations. 
  - **Florin** - For his insights regarding the app and endurance with its bugs.
  - **Alina** - My better half, for tolerating my long programming evenings.
+
+**A big nod:** We extend our heartfelt gratitude to Aqua Security for the Trivy and Trivy Operator. These outstanding tools have been instrumental in enhancing the security management processes for many, and we deeply appreciate their openness and contribution to the open source community.
+
+And last but not least, a big thank you to all the contributors and users who continuously support and improve these tools.

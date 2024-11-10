@@ -70,4 +70,6 @@ extraEnvValues:
 ```
 Any other Serilog related parameters can be modified in the same way.
 
+> **Note:** writing directly to container storage without utilizing volumes is strongly discouraged for several critical reasons, including data persistence, security, and resource management. To activate this feature safely and effectively, it is essential to attach a volume to the pod; this is not in the scope of this document
+
 Related to Serilog sinks, only Console and File are present at runtime. If other ones are needed, you can do a custom build of the app or provide them in the image or in the container (via configmap, or init container) and add the needed environment variables in `extraEnvValues` from `values.yaml` file. Also, they are not in the scope of this document.
