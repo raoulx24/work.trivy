@@ -63,19 +63,11 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
           
-      - name: Git Version
+      - name: Git Semantic Version
         id: gitversion
-        uses: codacy/git-version@2.4.0
-        with:
-          # The name of the release branch
-          release-branch: master
-          # The name of the dev branch
-          dev-branch: develop
-          # The prefix to use in the version
-          # prefix: # optional
-          # The paths to be used to calculate changes (comma-separated)
-          # log-paths: # optional, default is ./
-          
+      # You may pin to the exact commit or the version.
+      # uses: PaulHatch/semantic-version@a8f8f59fd7f0625188492e945240f12d7ad2dca3
+        uses: PaulHatch/semantic-version@v5.4.0
       
       # Extract metadata (tags, labels) for Docker
       # https://github.com/docker/metadata-action
