@@ -3,48 +3,11 @@
 @import '../node_modules/primeicons/primeicons.css';
 @import '../node_modules/primeflex/primeflex.min.css';
 
-/* fix p-panel with h-full */
-p-panel.h-full > .p-panel.p-component {
-  height: 100% !important;
-}
+/* Components fixes*/
+@import './styles/p-panel.scss';
+@import './styles/p-inputswitch.scss';
 
-p-panel.h-full > .p-panel.p-component > .p-toggleable-content {
-  height: 100% !important;
-}
-
-p-panel.h-full > .p-panel.p-component > .p-toggleable-content > .p-panel-content {
-  height: calc(100% - 110px) !important;
-}
-
-/* fix p-sidebar padding */
-.p-sidebar.p-sidebar-left > .p-sidebar-content {
-  padding: 0 !important;
-}
-
-/* p-inputsitch */
-.p-inputswitch {
-  height: 1.2rem;
-  width: 2rem;
-}
-
-.p-inputswitch-checked .p-inputswitch-slider::before {
-  transform: translateX(0.66rem);
-}
-
-.p-inputswitch-slider::before {
-  width: 0.8rem;
-  height: 0.8rem;
-  margin-top: -0.37rem;
-}
-
-p-inputswitch .p-inputswitch-slider {
-  border-radius: 30px;
-}
-
-p-inputswitch .p-inputswitch-slider::before {
-  border-radius: 50%;
-}
-
+/* Others */
 .hide-on-small {
   display: none;
 }
@@ -53,4 +16,9 @@ p-inputswitch .p-inputswitch-slider::before {
   .hide-on-small {
     display: block;
   }
+}
+
+h4.no-margins {
+  margin-block-start: 0;
+  margin-block-end: 0;
 }

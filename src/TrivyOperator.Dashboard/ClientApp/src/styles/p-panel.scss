@@ -1,0 +1,16 @@
+p-panel.h-full > .p-panel.p-component {
+  height: 100% !important;
+}
+
+p-panel.h-full > .p-panel.p-component > .p-toggleable-content {
+  height: 100% !important;
+}
+
+p-panel.h-full > .p-panel.p-component > .p-toggleable-content > .p-panel-content {
+  height: calc(100% - 110px) !important;
+}
+
+/* fix p-sidebar padding */
+.p-sidebar.p-sidebar-left > .p-sidebar-content {
+  padding: 0 !important;
+}
