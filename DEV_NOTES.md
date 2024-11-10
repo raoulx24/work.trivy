@@ -4,6 +4,7 @@
 - Install [Visual Studio 2022 version 17.11.5 or newer](https://visualstudio.microsoft.com/vs/):
     - Select the following workloads:
         - `ASP.NET and web development` workload.
+## Prerequisites
 - a valid kube config file should be available for Kubernetes cluster access
 - if needed, the [k8s.create.kubeconfig.for.sa.ps1](tools/k8s.create.kubeconfig.for.sa.ps1) script can be used for creation of custom kube config file(s)
 
