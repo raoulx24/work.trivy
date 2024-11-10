@@ -9,17 +9,19 @@ on:
   # schedule:
   #   - cron: '36 2 * * *'
   push:
-    branches: [ "master" ]
+    # branches: [ "master" ]
     # Publish semver tags as releases.
     tags: [ 'v*.*.*' ]
   pull_request:
     branches: [ "master" ]
+  workflow_dispatch:
 
 env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
-  IMAGE_NAME: ${{ github.repository }}
+  # IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME: raoulx24/trivy-operator-dashboard
 
 
 jobs:
@@ -78,8 +80,8 @@ jobs:
           file: build/dockerfile
           context: .
           push: ${{ github.event_name != 'pull_request' }}
-          # tags: ${{ steps.meta.outputs.tags }}
-          tags: ${{ env.REGISTRY }}/raoulx24/trivydashboard:latest
+          tags: ${{ steps.meta.outputs.tags }}
+          # tags: ${{ env.REGISTRY }}/raoulx24/trivydashboard:latest
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
