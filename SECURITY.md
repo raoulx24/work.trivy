@@ -13,4 +13,4 @@ your reasons so that we can have a better understanding of your situation.
 
 For security inquiries or vulnerability reports, create new
 [issue](https://github.com/raoulx24/trivy-operator-dashboard/issues/new) with
-the 'vulnerability' label
+the 'vulnerability' label.
