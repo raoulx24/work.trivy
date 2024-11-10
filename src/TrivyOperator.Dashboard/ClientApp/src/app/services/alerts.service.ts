@@ -31,11 +31,7 @@ export class AlertsService {
 
   private startConnection() {
     this.hubConnection = new HubConnectionBuilder()
-      .withUrl(this.hubUrl, {
-        skipNegotiation: true,
-        transport: HttpTransportType.WebSockets,
-        // https://stackoverflow.com/questions/52086158/angular-signalr-error-failed-to-complete-negotiation-with-the-server
-      })
+      .withUrl(this.hubUrl)
       .configureLogging(LogLevel.Information)
       .withAutomaticReconnect({
         nextRetryDelayInMilliseconds: () => this.retryPolicy.nextDelayMs(),
