@@ -94,7 +94,6 @@ jobs:
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.gitversion.outputs.Major }}.${{ steps.gitversion.outputs.Minor }}
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.gitversion.outputs.SemVer }}
             ${{ steps.meta.outputs.tags }}
-            ${{ github.ref == 'refs/heads/master' && (env.REGISTRY + '/' + env.IMAGE_NAME + ':latest') || '' }}
           # tags: ${{ env.REGISTRY }}/raoulx24/trivydashboard:latest
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
