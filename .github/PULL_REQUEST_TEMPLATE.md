@@ -11,4 +11,4 @@ we ask both an author and a reviewer to verify the following:
 - [ ] **Tests code quality:** test set covers positive/negative scenarios, happy/edge cases. Tests are effective in terms of execution time and resources.
 
 ### Notes
-[Development Notes](DEV_NOTES.md)
+[Development Notes](../DEV_NOTES.md)
