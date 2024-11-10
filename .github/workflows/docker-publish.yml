@@ -63,11 +63,13 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
           
-      - name: Git Semantic Version
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v3.0.0
+        with:
+          versionSpec: '6.x'
+      - name: Get GitVersion
         id: gitversion
-      # You may pin to the exact commit or the version.
-      # uses: PaulHatch/semantic-version@a8f8f59fd7f0625188492e945240f12d7ad2dca3
-        uses: PaulHatch/semantic-version@v5.4.0
+        uses: gittools/actions/gitversion/execute@v3.0.0
       
       # Extract metadata (tags, labels) for Docker
       # https://github.com/docker/metadata-action
@@ -88,7 +90,7 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: |
             ${{ steps.meta.outputs.tags }}
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.gitversion.outputs.version }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.gitversion.outputs.semVer }}
           # tags: ${{ env.REGISTRY }}/raoulx24/trivydashboard:latest
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
