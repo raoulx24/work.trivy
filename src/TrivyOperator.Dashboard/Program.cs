@@ -6,12 +6,7 @@ using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using TrivyOperator.Dashboard.Application.Hubs;
-using TrivyOperator.Dashboard.Application.Services;
-using TrivyOperator.Dashboard.Application.Services.Abstractions;
 using TrivyOperator.Dashboard.Application.Services.BuilderServicesExtensions;
-using TrivyOperator.Dashboard.Application.Services.Options;
-using TrivyOperator.Dashboard.Infrastructure.Abstractions;
-using TrivyOperator.Dashboard.Infrastructure.Clients;
 using TrivyOperator.Dashboard.Utils;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 using JsonOptions = Microsoft.AspNetCore.Http.Json.JsonOptions;
@@ -19,6 +14,8 @@ using JsonOptions = Microsoft.AspNetCore.Http.Json.JsonOptions;
 Directory.SetCurrentDirectory(AppContext.BaseDirectory);
 
 const string applicationName = "TrivyOperator.Dashboard";
+const string queuesConfigurationSectionKey = "Queues";
+const string kubernetesConfigurationSectionKey = "Kubernetes";
 WebApplicationBuilder builder = WebApplication.CreateBuilder(
     new WebApplicationOptions
     {
@@ -51,10 +48,6 @@ builder.WebHost.UseShutdownTimeout(TimeSpan.FromSeconds(10));
 builder.WebHost.ConfigureKestrel(options => { options.AddServerHeader = false; });
 
 builder.Services.Configure<JsonOptions>(options => ConfigureJsonSerializerOptions(options.SerializerOptions));
-builder.Services.AddControllersWithViews(ConfigureMvcOptions)
-    .AddJsonOptions(options => ConfigureJsonSerializerOptions(options.JsonSerializerOptions));
-builder.Services
-    .AddHttpClient(); // see: https://docs.microsoft.com/en-us/dotnet/architecture/microservices/implement-resilient-applications/use-httpclientfactory-to-implement-resilient-http-requests
 builder.Services.Configure<ForwardedHeadersOptions>(
     options =>
     {
@@ -64,6 +57,10 @@ builder.Services.Configure<ForwardedHeadersOptions>(
         options.KnownNetworks.Clear();
         options.KnownProxies.Clear();
     });
+
+builder.Services.AddControllersWithViews(ConfigureMvcOptions)
+    .AddJsonOptions(options => ConfigureJsonSerializerOptions(options.JsonSerializerOptions));
+builder.Services.AddHttpClient();
 builder.Services.AddProblemDetails();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -71,24 +68,17 @@ builder.Services.AddCors(
     options => options.AddDefaultPolicy(
         configurePolicy => configurePolicy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
 
-builder.Services.AddSignalR();
-
+builder.Services.AddCommons(
+    configuration.GetSection(queuesConfigurationSectionKey),
+    configuration.GetSection(kubernetesConfigurationSectionKey));
 builder.Services.AddAlertsServices();
-
-builder.Services.Configure<BackgroundQueueOptions>(configuration.GetSection("Queues"));
-builder.Services.Configure<KubernetesOptions>(configuration.GetSection("Kubernetes"));
-
-builder.Services.AddHostedService<CacheWatcherEventHandlerHostedService>();
-
-builder.Services.AddSingleton<IKubernetesClientFactory, KubernetesClientFactory>();
-
 builder.Services.AddWatcherStateServices();
-builder.Services.AddV1NamespaceServices(configuration.GetSection("Kubernetes"));
-builder.Services.AddClusterRbacAssessmentReportServices(configuration.GetSection("Kubernetes"));
-builder.Services.AddConfigAuditReportServices(configuration.GetSection("Kubernetes"));
-builder.Services.AddExposedSecretReportServices(configuration.GetSection("Kubernetes"));
-builder.Services.AddVulnerabilityReportServices(configuration.GetSection("Kubernetes"));
-builder.Services.AddScoped<IBackendSettingsService, BackendSettingsService>();
+builder.Services.AddV1NamespaceServices(configuration.GetSection(kubernetesConfigurationSectionKey));
+builder.Services.AddClusterRbacAssessmentReportServices(configuration.GetSection(kubernetesConfigurationSectionKey));
+builder.Services.AddConfigAuditReportServices(configuration.GetSection(kubernetesConfigurationSectionKey));
+builder.Services.AddExposedSecretReportServices(configuration.GetSection(kubernetesConfigurationSectionKey));
+builder.Services.AddVulnerabilityReportServices(configuration.GetSection(kubernetesConfigurationSectionKey));
+builder.Services.AddUiCommons();
 
 WebApplication app = builder.Build();
 

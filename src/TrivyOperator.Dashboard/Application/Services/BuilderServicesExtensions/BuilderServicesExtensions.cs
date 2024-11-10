@@ -7,6 +7,7 @@ using TrivyOperator.Dashboard.Application.Services.CacheRefresh;
 using TrivyOperator.Dashboard.Application.Services.CacheRefresh.Abstractions;
 using TrivyOperator.Dashboard.Application.Services.CacheWatcherEventHandlers;
 using TrivyOperator.Dashboard.Application.Services.CacheWatcherEventHandlers.Abstractions;
+using TrivyOperator.Dashboard.Application.Services.Options;
 using TrivyOperator.Dashboard.Application.Services.Watchers;
 using TrivyOperator.Dashboard.Application.Services.Watchers.Abstractions;
 using TrivyOperator.Dashboard.Application.Services.WatcherStates;
@@ -17,18 +18,19 @@ using TrivyOperator.Dashboard.Domain.Trivy.ConfigAuditReport;
 using TrivyOperator.Dashboard.Domain.Trivy.ExposedSecretReport;
 using TrivyOperator.Dashboard.Domain.Trivy.VulnerabilityReport;
 using TrivyOperator.Dashboard.Infrastructure.Abstractions;
+using TrivyOperator.Dashboard.Infrastructure.Clients;
 using TrivyOperator.Dashboard.Infrastructure.Services;
 
 namespace TrivyOperator.Dashboard.Application.Services.BuilderServicesExtensions;
 
 public static class BuilderServicesExtensions
 {
-    public static void AddV1NamespaceServices(this IServiceCollection services, IConfiguration configuration)
+    public static void AddV1NamespaceServices(this IServiceCollection services, IConfiguration kubernetesConfiguration)
     {
         services
             .AddSingleton<IConcurrentCache<string, IList<V1Namespace>>, ConcurrentCache<string, IList<V1Namespace>>>();
         services.AddSingleton<IBackgroundQueue<V1Namespace>, BackgroundQueue<V1Namespace>>();
-        if (string.IsNullOrWhiteSpace(configuration.GetValue<string>("NamespaceList")))
+        if (string.IsNullOrWhiteSpace(kubernetesConfiguration.GetValue<string>("NamespaceList")))
         {
             services.AddSingleton<IClusterScopedWatcher<V1Namespace>, NamespaceWatcher>();
         }
@@ -45,9 +47,9 @@ public static class BuilderServicesExtensions
 
     public static void AddClusterRbacAssessmentReportServices(
         this IServiceCollection services,
-        IConfiguration configuration)
+        IConfiguration kubernetesConfiguration)
     {
-        bool? useServices = configuration.GetValue<bool?>("TrivyUseClusterRbacAssessmentReport");
+        bool? useServices = kubernetesConfiguration.GetValue<bool?>("TrivyUseClusterRbacAssessmentReport");
         if (useServices == null || !(bool)useServices)
         {
             services.AddScoped<IClusterRbacAssessmentReportService, ClusterRbacAssessmentReportNullService>();
@@ -70,9 +72,11 @@ public static class BuilderServicesExtensions
         services.AddScoped<IClusterRbacAssessmentReportService, ClusterRbacAssessmentReportService>();
     }
 
-    public static void AddConfigAuditReportServices(this IServiceCollection services, IConfiguration configuration)
+    public static void AddConfigAuditReportServices(
+        this IServiceCollection services,
+        IConfiguration kubernetesConfiguration)
     {
-        bool? useServices = configuration.GetValue<bool?>("TrivyUseConfigAuditReport");
+        bool? useServices = kubernetesConfiguration.GetValue<bool?>("TrivyUseConfigAuditReport");
         if (useServices == null || !(bool)useServices)
         {
             services.AddScoped<IConfigAuditReportService, ConfigAuditReportNullService>();
@@ -91,9 +95,11 @@ public static class BuilderServicesExtensions
         services.AddScoped<IConfigAuditReportService, ConfigAuditReportService>();
     }
 
-    public static void AddExposedSecretReportServices(this IServiceCollection services, IConfiguration configuration)
+    public static void AddExposedSecretReportServices(
+        this IServiceCollection services,
+        IConfiguration kubernetesConfiguration)
     {
-        bool? useServices = configuration.GetValue<bool?>("TrivyUseConfigAuditReport");
+        bool? useServices = kubernetesConfiguration.GetValue<bool?>("TrivyUseConfigAuditReport");
         if (useServices == null || !(bool)useServices)
         {
             services.AddScoped<IExposedSecretReportService, ExposedSecretReportNullService>();
@@ -112,9 +118,11 @@ public static class BuilderServicesExtensions
         services.AddScoped<IExposedSecretReportService, ExposedSecretReportService>();
     }
 
-    public static void AddVulnerabilityReportServices(this IServiceCollection services, IConfiguration configuration)
+    public static void AddVulnerabilityReportServices(
+        this IServiceCollection services,
+        IConfiguration kubernetesConfiguration)
     {
-        bool? useServices = configuration.GetValue<bool?>("TrivyUseVulnerabilityReport");
+        bool? useServices = kubernetesConfiguration.GetValue<bool?>("TrivyUseVulnerabilityReport");
         if (useServices == null || !(bool)useServices)
         {
             services.AddScoped<IVulnerabilityReportService, VulnerabilityReportNullService>();
@@ -143,7 +151,24 @@ public static class BuilderServicesExtensions
 
     public static void AddAlertsServices(this IServiceCollection services)
     {
+        services.AddSignalR();
         services.AddSingleton<IConcurrentCache<string, IList<Alert>>, ConcurrentCache<string, IList<Alert>>>();
         services.AddTransient<IAlertsService, AlertsService>();
     }
+
+    public static void AddCommons(
+        this IServiceCollection services,
+        IConfiguration queuesConfiguration,
+        IConfiguration kubernetesConfiguration)
+    {
+        services.Configure<BackgroundQueueOptions>(queuesConfiguration);
+        services.Configure<KubernetesOptions>(kubernetesConfiguration);
+
+        services.AddHostedService<CacheWatcherEventHandlerHostedService>();
+
+        services.AddSingleton<IKubernetesClientFactory, KubernetesClientFactory>();
+    }
+
+    public static void AddUiCommons(this IServiceCollection services) =>
+        services.AddScoped<IBackendSettingsService, BackendSettingsService>();
 }
