@@ -72,7 +72,7 @@ It consists in three main sections:
 
 ### Dark/Light Mode
 
-The application fully supports Dark/Light mode; it can be changed on the fly at any desired moment, and it persisted between sessions. By default, the application uses the default one, provided by the browser/system.
+The application fully supports Dark/Light mode. It can be switched on the fly at any desired moment and persists between sessions. By default, the application uses the mode provided by the browser/system.
 
 ![](imgs/vr-combined.png)
 <br>*Dark/Light Mode*
