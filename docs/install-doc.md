@@ -9,9 +9,9 @@ To run, the app needs a Kubernetes cluster. If the app is started without any ad
 |                        | namespace | get, watch, list |
 | aquasecurity.github.io | *         | get, watch, list |
 
-If, for any reason, the right watch on namespaces cannot be provided, then the ones for `apiGroup aquasecurity.github.io` are still required, and the value for parameter `namespaceList` must be provided (more info in [Specific Parameters](#specific-parameters)).
+If, for any reason, `watch` on `namespaces` cannot be provided, then the ones for `apiGroup aquasecurity.github.io` are still required, and the value for parameter `namespaceList` must be provided (more info in [Specific Parameters](#specific-parameters)).
 
-> **Note:** why watch on namespaces is needed: the app starts a watcher on namespaces as it needs to be aware of any changes, and to start (or stop) the subsequent watchers on newer (or deleted) namespaces accordingly
+> **Note:** why `watch` on `namespaces` is needed: the app starts a watcher on `namespaces` as it needs to be aware of any changes, and to start (or stop) the subsequent watchers on newer (or deleted) namespaces accordingly
 
 ## Installation
 
