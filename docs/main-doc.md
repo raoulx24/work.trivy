@@ -68,7 +68,7 @@ It consists in three main sections:
 - Trivy Reports States - here sections related to a Trivy Report can be (in)activated in the frontend (i.e. there is no need to use Config Audit Reports). Also, if inactivated in the backend, it will be shown here.
 
 ![](imgs/settings.png)
-<br>*Setting Page*
+<br>*Settings Page*
 
 ### Dark/Light Mode
 
