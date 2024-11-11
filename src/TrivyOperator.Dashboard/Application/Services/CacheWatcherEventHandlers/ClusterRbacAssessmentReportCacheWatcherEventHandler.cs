@@ -8,10 +8,10 @@ using TrivyOperator.Dashboard.Domain.Trivy.CustomResources.Abstractions;
 
 namespace TrivyOperator.Dashboard.Application.Services.CacheWatcherEventHandlers;
 
-public class ClusterRbacAssessmentReportWatcherCacheSomething(
+public class ClusterRbacAssessmentReportWatcherEventHandler(
     ICacheRefresh<ClusterRbacAssessmentReportCr, IBackgroundQueue<ClusterRbacAssessmentReportCr>> cacheRefresh,
     IClusterScopedWatcher<ClusterRbacAssessmentReportCr> kubernetesWatcher,
-    ILogger<ClusterRbacAssessmentReportWatcherCacheSomething> logger)
+    ILogger<ClusterRbacAssessmentReportWatcherEventHandler> logger)
     : ClusterScopedCacheWatcherEventHandler<IBackgroundQueue<ClusterRbacAssessmentReportCr>,
         ICacheRefresh<ClusterRbacAssessmentReportCr, IBackgroundQueue<ClusterRbacAssessmentReportCr>>,
         WatcherEvent<ClusterRbacAssessmentReportCr>, IClusterScopedWatcher<ClusterRbacAssessmentReportCr>,

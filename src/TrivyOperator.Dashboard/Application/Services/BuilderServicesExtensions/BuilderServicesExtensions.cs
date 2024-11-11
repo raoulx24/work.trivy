@@ -13,6 +13,7 @@ using TrivyOperator.Dashboard.Application.Services.Watchers.Abstractions;
 using TrivyOperator.Dashboard.Application.Services.WatcherStates;
 using TrivyOperator.Dashboard.Domain.Services;
 using TrivyOperator.Dashboard.Domain.Services.Abstractions;
+using TrivyOperator.Dashboard.Domain.Trivy.ClusterComplianceReport;
 using TrivyOperator.Dashboard.Domain.Trivy.ClusterRbacAssessmentReport;
 using TrivyOperator.Dashboard.Domain.Trivy.ConfigAuditReport;
 using TrivyOperator.Dashboard.Domain.Trivy.ExposedSecretReport;
@@ -68,7 +69,7 @@ public static class BuilderServicesExtensions
             ICacheRefresh<ClusterRbacAssessmentReportCr, IBackgroundQueue<ClusterRbacAssessmentReportCr>>, CacheRefresh<
                 ClusterRbacAssessmentReportCr, IBackgroundQueue<ClusterRbacAssessmentReportCr>>>();
         services
-            .AddSingleton<IClusterScopedCacheWatcherEventHandler, ClusterRbacAssessmentReportWatcherCacheSomething>();
+            .AddSingleton<IClusterScopedCacheWatcherEventHandler, ClusterRbacAssessmentReportWatcherEventHandler>();
         services.AddScoped<IClusterRbacAssessmentReportService, ClusterRbacAssessmentReportService>();
     }
 
@@ -139,6 +140,34 @@ public static class BuilderServicesExtensions
             CacheRefresh<VulnerabilityReportCr, IBackgroundQueue<VulnerabilityReportCr>>>();
         services.AddSingleton<INamespacedCacheWatcherEventHandler, VulnerabilityReportCacheWatcherEventHandler>();
         services.AddScoped<IVulnerabilityReportService, VulnerabilityReportService>();
+    }
+
+    public static void AddClusterComplianceReportServices(
+        this IServiceCollection services,
+        IConfiguration kubernetesConfiguration)
+    {
+        bool? useServices = kubernetesConfiguration.GetValue<bool?>("TrivyUseClusterComplianceReport");
+
+        if (useServices == null || !(bool)useServices)
+        {
+//            services.AddScoped<IClusterComplianceReportService, ClusterComplianceReportNullService>();
+            return;
+        }
+
+        services.AddSingleton<
+            IConcurrentCache<string, IList<ClusterComplianceReportCr>>,
+            ConcurrentCache<string, IList<ClusterComplianceReportCr>>>();
+        services
+            .AddSingleton<IBackgroundQueue<ClusterComplianceReportCr>,
+                BackgroundQueue<ClusterComplianceReportCr>>();
+        services
+            .AddSingleton<IClusterScopedWatcher<ClusterComplianceReportCr>, ClusterComplianceReportWatcher>();
+        services.AddSingleton<
+            ICacheRefresh<ClusterComplianceReportCr, IBackgroundQueue<ClusterComplianceReportCr>>, CacheRefresh<
+                ClusterComplianceReportCr, IBackgroundQueue<ClusterComplianceReportCr>>>();
+        services
+            .AddSingleton<IClusterScopedCacheWatcherEventHandler, ClusterComplianceReportWatcherEventHandler>();
+        //services.AddScoped<IClusterComplianceReportService, ClusterComplianceReportService>();
     }
 
     public static void AddWatcherStateServices(this IServiceCollection services)
