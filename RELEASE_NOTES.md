@@ -1,4 +1,4 @@
-Release Notes for Trivy Operator Dashboard
+Release Notes
 ===========================
 
 Version 1.0.1 (Nov 2024)
