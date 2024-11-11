@@ -78,6 +78,8 @@ Recommended resolution: 1080p (1920x1080)
 
 [Code of Conduct](CODE_OF_CONDUCT.md)
 
+[Release Notes](RELEASE_NOTES.md)
+
 ## Acknowledgements
 
 **Personal:** I would like to give my sincere thanks to the following persons who have helped me to get here:
