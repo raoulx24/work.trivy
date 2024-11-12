@@ -53,6 +53,58 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
+  /api/cluster-compliance-report:
+    get:
+      tags:
+        - ClusterComplianceReport
+      operationId: GetClusterComplianceReportDtos
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ClusterComplianceReportDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/cluster-compliance-report/denormalized:
+    get:
+      tags:
+        - ClusterComplianceReport
+      operationId: GetClusterComplianceReportDenormalizedDto
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ClusterComplianceReportDenormalizedDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
   /api/cluster-rbac-assessment-reports:
     get:
       tags:
@@ -682,6 +734,169 @@ components:
           nullable: true
         enabled:
           type: boolean
+      additionalProperties: false
+    ClusterComplianceReportDenormalizedDto:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+        uid:
+          type: string
+          format: uuid
+        description:
+          type: string
+          nullable: true
+        platform:
+          type: string
+          nullable: true
+        relatedResources:
+          type: array
+          items:
+            type: string
+          nullable: true
+        title:
+          type: string
+          nullable: true
+        type:
+          type: string
+          nullable: true
+        version:
+          type: string
+          nullable: true
+        cron:
+          type: string
+          nullable: true
+        reportType:
+          type: string
+          nullable: true
+        totalPassCount:
+          type: integer
+          format: int64
+        totalFailCount:
+          type: integer
+          format: int64
+        updateTimestamp:
+          type: string
+          format: date-time
+          nullable: true
+        detailId:
+          type: string
+          nullable: true
+        detailName:
+          type: string
+          nullable: true
+        detailDescription:
+          type: string
+          nullable: true
+        severityId:
+          type: integer
+          format: int32
+        checks:
+          type: array
+          items:
+            type: string
+          nullable: true
+        commands:
+          type: array
+          items:
+            type: string
+          nullable: true
+        totalFail:
+          type: integer
+          format: int64
+      additionalProperties: false
+    ClusterComplianceReportDetailDto:
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: true
+        name:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        severityId:
+          type: integer
+          format: int32
+        checks:
+          type: array
+          items:
+            type: string
+          nullable: true
+        commands:
+          type: array
+          items:
+            type: string
+          nullable: true
+        totalFail:
+          type: integer
+          format: int64
+      additionalProperties: false
+    ClusterComplianceReportDto:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+        uid:
+          type: string
+          format: uuid
+        description:
+          type: string
+          nullable: true
+        platform:
+          type: string
+          nullable: true
+        relatedResources:
+          type: array
+          items:
+            type: string
+          nullable: true
+        title:
+          type: string
+          nullable: true
+        type:
+          type: string
+          nullable: true
+        version:
+          type: string
+          nullable: true
+        cron:
+          type: string
+          nullable: true
+        reportType:
+          type: string
+          nullable: true
+        totalPassCount:
+          type: integer
+          format: int64
+        totalFailCount:
+          type: integer
+          format: int64
+        totalFailCriticalCount:
+          type: integer
+          format: int64
+        totalFailHighCount:
+          type: integer
+          format: int64
+        totalFailMediumCount:
+          type: integer
+          format: int64
+        totalFailLowCount:
+          type: integer
+          format: int64
+        updateTimestamp:
+          type: string
+          format: date-time
+          nullable: true
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClusterComplianceReportDetailDto'
+          nullable: true
       additionalProperties: false
     ClusterRbacAssessmentReportDenormalizedDto:
       type: object

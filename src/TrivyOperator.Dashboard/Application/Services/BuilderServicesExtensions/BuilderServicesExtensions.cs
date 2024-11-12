@@ -150,7 +150,7 @@ public static class BuilderServicesExtensions
 
         if (useServices == null || !(bool)useServices)
         {
-//            services.AddScoped<IClusterComplianceReportService, ClusterComplianceReportNullService>();
+            services.AddScoped<IClusterComplianceReportService, ClusterComplianceReportNullService>();
             return;
         }
 
@@ -167,7 +167,7 @@ public static class BuilderServicesExtensions
                 ClusterComplianceReportCr, IBackgroundQueue<ClusterComplianceReportCr>>>();
         services
             .AddSingleton<IClusterScopedCacheWatcherEventHandler, ClusterComplianceReportWatcherEventHandler>();
-        //services.AddScoped<IClusterComplianceReportService, ClusterComplianceReportService>();
+        services.AddScoped<IClusterComplianceReportService, ClusterComplianceReportService>();
     }
 
     public static void AddWatcherStateServices(this IServiceCollection services)
