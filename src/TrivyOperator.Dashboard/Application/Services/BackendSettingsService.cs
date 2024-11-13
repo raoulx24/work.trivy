@@ -14,6 +14,13 @@ public class BackendSettingsService(IOptions<KubernetesOptions> options) : IBack
         backendSettingsDto.TrivyReportConfigDtos.Add(
             new BackendSettingsTrivyReportConfigDto
             {
+                Id = "ccr",
+                Name = "Cluster Compliance Report",
+                Enabled = options.Value.TrivyUseVulnerabilityReport ?? false,
+            });
+        backendSettingsDto.TrivyReportConfigDtos.Add(
+            new BackendSettingsTrivyReportConfigDto
+            {
                 Id = "crar",
                 Name = "Cluster RBAC Assessment Report",
                 Enabled = options.Value.TrivyUseClusterRbacAssessmentReport ?? false,
