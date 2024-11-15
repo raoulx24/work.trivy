@@ -57,6 +57,7 @@ export class GenericMasterDetailComponent<TDataDto extends IMasterDetail<TDetail
     style: '',
     buttonLink: undefined,
     badge: undefined,
+    url: undefined,
   });
 
   onGetTDataDtos() {

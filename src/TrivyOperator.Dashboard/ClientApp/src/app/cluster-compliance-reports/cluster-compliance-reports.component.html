@@ -1,1 +1,12 @@
-<p>cluster-compliance-reports works!</p>
+<h3>Cluster Compliance Reports</h3>
+
+<app-generic-master-detail [activeNamespaces]="activeNamespaces"
+                           [dataDtos]="dataDtos"
+                           [detailsTableColumns]="detailsTableColumns"
+                           [detailsTableOptions]="detailsTableOptions"
+                           [isMainTableLoading]="isMainTableLoading"
+                           [mainTableColumns]="mainTableColumns"
+                           [mainTableOptions]="mainTableOptions"
+                           [mainTableExpandCellOptions]="mainTableExpandCellOptions"
+                           [mainTableExpandTableOptions]="mainTableExpandTableOptions"
+                           (refreshRequested)="onRefreshRequested($event)" />

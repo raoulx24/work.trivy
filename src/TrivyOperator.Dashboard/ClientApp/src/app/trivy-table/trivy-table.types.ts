@@ -78,4 +78,5 @@ export interface TrivyTableCellCustomOptions {
   style: string;
   buttonLink: string | undefined;
   badge: string | undefined;
+  url: string | undefined;
 }
