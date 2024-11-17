@@ -95,7 +95,7 @@ spec:
       - name: trivy-operator-dashboard
         securityContext:
           {}
-        image: "ghcr.io/raoulx24/trivy-operator-dashboard:latest"
+        image: "ghcr.io/raoulx24/trivy-operator-dashboard:1.0"
         imagePullPolicy: Always
         env:
         - name: KUBERNETES__KUBECONFIGFILENAME

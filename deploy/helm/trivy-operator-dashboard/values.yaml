@@ -21,7 +21,7 @@ replicaCount: 1
 image:
   repository: ghcr.io/raoulx24/trivy-operator-dashboard
   pullPolicy: Always
-  tag: "latest"
+  tag: "1.0"
 
 imagePullSecrets: []
 
