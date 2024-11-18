@@ -96,6 +96,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
         loadComponent: () => import('./settings/settings.component').then((m) => m.SettingsComponent),
       },
       { path: 'about', loadComponent: () => import('./about/about.component').then((m) => m.AboutComponent) },
+
+      { path: 'mermaid', loadComponent: () => import('./mermaid-tests/mermaid-tests.component').then((m) => m.MermaidTestsComponent) },
     ]),
     ApiModule.forRoot({ rootUrl: environment.baseUrl }),
     BrowserAnimationsModule,
