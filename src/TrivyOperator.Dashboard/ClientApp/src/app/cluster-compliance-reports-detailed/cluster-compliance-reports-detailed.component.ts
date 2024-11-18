@@ -224,7 +224,7 @@ export class ClusterComplianceReportsDetailedComponent {
 
   getTableDataDtos() {
     this.isLoading = true;
-    this.dataDtoService.getClusterComplianceReportDenormalizedDto().subscribe({
+    this.dataDtoService.getClusterComplianceReportDenormalizedDtos().subscribe({
       next: (res) => this.onGetDataDtos(res),
       error: (err) => console.error(err),
     });

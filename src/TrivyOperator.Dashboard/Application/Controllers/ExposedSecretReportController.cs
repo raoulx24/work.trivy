@@ -27,7 +27,7 @@ public class ExposedSecretReportController(IExposedSecretReportService exposedSe
         return Ok(ExposedSecretReportImageDtos);
     }
 
-    [HttpGet("denormalized", Name = "GetExposedSecretReportDenormalizedDto")]
+    [HttpGet("denormalized", Name = "GetExposedSecretReportDenormalizedDtos")]
     [ProducesResponseType<IEnumerable<ExposedSecretReportDenormalizedDto>>(StatusCodes.Status200OK)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status500InternalServerError)]

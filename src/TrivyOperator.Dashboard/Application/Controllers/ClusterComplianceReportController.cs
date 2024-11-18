@@ -16,7 +16,7 @@ public class ClusterComplianceReportController(
     public async Task<IEnumerable<ClusterComplianceReportDto>> Get() =>
         await clusterComplianceReportService.GetClusterComplianceReportDtos();
 
-    [HttpGet("denormalized", Name = "GetClusterComplianceReportDenormalizedDto")]
+    [HttpGet("denormalized", Name = "GetClusterComplianceReportDenormalizedDtos")]
     [ProducesResponseType<IEnumerable<ClusterComplianceReportDenormalizedDto>>(StatusCodes.Status200OK)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status500InternalServerError)]

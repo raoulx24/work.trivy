@@ -10,7 +10,7 @@ public class RbacAssessmentReportDto
     public long HighCount { get; init; }
     public long MediumCount { get; init; }
     public long LowCount { get; init; }
-    public RbacAssessmentReportDetailDto[] Details { get; init; } = [];
+    public RbacAssessmentReportDetailDto[] Details { get; set; } = [];
 }
 
 public class RbacAssessmentReportDetailDto

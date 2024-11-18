@@ -83,7 +83,7 @@ paths:
     get:
       tags:
         - ClusterComplianceReport
-      operationId: GetClusterComplianceReportDenormalizedDto
+      operationId: GetClusterComplianceReportDenormalizedDtos
       responses:
         '200':
           description: OK
@@ -135,7 +135,7 @@ paths:
     get:
       tags:
         - ClusterRbacAssessmentReport
-      operationId: GetClusterRbacAssessmentReportDenormalizedDto
+      operationId: GetClusterRbacAssessmentReportDenormalizedDtos
       responses:
         '200':
           description: OK
@@ -171,6 +171,58 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ClusterRbacAssessmentReportSummaryDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/cluster-vulnerability-report:
+    get:
+      tags:
+        - ClusterVulnerabilityReport
+      operationId: GetClusterVulnerabilityReportDtos
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ClusterVulnerabilityReportDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/cluster-vulnerability-report/denormalized:
+    get:
+      tags:
+        - ClusterVulnerabilityReport
+      operationId: GetClusterVulnerabilityReportDenormalizedDtos
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ClusterVulnerabilityReportDenormalizedDto'
         '400':
           description: Bad Request
           content:
@@ -222,7 +274,7 @@ paths:
     get:
       tags:
         - ConfigAuditReport
-      operationId: GetConfigAuditReportDenormalizedDto
+      operationId: GetConfigAuditReportDenormalizedDtos
       responses:
         '200':
           description: OK
@@ -335,7 +387,7 @@ paths:
     get:
       tags:
         - ExposedSecretReport
-      operationId: GetExposedSecretReportDenormalizedDto
+      operationId: GetExposedSecretReportDenormalizedDtos
       responses:
         '200':
           description: OK
@@ -470,6 +522,93 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
+  /api/rbac-assessment-report:
+    get:
+      tags:
+        - RbacAssessmentReport
+      operationId: GetRbacAssessmentReportDtos
+      parameters:
+        - name: namespaceName
+          in: query
+          schema:
+            type: string
+        - name: excludedSeverities
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RbacAssessmentReportDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/rbac-assessment-report/denormalized:
+    get:
+      tags:
+        - RbacAssessmentReport
+      operationId: GetRbacAssessmentReportDenormalizedDtos
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RbacAssessmentReportDenormalizedDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/rbac-assessment-report/active-namespaces:
+    get:
+      tags:
+        - RbacAssessmentReport
+      operationId: GetRbacAssessmentReportActiveNamespaces
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
   /api/severities:
     get:
       tags:
@@ -564,7 +703,7 @@ paths:
     get:
       tags:
         - VulnerabilityReports
-      operationId: GetVulnerabilityReportDenormalizedDto
+      operationId: GetVulnerabilityReportDenormalizedDtos
       responses:
         '200':
           description: OK
@@ -1017,6 +1156,179 @@ components:
           type: integer
           format: int32
       additionalProperties: false
+    ClusterVulnerabilityReportDenormalizedDto:
+      type: object
+      properties:
+        resourceName:
+          type: string
+          nullable: true
+        resourceNamespace:
+          type: string
+          nullable: true
+        resourceKind:
+          type: string
+          nullable: true
+        resourceContainerName:
+          type: string
+          nullable: true
+        imageName:
+          type: string
+          nullable: true
+        imageTag:
+          type: string
+          nullable: true
+        imageRepository:
+          type: string
+          nullable: true
+        imageOsFamily:
+          type: string
+          nullable: true
+        imageOsName:
+          type: string
+          nullable: true
+        imageEosl:
+          type: boolean
+          nullable: true
+        fixedVersion:
+          type: string
+          nullable: true
+        installedVersion:
+          type: string
+          nullable: true
+        lastModifiedDate:
+          type: string
+          format: date-time
+          nullable: true
+        primaryLink:
+          type: string
+          format: uri
+          nullable: true
+        publishedDate:
+          type: string
+          format: date-time
+          nullable: true
+        resource:
+          type: string
+          nullable: true
+        score:
+          type: number
+          format: float
+        severityId:
+          type: integer
+          format: int32
+        target:
+          type: string
+          nullable: true
+        title:
+          type: string
+          nullable: true
+        vulnerabilityId:
+          type: string
+          nullable: true
+      additionalProperties: false
+    ClusterVulnerabilityReportDetailDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        fixedVersion:
+          type: string
+          nullable: true
+        installedVersion:
+          type: string
+          nullable: true
+        lastModifiedDate:
+          type: string
+          format: date-time
+          nullable: true
+        primaryLink:
+          type: string
+          format: uri
+          nullable: true
+        publishedDate:
+          type: string
+          format: date-time
+          nullable: true
+        resource:
+          type: string
+          nullable: true
+        score:
+          type: number
+          format: float
+        severityId:
+          type: integer
+          format: int32
+        target:
+          type: string
+          nullable: true
+        title:
+          type: string
+          nullable: true
+        vulnerabilityId:
+          type: string
+          nullable: true
+      additionalProperties: false
+    ClusterVulnerabilityReportDto:
+      type: object
+      properties:
+        uid:
+          type: string
+          format: uuid
+        resourceName:
+          type: string
+          nullable: true
+        resourceNamespace:
+          type: string
+          nullable: true
+        resourceKind:
+          type: string
+          nullable: true
+        resourceContainerName:
+          type: string
+          nullable: true
+        imageName:
+          type: string
+          nullable: true
+        imageTag:
+          type: string
+          nullable: true
+        imageRepository:
+          type: string
+          nullable: true
+        imageOsFamily:
+          type: string
+          nullable: true
+        imageOsName:
+          type: string
+          nullable: true
+        imageEosl:
+          type: boolean
+          nullable: true
+        criticalCount:
+          type: integer
+          format: int64
+        highCount:
+          type: integer
+          format: int64
+        mediumCount:
+          type: integer
+          format: int64
+        lowCount:
+          type: integer
+          format: int64
+        unknownCount:
+          type: integer
+          format: int64
+        noneCount:
+          type: integer
+          format: int64
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClusterVulnerabilityReportDetailDto'
+          nullable: true
+      additionalProperties: false
     ConfigAuditReportDenormalizedDto:
       type: object
       properties:
@@ -1405,6 +1717,100 @@ components:
           type: string
           nullable: true
       additionalProperties: { }
+    RbacAssessmentReportDenormalizedDto:
+      type: object
+      properties:
+        uid:
+          type: string
+          format: uuid
+        resourceName:
+          type: string
+          nullable: true
+        category:
+          type: string
+          nullable: true
+        checkId:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        messages:
+          type: array
+          items:
+            type: string
+          nullable: true
+        remediation:
+          type: string
+          nullable: true
+        severityId:
+          type: integer
+          format: int32
+        success:
+          type: boolean
+        title:
+          type: string
+          nullable: true
+      additionalProperties: false
+    RbacAssessmentReportDetailDto:
+      type: object
+      properties:
+        uid:
+          type: string
+          format: uuid
+        category:
+          type: string
+          nullable: true
+        checkId:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        messages:
+          type: array
+          items:
+            type: string
+          nullable: true
+        remediation:
+          type: string
+          nullable: true
+        severityId:
+          type: integer
+          format: int32
+        success:
+          type: boolean
+        title:
+          type: string
+          nullable: true
+      additionalProperties: false
+    RbacAssessmentReportDto:
+      type: object
+      properties:
+        uid:
+          type: string
+          format: uuid
+        resourceName:
+          type: string
+          nullable: true
+        criticalCount:
+          type: integer
+          format: int64
+        highCount:
+          type: integer
+          format: int64
+        mediumCount:
+          type: integer
+          format: int64
+        lowCount:
+          type: integer
+          format: int64
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/RbacAssessmentReportDetailDto'
+          nullable: true
+      additionalProperties: false
     Severity:
       enum:
         - Error

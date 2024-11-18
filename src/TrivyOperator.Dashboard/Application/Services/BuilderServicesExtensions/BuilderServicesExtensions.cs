@@ -15,8 +15,10 @@ using TrivyOperator.Dashboard.Domain.Services;
 using TrivyOperator.Dashboard.Domain.Services.Abstractions;
 using TrivyOperator.Dashboard.Domain.Trivy.ClusterComplianceReport;
 using TrivyOperator.Dashboard.Domain.Trivy.ClusterRbacAssessmentReport;
+using TrivyOperator.Dashboard.Domain.Trivy.ClusterVulnerabilityReport;
 using TrivyOperator.Dashboard.Domain.Trivy.ConfigAuditReport;
 using TrivyOperator.Dashboard.Domain.Trivy.ExposedSecretReport;
+using TrivyOperator.Dashboard.Domain.Trivy.RbacAssessmentReport;
 using TrivyOperator.Dashboard.Domain.Trivy.VulnerabilityReport;
 using TrivyOperator.Dashboard.Infrastructure.Abstractions;
 using TrivyOperator.Dashboard.Infrastructure.Clients;
@@ -168,6 +170,62 @@ public static class BuilderServicesExtensions
         services
             .AddSingleton<IClusterScopedCacheWatcherEventHandler, ClusterComplianceReportWatcherEventHandler>();
         services.AddScoped<IClusterComplianceReportService, ClusterComplianceReportService>();
+    }
+
+    public static void AddClusterVulnerabilityReportServices(
+        this IServiceCollection services,
+        IConfiguration kubernetesConfiguration)
+    {
+        bool? useServices = kubernetesConfiguration.GetValue<bool?>("TrivyUseClusterVulnerabilityReport");
+
+        if (useServices == null || !(bool)useServices)
+        {
+            services.AddScoped<IClusterVulnerabilityReportService, ClusterVulnerabilityReportNullService>();
+            return;
+        }
+
+        services.AddSingleton<
+            IConcurrentCache<string, IList<ClusterVulnerabilityReportCr>>,
+            ConcurrentCache<string, IList<ClusterVulnerabilityReportCr>>>();
+        services
+            .AddSingleton<IBackgroundQueue<ClusterVulnerabilityReportCr>,
+                BackgroundQueue<ClusterVulnerabilityReportCr>>();
+        services
+            .AddSingleton<IClusterScopedWatcher<ClusterVulnerabilityReportCr>, ClusterVulnerabilityReportWatcher>();
+        services.AddSingleton<
+            ICacheRefresh<ClusterVulnerabilityReportCr, IBackgroundQueue<ClusterVulnerabilityReportCr>>, CacheRefresh<
+                ClusterVulnerabilityReportCr, IBackgroundQueue<ClusterVulnerabilityReportCr>>>();
+        services
+            .AddSingleton<IClusterScopedCacheWatcherEventHandler, ClusterVulnerabilityReportWatcherEventHandler>();
+        services.AddScoped<IClusterVulnerabilityReportService, ClusterVulnerabilityReportService>();
+    }
+
+    public static void AddRbacAssessmentReportServices(
+        this IServiceCollection services,
+        IConfiguration kubernetesConfiguration)
+    {
+        bool? useServices = kubernetesConfiguration.GetValue<bool?>("TrivyUseRbacAssessmentReport");
+
+        if (useServices == null || !(bool)useServices)
+        {
+            services.AddScoped<IRbacAssessmentReportService, RbacAssessmentReportNullService>();
+            return;
+        }
+
+        services.AddSingleton<
+            IConcurrentCache<string, IList<RbacAssessmentReportCr>>,
+            ConcurrentCache<string, IList<RbacAssessmentReportCr>>>();
+        services
+            .AddSingleton<IBackgroundQueue<RbacAssessmentReportCr>,
+                BackgroundQueue<RbacAssessmentReportCr>>();
+        services
+            .AddSingleton<INamespacedWatcher<RbacAssessmentReportCr>, RbacAssessmentReportWatcher>();
+        services.AddSingleton<
+            ICacheRefresh<RbacAssessmentReportCr, IBackgroundQueue<RbacAssessmentReportCr>>, CacheRefresh<
+                RbacAssessmentReportCr, IBackgroundQueue<RbacAssessmentReportCr>>>();
+        services
+            .AddSingleton<INamespacedCacheWatcherEventHandler, RbacAssessmentReportCacheWatcherEventHandler>();
+        services.AddScoped<IRbacAssessmentReportService, RbacAssessmentReportService>();
     }
 
     public static void AddWatcherStateServices(this IServiceCollection services)

@@ -169,7 +169,7 @@ export class ExposedSecretReportsDetailedComponent {
 
   public getTableDataDtos() {
     this.isLoading = true;
-    this.dataDtoService.getExposedSecretReportDenormalizedDto().subscribe({
+    this.dataDtoService.getExposedSecretReportDenormalizedDtos().subscribe({
       next: (res) => this.onGetDataDtos(res),
       error: (err) => console.error(err),
     });
