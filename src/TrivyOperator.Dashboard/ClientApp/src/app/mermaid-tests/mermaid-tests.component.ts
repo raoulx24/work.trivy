@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
-import mermaid from 'mermaid';
+declare var mermaid: any;
 
 @Component({
   selector: 'app-mermaid-tests',
