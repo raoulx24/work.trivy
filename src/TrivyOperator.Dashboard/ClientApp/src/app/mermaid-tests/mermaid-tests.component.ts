@@ -11,7 +11,7 @@ import * as svgPanZoom from 'svg-pan-zoom'
 })
 export class MermaidTestsComponent implements OnInit, AfterViewInit {
   @ViewChild("mermaid") mermaid!: ElementRef;
-  panZoom: any;
+  panZoom?: any = null;
 
   config = {
     theme: "neutral",
@@ -34,35 +34,37 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    mermaid.initialize({
-      ...this.config,
-    });
-    setTimeout(() => {
-      mermaid.init();
-      const element = this.mermaid.nativeElement;
-      const svg = element.querySelector('svg');
-      this.panZoom = svgPanZoom(svg, {
-        panEnabled: true,
-        zoomEnabled: true,
-        mouseWheelZoomEnabled: true,
-        preventMouseEventsDefault: true,
-        center: false
-      });
-
-      console.log(JSON.stringify(this.panZoom));
-      console.log(svg);
-
-    }, 200);
+    this.initializeMermaid();
+    //this.initializePanZoom();
   }
 
+  initializeMermaid() {
+    mermaid.initialize({ startOnLoad: true });
+    mermaid.init();
+  }
+
+  initializePanZoom() {
+    this.panZoom = svgPanZoom('.mermaid svg', {
+      zoomEnabled: true,
+      controlIconsEnabled: true
+    });
+  }
 
   onZoomInClick() {
+    if (!this.panZoom) {
+      this.initializePanZoom();
+    }
+
     console.log(JSON.stringify(this.panZoom));
     console.log(this.panZoom);
     this.panZoom.zoomIn()
   }
 
   onZoomOutClick() {
+    if (!this.panZoom) {
+      this.initializePanZoom();
+    }
+
     console.log(JSON.stringify(this.panZoom));
     console.log(this.panZoom);
     this.panZoom.zoomOut()
