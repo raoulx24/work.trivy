@@ -12,6 +12,7 @@ import * as svgPanZoom from 'svg-pan-zoom'
 export class MermaidTestsComponent implements OnInit, AfterViewInit {
   @ViewChild("mermaid") mermaid!: ElementRef;
   panZoom?: any = null;
+  private isDragging = false;
 
   config = {
     theme: "neutral",
@@ -91,6 +92,62 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
   mermaidCallback(id: string) {
     console.log("mama " + id);
     this.initializePanZoom();
+    this.addClickhandlersToMermaidGraph();
+  }
+
+  addClickhandlersToMermaidGraph() {
+    const svgElement = document.querySelector('.mermaid svg');
+    if (svgElement) {
+      svgElement.addEventListener('mousedown', () => {
+        this.isDragging = false;
+      });
+      svgElement.addEventListener('mousemove', () => {
+        this.isDragging = true;
+      });
+      svgElement.addEventListener('mouseup', (event) => {
+        if (!this.isDragging) {
+          const target = event.target as HTMLElement;
+          const node = target.closest('.node');
+          if (node && node.tagName === 'g') {
+            this.onNodeClick(node);
+          }
+        }
+        this.isDragging = false;
+      });
+      svgElement.querySelectorAll('.node').forEach((node) => {
+        (node as HTMLElement).addEventListener('mouseover', this.onNodeMouseOver.bind(this));
+        (node as HTMLElement).addEventListener('mouseout', this.onNodeMouseOut.bind(this));
+      });
+    }
+  }
+
+  onNodeClick(node: Element) {
+    console.log(node.getAttribute('id'));
+    console.log("mama");
+    node.querySelectorAll('rect, circle').forEach((element) => {
+      (element as HTMLElement).style.fill = 'blue';
+    });
+  }
+
+  onNodeMouseOver(event: MouseEvent) {
+    const target = event.currentTarget as HTMLElement;
+    target.querySelectorAll('rect, circle, p').forEach((element) => {
+      const el = element as SVGElement;
+      el.style.transform = 'scale(1.2)';
+      el.style.transition = 'transform 0.3s ease';
+
+      if (element.tagName.toLowerCase() === 'p') { // Specific code for <p> elements
+        el.style.overflow = 'visible';
+      }
+    });
+  }
+
+  onNodeMouseOut(event: MouseEvent) {
+    const target = event.currentTarget as HTMLElement;
+    target.querySelectorAll('rect, circle, p').forEach((element) => {
+      (element as SVGElement).style.transform = 'scale(1)';
+      (element as SVGElement).style.transition = 'transform 0.3s ease';
+    });
   }
 
   handleSvgSize() {
