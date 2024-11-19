@@ -1,4 +1,6 @@
-<div style="width: 400px; height: 300px; overflow: auto; border: 1px solid #ddd; padding: 10px;">
+<div #mermaid
+     style="width: 400px; height: 700px; overflow: auto; border: 1px solid #ddd; padding: 10px;">
+<!--<div #mermaid>-->
   <div class="mermaid" style="display: flex; justify-content: center; align-items: center;">
     graph TD;
     A-->B;
@@ -11,4 +13,13 @@
     A-->G;
     G-->H;
   </div>
+</div>
+
+<div style="display: flex;align-items: center;">
+  <button (click)="onZoomInClick()">
+    Zoom in
+  </button>
+  <button (click)="onZoomOutClick()">
+    Zoom out
+  </button>
 </div>
