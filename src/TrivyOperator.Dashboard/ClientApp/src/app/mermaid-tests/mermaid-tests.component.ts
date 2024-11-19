@@ -34,20 +34,38 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    console.log("ngAfterViewInit()");
     this.initializeMermaid();
     //this.initializePanZoom();
   }
 
   initializeMermaid() {
-    mermaid.initialize({ startOnLoad: true });
-    mermaid.init();
+    mermaid.initialize({
+      startOnLoad: true,
+      postRenderCallback: () => { console.log("mama"); }
+    });
+    //mermaid.init();
+    mermaid.run({
+      querySelector: '.mermaid',
+      postRenderCallback: this.mermaidCallback.bind(this)
+    });
+    //mermaid.contentLoaded();
   }
 
   initializePanZoom() {
-    this.panZoom = svgPanZoom('.mermaid svg', {
+    const svgElement = document.querySelector('.mermaid svg') as SVGAElement;
+    
+    if (!svgElement) {
+      return;
+    }
+    this.panZoom = svgPanZoom(svgElement, {
       zoomEnabled: true,
-      controlIconsEnabled: true
+      controlIconsEnabled: true,
+      fit: true,
+      center: true,
+      onZoom: this.handleSvgSize.bind(this)
     });
+    this.handleSvgSize();
   }
 
   onZoomInClick() {
@@ -70,9 +88,23 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
     this.panZoom.zoomOut()
   }
 
-    //const mermaidConfig = {
-    //  startOnLoad: true
-    //};
-    //mermaid.initialize(mermaidConfig);
-    //mermaid.contentLoaded();
+  mermaidCallback(id: string) {
+    console.log("mama " + id);
+    this.initializePanZoom();
+  }
+
+  handleSvgSize() {
+    const mermaidDiv = document.querySelector('div.mermaid') as Element;
+    if (!mermaidDiv) {
+      return;
+    }
+
+    const { x, y, width, height } = mermaidDiv.getBoundingClientRect();
+    console.log(`${x} ${y} ${width} ${height}`);
+    const svgElement = mermaidDiv.querySelector('svg');
+    if (svgElement) {
+      svgElement.setAttribute('viewBox', `${x} ${y} ${width} ${height}`);
+      svgElement.style.maxWidth = `${width}px`;
+    }
+  }
 }
