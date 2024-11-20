@@ -43,7 +43,7 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
   initializeMermaid() {
     mermaid.initialize({
       startOnLoad: true,
-      postRenderCallback: () => { console.log("mama"); }
+      postRenderCallback: () => { console.log("mama_initialize_postrender"); }
     });
     //mermaid.init();
     mermaid.run({
@@ -131,20 +131,16 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
 
   onNodeMouseOver(event: MouseEvent) {
     const target = event.currentTarget as HTMLElement;
-    target.querySelectorAll('rect, circle, p').forEach((element) => {
+    target.querySelectorAll('rect, circle').forEach((element) => {
       const el = element as SVGElement;
       el.style.transform = 'scale(1.2)';
       el.style.transition = 'transform 0.3s ease';
-
-      if (element.tagName.toLowerCase() === 'p') { // Specific code for <p> elements
-        el.style.overflow = 'visible';
-      }
     });
   }
 
   onNodeMouseOut(event: MouseEvent) {
     const target = event.currentTarget as HTMLElement;
-    target.querySelectorAll('rect, circle, p').forEach((element) => {
+    target.querySelectorAll('rect, circle').forEach((element) => {
       (element as SVGElement).style.transform = 'scale(1)';
       (element as SVGElement).style.transition = 'transform 0.3s ease';
     });
