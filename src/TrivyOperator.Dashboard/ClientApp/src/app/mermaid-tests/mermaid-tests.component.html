@@ -1,18 +1,20 @@
 <div #mermaid
      class="flex align-items-stretch justify-content-center overflow-auto"
      style="width: 1400px; height: 700px; border: 1px solid #ddd; padding: 10px;">
-<!--<div #mermaid>-->
+  <!--<div [innerHTML]="mermaidGraphDefinition">
+    <span>ma</span>
+  </div>-->
   <div id="mermaid" class="mermaid flex-grow-1 justify-content-center">
     graph TD;
-    A([<span style="font-size: 12px; display: block; margin-bottom: -30px; ">Line 1 - Lorem Ipsum</span><br /><span style="font-size: 10px;">Line 2 - sin dolor</span>])-->B([Alphabet]);
-    A([<span style="font-size: 12px; display: block; margin-bottom: -30px; ">Line 1 - Lorem Ipsum</span><br /><span style="font-size: 10px;">Line 2 - sin dolor</span>])-->C([Alphabet]);
-    B([Alphabet])-->D([Alphabet]);
-    C([Alphabet])-->D([Alphabet]);
-    D([Alphabet])-->E([Alphabet]);
-    E([Alphabet])-->F([Alphabet]);
-    F([Alphabet])-->G([Alphabet]);
-    A([<span style="font-size: 12px; display: block; margin-bottom: -30px; ">Line 1 - Lorem Ipsum</span><br /><span style="font-size: 10px;">Line 2 - sin dolor</span>])-->G([Alphabet]);
-    G([Alphabet])-->H([Alphabet]);
+    A([<span class="mnodel1">A - Lorem ipsum dolor</span><br /><span class="mnodel1">sit amet</span>])-->B([<span class="mnodel2">B - Lorem ipsum dolor</span><br /><span class="mnodel2">sit amet</span>]);
+    A([<span class="mnodel1">A - Lorem ipsum dolor</span><br /><span class="mnodel1">sit amet</span>])-->C([<span class="mnodel2">C - Lorem ipsum dolor</span><br /><span class="mnodel2">sit amet</span>]);
+    B([<span class="mnodel1">B - Lorem ipsum dolor</span><br /><span class="mnodel1">sit amet</span>])-->D([<span class="mnodel2">D - Lorem ipsum dolor</span><br /><span class="mnodel2">sit amet</span>]);
+    C([<span class="mnodel1">C - Lorem ipsum dolor</span><br /><span class="mnodel1">sit amet</span>])-->D([<span class="mnodel2">D - Lorem ipsum dolor</span><br /><span class="mnodel2">sit amet</span>]);
+    D([<span class="mnodel1">D - Lorem ipsum dolor</span><br /><span class="mnodel1">sit amet</span>])-->E([<span class="mnodel2">E - Lorem ipsum dolor</span><br /><span class="mnodel2">sit amet</span>]);
+    E([<span class="mnodel1">E - Lorem ipsum dolor</span><br /><span class="mnodel1">sit amet</span>])-->F([<span class="mnodel2">F - Lorem ipsum dolor</span><br /><span class="mnodel2">sit amet</span>]);
+    F([<span class="mnodel1">F - Lorem ipsum dolor</span><br /><span class="mnodel1">sit amet</span>])-->G([<span class="mnodel2">G - Lorem ipsum dolor</span><br /><span class="mnodel2">sit amet</span>]);
+    A([<span class="mnodel1">A - Lorem ipsum dolor</span><br /><span class="mnodel1">sit amet</span>])-->G([<span class="mnodel2">G - Lorem ipsum dolor</span><br /><span class="mnodel2">sit amet</span>]);
+    G([<span class="mnodel1">G - Lorem ipsum dolor</span><br /><span class="mnodel1">sit amet</span>])-->H([<span class="mnodel2">H - Lorem ipsum dolor</span><br /><span class="mnodel2">sit amet</span>]);
   </div>
 </div>
 
@@ -23,4 +25,7 @@
   <button (click)="onZoomOutClick()">
     Zoom out
   </button>
+</div>
+<div>
+  <span>{{ mermaidGraphDefinition }}</span>
 </div>
