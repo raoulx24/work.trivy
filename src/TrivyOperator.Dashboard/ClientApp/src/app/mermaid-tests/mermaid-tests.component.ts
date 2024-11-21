@@ -210,8 +210,8 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
       const destNode: MermaidNode = this.nodes.find(x => x.id == link.destId) ??
         { id: link.destId, line1: "", line2: "", counter: 0 };
       const sourceText1 = `<span class="mnodel1">${sourceNode.line1}</span>`;
-      const sourceText2 = `<span class="mnodel1">${sourceNode.line2}</span>`;
-      const destText1 = `<span class="mnodel2">${destNode.line1}</span>`;
+      const sourceText2 = `<span class="mnodel2">${sourceNode.line2}</span>`;
+      const destText1 = `<span class="mnodel1">${destNode.line1}</span>`;
       const destText2 = `<span class="mnodel2">${destNode.line2}</span>`;
       const line: string = `${sourceNode.id}([${sourceText1}<br/>${sourceText2}])-->${destNode.id}([${destText1}<br/>${destText2}])`
 
