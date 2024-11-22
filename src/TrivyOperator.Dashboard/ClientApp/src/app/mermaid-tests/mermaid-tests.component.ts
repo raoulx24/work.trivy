@@ -28,18 +28,19 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
   @ViewChild("mermaid") mermaid!: ElementRef;
   panZoom?: any = null;
   private isDragging = false;
+  private selectedNode: MermaidNode | undefined = undefined;
+  private hoveredNode: MermaidNode | undefined = undefined;
 
   config = {
-    theme: "neutral",
+    theme: 'neutral',
     startOnLoad: false,
-    securityLevel: "loose",
+    securityLevel: 'loose',
     flowChart: {
       useMaxWidth: true,
       htmlLabels: true,
     },
     themeVariables: {
-      fontSize: "12px",
-      primaryColor: "#607D8B",
+      fontSize: '12px',
     },
   };
 
@@ -81,14 +82,11 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
   }
 
   initializeMermaid() {
-    mermaid.initialize({
-      startOnLoad: true,
-      postRenderCallback: () => { console.log("mama_initialize_postrender"); }
-    });
+    mermaid.initialize(this.config);
     //mermaid.init();
     mermaid.run({
       querySelector: '.mermaid',
-      postRenderCallback: this.mermaidCallback.bind(this)
+      postRenderCallback: this.onMermaidRendered.bind(this)
     });
     //mermaid.contentLoaded();
   }
@@ -129,10 +127,11 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
     this.panZoom.zoomOut()
   }
 
-  mermaidCallback(id: string) {
+  onMermaidRendered(id: string) {
     console.log("mama " + id);
     this.initializePanZoom();
     this.addClickhandlersToMermaidGraph();
+    this.getMermaidIds();
   }
 
   addClickhandlersToMermaidGraph() {
@@ -161,11 +160,47 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
     }
   }
 
+  private getMermaidIds() {
+    const svgElement = document.querySelector('.mermaid svg');
+    // ids
+    // line: id="L_A_B_0"
+    // node: id="flowchart-A-0"
+    if (svgElement) {
+      svgElement.querySelectorAll('.node').forEach((nodeElement) => {
+        const splittedElementId = nodeElement.id.split('-');
+        if (splittedElementId.length == 3) {
+          const nodeCounter = Number(splittedElementId[2]);
+          const node = this.getMermaidNodeByElementId(nodeElement.id);
+          if (node) {
+            node.counter = isNaN(nodeCounter) ? -1 : nodeCounter;
+          }
+        }
+      });
+      svgElement.querySelectorAll('.flowchart-link').forEach((linkElement) => {
+        const splittedElementId = linkElement.id.split('_');
+        if (splittedElementId.length == 4) {
+          const sourceNodeId = splittedElementId[1];
+          const destNodeId = splittedElementId[2];
+          const linkCounter = Number(splittedElementId[3]);
+          const link = this.links.find(x => x.sourceId == sourceNodeId && x.destId == destNodeId);
+          if (link) {
+            link.counter = isNaN(linkCounter) ? -1 : linkCounter;
+          }
+        }
+      });
+    }
+    // debug
+    this.nodes.forEach(x => console.log(x));
+    this.links.forEach(x => console.log(x));
+  }
+
   onNodeClick(node: Element) {
     console.log(node.getAttribute('id'));
     console.log("mama");
+    const mermaidNode = this.getMermaidNodeByElementId(node.id);
+    this.selectedNode = this.selectedNode && this.selectedNode == mermaidNode ? undefined : this.getMermaidNodeByElementId(node.id);
     node.querySelectorAll('rect, circle').forEach((element) => {
-      (element as HTMLElement).style.fill = 'blue';
+      (element as HTMLElement).style.fill = this.selectedNode ? 'blue' : 'white';
     });
   }
 
@@ -225,9 +260,19 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
     return result;
   }
 
+  private getMermaidNodeByElementId(elementId: string): MermaidNode | undefined {
+    const splittedElementId = elementId.split('-');
+    if (splittedElementId.length == 3) {
+      const nodeId = splittedElementId[1];
+      const node = this.nodes.find(x => x.id == nodeId);
+
+      return node;
+    }
+
+    return undefined;
+  }
+
   // mermaidGraphDefinition: string = `<div id="mermaid" class="mermaid flex-grow-1 justify-content-center">graph TD; </div>`;
 }
 
-// ids
-// line: id="L_A_B_0"
-// node: id="flowchart-A-0"
+
