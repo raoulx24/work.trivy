@@ -219,7 +219,7 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
 
       graphLines.push(line);
     });
-    const result: string = `<div id="mermaid" class="mermaid flex-grow-1 justify-content-center">graph TD; ${graphLines.join('; ')}</div>`;
+    const result: string = `<div id="mermaid" class="mermaid h-full">graph TD; ${graphLines.join('; ')}</div>`;
     console.log(result);
 
     return result;
