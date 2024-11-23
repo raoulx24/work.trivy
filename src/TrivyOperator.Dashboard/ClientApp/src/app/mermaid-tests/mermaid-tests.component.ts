@@ -34,6 +34,12 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
   private selectedNode: MermaidNode | undefined = undefined;
   private hoveredNode: MermaidNode | undefined = undefined;
 
+  private selectedNodeColor: string = 'Gray';
+  private hoveredNodeColor: string = 'Silver';
+  private sourceNodeColor: string = 'RoyalBlue';
+  private destNodeColor: string = 'DeepSkyBlue';
+  private unfocusedNodeColor: string = 'White';
+
   private mermaidConfig = {
     theme: 'neutral',
     startOnLoad: false,
@@ -116,26 +122,6 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
     });
   }
 
-  onZoomInClick() {
-    if (!this.panZoom) {
-      this.initializePanZoom();
-    }
-
-    console.log(JSON.stringify(this.panZoom));
-    console.log(this.panZoom);
-    this.panZoom.zoomIn()
-  }
-
-  onZoomOutClick() {
-    if (!this.panZoom) {
-      this.initializePanZoom();
-    }
-
-    console.log(JSON.stringify(this.panZoom));
-    console.log(this.panZoom);
-    this.panZoom.zoomOut()
-  }
-
   onMermaidRendered(id: string) {
     console.log("mama " + id);
     this.initializePanZoom();
@@ -207,15 +193,16 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
     console.log(node.getAttribute('id'));
     console.log("mama");
     const mermaidNode = this.getMermaidNodeByElementId(node.id);
-    this.selectedNode = this.selectedNode && this.selectedNode == mermaidNode ? undefined : this.getMermaidNodeByElementId(node.id);
-    node.querySelectorAll('rect, circle').forEach((element) => {
-      (element as HTMLElement).style.fill = this.selectedNode ? 'blue' : 'white';
-    });
+    this.selectedNode = this.selectedNode && this.selectedNode == mermaidNode ? undefined : mermaidNode;
+    this.hoveredNode == this.hoveredNode ?? mermaidNode;
+    if (mermaidNode) {
+      this.setNodeColor(mermaidNode, this.selectedNodeColor, this.hoveredNodeColor);
+    }
   }
 
   onNodeMouseEnter(event: MouseEvent) {
     console.log("onNodeMouseOver - enter - hoverNode ", this.hoveredNode?.id);
-    if (this.hoveredNode) {
+    if (this.hoveredNode || this.selectedNode) {
       console.log("cucu");
       return;
     }
@@ -231,11 +218,15 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
 
     const targetMermaidNode = this.getMermaidNodeByElementId(target.id);
     if (targetMermaidNode) {
-      this.setFocusedNode(targetMermaidNode, true);
+      this.setFocusedNode(targetMermaidNode);
     }
   }
 
   onNodeMouseLeave(event: MouseEvent) {
+    if (this.selectedNode) {
+      this.hoveredNode = undefined;
+      return;
+    }
     console.log("onNodeMouseOut - enter");
     const target = event.currentTarget as HTMLElement;
     console.log("onNodeMouseOut - " + target.id);
@@ -247,7 +238,7 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
 
     const targetMermaidNode = this.getMermaidNodeByElementId(target.id);
     if (targetMermaidNode) {
-      this.setFocusedNode(targetMermaidNode, false);
+      this.setFocusedNode(targetMermaidNode);
     }
   }
 
@@ -300,49 +291,42 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
     return undefined;
   }
 
-  private setFocusedNode(mainNode: MermaidNode, isHighlighted: boolean) {
+  private setFocusedNode(mainNode: MermaidNode) {
     const destIds = this.links.filter(x => x.sourceId == mainNode.id).map(x => x.destId);
     const destNodes = this.nodes.filter(x => destIds.includes(x.id));
     const sourceIds = this.links.filter(x => x.destId == mainNode.id).map(x => x.sourceId);
     const sourceNodes = this.nodes.filter(x => sourceIds.includes(x.id));
 
     destNodes.forEach(x => {
-      const elementNode = document.getElementById(`flowchart-${x.id}-${x.counter}`);
-      if (elementNode) {
-        elementNode.querySelectorAll('rect, circle').forEach((element) => {
-          (element as HTMLElement).style.fill = isHighlighted ? 'red' : 'white';
-        });
-      }
+      this.setNodeColor(x, this.destNodeColor);
     });
 
     sourceNodes.forEach(x => {
-      const elementNode = document.getElementById(`flowchart-${x.id}-${x.counter}`);
-      if (elementNode) {
-        elementNode.querySelectorAll('rect, circle').forEach((element) => {
-          (element as HTMLElement).style.fill = isHighlighted ? 'yellow' : 'white';
-        });
-      }
+      this.setNodeColor(x, this.sourceNodeColor);
     });
 
-    const elementNode = document.getElementById(`flowchart-${mainNode.id}-${mainNode.counter}`);
-    if (elementNode) {
-      elementNode.querySelectorAll('rect, circle').forEach((element) => {
-        (element as HTMLElement).style.fill = isHighlighted ? 'deepskyblue' : 'white';
-      });
-    }
+    this.setNodeColor(mainNode, this.hoveredNodeColor);
 
     const links = this.links.filter(x => x.sourceId == mainNode.id || x.destId == mainNode.id);
     links.forEach(x => {
       const elementLink = document.getElementById(`L_${x.sourceId}_${x.destId}_${x.counter}`);
       if (elementLink) {
-        // elementLink.setAttribute('stroke-width', isHighlighted ? '50px' : '1px');
-        elementLink.style.strokeWidth = isHighlighted ? '3px' : '1px';
+        elementLink.style.strokeWidth = this.hoveredNode ? '5px' : '1px';
       }
     });
 
     // ids
     // line: id="L_A_B_0"
     // node: id="flowchart-A-0"
+  }
+
+  private setNodeColor(node: MermaidNode, focusColor: string, unfocusColor: string = this.unfocusedNodeColor) {
+    const elementNode = document.getElementById(`flowchart-${node.id}-${node.counter}`);
+    if (elementNode) {
+      elementNode.querySelectorAll('rect, circle').forEach((element) => {
+        (element as HTMLElement).style.fill = this.hoveredNode ? focusColor : unfocusColor;
+      });
+    }
   }
 
   onZoomIn(_event: MouseEvent) {
