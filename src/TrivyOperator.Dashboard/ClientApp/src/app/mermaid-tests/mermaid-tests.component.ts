@@ -1,6 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+
+import { ButtonModule } from 'primeng/button';
+
 declare const mermaid: any;
 import * as svgPanZoom from 'svg-pan-zoom'
 
@@ -20,7 +23,7 @@ export interface MermaidNode {
 @Component({
   selector: 'app-mermaid-tests',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ButtonModule],
   templateUrl: './mermaid-tests.component.html',
   styleUrl: './mermaid-tests.component.scss'
 })
@@ -31,7 +34,7 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
   private selectedNode: MermaidNode | undefined = undefined;
   private hoveredNode: MermaidNode | undefined = undefined;
 
-  config = {
+  private mermaidConfig = {
     theme: 'neutral',
     startOnLoad: false,
     securityLevel: 'loose',
@@ -42,6 +45,13 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
     themeVariables: {
       fontSize: '12px',
     },
+  };
+
+  private pansvgConfig = {
+    zoomEnabled: true,
+    fit: true,
+    center: true,
+    onZoom: this.handleSvgSize.bind(this)
   };
 
   nodes: MermaidNode[] = [];
@@ -82,7 +92,7 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
   }
 
   initializeMermaid() {
-    mermaid.initialize(this.config);
+    mermaid.initialize(this.mermaidConfig);
     //mermaid.init();
     mermaid.run({
       querySelector: '.mermaid',
@@ -97,14 +107,13 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
     if (!svgElement) {
       return;
     }
-    this.panZoom = svgPanZoom(svgElement, {
-      zoomEnabled: true,
-      controlIconsEnabled: true,
-      fit: true,
-      center: true,
-      onZoom: this.handleSvgSize.bind(this)
-    });
     this.handleSvgSize();
+    this.panZoom = svgPanZoom(svgElement, this.pansvgConfig);
+    this.handleSvgSize();
+    window.addEventListener('resize', () => {
+      this.handleSvgSize();
+      
+    });
   }
 
   onZoomInClick() {
@@ -252,7 +261,7 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
     console.log(`${x} ${y} ${width} ${height}`);
     const svgElement = mermaidDiv.querySelector('svg');
     if (svgElement) {
-      svgElement.setAttribute('viewBox', `${x} ${y} ${width} ${height}`);
+      svgElement.setAttribute('viewBox', `0 0 ${width} ${height}`);
       svgElement.style.maxWidth = `${width}px`;
     }
   }
@@ -336,6 +345,18 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
     // node: id="flowchart-A-0"
   }
 
+  onZoomIn(_event: MouseEvent) {
+    this.panZoom.zoomIn();
+  }
+
+  onZoomOut(_event: MouseEvent) {
+    this.panZoom.zoomOut();
+  }
+
+  onZoomReset(_event: MouseEvent) {
+    this.panZoom.resetZoom();
+    this.panZoom.resetPan();
+  }
   
 
   // mermaidGraphDefinition: string = `<div id="mermaid" class="mermaid flex-grow-1 justify-content-center">graph TD; </div>`;
