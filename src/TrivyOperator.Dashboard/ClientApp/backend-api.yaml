@@ -131,6 +131,32 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
+  /api/cluster-sbom-reports:
+    get:
+      tags:
+        - ClusterSbomReport
+      operationId: GetClusterSbomReportDtos
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ClusterSbomReportDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
   /api/config-audit-reports:
     get:
       tags:
@@ -801,6 +827,49 @@ components:
         distinctCount:
           type: integer
           format: int32
+      additionalProperties: false
+    ClusterSbomReportDetailDto:
+      type: object
+      properties:
+        bomRef:
+          type: string
+          format: uuid
+        name:
+          type: string
+          nullable: true
+        purl:
+          type: string
+          nullable: true
+        version:
+          type: string
+          nullable: true
+        dependsOn:
+          type: array
+          items:
+            type: string
+            format: uuid
+          nullable: true
+      additionalProperties: false
+    ClusterSbomReportDto:
+      type: object
+      properties:
+        uid:
+          type: string
+          nullable: true
+        imageName:
+          type: string
+          nullable: true
+        imageTag:
+          type: string
+          nullable: true
+        repository:
+          type: string
+          nullable: true
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClusterSbomReportDetailDto'
+          nullable: true
       additionalProperties: false
     ConfigAuditReportDenormalizedDto:
       type: object
