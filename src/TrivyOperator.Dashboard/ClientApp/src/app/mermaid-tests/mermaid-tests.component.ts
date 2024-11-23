@@ -259,21 +259,20 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
 
   getMermaidGraphDefinition(): string {
     const graphLines: string[] = [];
-    this.links.forEach(link => {
-      const sourceNode: MermaidNode = this.nodes.find(x => x.id == link.sourceId) ??
-        { id: link.sourceId, line1: "", line2: "", counter: 0 };
-      const destNode: MermaidNode = this.nodes.find(x => x.id == link.destId) ??
-        { id: link.destId, line1: "", line2: "", counter: 0 };
-      const sourceText1 = `<span class="mnodel1">${sourceNode.line1}</span>`;
-      const sourceText2 = `<span class="mnodel2">${sourceNode.line2}</span>`;
-      const destText1 = `<span class="mnodel1">${destNode.line1}</span>`;
-      const destText2 = `<span class="mnodel2">${destNode.line2}</span>`;
-      const line: string = `${sourceNode.id}([${sourceText1}<br/>${sourceText2}])-->${destNode.id}([${destText1}<br/>${destText2}])`
-
-      console.log(line);
+    this.nodes.forEach(node => {
+      const sourceText1 = `<span class="mnodel1">${node.line1}</span>`;
+      const sourceText2 = `<span class="mnodel2">${node.line2}</span>`;
+      const line = `${node.id}([${sourceText1}<br/>${sourceText2}])`;
 
       graphLines.push(line);
     });
+
+    this.links.forEach(link => {
+      const line = `${link.sourceId} --> ${link.destId}`;
+
+      graphLines.push(line);
+    });
+
     const result: string = `<div id="mermaid" class="mermaid h-full">graph TD; ${graphLines.join('; ')}</div>`;
     console.log(result);
 
