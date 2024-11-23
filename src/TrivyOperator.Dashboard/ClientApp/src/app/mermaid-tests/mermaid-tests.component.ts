@@ -154,8 +154,8 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
         this.isDragging = false;
       });
       svgElement.querySelectorAll('.node').forEach((node) => {
-        (node as HTMLElement).addEventListener('mouseover', this.onNodeMouseOver.bind(this));
-        (node as HTMLElement).addEventListener('mouseout', this.onNodeMouseOut.bind(this));
+        (node as HTMLElement).addEventListener('mouseenter', this.onNodeMouseEnter.bind(this));
+        (node as HTMLElement).addEventListener('mouseleave', this.onNodeMouseLeave.bind(this));
       });
     }
   }
@@ -204,22 +204,42 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
     });
   }
 
-  onNodeMouseOver(event: MouseEvent) {
+  onNodeMouseEnter(event: MouseEvent) {
+    console.log("onNodeMouseOver - enter - hoverNode ", this.hoveredNode?.id);
+    if (this.hoveredNode) {
+      console.log("cucu");
+      return;
+    }
     const target = event.currentTarget as HTMLElement;
-    console.log("target node id " + target.id);
+    console.log("onNodeMouseOver - target node id " + target.id);
+    this.hoveredNode = this.getMermaidNodeByElementId(target.id);
+    console.log("onNodeMouseOver - hoveredNode " + this.hoveredNode?.id);
     target.querySelectorAll('rect, circle').forEach((element) => {
       const el = element as SVGElement;
       el.style.transform = 'scale(1.2)';
       el.style.transition = 'transform 0.3s ease';
     });
+
+    const targetMermaidNode = this.getMermaidNodeByElementId(target.id);
+    if (targetMermaidNode) {
+      this.setFocusedNode(targetMermaidNode, true);
+    }
   }
 
-  onNodeMouseOut(event: MouseEvent) {
+  onNodeMouseLeave(event: MouseEvent) {
+    console.log("onNodeMouseOut - enter");
     const target = event.currentTarget as HTMLElement;
+    console.log("onNodeMouseOut - " + target.id);
     target.querySelectorAll('rect, circle').forEach((element) => {
       (element as SVGElement).style.transform = 'scale(1)';
       (element as SVGElement).style.transition = 'transform 0.3s ease';
     });
+    this.hoveredNode = undefined;
+
+    const targetMermaidNode = this.getMermaidNodeByElementId(target.id);
+    if (targetMermaidNode) {
+      this.setFocusedNode(targetMermaidNode, false);
+    }
   }
 
   handleSvgSize() {
@@ -271,6 +291,53 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
 
     return undefined;
   }
+
+  private setFocusedNode(mainNode: MermaidNode, isHighlighted: boolean) {
+    const destIds = this.links.filter(x => x.sourceId == mainNode.id).map(x => x.destId);
+    const destNodes = this.nodes.filter(x => destIds.includes(x.id));
+    const sourceIds = this.links.filter(x => x.destId == mainNode.id).map(x => x.sourceId);
+    const sourceNodes = this.nodes.filter(x => sourceIds.includes(x.id));
+
+    destNodes.forEach(x => {
+      const elementNode = document.getElementById(`flowchart-${x.id}-${x.counter}`);
+      if (elementNode) {
+        elementNode.querySelectorAll('rect, circle').forEach((element) => {
+          (element as HTMLElement).style.fill = isHighlighted ? 'red' : 'white';
+        });
+      }
+    });
+
+    sourceNodes.forEach(x => {
+      const elementNode = document.getElementById(`flowchart-${x.id}-${x.counter}`);
+      if (elementNode) {
+        elementNode.querySelectorAll('rect, circle').forEach((element) => {
+          (element as HTMLElement).style.fill = isHighlighted ? 'yellow' : 'white';
+        });
+      }
+    });
+
+    const elementNode = document.getElementById(`flowchart-${mainNode.id}-${mainNode.counter}`);
+    if (elementNode) {
+      elementNode.querySelectorAll('rect, circle').forEach((element) => {
+        (element as HTMLElement).style.fill = isHighlighted ? 'deepskyblue' : 'white';
+      });
+    }
+
+    const links = this.links.filter(x => x.sourceId == mainNode.id || x.destId == mainNode.id);
+    links.forEach(x => {
+      const elementLink = document.getElementById(`L_${x.sourceId}_${x.destId}_${x.counter}`);
+      if (elementLink) {
+        // elementLink.setAttribute('stroke-width', isHighlighted ? '50px' : '1px');
+        elementLink.style.strokeWidth = isHighlighted ? '3px' : '1px';
+      }
+    });
+
+    // ids
+    // line: id="L_A_B_0"
+    // node: id="flowchart-A-0"
+  }
+
+  
 
   // mermaidGraphDefinition: string = `<div id="mermaid" class="mermaid flex-grow-1 justify-content-center">graph TD; </div>`;
 }
