@@ -7,6 +7,12 @@ import { ButtonModule } from 'primeng/button';
 declare const mermaid: any;
 import * as svgPanZoom from 'svg-pan-zoom'
 
+// tests.sbom
+import { ClusterSbomReportService } from '../../api/services/cluster-sbom-report.service';
+import { ClusterSbomReportDto } from '../../api/models/cluster-sbom-report-dto';
+//
+
+
 export interface MermaidLink {
   sourceId: string,
   destId: string,
@@ -65,27 +71,32 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
 
   mermaidGraphDefinition: SafeHtml;
 
-  constructor(private sanitizer: DomSanitizer) {
-    this.nodes.push({ id: "A", line1: "A - Lorem ipsum dolor", line2: "sit amet", counter: 0 });
-    this.nodes.push({ id: "B", line1: "B - Lorem ipsum dolor", line2: "sit amet", counter: 0 });
-    this.nodes.push({ id: "C", line1: "C - Lorem ipsum dolor", line2: "sit amet", counter: 0 });
-    this.nodes.push({ id: "D", line1: "D - Lorem ipsum dolor", line2: "sit amet", counter: 0 });
-    this.nodes.push({ id: "E", line1: "E - Lorem ipsum dolor", line2: "sit amet", counter: 0 });
-    this.nodes.push({ id: "F", line1: "F - Lorem ipsum dolor", line2: "sit amet", counter: 0 });
-    this.nodes.push({ id: "G", line1: "G - Lorem ipsum dolor", line2: "sit amet", counter: 0 });
-    this.nodes.push({ id: "H", line1: "H - Lorem ipsum dolor", line2: "sit amet", counter: 0 });
+  constructor(private sanitizer: DomSanitizer, private service: ClusterSbomReportService) {
+    //this.nodes.push({ id: "A", line1: "A - Lorem ipsum dolor", line2: "sit amet", counter: 0 });
+    //this.nodes.push({ id: "B", line1: "B - Lorem ipsum dolor", line2: "sit amet", counter: 0 });
+    //this.nodes.push({ id: "C", line1: "C - Lorem ipsum dolor", line2: "sit amet", counter: 0 });
+    //this.nodes.push({ id: "D", line1: "D - Lorem ipsum dolor", line2: "sit amet", counter: 0 });
+    //this.nodes.push({ id: "E", line1: "E - Lorem ipsum dolor", line2: "sit amet", counter: 0 });
+    //this.nodes.push({ id: "F", line1: "F - Lorem ipsum dolor", line2: "sit amet", counter: 0 });
+    //this.nodes.push({ id: "G", line1: "G - Lorem ipsum dolor", line2: "sit amet", counter: 0 });
+    //this.nodes.push({ id: "H", line1: "H - Lorem ipsum dolor", line2: "sit amet", counter: 0 });
 
-    this.links.push({ sourceId: "A", destId: "B", counter: 0 });
-    this.links.push({ sourceId: "A", destId: "C", counter: 0 });
-    this.links.push({ sourceId: "B", destId: "D", counter: 0 });
-    this.links.push({ sourceId: "C", destId: "D", counter: 0 });
-    this.links.push({ sourceId: "D", destId: "E", counter: 0 });
-    this.links.push({ sourceId: "E", destId: "F", counter: 0 });
-    this.links.push({ sourceId: "F", destId: "G", counter: 0 });
-    this.links.push({ sourceId: "A", destId: "G", counter: 0 });
-    this.links.push({ sourceId: "G", destId: "H", counter: 0 });
+    //this.links.push({ sourceId: "A", destId: "B", counter: 0 });
+    //this.links.push({ sourceId: "A", destId: "C", counter: 0 });
+    //this.links.push({ sourceId: "B", destId: "D", counter: 0 });
+    //this.links.push({ sourceId: "C", destId: "D", counter: 0 });
+    //this.links.push({ sourceId: "D", destId: "E", counter: 0 });
+    //this.links.push({ sourceId: "E", destId: "F", counter: 0 });
+    //this.links.push({ sourceId: "F", destId: "G", counter: 0 });
+    //this.links.push({ sourceId: "A", destId: "G", counter: 0 });
+    //this.links.push({ sourceId: "G", destId: "H", counter: 0 });
 
-    this.mermaidGraphDefinition = this.sanitizer.bypassSecurityTrustHtml(this.getMermaidGraphDefinition());
+
+
+    // tests.sbom
+    this.mermaidGraphDefinition = this.sanitizer.bypassSecurityTrustHtml('');
+    this.getTableDataDtos();
+    //
   }
 
   ngOnInit(): void {
@@ -93,8 +104,7 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     console.log("ngAfterViewInit()");
-    this.initializeMermaid();
-    //this.initializePanZoom();
+    //this.initializeMermaid();
   }
 
   initializeMermaid() {
@@ -260,10 +270,12 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
   getMermaidGraphDefinition(): string {
     const graphLines: string[] = [];
     this.nodes.forEach(node => {
-      const sourceText1 = `<span class="mnodel1">${node.line1}</span>`;
-      const sourceText2 = `<span class="mnodel2">${node.line2}</span>`;
-      const line = `${node.id}([${sourceText1}<br/>${sourceText2}])`;
+      // tests.sbom - uncomment next 3 lines
+      //const sourceText1 = `<span class="mnodel1">${node.line1}</span>`;
+      //const sourceText2 = `<span class="mnodel2">${node.line2}</span>`;
+      //const line = `${node.id}([${sourceText1}<br/>${sourceText2}])`;
 
+      const line = `${node.id}([${node.line1}])`;
       graphLines.push(line);
     });
 
@@ -341,9 +353,37 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
     this.panZoom.resetZoom();
     this.panZoom.resetPan();
   }
-  
 
-  // mermaidGraphDefinition: string = `<div id="mermaid" class="mermaid flex-grow-1 justify-content-center">graph TD; </div>`;
+  // tests.sbom
+  getTableDataDtos() {
+    this.service.getClusterSbomReportDtos().subscribe({
+      next: (res) => this.onGetDataDtos(res),
+      error: (err) => console.error(err),
+    });
+  }
+
+  onGetDataDtos(dtos: ClusterSbomReportDto[]) {
+    this.dataDtos = dtos;
+
+    this.dataDtos[0].details?.forEach(detail => {
+      const bomRef = detail.bomRef?.replace(/-/g, "") ?? "";
+      //this.nodes.push({ id: bomRef, line1: detail.name ?? "", line2: detail.version ?? "", counter: 0 });
+      this.nodes.push({ id: bomRef, line1: "Line 1", line2: "Line 2", counter: 0 });
+      const newLinks: MermaidLink[] = detail.dependsOn?.map(x => {
+        return { sourceId: bomRef, destId: x.replace(/-/g, ""), counter: 0 }
+      }) ?? [];
+      this.links.push(...newLinks);
+    });
+
+    // IMPORTANT - move it in Mermaid Nodes and Links setter (or maybe in dataDots)
+    const tempText = this.getMermaidGraphDefinition();
+    console.log(tempText);
+    this.mermaidGraphDefinition = this.sanitizer.bypassSecurityTrustHtml(tempText);
+    this.initializeMermaid();
+  }
+
+  private dataDtos: ClusterSbomReportDto[] = [];
+  //
 }
 
 
