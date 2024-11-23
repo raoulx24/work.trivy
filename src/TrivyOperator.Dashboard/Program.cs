@@ -6,7 +6,11 @@ using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using TrivyOperator.Dashboard.Application.Hubs;
+using TrivyOperator.Dashboard.Application.Services;
+using TrivyOperator.Dashboard.Application.Services.Abstractions;
 using TrivyOperator.Dashboard.Application.Services.BuilderServicesExtensions;
+using TrivyOperator.Dashboard.Domain.Services;
+using TrivyOperator.Dashboard.Domain.Services.Abstractions;
 using TrivyOperator.Dashboard.Utils;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 using JsonOptions = Microsoft.AspNetCore.Http.Json.JsonOptions;
@@ -83,6 +87,10 @@ builder.Services.AddConfigAuditReportServices(configuration.GetSection(kubernete
 builder.Services.AddExposedSecretReportServices(configuration.GetSection(kubernetesConfigurationSectionKey));
 builder.Services.AddVulnerabilityReportServices(configuration.GetSection(kubernetesConfigurationSectionKey));
 builder.Services.AddUiCommons();
+
+// TODO: Cluster SBOM - tests
+builder.Services.AddScoped<IClusterSbomReportDomainService, ClusterSbomReportDomainService>();
+builder.Services.AddScoped<IClusterSbomReportService, ClusterSbomReportService>();
 
 WebApplication app = builder.Build();
 
