@@ -24,15 +24,16 @@ public static class ClusterSbomReportCrExtensions
 {
     public static ClusterSbomReportDto ToClusterSbomReportDto(this ClusterSbomReportCr clusterSbomReportCr)
     {
-        var allComponents = clusterSbomReportCr.Report?.Components.ComponentsComponents ?? [];
+        ComponentsComponent[] allComponents = clusterSbomReportCr.Report?.Components.ComponentsComponents ?? [];
+        SanitizeComponents(allComponents);
         Array.Resize(ref allComponents, allComponents.Length + 1);
         allComponents[^1] = new()
         {
-            BomRef = clusterSbomReportCr.Report?.Components.Metadata.Component.BomRef ?? Guid.Empty.ToString(),
+            BomRef = SanitizeBomRef(clusterSbomReportCr.Report?.Components.Metadata.Component.BomRef),
             Name = clusterSbomReportCr.Report?.Components.Metadata.Component.Name ?? string.Empty,
-            Purl = clusterSbomReportCr.Report?.Components.Metadata.Component.Purl ?? Guid.Empty.ToString(),
-            Type = clusterSbomReportCr.Report?.Components.Metadata.Component.Type ?? Guid.Empty.ToString(),
-            Version = clusterSbomReportCr.Report?.Components.Metadata.Component.Version ?? Guid.Empty.ToString(),
+            Purl = clusterSbomReportCr.Report?.Components.Metadata.Component.Purl ?? string.Empty,
+            Type = clusterSbomReportCr.Report?.Components.Metadata.Component.Type ?? string.Empty,
+            Version = clusterSbomReportCr.Report?.Components.Metadata.Component.Version ?? string.Empty,
         };
         var alldependencies = clusterSbomReportCr.Report?.Components.Dependencies ?? [];
 
@@ -70,5 +71,23 @@ public static class ClusterSbomReportCrExtensions
         };
 
         return result;
+    }
+
+    private static void SanitizeComponents(ComponentsComponent[] components)
+    {
+        foreach (var component in components)
+        {
+            component.BomRef = SanitizeBomRef(component.BomRef);
+        }
+    }
+
+    private static string SanitizeBomRef(string? bomRef)
+    {
+        if (string.IsNullOrWhiteSpace(bomRef) || bomRef.Length != 36)
+        {
+            return Guid.NewGuid().ToString();
+        }
+
+        return Guid.TryParse(bomRef,out _) ? bomRef : Guid.NewGuid().ToString();
     }
 }

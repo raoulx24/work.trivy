@@ -56,7 +56,7 @@ public class Components
 public class ComponentsComponent
 {
     [JsonPropertyName("bom-ref")]
-    public string BomRef { get; init; } = string.Empty;
+    public string BomRef { get; set; } = string.Empty;
 
     [JsonPropertyName("name")]
     public string Name { get; init; } = string.Empty;
