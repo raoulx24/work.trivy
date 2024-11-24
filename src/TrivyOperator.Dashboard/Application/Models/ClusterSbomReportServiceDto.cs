@@ -29,7 +29,7 @@ public static class ClusterSbomReportCrExtensions
         Array.Resize(ref allComponents, allComponents.Length + 1);
         allComponents[^1] = new()
         {
-            BomRef = SanitizeBomRef(clusterSbomReportCr.Report?.Components.Metadata.Component.BomRef),
+            BomRef = Guid.Empty.ToString(),
             Name = clusterSbomReportCr.Report?.Components.Metadata.Component.Name ?? string.Empty,
             Purl = clusterSbomReportCr.Report?.Components.Metadata.Component.Purl ?? string.Empty,
             Type = clusterSbomReportCr.Report?.Components.Metadata.Component.Type ?? string.Empty,
@@ -52,9 +52,9 @@ public static class ClusterSbomReportCrExtensions
             ClusterSbomReportDetailDto detailDto = new()
             {
                 BomRef = bomRef,
-                Name = component.Name,
+                Name = SanitizeHtmlString(component.Name),
                 Purl = component.Purl,
-                Version = component.Version,
+                Version = SanitizeHtmlString(component.Version),
                 DependsOn = dependencies,
             };
 
@@ -79,6 +79,16 @@ public static class ClusterSbomReportCrExtensions
         {
             component.BomRef = SanitizeBomRef(component.BomRef);
         }
+    }
+
+    private static string SanitizeHtmlString(string input)
+    {
+        return input
+            .Replace("&", "&amp;")
+            .Replace("<", "&lt;")
+            .Replace(">", "&gt;")
+            .Replace("\"", "&quot;")
+            .Replace("'", "&#39;");
     }
 
     private static string SanitizeBomRef(string? bomRef)

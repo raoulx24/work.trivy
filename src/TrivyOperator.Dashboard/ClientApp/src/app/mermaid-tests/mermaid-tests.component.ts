@@ -368,7 +368,7 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
     this.dataDtos[0].details?.forEach(detail => {
       const bomRef = detail.bomRef?.replace(/-/g, "") ?? "";
       //this.nodes.push({ id: bomRef, line1: detail.name ?? "", line2: detail.version ?? "", counter: 0 });
-      this.nodes.push({ id: bomRef, line1: "Line 1", line2: "Line 2", counter: 0 });
+      this.nodes.push({ id: bomRef, line1: detail.name ?? "", line2: "Line 2", counter: 0 });
       const newLinks: MermaidLink[] = detail.dependsOn?.map(x => {
         return { sourceId: bomRef, destId: x.replace(/-/g, ""), counter: 0 }
       }) ?? [];
@@ -379,7 +379,8 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
     const tempText = this.getMermaidGraphDefinition();
     console.log(tempText);
     this.mermaidGraphDefinition = this.sanitizer.bypassSecurityTrustHtml(tempText);
-    this.initializeMermaid();
+    setTimeout(() => { this.initializeMermaid(); }, 0);
+    
   }
 
   private dataDtos: ClusterSbomReportDto[] = [];
