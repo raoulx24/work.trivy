@@ -271,11 +271,11 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
     const graphLines: string[] = [];
     this.nodes.forEach(node => {
       // tests.sbom - uncomment next 3 lines
-      //const sourceText1 = `<span class="mnodel1">${node.line1}</span>`;
-      //const sourceText2 = `<span class="mnodel2">${node.line2}</span>`;
-      //const line = `${node.id}([${sourceText1}<br/>${sourceText2}])`;
+      const sourceText1 = `<span class="mnodel1">${node.line1}</span>`;
+      const sourceText2 = `<span class="mnodel2">${node.line2}</span>`;
+      const line = `${node.id}([${sourceText1}<br/>${sourceText2}])`;
 
-      const line = `${node.id}([${node.line1}])`;
+      //const line = `${node.id}([${node.line1}])`;
       graphLines.push(line);
     });
 
@@ -367,8 +367,7 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
 
     this.dataDtos[0].details?.forEach(detail => {
       const bomRef = detail.bomRef?.replace(/-/g, "") ?? "";
-      //this.nodes.push({ id: bomRef, line1: detail.name ?? "", line2: detail.version ?? "", counter: 0 });
-      this.nodes.push({ id: bomRef, line1: detail.name ?? "", line2: "Line 2", counter: 0 });
+      this.nodes.push({ id: bomRef, line1: detail.name ?? "", line2: detail.version ?? "", counter: 0 });
       const newLinks: MermaidLink[] = detail.dependsOn?.map(x => {
         return { sourceId: bomRef, destId: x.replace(/-/g, ""), counter: 0 }
       }) ?? [];

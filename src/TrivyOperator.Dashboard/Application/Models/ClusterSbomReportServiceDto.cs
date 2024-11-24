@@ -1,4 +1,5 @@
-﻿using TrivyOperator.Dashboard.Domain.Trivy.ClusterSbomReport;
+﻿using System.Web;
+using TrivyOperator.Dashboard.Domain.Trivy.ClusterSbomReport;
 
 namespace TrivyOperator.Dashboard.Application.Models;
 
@@ -52,9 +53,9 @@ public static class ClusterSbomReportCrExtensions
             ClusterSbomReportDetailDto detailDto = new()
             {
                 BomRef = bomRef,
-                Name = SanitizeHtmlString(component.Name),
+                Name = HttpUtility.HtmlEncode(component.Name),
                 Purl = component.Purl,
-                Version = SanitizeHtmlString(component.Version),
+                Version = HttpUtility.HtmlEncode(component.Version),
                 DependsOn = dependencies,
             };
 
@@ -79,16 +80,6 @@ public static class ClusterSbomReportCrExtensions
         {
             component.BomRef = SanitizeBomRef(component.BomRef);
         }
-    }
-
-    private static string SanitizeHtmlString(string input)
-    {
-        return input
-            .Replace("&", "&amp;")
-            .Replace("<", "&lt;")
-            .Replace(">", "&gt;")
-            .Replace("\"", "&quot;")
-            .Replace("'", "&#39;");
     }
 
     private static string SanitizeBomRef(string? bomRef)
