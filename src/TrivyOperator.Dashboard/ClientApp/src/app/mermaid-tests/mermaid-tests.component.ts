@@ -37,8 +37,9 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
   @ViewChild("mermaid") mermaid!: ElementRef;
   panZoom?: any = null;
   private isDragging = false;
-  private selectedNode: MermaidNode | undefined = undefined;
-  private hoveredNode: MermaidNode | undefined = undefined;
+  // tests - change back to private next 2
+  public selectedNode: MermaidNode | undefined = undefined;
+  public hoveredNode: MermaidNode | undefined = undefined;
 
   private selectedNodeColor: string = 'Gray';
   private hoveredNodeColor: string = 'Silver';
@@ -200,26 +201,26 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
   }
 
   onNodeClick(node: Element) {
-    console.log(node.getAttribute('id'));
-    console.log("mama");
+    console.log("onNodeClick - enter - nodeId " + node.getAttribute('id'));
     const mermaidNode = this.getMermaidNodeByElementId(node.id);
-    this.selectedNode = this.selectedNode && this.selectedNode == mermaidNode ? undefined : mermaidNode;
-    this.hoveredNode == this.hoveredNode ?? mermaidNode;
+    if (mermaidNode && this.selectedNode && this.selectedNode.id !== mermaidNode.id) {
+      return;
+    }
+    this.selectedNode = this.selectedNode == mermaidNode ? undefined : mermaidNode;
     if (mermaidNode) {
       this.setNodeColor(mermaidNode, this.selectedNodeColor, this.hoveredNodeColor);
     }
+    this.hoveredNode = this.selectedNode ? undefined : mermaidNode;
   }
 
   onNodeMouseEnter(event: MouseEvent) {
     console.log("onNodeMouseOver - enter - hoverNode ", this.hoveredNode?.id);
-    if (this.hoveredNode || this.selectedNode) {
-      console.log("cucu");
+    if (this.selectedNode) {
       return;
     }
     const target = event.currentTarget as HTMLElement;
     console.log("onNodeMouseOver - target node id " + target.id);
     this.hoveredNode = this.getMermaidNodeByElementId(target.id);
-    console.log("onNodeMouseOver - hoveredNode " + this.hoveredNode?.id);
     target.querySelectorAll('rect, circle').forEach((element) => {
       const el = element as SVGElement;
       el.style.transform = 'scale(1.2)';
@@ -237,7 +238,6 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
       this.hoveredNode = undefined;
       return;
     }
-    console.log("onNodeMouseOut - enter");
     const target = event.currentTarget as HTMLElement;
     console.log("onNodeMouseOut - " + target.id);
     target.querySelectorAll('rect, circle').forEach((element) => {
