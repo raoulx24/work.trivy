@@ -367,7 +367,7 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
 
     this.dataDtos[0].details?.forEach(detail => {
       const bomRef = detail.bomRef?.replace(/-/g, "") ?? "";
-      this.nodes.push({ id: bomRef, line1: detail.name ?? "", line2: detail.version ?? "", counter: 0 });
+      this.nodes.push({ id: bomRef, line1: detail.name || "none", line2: detail.version || "none", counter: 0 });
       const newLinks: MermaidLink[] = detail.dependsOn?.map(x => {
         return { sourceId: bomRef, destId: x.replace(/-/g, ""), counter: 0 }
       }) ?? [];
