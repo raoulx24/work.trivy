@@ -4,8 +4,9 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 import { ButtonModule } from 'primeng/button';
 
-declare const mermaid: any;
 import * as svgPanZoom from 'svg-pan-zoom'
+import mermaid, { MermaidConfig } from 'mermaid';
+import elkLayouts from '@mermaid-js/layout-elk';
 
 // tests.sbom
 import { ClusterSbomReportService } from '../../api/services/cluster-sbom-report.service';
@@ -47,17 +48,18 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
   private destNodeColor: string = 'DeepSkyBlue';
   private unfocusedNodeColor: string = 'White';
 
-  private mermaidConfig = {
+  private mermaidConfig: MermaidConfig = {
     theme: 'neutral',
     startOnLoad: false,
     securityLevel: 'loose',
-    flowChart: {
+    flowchart: {
       useMaxWidth: true,
       htmlLabels: true,
     },
     themeVariables: {
       fontSize: '12px',
     },
+    layout: 'elk',
   };
 
   private pansvgConfig = {
@@ -109,6 +111,7 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
   }
 
   initializeMermaid() {
+    mermaid.registerLayoutLoaders(elkLayouts);
     mermaid.initialize(this.mermaidConfig);
     //mermaid.init();
     mermaid.run({
@@ -120,7 +123,7 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
 
   initializePanZoom() {
     const svgElement = document.querySelector('.mermaid svg') as SVGAElement;
-    
+
     if (!svgElement) {
       return;
     }
@@ -129,7 +132,7 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
     this.handleSvgSize();
     window.addEventListener('resize', () => {
       this.handleSvgSize();
-      
+
     });
   }
 
@@ -379,7 +382,7 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
     console.log(tempText);
     this.mermaidGraphDefinition = this.sanitizer.bypassSecurityTrustHtml(tempText);
     setTimeout(() => { this.initializeMermaid(); }, 0);
-    
+
   }
 
   private dataDtos: ClusterSbomReportDto[] = [];

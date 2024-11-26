@@ -35,6 +35,7 @@
     "@fortawesome/fontawesome-svg-core": "^6.6.0",
     "@fortawesome/free-regular-svg-icons": "^6.6.0",
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
+    "@mermaid-js/layout-elk": "^0.1.5",
     "@microsoft/signalr": "^8.0.7",
     "chart.js": "^4.4.6",
     "mermaid": "^11.4.0",

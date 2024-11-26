@@ -47,9 +47,7 @@
               "src/styles.scss"
 
             ],
-            "scripts": [
-              "node_modules/mermaid/dist/mermaid.min.js"
-            ]
+            "scripts": []
           },
           "configurations": {
             "production": {
