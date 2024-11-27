@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 
-import cytoscape, { ElementDefinition } from 'cytoscape';
+import cytoscape, { BaseLayoutOptions, ElementDefinition } from 'cytoscape';
 import fcose from 'cytoscape-fcose';
 cytoscape.use(fcose);
 
@@ -8,6 +8,14 @@ cytoscape.use(fcose);
 import { ClusterSbomReportService } from '../../api/services/cluster-sbom-report.service';
 import { ClusterSbomReportDto } from '../../api/models/cluster-sbom-report-dto';
 //
+
+interface FcoseLayoutOptions extends BaseLayoutOptions {
+  name: 'fcose';
+  padding: number;
+  fit: boolean;
+  nodeSeparation: number;
+  nodeRepulsion: number;
+}
 
 @Component({
   selector: 'app-fcose',
@@ -56,7 +64,9 @@ export class FcoseComponent {
       elements: elements,
       layout: {
         name: 'fcose',
-      },
+        fit: false,
+        nodeRepulsion: 20000,
+      } as FcoseLayoutOptions,
       style: [
         {
           selector: 'node',
