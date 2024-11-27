@@ -37,6 +37,8 @@
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
     "@mermaid-js/layout-elk": "^0.1.5",
     "@microsoft/signalr": "^8.0.7",
+    "@types/cytoscape": "^3.21.8",
+    "@types/cytoscape-fcose": "^2.2.4",
     "chart.js": "^4.4.6",
     "cytoscape": "^3.30.4",
     "cytoscape-fcose": "^2.2.0",

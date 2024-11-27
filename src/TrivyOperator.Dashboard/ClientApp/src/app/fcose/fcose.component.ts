@@ -1,9 +1,10 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 
 import cytoscape from 'cytoscape';
 import fcose from 'cytoscape-fcose';
-
 cytoscape.use(fcose);
+
+
 
 @Component({
   selector: 'app-fcose',
@@ -12,10 +13,12 @@ cytoscape.use(fcose);
   templateUrl: './fcose.component.html',
   styleUrl: './fcose.component.scss'
 })
-export class FcoseComponent {
+export class FcoseComponent implements AfterViewInit {
   @ViewChild('graphContainer', { static: true }) graphContainer: ElementRef;
 
-  constructor() {
+  constructor() { }
+
+  ngAfterViewInit() {
     const cy = cytoscape({
       container: this.graphContainer.nativeElement,
       elements: [
@@ -30,7 +33,6 @@ export class FcoseComponent {
         { data: { source: 'd', target: 'e' } }],
       layout: {
         name: 'fcose',
-        randomize: true
       },
       style: [
         {
@@ -43,5 +45,4 @@ export class FcoseComponent {
         }]
     });
   }
-
 }
