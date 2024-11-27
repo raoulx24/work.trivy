@@ -38,6 +38,8 @@
     "@mermaid-js/layout-elk": "^0.1.5",
     "@microsoft/signalr": "^8.0.7",
     "chart.js": "^4.4.6",
+    "cytoscape": "^3.30.4",
+    "cytoscape-fcose": "^2.2.0",
     "mermaid": "^11.4.0",
     "primeflex": "^3.3.1",
     "primeicons": "^7.0.0",
