@@ -55,11 +55,16 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
     flowchart: {
       useMaxWidth: true,
       htmlLabels: true,
+      //defaultRenderer: "elk",
     },
     themeVariables: {
       fontSize: '12px',
     },
-    layout: 'elk',
+    //layout: 'elk.stress',
+    //elk: {
+    //  mergeEdges: true,
+    //  nodePlacementStrategy: 'NETWORK_SIMPLEX',
+    //}
   };
 
   private pansvgConfig = {

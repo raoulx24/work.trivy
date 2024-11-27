@@ -18,7 +18,7 @@ public class ClusterSbomReportDomainService(IKubernetesClientFactory kubernetesC
                 .ListNamespacedCustomObjectAsync<CustomResourceList<ClusterSbomReportCr>>(
                     myCrd.Group,
                     myCrd.Version,
-                    namespaceParameter: "develop",
+                    namespaceParameter: "trivy",
                     myCrd.PluralName);
 
         return csr.Items ?? [];
