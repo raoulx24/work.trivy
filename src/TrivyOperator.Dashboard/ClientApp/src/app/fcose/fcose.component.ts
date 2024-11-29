@@ -64,6 +64,9 @@ interface FcoseLayoutOptions extends BaseLayoutOptions {
 })
 export class FcoseComponent {
   @ViewChild('graphContainer', { static: true }) graphContainer: ElementRef;
+  private cy: cytoscape.Core;
+  private hoveredNode: NodeSingular | null = null;
+
 
   constructor(private service: ClusterSbomReportService) {
     // tests.sbom
@@ -97,7 +100,7 @@ export class FcoseComponent {
       });
     });
 
-    const cy = cytoscape({
+    this.cy = cytoscape({
       container: this.graphContainer.nativeElement,
       elements: elements,
       layout: {
@@ -191,23 +194,30 @@ export class FcoseComponent {
       ]
     });
 
-    cy.on('mouseover', 'node', function (event) {
-      const node: NodeSingular = event.target;
-      node.addClass('hovered');
+    this.setupCyEvents();
+  }
 
-      node.outgoers('node').forEach((depNode: NodeSingular) => {
+  setupCyEvents() {
+    this.cy.on('mouseover', 'node', (event) => {
+      if (this.hoveredNode) {
+        return;
+      }
+      this.hoveredNode = event.target;
+      this.hoveredNode.addClass('hovered');
+
+      this.hoveredNode.outgoers('node').forEach((depNode: NodeSingular) => {
         depNode.addClass('hoveredOutgoers');
       });
-      node.incomers('node').forEach((depNode: NodeSingular) => {
+      this.hoveredNode.incomers('node').forEach((depNode: NodeSingular) => {
         depNode.addClass('hoveredIncomers');
       });
 
-      node.connectedEdges().forEach((edge: EdgeSingular)  => {
+      this.hoveredNode.connectedEdges().forEach((edge: EdgeSingular) => {
         edge.addClass('highlighted-edge');
       });
     });
 
-    cy.on('mouseout', 'node', function (event: any) {
+    this.cy.on('mouseout', 'node', (event) => {
       const node: NodeSingular = event.target;
       node.removeClass('hovered');
 
@@ -221,6 +231,7 @@ export class FcoseComponent {
       node.connectedEdges().forEach((edge: EdgeSingular) => {
         edge.removeClass('highlighted-edge');
       });
+      this.hoveredNode = null;
     });
 
     //cy.on('position', 'node', (event) => {
@@ -235,11 +246,10 @@ export class FcoseComponent {
     //    console.log("tata");
     //    node.position({
     //      x: sourceNode.position().x + 10,
-    //      y: sourceNode.position().y + 10 
+    //      y: sourceNode.position().y + 10
     //    });
     //  });
     //});
-
   }
 
   private dataDtos: ClusterSbomReportDto[] = [];
