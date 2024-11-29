@@ -118,7 +118,7 @@ export class FcoseComponent {
         {
           selector: 'node',
           style: {
-            'width': 'mapData(label.length, 1, 30, 5, 200)',
+            'width': 'mapData(label.length, 1, 30, 20, 200)',
             'height': '20px',
             'shape': 'roundrectangle',
             'background-color': 'Aqua',
@@ -127,53 +127,65 @@ export class FcoseComponent {
             'text-halign': 'center',
             'text-wrap': 'ellipsis',
             'text-max-width': '200px',
+            'font-family': 'var(--font-family)',
             'font-size': '10px',
             'border-width': 1,
             'border-color': '#000',
-            'transition-property': 'width height font-size',
-            'transition-duration': 0.2,
+            'transition-property': 'width height background-color font-size border-color',
+            'transition-duration': 300,
           }
-
         },
         {
           selector: 'edge',
-          style: { 'width': 1, 'line-color': '#ccc', 'target-arrow-color': '#ccc', 'target-arrow-shape': 'triangle' }
+          style: {
+            'width': 1,
+            'line-color': '#ccc',
+            'target-arrow-color': '#ccc',
+            'target-arrow-shape': 'triangle',
+            'transition-property': 'width line-color',
+            'transition-duration': 300,
+          }
         },
         {
           selector: '.hovered',
           style: {
-            'width': 'mapData(label.length, 1, 30, 5, 240)',
+            'width': 'mapData(label.length, 1, 30, 20, 240)',
             'height': '24px',
             'font-size': '12px',
             'background-color': 'Silver',
-            //'border-color': 'Gray'
+            'transition-property': 'width height background-color font-size border-color',
+            'transition-duration': 300,
           }
         },
         {
           selector: '.hoveredOutgoers',
           style: {
-            'width': 'mapData(label.length, 1, 30, 5, 240)',
+            'width': 'mapData(label.length, 1, 30, 20, 240)',
             'height': '24px',
             'font-size': '12px',
             'background-color': 'DeepSkyBlue',
-            //'border-color': 'skyblue'
+            'transition-property': 'width height background-color font-size border-color',
+            'transition-duration': 300,
           }
         },
         {
           selector: '.hoveredIncomers',
           style: {
-            'width': 'mapData(label.length, 1, 30, 5, 240)',
+            'width': 'mapData(label.length, 1, 30, 20, 240)',
             'height': '24px',
             'font-size': '12px',
             'background-color': 'RoyalBlue',
-            //'border-color': 'skyblue'
+            'transition-property': 'width height background-color font-size border-color',
+            'transition-duration': 300,
           }
         },
         {
           selector: '.highlighted-edge',
           style: {
             'width': 3,
-            "line-color": "violet",
+            "line-color": "Violet",
+            'transition-property': 'line-color',
+            'transition-duration': 300,
           }
         },
       ]
