@@ -11,19 +11,48 @@ import { ClusterSbomReportDto } from '../../api/models/cluster-sbom-report-dto';
 
 interface FcoseLayoutOptions extends BaseLayoutOptions {
   name: 'fcose';
-  padding: number;
-  fit: boolean;
-  nodeSeparation: number;
-  nodeRepulsion: number;
-  idealEdgeLength: number;
-  edgeElasticity: number;
-  numIter: 2500;
-  randomize: boolean;
-  componentSpacing: number;
-  nodeOverlap: number;
-  animate: boolean;
-  nodeDimensionsIncludeLabels: boolean;
   quality: "draft" | "default" | "proof";
+  randomize: boolean;
+  animate: boolean;
+  animationDuration: number;
+  animationEasing: undefined,
+  fit: boolean;
+  padding: number,
+  nodeDimensionsIncludeLabels: boolean;
+  uniformNodeDimensions: boolean;
+  packComponents: boolean;
+  step: "all" | "transformed" | "enforced" | "cose";
+  /* spectral layout options */
+  samplingType: boolean;
+  sampleSize: number;
+  nodeSeparation: number;
+  piTol: number;
+  /* incremental layout options */
+  nodeRepulsion: (node: NodeSingular) => number;
+  idealEdgeLength: (edge: EdgeSingular) => number;
+  edgeElasticity: (edge: EdgeSingular) => number;
+  nestingFactor: number;
+  numIter: number;
+  tile: boolean;
+  tilingCompareBy: undefined;
+  tilingPaddingVertical: number;
+  tilingPaddingHorizontal: number;
+  gravity: number;
+  gravityRangeCompound: number;
+  gravityCompound: number;
+  gravityRange: number;
+  initialEnergyOnIncremental: number;
+  /* constraint options */
+  // Fix desired nodes to predefined positions
+  // [{nodeId: 'n1', position: {x: 100, y: 200}}, {...}]
+  fixedNodeConstraint: undefined;
+  // Align desired nodes in vertical/horizontal direction
+  // {vertical: [['n1', 'n2'], [...]], horizontal: [['n2', 'n4'], [...]]}
+  alignmentConstraint: undefined;
+  // Place two nodes relatively in vertical/horizontal direction
+  // [{top: 'n1', bottom: 'n2', gap: 100}, {left: 'n3', right: 'n4', gap: 75}, {...}]
+  relativePlacementConstraint: undefined;
+
 }
 
 @Component({
@@ -73,23 +102,23 @@ export class FcoseComponent {
       elements: elements,
       layout: {
         name: "fcose",
-        nodeRepulsion: 4500,
-        idealEdgeLength: 100,
-        edgeElasticity: 0.45,
+        nodeRepulsion: (node) => { return 20000 },
         numIter: 2500,
         animate: true,
         fit: true,
         padding: 10,
-        componentSpacing: 1000,
-        nodeOverlap: 2000,
-        nodeDimensionsIncludeLabels: true,
-        quality: "default"
+        sampleSize: 50,
+        nodeSeparation: 4000,
+        tilingPaddingHorizontal: 1000,
+        tilingPaddingVertical: 1000,
+        idealEdgeLength: (edge) => { return 150; },
+        edgeElasticity: (edge) => { return .15; }
       } as FcoseLayoutOptions,
       style: [
         {
           selector: 'node',
           style: {
-            'width': 'mapData(label.length, 1, 20, 20, 200)',
+            'width': 'mapData(label.length, 1, 30, 5, 200)',
             'height': '20px',
             'shape': 'roundrectangle',
             'background-color': 'Aqua',
@@ -113,9 +142,9 @@ export class FcoseComponent {
         {
           selector: '.hovered',
           style: {
-            //'width': '120px', // Increase node width by 1.2
-            'height': '24px', // Increase node height by 1.2
-            'font-size': '14.4px', // Increase font size by 1.2
+            'width': 'mapData(label.length, 1, 30, 5, 240)',
+            'height': '24px',
+            'font-size': '12px',
             'background-color': 'Silver',
             //'border-color': 'Gray'
           }
@@ -123,9 +152,9 @@ export class FcoseComponent {
         {
           selector: '.hoveredOutgoers',
           style: {
-            //'width': '120px', // Increase node width by 1.2
-            'height': '24px', // Increase node height by 1.2
-            'font-size': '14.4px', // Increase font size by 1.2
+            'width': 'mapData(label.length, 1, 30, 5, 240)',
+            'height': '24px',
+            'font-size': '12px',
             'background-color': 'DeepSkyBlue',
             //'border-color': 'skyblue'
           }
@@ -133,9 +162,9 @@ export class FcoseComponent {
         {
           selector: '.hoveredIncomers',
           style: {
-            //'width': '120px', // Increase node width by 1.2
-            'height': '24px', // Increase node height by 1.2
-            'font-size': '14.4px', // Increase font size by 1.2
+            'width': 'mapData(label.length, 1, 30, 5, 240)',
+            'height': '24px',
+            'font-size': '12px',
             'background-color': 'RoyalBlue',
             //'border-color': 'skyblue'
           }
@@ -143,9 +172,8 @@ export class FcoseComponent {
         {
           selector: '.highlighted-edge',
           style: {
-            'line-color': '#ffa500',
-            'width': 2,
-            'target-arrow-color': '#ffa500'
+            'width': 3,
+            "line-color": "violet",
           }
         },
       ]
