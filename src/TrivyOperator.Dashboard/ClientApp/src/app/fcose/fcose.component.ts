@@ -4,6 +4,8 @@ import cytoscape, { BaseLayoutOptions, EdgeSingular, ElementDefinition, NodeSing
 import fcose from 'cytoscape-fcose';
 cytoscape.use(fcose);
 
+import { ButtonModule } from 'primeng/button';
+
 // tests.sbom
 import { ClusterSbomReportService } from '../../api/services/cluster-sbom-report.service';
 import { ClusterSbomReportDto } from '../../api/models/cluster-sbom-report-dto';
@@ -58,7 +60,7 @@ interface FcoseLayoutOptions extends BaseLayoutOptions {
 @Component({
   selector: 'app-fcose',
   standalone: true,
-  imports: [],
+  imports: [ButtonModule],
   templateUrl: './fcose.component.html',
   styleUrl: './fcose.component.scss'
 })
@@ -130,7 +132,6 @@ export class FcoseComponent {
             'text-halign': 'center',
             'text-wrap': 'ellipsis',
             'text-max-width': '200px',
-            'font-family': 'var(--font-family)',
             'font-size': '10px',
             'border-width': 1,
             'border-color': '#000',
@@ -233,25 +234,54 @@ export class FcoseComponent {
       });
       this.hoveredNode = null;
     });
-
-    //cy.on('position', 'node', (event) => {
-    //  console.log("mama");
-
-    //  const sourceNode = event.target;
-    //  console.log(sourceNode);
-
-    //  const dependentNodes = sourceNode.connectedNodes();
-
-    //  dependentNodes.forEach((node: any) => {
-    //    console.log("tata");
-    //    node.position({
-    //      x: sourceNode.position().x + 10,
-    //      y: sourceNode.position().y + 10
-    //    });
-    //  });
-    //});
   }
 
+  onZoomIn(_event: MouseEvent) {
+    this.cy.animate({
+      zoom: this.cy.zoom() + 0.1,
+      duration: 300,
+    });
+  }
+
+  onZoomOut(_event: MouseEvent) {
+    this.cy.animate({
+      zoom: this.cy.zoom() - 0.1,
+      duration: 300
+    });
+  }
+
+  onZoomFit(_event?: MouseEvent) {
+    this.cy.animate({
+      fit: {
+        eles: this.cy.elements(),
+        padding: 10,
+      },
+      duration: 300
+    });
+  }
+
+  onDiveIn(_event: MouseEvent) {
+    // Select the node to keep (e.g., node with id 'root')
+    const rootNode = this.cy.$('#78f660ea-c2f6-49e8-b116-c93884ad68bf');
+    this.cy.elements().not(rootNode).animate({
+      style: { opacity: 0 },
+      duration: 300,
+      complete: () => {
+        this.cy.remove(this.cy.elements().not(rootNode));
+        const newElements = [
+          { data: { id: 'child1', label: 'child1' } },
+          { data: { id: 'child2', label: 'child2' } },
+          { data: { id: 'child1-root', source: rootNode.id(), target: 'child1' } },
+          { data: { id: 'child2-root', source: rootNode.id(), target: 'child2' } }
+        ];
+        this.cy.add(newElements);
+        this.cy.elements().animate({ style: { opacity: 1 }, duration: 300 });
+        this.cy.layout({ name: 'fcose' }).run();
+      }
+    });
+  }
+
+  // tests sbom
   private dataDtos: ClusterSbomReportDto[] = [];
   //
 }

@@ -1,1 +1,27 @@
-<div #graphContainer style="width: 100%; height: 80vh;"></div>
+<div class="grid flex">
+  <div class="col-12">
+    <p-button label="Zoom In"
+              icon="pi pi-search-plus"
+              size="small"
+              [text]="true"
+              (onClick)="onZoomIn($event)" />
+    <p-button label="Zoom Out"
+              icon="pi pi-search-minus"
+              size="small"
+              [text]="true"
+              (onClick)="onZoomOut($event)" />
+    <p-button label="Fit"
+              icon="pi pi-refresh"
+              size="small"
+              [text]="true"
+              (onClick)="onZoomFit($event)" />
+    <p-button label="Dive In Ubuntu"
+              icon="pi pi-face-smile"
+              size="small"
+              [text]="true"
+              (onClick)="onDiveIn($event)" />
+  </div>
+  <div class="col-12 h-full">
+    <div #graphContainer style="width: 100%; height: 80vh;"></div>
+  </div>
+</div>
