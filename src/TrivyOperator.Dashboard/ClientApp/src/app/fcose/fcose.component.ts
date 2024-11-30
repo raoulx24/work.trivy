@@ -13,8 +13,8 @@ import { ClusterSbomReportDto } from '../../api/models/cluster-sbom-report-dto';
 
 interface FcoseLayoutOptions extends BaseLayoutOptions {
   name: 'fcose';
-  quality: "draft" | "default" | "proof";
-  randomize: boolean;
+  quality: "draft" | "default" | "proof" | undefined;
+  randomize: boolean | undefined;
   animate: boolean;
   animationDuration: number;
   animationEasing: undefined,
@@ -69,6 +69,21 @@ export class FcoseComponent {
   private cy: cytoscape.Core;
   private hoveredNode: NodeSingular | null = null;
 
+  private fcoseLayoutOptions = {
+    name: "fcose",
+    nodeRepulsion: (node: NodeSingular) => { return 20000 },
+    numIter: 2500,
+    animate: true,
+    fit: true,
+    padding: 10,
+    sampleSize: 50,
+    nodeSeparation: 4000,
+    tilingPaddingHorizontal: 1000,
+    tilingPaddingVertical: 1000,
+    idealEdgeLength: (edge: EdgeSingular) => { return 150; },
+    edgeElasticity: (edge: EdgeSingular) => { return .15; }
+  };
+
 
   constructor(private service: ClusterSbomReportService) {
     // tests.sbom
@@ -105,20 +120,7 @@ export class FcoseComponent {
     this.cy = cytoscape({
       container: this.graphContainer.nativeElement,
       elements: elements,
-      layout: {
-        name: "fcose",
-        nodeRepulsion: (node) => { return 20000 },
-        numIter: 2500,
-        animate: true,
-        fit: true,
-        padding: 10,
-        sampleSize: 50,
-        nodeSeparation: 4000,
-        tilingPaddingHorizontal: 1000,
-        tilingPaddingVertical: 1000,
-        idealEdgeLength: (edge) => { return 150; },
-        edgeElasticity: (edge) => { return .15; }
-      } as FcoseLayoutOptions,
+      layout: this.fcoseLayoutOptions as FcoseLayoutOptions,
       style: [
         {
           selector: 'node',
@@ -263,23 +265,65 @@ export class FcoseComponent {
   onDiveIn(_event: MouseEvent) {
     // Select the node to keep (e.g., node with id 'root')
     const rootNode = this.cy.$('#78f660ea-c2f6-49e8-b116-c93884ad68bf');
-    this.cy.elements().not(rootNode).animate({
-      style: { opacity: 0 },
-      duration: 300,
-      complete: () => {
-        this.cy.remove(this.cy.elements().not(rootNode));
-        const newElements = [
-          { data: { id: 'child1', label: 'child1' } },
-          { data: { id: 'child2', label: 'child2' } },
-          { data: { id: 'child1-root', source: rootNode.id(), target: 'child1' } },
-          { data: { id: 'child2-root', source: rootNode.id(), target: 'child2' } }
-        ];
-        this.cy.add(newElements);
-        this.cy.elements().animate({ style: { opacity: 1 }, duration: 300 });
-        this.cy.layout({ name: 'fcose' }).run();
-      }
-    });
+    this.cy.elements().not(rootNode).animate({ style: { opacity: 0 }, duration: 300 });
+    this.cy.remove(this.cy.elements().not(rootNode));
+    const newElements = this.getElementsByNodeId("78f660ea-c2f6-49e8-b116-c93884ad68bf");
+    this.cy.add(newElements);
+    this.cy.elements().animate({ style: { opacity: 1 }, duration: 300 });
+    this.cy.layout(this.fcoseLayoutOptions as FcoseLayoutOptions).run();
+    this.cy.fit();
   }
+
+  private getElementsByNodeId(nodeId: string): ElementDefinition[] {
+    const nodeIds: string[] = [nodeId];
+    this.getNodeIds(nodeId, nodeIds);
+
+    const elements: ElementDefinition[] = [];
+    nodeIds.forEach(id => {
+      const sbomDetail = this.dataDtos[0].details?.find(x => x.bomRef == id);
+      if (sbomDetail) {
+        elements.push({ data: { id: id, label: sbomDetail.name ?? "" } });
+        sbomDetail.dependsOn?.forEach(depends => {
+            elements.push({
+              data: {
+                source: sbomDetail.bomRef,
+                target: depends
+              }
+            });
+          });
+      }
+
+    });
+
+    return elements;
+  }
+
+  private getNodeIds(nodeId: string, nodeIds: string[]) {
+    const detail = this.dataDtos[0].details?.find(x => x.bomRef == nodeId);
+    if (!detail) {
+      return;
+    }
+    const detailRefIds = detail.dependsOn;
+    if (!detailRefIds) {
+      return;
+    }
+
+    const newIds: string[] = detailRefIds.filter(id => !nodeIds.includes(id));
+    nodeIds.push(...newIds);
+    newIds.forEach(id => this.getNodeIds(id, nodeIds))
+  }
+
+  //this.dataDtos[0].details?.forEach(detail => {
+  //  elements.push({ data: { id: detail.bomRef, label: detail.name } });
+  //  detail.dependsOn?.forEach(depends => {
+  //    elements.push({
+  //      data: {
+  //        source: detail.bomRef,
+  //        target: depends
+  //      }
+  //    });
+  //  });
+  //});
 
   // tests sbom
   private dataDtos: ClusterSbomReportDto[] = [];
