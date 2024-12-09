@@ -265,13 +265,14 @@ export class FcoseComponent {
   onDiveIn(_event: MouseEvent) {
     // Select the node to keep (e.g., node with id 'root')
     const rootNode = this.cy.$('#78f660ea-c2f6-49e8-b116-c93884ad68bf');
-    this.cy.elements().not(rootNode).animate({ style: { opacity: 0 }, duration: 300 });
-    this.cy.remove(this.cy.elements().not(rootNode));
+    //this.cy.elements().not(rootNode).animate({ style: { opacity: 0 }, duration: 300 });
     const newElements = this.getElementsByNodeId("78f660ea-c2f6-49e8-b116-c93884ad68bf");
+    this.cy.remove(this.cy.elements().filter(x => newElements.includes(x.id)))
+    
     this.cy.add(newElements);
-    this.cy.elements().animate({ style: { opacity: 1 }, duration: 300 });
+    //this.cy.elements().animate({ style: { opacity: 1 }, duration: 300 });
     this.cy.layout(this.fcoseLayoutOptions as FcoseLayoutOptions).run();
-    this.cy.fit();
+    //this.cy.fit();
   }
 
   private getElementsByNodeId(nodeId: string): ElementDefinition[] {
@@ -312,18 +313,6 @@ export class FcoseComponent {
     nodeIds.push(...newIds);
     newIds.forEach(id => this.getNodeIds(id, nodeIds))
   }
-
-  //this.dataDtos[0].details?.forEach(detail => {
-  //  elements.push({ data: { id: detail.bomRef, label: detail.name } });
-  //  detail.dependsOn?.forEach(depends => {
-  //    elements.push({
-  //      data: {
-  //        source: detail.bomRef,
-  //        target: depends
-  //      }
-  //    });
-  //  });
-  //});
 
   // tests sbom
   private dataDtos: ClusterSbomReportDto[] = [];
