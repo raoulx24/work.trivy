@@ -113,6 +113,7 @@ export class TrivyTableComponent<TData> implements OnInit {
     style: '',
     buttonLink: undefined,
     badge: undefined,
+    url: undefined,
   });
 
   ngOnInit() {

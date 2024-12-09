@@ -27,7 +27,7 @@ public class ConfigAuditReportController(IConfigAuditReportService configAuditRe
         return Ok(configAuditReportImageDtos);
     }
 
-    [HttpGet("denormalized", Name = "GetConfigAuditReportDenormalizedDto")]
+    [HttpGet("denormalized", Name = "GetConfigAuditReportDenormalizedDtos")]
     [ProducesResponseType<IEnumerable<ConfigAuditReportDenormalizedDto>>(StatusCodes.Status200OK)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status500InternalServerError)]

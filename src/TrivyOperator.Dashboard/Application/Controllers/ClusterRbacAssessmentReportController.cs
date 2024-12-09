@@ -16,7 +16,7 @@ public class ClusterRbacAssessmentReportController(
     public async Task<IEnumerable<ClusterRbacAssessmentReportDto>> Get() =>
         await clusterRbacAssessmentReportService.GetClusterRbacAssessmentReportDtos();
 
-    [HttpGet("denormalized", Name = "GetClusterRbacAssessmentReportDenormalizedDto")]
+    [HttpGet("denormalized", Name = "GetClusterRbacAssessmentReportDenormalizedDtos")]
     [ProducesResponseType<IEnumerable<ClusterRbacAssessmentReportDenormalizedDto>>(StatusCodes.Status200OK)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status500InternalServerError)]

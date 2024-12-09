@@ -1,0 +1,10 @@
+<h3>Cluster Compliance Reports Detailed</h3>
+<app-trivy-table csvFileName="Cluster Compliance Reports"
+                 csvStoragekey="Cluster Compliance Reports"
+                 tableHeight="82vh"
+                 [dataDtos]="dataDtos"
+                 [exportColumns]="exportColumns"
+                 [isLoading]="isLoading"
+                 [trivyTableColumns]="trivyTableColumns"
+                 [trivyTableOptions]="trivyTableOptions"
+                 (refreshRequested)="getTableDataDtos()" />

@@ -124,7 +124,7 @@ export class ClusterRbacAssessmentReportsDetailedComponent {
 
   public getTableDataDtos() {
     this.isLoading = true;
-    this.dataDtoService.getClusterRbacAssessmentReportDenormalizedDto().subscribe({
+    this.dataDtoService.getClusterRbacAssessmentReportDenormalizedDtos().subscribe({
       next: (res) => this.onGetDataDtos(res),
       error: (err) => console.error(err),
     });

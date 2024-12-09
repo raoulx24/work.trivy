@@ -15,7 +15,7 @@ public class ExposedSecretReportService(IConcurrentCache<string, IList<ExposedSe
     {
         excludedSeverities ??= [];
         int[] excludedSeveritiesArray = excludedSeverities.ToArray();
-        int[] incudedSeverities = ((int[])Enum.GetValues(typeof(TrivySeverity))).ToList()
+        int[] includedSeverities = ((int[])Enum.GetValues(typeof(TrivySeverity))).ToList()
             .Except(excludedSeveritiesArray)
             .ToArray();
 
@@ -27,14 +27,14 @@ public class ExposedSecretReportService(IConcurrentCache<string, IList<ExposedSe
                         dto =>
                         {
                             dto.Details = dto.Details.Join(
-                                    incudedSeverities,
+                                    includedSeverities,
                                     vulnerability => vulnerability.SeverityId,
                                     id => id,
                                     (vulnerability, _) => vulnerability)
                                 .ToArray();
                             return dto;
                         })
-                    .Where(dto => !excludedSeveritiesArray.Any() || dto.Details.Length != 0));
+                    .Where(dto => excludedSeveritiesArray.Length == 0 || dto.Details.Length != 0));
 
         return Task.FromResult(dtos);
     }
@@ -45,7 +45,7 @@ public class ExposedSecretReportService(IConcurrentCache<string, IList<ExposedSe
         List<ExposedSecretReportDenormalizedDto> result = cache
             .Where(kvp => string.IsNullOrEmpty(namespaceName) || kvp.Key == namespaceName)
             .SelectMany(kvp => kvp.Value)
-            .SelectMany(car => car.ToExposedSecretReportDenormalizedDtos())
+            .SelectMany(cr => cr.ToExposedSecretReportDenormalizedDtos())
             .ToList();
 
         return Task.FromResult<IList<ExposedSecretReportDenormalizedDto>>(result);

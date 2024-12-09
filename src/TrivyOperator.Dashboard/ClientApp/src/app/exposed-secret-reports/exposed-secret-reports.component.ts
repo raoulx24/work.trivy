@@ -207,6 +207,7 @@ export class ExposedSecretReportsComponent {
     let celStyle: string = '';
     let celBadge: string | undefined;
     let celButtonLink: string | undefined;
+    let celUrl: string | undefined;
 
     switch (colIndex) {
       case 0:
@@ -249,6 +250,7 @@ export class ExposedSecretReportsComponent {
       style: celStyle,
       badge: celBadge,
       buttonLink: celButtonLink,
+      url: celUrl,
     };
   }
 

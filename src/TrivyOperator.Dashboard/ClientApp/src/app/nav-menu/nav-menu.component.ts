@@ -12,6 +12,7 @@ import {
   faGears,
   faHouse,
   faKey,
+  faServer,
   faShieldHalved,
   faUserShield,
   IconDefinition,
@@ -38,6 +39,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   faUserShield = faUserShield;
   faKey = faKey;
   faGears = faGears;
+  faServer = faServer;
   private alertSubscription!: Subscription;
 
   constructor(
@@ -189,6 +191,30 @@ export class NavMenuComponent implements OnInit, OnDestroy {
             disabled: !this.enabledTrivyReports.includes('esr'),
             command: () => {
               this.router.navigate(['/exposed-secret-reports-detailed']);
+              this.isSidebarVisible = false;
+            },
+          },
+        ],
+      },
+      {
+        label: 'Cluster Compliance',
+        faIcon: faServer,
+        disabled: !this.enabledTrivyReports.includes('ccr'),
+        expanded: true,
+        items: [
+          {
+            label: 'Browse',
+            disabled: !this.enabledTrivyReports.includes('ccr'),
+            command: () => {
+              this.router.navigate(['/cluster-compliance-reports']);
+              this.isSidebarVisible = false;
+            },
+          },
+          {
+            label: 'Detailed',
+            disabled: !this.enabledTrivyReports.includes('ccr'),
+            command: () => {
+              this.router.navigate(['/cluster-compliance-reports-detailed']);
               this.isSidebarVisible = false;
             },
           },

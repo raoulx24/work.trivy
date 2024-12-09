@@ -142,7 +142,7 @@ export class ConfigAuditReportsDetailedComponent {
 
   public getTableDataDtos() {
     this.isLoading = true;
-    this.dataDtoService.getConfigAuditReportDenormalizedDto().subscribe({
+    this.dataDtoService.getConfigAuditReportDenormalizedDtos().subscribe({
       next: (res) => this.onGetDataDtos(res),
       error: (err) => console.error(err),
     });

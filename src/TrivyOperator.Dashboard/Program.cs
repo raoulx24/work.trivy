@@ -82,6 +82,9 @@ builder.Services.AddClusterRbacAssessmentReportServices(configuration.GetSection
 builder.Services.AddConfigAuditReportServices(configuration.GetSection(kubernetesConfigurationSectionKey));
 builder.Services.AddExposedSecretReportServices(configuration.GetSection(kubernetesConfigurationSectionKey));
 builder.Services.AddVulnerabilityReportServices(configuration.GetSection(kubernetesConfigurationSectionKey));
+builder.Services.AddClusterComplianceReportServices(configuration.GetSection(kubernetesConfigurationSectionKey));
+builder.Services.AddClusterVulnerabilityReportServices(configuration.GetSection(kubernetesConfigurationSectionKey));
+builder.Services.AddRbacAssessmentReportServices(configuration.GetSection(kubernetesConfigurationSectionKey));
 builder.Services.AddUiCommons();
 
 WebApplication app = builder.Build();
