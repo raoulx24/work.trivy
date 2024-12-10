@@ -19,9 +19,17 @@
               icon="pi pi-face-smile"
               size="small"
               [text]="true"
-              (onClick)="onDiveIn($event)" />
+              (onClick)="onDiveInUbuntu($event)" />
+    <p-button label="Dive In dotnet"
+              icon="pi pi-face-smile"
+              size="small"
+              [text]="true"
+              (onClick)="onDiveInDotnet($event)" />
   </div>
   <div class="col-12 h-full">
     <div #graphContainer style="width: 100%; height: 80vh;"></div>
   </div>
+</div>
+<div>
+  <span>{{ testText }}</span>
 </div>
