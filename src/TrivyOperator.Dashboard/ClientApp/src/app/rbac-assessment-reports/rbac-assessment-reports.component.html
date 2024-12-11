@@ -1,10 +1,12 @@
 <h3>RBAC Assessment Reports</h3>
 
-<app-generic-master-detail [activeNamespaces]="activeNamespaces"
-                           [dataDtos]="dataDtos"
-                           [detailsTableColumns]="detailsTableColumns"
-                           [detailsTableOptions]="detailsTableOptions"
-                           [isMainTableLoading]="isMainTableLoading"
-                           [mainTableColumns]="mainTableColumns"
-                           [mainTableOptions]="mainTableOptions"
-                           (refreshRequested)="onRefreshRequested($event)" />
+<app-generic-master-detail
+  [activeNamespaces]="activeNamespaces"
+  [dataDtos]="dataDtos"
+  [detailsTableColumns]="detailsTableColumns"
+  [detailsTableOptions]="detailsTableOptions"
+  [isMainTableLoading]="isMainTableLoading"
+  [mainTableColumns]="mainTableColumns"
+  [mainTableOptions]="mainTableOptions"
+  (refreshRequested)="onRefreshRequested($event)"
+/>

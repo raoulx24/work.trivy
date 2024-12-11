@@ -10,7 +10,7 @@ import { TrivyFilterData, TrivyTableColumn, TrivyTableOptions } from '../trivy-t
   standalone: true,
   imports: [GenericMasterDetailComponent],
   templateUrl: './rbac-assessment-reports.component.html',
-  styleUrl: './rbac-assessment-reports.component.scss'
+  styleUrl: './rbac-assessment-reports.component.scss',
 })
 export class RbacAssessmentReportsComponent {
   dataDtos: RbacAssessmentReportDto[] = [];

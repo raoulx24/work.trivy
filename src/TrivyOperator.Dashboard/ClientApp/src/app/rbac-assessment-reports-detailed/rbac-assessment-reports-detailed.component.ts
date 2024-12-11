@@ -13,7 +13,7 @@ import { TrivyTableUtils } from '../utils/trivy-table.utils';
   standalone: true,
   imports: [TrivyTableComponent],
   templateUrl: './rbac-assessment-reports-detailed.component.html',
-  styleUrl: './rbac-assessment-reports-detailed.component.scss'
+  styleUrl: './rbac-assessment-reports-detailed.component.scss',
 })
 export class RbacAssessmentReportsDetailedComponent {
   public dataDtos?: RbacAssessmentReportDenormalizedDto[] | null;
