@@ -111,8 +111,8 @@ public static class ClusterComplianceReportCrExtensions
         };
     }
 
-    public static IList<ClusterComplianceReportDenormalizedDto>
-        ToClusterComplianceReportDenormalizedDto(this ClusterComplianceReportCr clusterComplianceReportCr) =>
+    public static IList<ClusterComplianceReportDenormalizedDto> ToClusterComplianceReportDenormalizedDto(
+        this ClusterComplianceReportCr clusterComplianceReportCr) =>
         clusterComplianceReportCr.Spec.Compliance.Controls.Select(
                 control => new ClusterComplianceReportDenormalizedDto
                 {

@@ -27,20 +27,22 @@ public static class WatcherStateInfoExtensions
                 LastException = watcherStateInfo.LastException?.Message ?? string.Empty,
             };
 
-    private static string GetMitigationMessage(WatcherStateInfo watcherStateInfo) => watcherStateInfo.LastException == null
+    private static string GetMitigationMessage(WatcherStateInfo watcherStateInfo) =>
+        watcherStateInfo.LastException == null
             ? "All ok"
-            : watcherStateInfo.LastException is not HttpOperationException
-            ? "Unknown mitigation"
             :
-            ((HttpOperationException)watcherStateInfo.LastException).Response.StatusCode ==
-            HttpStatusCode.Unauthorized
-                ? "Unauthorized: The kube config file does not provide a porper token"
+            watcherStateInfo.LastException is not HttpOperationException
+                ? "Unknown mitigation"
                 :
-                ((HttpOperationException)watcherStateInfo.LastException).Response.StatusCode == HttpStatusCode.Forbidden
+                ((HttpOperationException)watcherStateInfo.LastException).Response.StatusCode ==
+                HttpStatusCode.Unauthorized
                     ?
-                    "Forbidden: The k8s user is not allowed to perform the watch operation"
+                    "Unauthorized: The kube config file does not provide a porper token"
                     : ((HttpOperationException)watcherStateInfo.LastException).Response.StatusCode ==
-                      HttpStatusCode.NotFound
-                        ? "Not Found: The specified resource type does not exist in cluster (it might be that Trivy is not installed)"
-                        : string.Empty;
+                      HttpStatusCode.Forbidden
+                        ? "Forbidden: The k8s user is not allowed to perform the watch operation"
+                        : ((HttpOperationException)watcherStateInfo.LastException).Response.StatusCode ==
+                          HttpStatusCode.NotFound
+                            ? "Not Found: The specified resource type does not exist in cluster (it might be that Trivy is not installed)"
+                            : string.Empty;
 }
