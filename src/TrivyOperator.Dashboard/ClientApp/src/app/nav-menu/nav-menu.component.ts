@@ -221,6 +221,54 @@ export class NavMenuComponent implements OnInit, OnDestroy {
         ],
       },
       {
+        label: 'Cluster Vulnerabilities',
+        faIcon: this.faShieldHalved,
+        disabled: !this.enabledTrivyReports.includes('cvr'),
+        expanded: true,
+        items: [
+          {
+            label: 'Browse',
+            disabled: !this.enabledTrivyReports.includes('cvr'),
+            command: () => {
+              this.router.navigate(['/cluster-vulnerability-reports']);
+              this.isSidebarVisible = false;
+            },
+          },
+          {
+            label: 'Detailed',
+            disabled: !this.enabledTrivyReports.includes('cvr'),
+            command: () => {
+              this.router.navigate(['/cluster-vulnerability-reports-detailed']);
+              this.isSidebarVisible = false;
+            },
+          },
+        ],
+      },
+      {
+        label: 'RBAC Assessments',
+        faIcon: this.faUserShield,
+        disabled: !this.enabledTrivyReports.includes('rar'),
+        expanded: true,
+        items: [
+          {
+            label: 'Browse',
+            disabled: !this.enabledTrivyReports.includes('rar'),
+            command: () => {
+              this.router.navigate(['/rbac-assessment-reports']);
+              this.isSidebarVisible = false;
+            },
+          },
+          {
+            label: 'Detailed',
+            disabled: !this.enabledTrivyReports.includes('rar'),
+            command: () => {
+              this.router.navigate(['/rbac-assessment-reports-detailed']);
+              this.isSidebarVisible = false;
+            },
+          },
+        ],
+      },
+      {
         label: 'System',
         faIcon: faGears,
         expanded: true,

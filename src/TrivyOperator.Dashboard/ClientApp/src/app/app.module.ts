@@ -101,6 +101,35 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
             (m) => m.ClusterComplianceReportsDetailedComponent,
           ),
       },
+
+      {
+        path: 'cluster-vulnerability-reports',
+        loadComponent: () =>
+          import('./cluster-vulnerability-reports/cluster-vulnerability-reports.component').then(
+            (m) => m.ClusterVulnerabilityReportsComponent,
+          ),
+      },
+      {
+        path: 'cluster-vulnerability-reports-detailed',
+        loadComponent: () =>
+          import('./cluster-vulnerability-reports-detailed/cluster-vulnerability-reports-detailed.component').then(
+            (m) => m.ClusterVulnerabilityReportsDetailedComponent,
+          ),
+      },
+      {
+        path: 'rbac-assessment-reports',
+        loadComponent: () =>
+          import('./rbac-assessment-reports/rbac-assessment-reports.component').then(
+            (m) => m.RbacAssessmentReportsComponent,
+          ),
+      },
+      {
+        path: 'rbac-assessment-reports-detailed',
+        loadComponent: () =>
+          import('./rbac-assessment-reports-detailed/rbac-assessment-reports-detailed.component').then(
+            (m) => m.RbacAssessmentReportsDetailedComponent,
+          ),
+      },
       {
         path: 'watcher-states',
         loadComponent: () => import('./watcher-state/watcher-state.component').then((m) => m.WatcherStateComponent),
