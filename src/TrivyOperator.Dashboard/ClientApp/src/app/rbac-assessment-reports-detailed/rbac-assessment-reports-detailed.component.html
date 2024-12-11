@@ -1,0 +1,13 @@
+<h3>RBAC Assessment Reports Detailed</h3>
+<app-trivy-table
+  csvFileName="RBAC Assessment Reports"
+  csvStoragekey="RBAC Assessment Reports"
+  tableHeight="82vh"
+  [activeNamespaces]="activeNamespaces"
+  [dataDtos]="dataDtos"
+  [exportColumns]="exportColumns"
+  [isLoading]="isLoading"
+  [trivyTableColumns]="trivyTableColumns"
+  [trivyTableOptions]="trivyTableOptions"
+  (refreshRequested)="getTableDataDtos()"
+/>

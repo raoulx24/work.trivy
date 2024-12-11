@@ -6,6 +6,7 @@ public class RbacAssessmentReportDto
 {
     public Guid Uid { get; init; } = Guid.Empty;
     public string ResourceName { get; init; } = string.Empty;
+    public string ResourceNamespace { get; init; } = string.Empty;
     public long CriticalCount { get; init; }
     public long HighCount { get; init; }
     public long MediumCount { get; init; }
@@ -30,6 +31,7 @@ public class RbacAssessmentReportDenormalizedDto
 {
     public Guid Uid { get; init; } = Guid.NewGuid();
     public string ResourceName { get; init; } = string.Empty;
+    public string ResourceNamespace { get; init; } = string.Empty;
 
     public string Category { get; init; } = string.Empty;
     public string CheckId { get; init; } = string.Empty;
@@ -66,12 +68,13 @@ public static class RbacAssessmentReportCrExtensions
         {
             Uid = new Guid(rbacAssessmentReportCr.Metadata.Uid ?? string.Empty),
             ResourceName =
-                rbacAssessmentReportCr.Metadata.Annotations != null &&
-                rbacAssessmentReportCr.Metadata.Annotations.TryGetValue(
+                rbacAssessmentReportCr.Metadata.Labels != null &&
+                rbacAssessmentReportCr.Metadata.Labels.TryGetValue(
                     "trivy-operator.resource.name",
                     out string? resourceName)
                     ? resourceName
                     : string.Empty,
+            ResourceNamespace = rbacAssessmentReportCr.Metadata.NamespaceProperty,
             CriticalCount = rbacAssessmentReportCr.Report?.Summary?.CriticalCount ?? 0,
             HighCount = rbacAssessmentReportCr.Report?.Summary?.HighCount ?? 0,
             MediumCount = rbacAssessmentReportCr.Report?.Summary?.MediumCount ?? 0,
@@ -87,12 +90,13 @@ public static class RbacAssessmentReportCrExtensions
     {
         List<RbacAssessmentReportDenormalizedDto> rbacAssessmentReportDetailDtos = [];
         string resourceName =
-            rbacAssessmentReportCr?.Metadata?.Annotations != null &&
-            rbacAssessmentReportCr.Metadata.Annotations.TryGetValue(
+            rbacAssessmentReportCr?.Metadata?.Labels != null &&
+            rbacAssessmentReportCr.Metadata.Labels.TryGetValue(
                 "trivy-operator.resource.name",
                 out string? tryResourceName)
                 ? tryResourceName
                 : string.Empty;
+        string resourceNamespace = rbacAssessmentReportCr?.Metadata.NamespaceProperty ?? string.Empty;
 
         foreach (Check check in rbacAssessmentReportCr?.Report?.Checks ?? [])
         {
@@ -107,6 +111,7 @@ public static class RbacAssessmentReportCrExtensions
                 Success = check.Success,
                 Title = check.Title,
                 ResourceName = resourceName,
+                ResourceNamespace = resourceNamespace,
             };
             rbacAssessmentReportDetailDtos.Add(rbacAssessmentReportDenormalizedDto);
         }

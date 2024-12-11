@@ -46,6 +46,20 @@ public class BackendSettingsService(IOptions<KubernetesOptions> options) : IBack
                 Name = "Vulnerability Report",
                 Enabled = options.Value.TrivyUseVulnerabilityReport ?? false,
             });
+        backendSettingsDto.TrivyReportConfigDtos.Add(
+            new BackendSettingsTrivyReportConfigDto
+            {
+                Id = "cvr",
+                Name = "Cluster Vulnerability Report",
+                Enabled = options.Value.TrivyUseClusterVulnerabilityReport ?? false,
+            });
+        backendSettingsDto.TrivyReportConfigDtos.Add(
+            new BackendSettingsTrivyReportConfigDto
+            {
+                Id = "rar",
+                Name = "RBAC Assessment Report",
+                Enabled = options.Value.TrivyUseRbacAssessmentReport ?? false,
+            });
 
         return Task.FromResult(backendSettingsDto);
     }
