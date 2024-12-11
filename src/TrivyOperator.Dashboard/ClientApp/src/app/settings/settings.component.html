@@ -47,18 +47,18 @@
               <p-button
                 icon="pi pi-check-square"
                 label="Clear Selected"
+                raised
                 size="small"
                 text
-                raised
                 [disabled]="clearTablesOptions.length == 0"
                 (onClick)="onClearTableStatesSelected($event)"
               />
               <p-button
                 icon="pi pi-trash"
                 label="Clear All"
+                raised
                 size="small"
                 text
-                raised
                 [disabled]="clearTablesOptions.length == 0"
                 (onClick)="onClearTableStatesAll($event)"
               />
@@ -87,9 +87,9 @@
       <p-button
         icon="pi pi-file-check"
         label="Update Names"
+        raised
         size="small"
         text
-        raised
         [disabled]="csvFileNames.length == 0"
         (onClick)="onUpdateCsvFileNames($event)"
       />
@@ -123,8 +123,9 @@
                 [disabled]="!item.backendEnabled"
                 [(ngModel)]="item.frontendEnabled"
               ></p-checkbox>
-            </td></tr
-        ></ng-template>
+            </td>
+          </tr>
+        </ng-template>
         <ng-template pTemplate="emptymessage">
           <tr>
             <td colspan="6" class="font-italic text-color-secondary text-sm text-center">
@@ -138,9 +139,9 @@
               <p-button
                 icon="pi pi-check-square"
                 label="Save"
+                raised
                 size="small"
                 text
-                raised
                 (onClick)="onUpdateTrivyReportsStates($event)"
               />
             </td>

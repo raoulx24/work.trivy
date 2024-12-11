@@ -1,20 +1,20 @@
 import { Component } from '@angular/core';
 
 import { ClusterComplianceReportDto } from '../../api/models/cluster-compliance-report-dto';
-import { ClusterComplianceReportService } from '../../api/services/cluster-compliance-report.service';
 import { SeverityDto } from '../../api/models/severity-dto';
+import { ClusterComplianceReportService } from '../../api/services/cluster-compliance-report.service';
 
+import { ClusterComplianceReportDenormalizedDto } from '../../api/models';
 import { TrivyTableComponent } from '../trivy-table/trivy-table.component';
 import { ExportColumn, TrivyTableColumn, TrivyTableOptions } from '../trivy-table/trivy-table.types';
 import { TrivyTableUtils } from '../utils/trivy-table.utils';
-import { ClusterComplianceReportDenormalizedDto } from '../../api/models';
 
 @Component({
   selector: 'app-cluster-compliance-reports-detailed',
   standalone: true,
   imports: [TrivyTableComponent],
   templateUrl: './cluster-compliance-reports-detailed.component.html',
-  styleUrl: './cluster-compliance-reports-detailed.component.scss'
+  styleUrl: './cluster-compliance-reports-detailed.component.scss',
 })
 export class ClusterComplianceReportsDetailedComponent {
   public dataDtos?: ClusterComplianceReportDto[] | null;
@@ -76,7 +76,7 @@ export class ClusterComplianceReportsDetailedComponent {
         multiSelectType: 'none',
         style: 'width: 290px; max-width: 290px; white-space: normal;',
         renderType: 'link',
-        extraFields: ['relatedResources']
+        extraFields: ['relatedResources'],
       },
       {
         field: 'type',

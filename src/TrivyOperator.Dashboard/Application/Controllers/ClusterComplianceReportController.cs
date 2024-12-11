@@ -6,8 +6,8 @@ namespace TrivyOperator.Dashboard.Application.Controllers;
 
 [ApiController]
 [Route("api/cluster-compliance-report")]
-public class ClusterComplianceReportController(
-    IClusterComplianceReportService clusterComplianceReportService) : ControllerBase
+public class ClusterComplianceReportController(IClusterComplianceReportService clusterComplianceReportService)
+    : ControllerBase
 {
     [HttpGet(Name = "GetClusterComplianceReportDtos")]
     [ProducesResponseType<IEnumerable<ClusterComplianceReportDto>>(StatusCodes.Status200OK)]

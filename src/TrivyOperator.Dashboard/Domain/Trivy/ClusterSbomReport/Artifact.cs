@@ -1,5 +1,4 @@
 ﻿using System.Text.Json.Serialization;
-using YamlDotNet.Core.Tokens;
 
 namespace TrivyOperator.Dashboard.Domain.Trivy.ClusterSbomReport;
 

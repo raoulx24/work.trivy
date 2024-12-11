@@ -85,9 +85,8 @@ public abstract class
                     await BackgroundQueue.QueueBackgroundWorkItemAsync(kubernetesWatcherEvent);
                 }
             }
-            catch (HttpOperationException hoe) when (hoe.Response.StatusCode is HttpStatusCode.Unauthorized or
-                                                     HttpStatusCode.Forbidden or
-                                                     HttpStatusCode.NotFound)
+            catch (HttpOperationException hoe) when (hoe.Response.StatusCode is HttpStatusCode.Unauthorized
+                                                         or HttpStatusCode.Forbidden or HttpStatusCode.NotFound)
             {
                 using IServiceScope scope = serviceProvider.CreateScope();
                 IWatcherState watcherState = scope.ServiceProvider.GetRequiredService<IWatcherState>();
@@ -117,7 +116,8 @@ public abstract class
         }
     }
 
-    protected string GetNamespaceFromSourceEvent(IKubernetesObject<V1ObjectMeta>? sourceKubernetesObject) => sourceKubernetesObject is V1Namespace
+    protected string GetNamespaceFromSourceEvent(IKubernetesObject<V1ObjectMeta>? sourceKubernetesObject) =>
+        sourceKubernetesObject is V1Namespace
             ? sourceKubernetesObject.Metadata.Name
             : VarUtils.GetCacheRefreshKey(sourceKubernetesObject);
 

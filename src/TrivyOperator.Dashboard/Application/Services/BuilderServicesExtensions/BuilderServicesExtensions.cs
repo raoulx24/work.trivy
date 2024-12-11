@@ -70,8 +70,7 @@ public static class BuilderServicesExtensions
         services.AddSingleton<
             ICacheRefresh<ClusterRbacAssessmentReportCr, IBackgroundQueue<ClusterRbacAssessmentReportCr>>, CacheRefresh<
                 ClusterRbacAssessmentReportCr, IBackgroundQueue<ClusterRbacAssessmentReportCr>>>();
-        services
-            .AddSingleton<IClusterScopedCacheWatcherEventHandler, ClusterRbacAssessmentReportWatcherEventHandler>();
+        services.AddSingleton<IClusterScopedCacheWatcherEventHandler, ClusterRbacAssessmentReportWatcherEventHandler>();
         services.AddScoped<IClusterRbacAssessmentReportService, ClusterRbacAssessmentReportService>();
     }
 
@@ -160,15 +159,12 @@ public static class BuilderServicesExtensions
             IConcurrentCache<string, IList<ClusterComplianceReportCr>>,
             ConcurrentCache<string, IList<ClusterComplianceReportCr>>>();
         services
-            .AddSingleton<IBackgroundQueue<ClusterComplianceReportCr>,
-                BackgroundQueue<ClusterComplianceReportCr>>();
-        services
-            .AddSingleton<IClusterScopedWatcher<ClusterComplianceReportCr>, ClusterComplianceReportWatcher>();
+            .AddSingleton<IBackgroundQueue<ClusterComplianceReportCr>, BackgroundQueue<ClusterComplianceReportCr>>();
+        services.AddSingleton<IClusterScopedWatcher<ClusterComplianceReportCr>, ClusterComplianceReportWatcher>();
         services.AddSingleton<
             ICacheRefresh<ClusterComplianceReportCr, IBackgroundQueue<ClusterComplianceReportCr>>, CacheRefresh<
                 ClusterComplianceReportCr, IBackgroundQueue<ClusterComplianceReportCr>>>();
-        services
-            .AddSingleton<IClusterScopedCacheWatcherEventHandler, ClusterComplianceReportWatcherEventHandler>();
+        services.AddSingleton<IClusterScopedCacheWatcherEventHandler, ClusterComplianceReportWatcherEventHandler>();
         services.AddScoped<IClusterComplianceReportService, ClusterComplianceReportService>();
     }
 
@@ -190,13 +186,11 @@ public static class BuilderServicesExtensions
         services
             .AddSingleton<IBackgroundQueue<ClusterVulnerabilityReportCr>,
                 BackgroundQueue<ClusterVulnerabilityReportCr>>();
-        services
-            .AddSingleton<IClusterScopedWatcher<ClusterVulnerabilityReportCr>, ClusterVulnerabilityReportWatcher>();
+        services.AddSingleton<IClusterScopedWatcher<ClusterVulnerabilityReportCr>, ClusterVulnerabilityReportWatcher>();
         services.AddSingleton<
             ICacheRefresh<ClusterVulnerabilityReportCr, IBackgroundQueue<ClusterVulnerabilityReportCr>>, CacheRefresh<
                 ClusterVulnerabilityReportCr, IBackgroundQueue<ClusterVulnerabilityReportCr>>>();
-        services
-            .AddSingleton<IClusterScopedCacheWatcherEventHandler, ClusterVulnerabilityReportWatcherEventHandler>();
+        services.AddSingleton<IClusterScopedCacheWatcherEventHandler, ClusterVulnerabilityReportWatcherEventHandler>();
         services.AddScoped<IClusterVulnerabilityReportService, ClusterVulnerabilityReportService>();
     }
 
@@ -215,16 +209,12 @@ public static class BuilderServicesExtensions
         services.AddSingleton<
             IConcurrentCache<string, IList<RbacAssessmentReportCr>>,
             ConcurrentCache<string, IList<RbacAssessmentReportCr>>>();
-        services
-            .AddSingleton<IBackgroundQueue<RbacAssessmentReportCr>,
-                BackgroundQueue<RbacAssessmentReportCr>>();
-        services
-            .AddSingleton<INamespacedWatcher<RbacAssessmentReportCr>, RbacAssessmentReportWatcher>();
+        services.AddSingleton<IBackgroundQueue<RbacAssessmentReportCr>, BackgroundQueue<RbacAssessmentReportCr>>();
+        services.AddSingleton<INamespacedWatcher<RbacAssessmentReportCr>, RbacAssessmentReportWatcher>();
         services.AddSingleton<
             ICacheRefresh<RbacAssessmentReportCr, IBackgroundQueue<RbacAssessmentReportCr>>, CacheRefresh<
                 RbacAssessmentReportCr, IBackgroundQueue<RbacAssessmentReportCr>>>();
-        services
-            .AddSingleton<INamespacedCacheWatcherEventHandler, RbacAssessmentReportCacheWatcherEventHandler>();
+        services.AddSingleton<INamespacedCacheWatcherEventHandler, RbacAssessmentReportCacheWatcherEventHandler>();
         services.AddScoped<IRbacAssessmentReportService, RbacAssessmentReportService>();
     }
 

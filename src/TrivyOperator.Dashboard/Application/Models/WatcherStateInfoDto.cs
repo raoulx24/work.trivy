@@ -27,14 +27,9 @@ public static class WatcherStateInfoExtensions
                 LastException = watcherStateInfo.LastException?.Message ?? string.Empty,
             };
 
-    private static string GetMitigationMessage(WatcherStateInfo watcherStateInfo)
-    {
-        if (watcherStateInfo.LastException == null)
-        {
-            return "All ok";
-        }
-
-        return watcherStateInfo.LastException is not HttpOperationException
+    private static string GetMitigationMessage(WatcherStateInfo watcherStateInfo) => watcherStateInfo.LastException == null
+            ? "All ok"
+            : watcherStateInfo.LastException is not HttpOperationException
             ? "Unknown mitigation"
             :
             ((HttpOperationException)watcherStateInfo.LastException).Response.StatusCode ==
@@ -48,5 +43,4 @@ public static class WatcherStateInfoExtensions
                       HttpStatusCode.NotFound
                         ? "Not Found: The specified resource type does not exist in cluster (it might be that Trivy is not installed)"
                         : string.Empty;
-    }
 }

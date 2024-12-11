@@ -1,8 +1,5 @@
 <h3>Home</h3>
-<p-tabView [(activeIndex)]="tabPageActiveIndex"
-           [scrollable]="true"
-           (onChange)="onTabPageChange($event)"
-           >
+<p-tabView [scrollable]="true" [(activeIndex)]="tabPageActiveIndex" (onChange)="onTabPageChange($event)">
   <p-tabPanel header="Vulnerability Reports" [disabled]="!enabledTrivyReports.includes('vr')">
     <app-home-vulnerability-reports
       *ngIf="enabledTrivyReports.includes('vr')"
