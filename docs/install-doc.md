@@ -22,7 +22,7 @@ The recommended way of installation is via helm. The files are provided in `depl
 Steps:
 
 1. customize `values.yaml` file. The parameters from `# app related params` section are explained in [Specific Parameters](#specific-parameters)
-2. if ingress with TLS is needed, update the value for `ingress.tls.secretName` and create the TLS secret. Example:
+2. if ingress with TLS is needed, update accordingly the values from `ingress` section and create the TLS secret. Example:
 ```sh
 kubectl create secret tls chart-example-tls --cert=path/to/cert/file --key=path/to/key/file
 ```
@@ -43,6 +43,9 @@ In helm values file, the following parameters are app related:
 | trivyUseConfigAuditReport           | activate or deactivate Config Audit Report module; if false, the watchers are disabled |
 | trivyUseExposedSecretReport         | activate or deactivate Exposed Secret Report module; if false, the watchers are disabled |
 | trivyUseVulnerabilityReport         | activate or deactivate Vulnerability Report module; if false, the watchers are disabled |
+| trivyUseClusterComplianceReport     | activate or deactivate Cluster Compliance Report module; if false, the watchers are disabled |
+| trivyUseClusterVulnerabilityReport  | activate or deactivate Cluster Vulnerability Report module; if false, the watchers are disabled |
+| trivyUseRbacAssessmentReport        | activate or deactivate RBAC Assessment Report module; if false, the watchers are disabled |
 
 > **Note:** the above described parameters have correspondence in appsettings.json. That file is for dev purposes
 

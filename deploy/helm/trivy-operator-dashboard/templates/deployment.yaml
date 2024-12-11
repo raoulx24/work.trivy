@@ -47,6 +47,12 @@ spec:
           value: {{ .Values.kubernetes.trivyUseExposedSecretReport | quote }}
         - name: KUBERNETES__TRIVYUSEVULNERABILITYREPORT
           value: {{ .Values.kubernetes.trivyUseVulnerabilityReport | quote }}
+        - name: KUBERNETES__TRIVYUSECLUSTERCOMPLIANCEREPORT
+          value: {{ .Values.kubernetes.trivyUseClusterComplianceReport | quote }}
+        - name: KUBERNETES__TRIVYUSECLUSTERVULNERABILITYREPORT
+          value: {{ .Values.kubernetes.trivyUseClusterVulnerabilityReport | quote }}
+        - name: KUBERNETES__TRIVYUSERBACASSESSMENTREPORT
+          value: {{ .Values.kubernetes.trivyUseRbacAssessmentReport | quote }}
         - name: SERILOG__MINIMUMLEVEL__DEFAULT
           value: {{ .Values.logging.level }}
         - name: ASPNETCORE_URLS
