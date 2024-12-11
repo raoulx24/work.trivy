@@ -6,6 +6,7 @@ public class RbacAssessmentReportDto
 {
     public Guid Uid { get; init; } = Guid.Empty;
     public string ResourceName { get; init; } = string.Empty;
+    public string ResourceNamespace {  get; init; } = string.Empty;
     public long CriticalCount { get; init; }
     public long HighCount { get; init; }
     public long MediumCount { get; init; }
@@ -66,12 +67,13 @@ public static class RbacAssessmentReportCrExtensions
         {
             Uid = new Guid(rbacAssessmentReportCr.Metadata.Uid ?? string.Empty),
             ResourceName =
-                rbacAssessmentReportCr.Metadata.Annotations != null &&
-                rbacAssessmentReportCr.Metadata.Annotations.TryGetValue(
+                rbacAssessmentReportCr.Metadata.Labels != null &&
+                rbacAssessmentReportCr.Metadata.Labels.TryGetValue(
                     "trivy-operator.resource.name",
                     out string? resourceName)
                     ? resourceName
                     : string.Empty,
+            ResourceNamespace = rbacAssessmentReportCr.Metadata.NamespaceProperty,
             CriticalCount = rbacAssessmentReportCr.Report?.Summary?.CriticalCount ?? 0,
             HighCount = rbacAssessmentReportCr.Report?.Summary?.HighCount ?? 0,
             MediumCount = rbacAssessmentReportCr.Report?.Summary?.MediumCount ?? 0,
