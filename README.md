@@ -68,7 +68,8 @@ ClusterConfigAuditReport, ClusterInfraAssessmentReport and so on), to have a rob
 immediate needs and serves the community effectively.
 
 > **Important:** Given the sensitivity of the data being handled, we recommend implementing external authentication
-> measures. Options include (and not limited to) basic authentication on ingress (not recommended, just as a last resort)
+> measures. Options include (and not limited to) basic authentication on ingress (not recommended, just as a last
+> resort)
 > or, preferably, using [oauth2-proxy container](https://quay.io/repository/oauth2-proxy/oauth2-proxy) (project
 > on [GitHub](https://github.com/oauth2-proxy/oauth2-proxy)) for enhanced security.
 
@@ -92,7 +93,8 @@ Browsers: tested mainly using Edge. Also tested on Chrome, Firefox and Opera.
 
 Recommended resolution: 1080p (1920x1080)
 > **Note on resolution:** although we are safe to state that Trivy Operator Dashboard is a Business Application (that
-> handles and displays extensive datasets) and that it should be used on desktop or laptop monitors, the app scales ok in
+> handles and displays extensive datasets) and that it should be used on desktop or laptop monitors, the app scales ok
+> in
 > both directions. On a phone the user experience may be less than optimal, but it is usable. On larger display, as some
 > might say, "the bigger, the better".
 

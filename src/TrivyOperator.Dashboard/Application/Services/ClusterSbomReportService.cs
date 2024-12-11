@@ -4,7 +4,8 @@ using TrivyOperator.Dashboard.Domain.Services.Abstractions;
 
 namespace TrivyOperator.Dashboard.Application.Services;
 
-public class ClusterSbomReportService(IClusterSbomReportDomainService clusterSbomReportDomainService) : IClusterSbomReportService
+public class ClusterSbomReportService(IClusterSbomReportDomainService clusterSbomReportDomainService)
+    : IClusterSbomReportService
 {
     public async Task<IEnumerable<ClusterSbomReportDto>> GetClusterSbomReportDtos()
     {

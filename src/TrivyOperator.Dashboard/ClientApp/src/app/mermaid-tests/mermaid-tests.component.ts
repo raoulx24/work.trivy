@@ -4,27 +4,27 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 import { ButtonModule } from 'primeng/button';
 
-import * as svgPanZoom from 'svg-pan-zoom'
-import mermaid, { MermaidConfig } from 'mermaid';
 import elkLayouts from '@mermaid-js/layout-elk';
+import mermaid, { MermaidConfig } from 'mermaid';
+import * as svgPanZoom from 'svg-pan-zoom';
 
 // tests.sbom
-import { ClusterSbomReportService } from '../../api/services/cluster-sbom-report.service';
 import { ClusterSbomReportDto } from '../../api/models/cluster-sbom-report-dto';
+import { ClusterSbomReportService } from '../../api/services/cluster-sbom-report.service';
+
 //
 
-
 export interface MermaidLink {
-  sourceId: string,
-  destId: string,
-  counter: number,
+  sourceId: string;
+  destId: string;
+  counter: number;
 }
 
 export interface MermaidNode {
-  id: string,
-  line1: string | undefined,
-  line2: string | undefined,
-  counter: number | undefined,
+  id: string;
+  line1: string | undefined;
+  line2: string | undefined;
+  counter: number | undefined;
 }
 
 @Component({
@@ -32,10 +32,10 @@ export interface MermaidNode {
   standalone: true,
   imports: [CommonModule, ButtonModule],
   templateUrl: './mermaid-tests.component.html',
-  styleUrl: './mermaid-tests.component.scss'
+  styleUrl: './mermaid-tests.component.scss',
 })
 export class MermaidTestsComponent implements OnInit, AfterViewInit {
-  @ViewChild("mermaid") mermaid!: ElementRef;
+  @ViewChild('mermaid') mermaid!: ElementRef;
   panZoom?: any = null;
   private isDragging = false;
   // tests - change back to private next 2
@@ -71,7 +71,7 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
     zoomEnabled: true,
     fit: true,
     center: true,
-    onZoom: this.handleSvgSize.bind(this)
+    onZoom: this.handleSvgSize.bind(this),
   };
 
   nodes: MermaidNode[] = [];
@@ -79,7 +79,10 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
 
   mermaidGraphDefinition: SafeHtml;
 
-  constructor(private sanitizer: DomSanitizer, private service: ClusterSbomReportService) {
+  constructor(
+    private sanitizer: DomSanitizer,
+    private service: ClusterSbomReportService,
+  ) {
     //this.nodes.push({ id: "A", line1: "A - Lorem ipsum dolor", line2: "sit amet", counter: 0 });
     //this.nodes.push({ id: "B", line1: "B - Lorem ipsum dolor", line2: "sit amet", counter: 0 });
     //this.nodes.push({ id: "C", line1: "C - Lorem ipsum dolor", line2: "sit amet", counter: 0 });
@@ -99,8 +102,6 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
     //this.links.push({ sourceId: "A", destId: "G", counter: 0 });
     //this.links.push({ sourceId: "G", destId: "H", counter: 0 });
 
-
-
     // tests.sbom
     this.mermaidGraphDefinition = this.sanitizer.bypassSecurityTrustHtml('');
     this.getTableDataDtos();
@@ -108,10 +109,11 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    console.log('ngOnInit()');
   }
 
   ngAfterViewInit(): void {
-    console.log("ngAfterViewInit()");
+    console.log('ngAfterViewInit()');
     //this.initializeMermaid();
   }
 
@@ -121,7 +123,7 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
     //mermaid.init();
     mermaid.run({
       querySelector: '.mermaid',
-      postRenderCallback: this.onMermaidRendered.bind(this)
+      postRenderCallback: this.onMermaidRendered.bind(this),
     });
     //mermaid.contentLoaded();
   }
@@ -137,12 +139,11 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
     this.handleSvgSize();
     window.addEventListener('resize', () => {
       this.handleSvgSize();
-
     });
   }
 
   onMermaidRendered(id: string) {
-    console.log("mama " + id);
+    console.log('mama ' + id);
     this.initializePanZoom();
     this.addClickhandlersToMermaidGraph();
     this.getMermaidIds();
@@ -196,7 +197,7 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
           const sourceNodeId = splittedElementId[1];
           const destNodeId = splittedElementId[2];
           const linkCounter = Number(splittedElementId[3]);
-          const link = this.links.find(x => x.sourceId == sourceNodeId && x.destId == destNodeId);
+          const link = this.links.find((x) => x.sourceId == sourceNodeId && x.destId == destNodeId);
           if (link) {
             link.counter = isNaN(linkCounter) ? -1 : linkCounter;
           }
@@ -204,12 +205,12 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
       });
     }
     // debug
-    this.nodes.forEach(x => console.log(x));
-    this.links.forEach(x => console.log(x));
+    this.nodes.forEach((x) => console.log(x));
+    this.links.forEach((x) => console.log(x));
   }
 
   onNodeClick(node: Element) {
-    console.log("onNodeClick - enter - nodeId " + node.getAttribute('id'));
+    console.log('onNodeClick - enter - nodeId ' + node.getAttribute('id'));
     const mermaidNode = this.getMermaidNodeByElementId(node.id);
     if (mermaidNode && this.selectedNode && this.selectedNode.id !== mermaidNode.id) {
       return;
@@ -222,12 +223,12 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
   }
 
   onNodeMouseEnter(event: MouseEvent) {
-    console.log("onNodeMouseOver - enter - hoverNode ", this.hoveredNode?.id);
+    console.log('onNodeMouseOver - enter - hoverNode ', this.hoveredNode?.id);
     if (this.selectedNode) {
       return;
     }
     const target = event.currentTarget as HTMLElement;
-    console.log("onNodeMouseOver - target node id " + target.id);
+    console.log('onNodeMouseOver - target node id ' + target.id);
     this.hoveredNode = this.getMermaidNodeByElementId(target.id);
     target.querySelectorAll('rect, circle').forEach((element) => {
       const el = element as SVGElement;
@@ -247,7 +248,7 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
       return;
     }
     const target = event.currentTarget as HTMLElement;
-    console.log("onNodeMouseOut - " + target.id);
+    console.log('onNodeMouseOut - ' + target.id);
     target.querySelectorAll('rect, circle').forEach((element) => {
       (element as SVGElement).style.transform = 'scale(1)';
       (element as SVGElement).style.transition = 'transform 0.3s ease';
@@ -277,7 +278,7 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
 
   getMermaidGraphDefinition(): string {
     const graphLines: string[] = [];
-    this.nodes.forEach(node => {
+    this.nodes.forEach((node) => {
       // tests.sbom - uncomment next 3 lines
       const sourceText1 = `<span class="mnodel1">${node.line1}</span>`;
       const sourceText2 = `<span class="mnodel2">${node.line2}</span>`;
@@ -287,7 +288,7 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
       graphLines.push(line);
     });
 
-    this.links.forEach(link => {
+    this.links.forEach((link) => {
       const line = `${link.sourceId} --> ${link.destId}`;
 
       graphLines.push(line);
@@ -303,7 +304,7 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
     const splittedElementId = elementId.split('-');
     if (splittedElementId.length == 3) {
       const nodeId = splittedElementId[1];
-      const node = this.nodes.find(x => x.id == nodeId);
+      const node = this.nodes.find((x) => x.id == nodeId);
 
       return node;
     }
@@ -312,23 +313,23 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
   }
 
   private setFocusedNode(mainNode: MermaidNode) {
-    const destIds = this.links.filter(x => x.sourceId == mainNode.id).map(x => x.destId);
-    const destNodes = this.nodes.filter(x => destIds.includes(x.id));
-    const sourceIds = this.links.filter(x => x.destId == mainNode.id).map(x => x.sourceId);
-    const sourceNodes = this.nodes.filter(x => sourceIds.includes(x.id));
+    const destIds = this.links.filter((x) => x.sourceId == mainNode.id).map((x) => x.destId);
+    const destNodes = this.nodes.filter((x) => destIds.includes(x.id));
+    const sourceIds = this.links.filter((x) => x.destId == mainNode.id).map((x) => x.sourceId);
+    const sourceNodes = this.nodes.filter((x) => sourceIds.includes(x.id));
 
-    destNodes.forEach(x => {
+    destNodes.forEach((x) => {
       this.setNodeColor(x, this.destNodeColor);
     });
 
-    sourceNodes.forEach(x => {
+    sourceNodes.forEach((x) => {
       this.setNodeColor(x, this.sourceNodeColor);
     });
 
     this.setNodeColor(mainNode, this.hoveredNodeColor);
 
-    const links = this.links.filter(x => x.sourceId == mainNode.id || x.destId == mainNode.id);
-    links.forEach(x => {
+    const links = this.links.filter((x) => x.sourceId == mainNode.id || x.destId == mainNode.id);
+    links.forEach((x) => {
       const elementLink = document.getElementById(`L_${x.sourceId}_${x.destId}_${x.counter}`);
       if (elementLink) {
         elementLink.style.strokeWidth = this.hoveredNode ? '5px' : '1px';
@@ -373,12 +374,13 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
   onGetDataDtos(dtos: ClusterSbomReportDto[]) {
     this.dataDtos = dtos;
 
-    this.dataDtos[0].details?.forEach(detail => {
-      const bomRef = detail.bomRef?.replace(/-/g, "") ?? "";
-      this.nodes.push({ id: bomRef, line1: detail.name || "none", line2: detail.version || "none", counter: 0 });
-      const newLinks: MermaidLink[] = detail.dependsOn?.map(x => {
-        return { sourceId: bomRef, destId: x.replace(/-/g, ""), counter: 0 }
-      }) ?? [];
+    this.dataDtos[0].details?.forEach((detail) => {
+      const bomRef = detail.bomRef?.replace(/-/g, '') ?? '';
+      this.nodes.push({ id: bomRef, line1: detail.name || 'none', line2: detail.version || 'none', counter: 0 });
+      const newLinks: MermaidLink[] =
+        detail.dependsOn?.map((x) => {
+          return { sourceId: bomRef, destId: x.replace(/-/g, ''), counter: 0 };
+        }) ?? [];
       this.links.push(...newLinks);
     });
 
@@ -386,12 +388,11 @@ export class MermaidTestsComponent implements OnInit, AfterViewInit {
     const tempText = this.getMermaidGraphDefinition();
     console.log(tempText);
     this.mermaidGraphDefinition = this.sanitizer.bypassSecurityTrustHtml(tempText);
-    setTimeout(() => { this.initializeMermaid(); }, 0);
-
+    setTimeout(() => {
+      this.initializeMermaid();
+    }, 0);
   }
 
   private dataDtos: ClusterSbomReportDto[] = [];
   //
 }
-
-

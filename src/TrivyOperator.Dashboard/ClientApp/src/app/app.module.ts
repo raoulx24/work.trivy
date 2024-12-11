@@ -111,7 +111,10 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
       },
       { path: 'about', loadComponent: () => import('./about/about.component').then((m) => m.AboutComponent) },
 
-      { path: 'mermaid', loadComponent: () => import('./mermaid-tests/mermaid-tests.component').then((m) => m.MermaidTestsComponent) },
+      {
+        path: 'mermaid',
+        loadComponent: () => import('./mermaid-tests/mermaid-tests.component').then((m) => m.MermaidTestsComponent),
+      },
       { path: 'fcose', loadComponent: () => import('./fcose/fcose.component').then((m) => m.FcoseComponent) },
     ]),
     ApiModule.forRoot({ rootUrl: environment.baseUrl }),

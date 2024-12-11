@@ -1,29 +1,30 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 
 import cytoscape, { BaseLayoutOptions, EdgeSingular, ElementDefinition, NodeSingular } from 'cytoscape';
 import fcose from 'cytoscape-fcose';
-cytoscape.use(fcose);
-
 import { ButtonModule } from 'primeng/button';
 
 // tests.sbom
-import { ClusterSbomReportService } from '../../api/services/cluster-sbom-report.service';
 import { ClusterSbomReportDto } from '../../api/models/cluster-sbom-report-dto';
+import { ClusterSbomReportService } from '../../api/services/cluster-sbom-report.service';
+
+cytoscape.use(fcose);
+
 //
 
 interface FcoseLayoutOptions extends BaseLayoutOptions {
   name: 'fcose';
-  quality: "draft" | "default" | "proof" | undefined;
+  quality: 'draft' | 'default' | 'proof' | undefined;
   randomize: boolean | undefined;
   animate: boolean;
   animationDuration: number;
-  animationEasing: undefined,
+  animationEasing: undefined;
   fit: boolean;
-  padding: number,
+  padding: number;
   nodeDimensionsIncludeLabels: boolean;
   uniformNodeDimensions: boolean;
   packComponents: boolean;
-  step: "all" | "transformed" | "enforced" | "cose";
+  step: 'all' | 'transformed' | 'enforced' | 'cose';
   /* spectral layout options */
   samplingType: boolean;
   sampleSize: number;
@@ -54,7 +55,6 @@ interface FcoseLayoutOptions extends BaseLayoutOptions {
   // Place two nodes relatively in vertical/horizontal direction
   // [{top: 'n1', bottom: 'n2', gap: 100}, {left: 'n3', right: 'n4', gap: 75}, {...}]
   relativePlacementConstraint: undefined;
-
 }
 
 @Component({
@@ -62,33 +62,37 @@ interface FcoseLayoutOptions extends BaseLayoutOptions {
   standalone: true,
   imports: [ButtonModule],
   templateUrl: './fcose.component.html',
-  styleUrl: './fcose.component.scss'
+  styleUrl: './fcose.component.scss',
 })
 export class FcoseComponent {
   @ViewChild('graphContainer', { static: true }) graphContainer: ElementRef;
   private cy: cytoscape.Core;
+
   private get hoveredNode(): NodeSingular | null {
     return this._hoveredNode;
   }
+
   private set hoveredNode(node: NodeSingular | null) {
     this._hoveredNode = node;
     if (node) {
-      const x = this.dataDtos[0].details?.find(x => x.bomRef == node.id());
+      const x = this.dataDtos[0].details?.find((x) => x.bomRef == node.id());
       if (x) {
         this.testText = `BomRef: ${x.bomRef} - Name: ${x.name} - Version: ${x.version} - purl: ${x.purl} - dependencies: ${x.dependsOn.length}`;
       }
-    }
-    else {
-      this.testText = "no info..."
+    } else {
+      this.testText = 'no info...';
     }
   }
+
   private _hoveredNode: NodeSingular | null = null;
 
-  testText: string = "";
+  testText: string = '';
 
   private fcoseLayoutOptions = {
-    name: "fcose",
-    nodeRepulsion: (node: NodeSingular) => { return 20000 },
+    name: 'fcose',
+    nodeRepulsion: (node: NodeSingular) => {
+      return 20000;
+    },
     numIter: 2500,
     animate: true,
     fit: true,
@@ -97,17 +101,19 @@ export class FcoseComponent {
     nodeSeparation: 4000,
     tilingPaddingHorizontal: 1000,
     tilingPaddingVertical: 1000,
-    idealEdgeLength: (edge: EdgeSingular) => { return 150; },
-    edgeElasticity: (edge: EdgeSingular) => { return .15; }
+    idealEdgeLength: (edge: EdgeSingular) => {
+      return 150;
+    },
+    edgeElasticity: (edge: EdgeSingular) => {
+      return 0.15;
+    },
   };
-
 
   constructor(private service: ClusterSbomReportService) {
     // tests.sbom
     this.getTableDataDtos();
     //
   }
-
 
   // tests.sbom
   getTableDataDtos() {
@@ -153,7 +159,7 @@ export class FcoseComponent {
     //  });
     //});
 
-    const elements: ElementDefinition[] = this.getElementsByNodeId("00000000-0000-0000-0000-000000000000");
+    const elements: ElementDefinition[] = this.getElementsByNodeId('00000000-0000-0000-0000-000000000000');
 
     this.cy = cytoscape({
       container: this.graphContainer.nativeElement,
@@ -166,26 +172,25 @@ export class FcoseComponent {
             'background-color': 'gray',
             'background-opacity': 0.2,
             //'label': 'data(label)',
-            'text-valign': 'top', 
+            'text-valign': 'top',
             'text-halign': 'center',
             'text-background-color': 'aqua',
             'font-size': '14px',
             'font-weight': 'bold',
-          }
+          },
         },
         {
           selector: '.nodeCommon',
           style: {
-            
             'border-width': 1,
-          }
+          },
         },
         {
           selector: '.nodePackage',
           style: {
-            'label': 'data(label)',
-            'width': 'mapData(label.length, 1, 30, 20, 200)',
-            'height': '20px',
+            label: 'data(label)',
+            width: 'mapData(label.length, 1, 30, 20, 200)',
+            height: '20px',
             'background-color': 'Aqua',
             'text-valign': 'center',
             'text-halign': 'center',
@@ -195,58 +200,58 @@ export class FcoseComponent {
             'border-color': '#000',
             'transition-property': 'width height background-color font-size border-color',
             'transition-duration': 300,
-          }
+          },
         },
         {
           selector: '.nodeBranch',
           style: {
-            'shape': 'roundrectangle',
-          }
+            shape: 'roundrectangle',
+          },
         },
         {
           selector: '.nodeLeaf',
           style: {
-            'shape': 'cut-rectangle',
-          }
+            shape: 'cut-rectangle',
+          },
         },
         {
           selector: '.edgeCommon',
           style: {
-            'width': 1,
+            width: 1,
             'line-color': '#ccc',
             'target-arrow-color': '#ccc',
             'target-arrow-shape': 'triangle',
             'transition-property': 'width line-color',
             'transition-duration': 300,
-          }
+          },
         },
         {
           selector: '.hoveredCommon',
           style: {
-            'width': 'mapData(label.length, 1, 30, 20, 240)',
-            'height': '24px',
+            width: 'mapData(label.length, 1, 30, 20, 240)',
+            height: '24px',
             'font-size': '12px',
             'transition-property': 'width height background-color font-size border-color',
             'transition-duration': 300,
-          }
+          },
         },
         {
           selector: '.hovered',
           style: {
             'background-color': 'Silver',
-          }
+          },
         },
         {
           selector: '.hoveredOutgoers',
           style: {
             'background-color': 'DeepSkyBlue',
-          }
+          },
         },
         {
           selector: '.hoveredIncomers',
           style: {
             'background-color': 'RoyalBlue',
-          }
+          },
         },
         {
           selector: '.hoveredHighlight',
@@ -254,18 +259,18 @@ export class FcoseComponent {
             'overlay-opacity': 0.5,
             'overlay-color': 'RoyalBlue',
             'font-style': 'italic',
-          }
+          },
         },
         {
           selector: '.highlighted-edge',
           style: {
-            'width': 3,
-            "line-color": "Violet",
+            width: 3,
+            'line-color': 'Violet',
             'transition-property': 'line-color',
             'transition-duration': 300,
-          }
+          },
         },
-      ]
+      ],
     });
 
     this.setupCyEvents();
@@ -282,8 +287,7 @@ export class FcoseComponent {
         depNode.addClass('hoveredCommon ');
         if (this.hoveredNode.outgoers('node').has(depNode)) {
           depNode.addClass('hoveredHighlight');
-        }
-        else {
+        } else {
           depNode.addClass('hoveredIncomers');
         }
       });
@@ -324,7 +328,7 @@ export class FcoseComponent {
   onZoomOut(_event: MouseEvent) {
     this.cy.animate({
       zoom: this.cy.zoom() - 0.1,
-      duration: 300
+      duration: 300,
     });
   }
 
@@ -334,16 +338,16 @@ export class FcoseComponent {
         eles: this.cy.elements(),
         padding: 10,
       },
-      duration: 300
+      duration: 300,
     });
   }
 
   onDiveInUbuntu(_event: MouseEvent) {
-    this.onDiveIn("78f660ea-c2f6-49e8-b116-c93884ad68bf");
+    this.onDiveIn('78f660ea-c2f6-49e8-b116-c93884ad68bf');
   }
 
   onDiveInDotnet(_event: MouseEvent) {
-    this.onDiveIn("404f2067-003e-47cd-aade-16875d0c6899");
+    this.onDiveIn('404f2067-003e-47cd-aade-16875d0c6899');
   }
 
   onDiveIn(nodeId: string) {
@@ -364,44 +368,44 @@ export class FcoseComponent {
     const groupMap: string[] = [];
 
     const elements: ElementDefinition[] = [];
-    nodeIds.forEach(id => {
-      const sbomDetail = this.dataDtos[0].details?.find(x => x.bomRef == id);
+    nodeIds.forEach((id) => {
+      const sbomDetail = this.dataDtos[0].details?.find((x) => x.bomRef == id);
       if (sbomDetail) {
-        if (sbomDetail.purl?.startsWith("pkg:nuget/")) {
+        if (sbomDetail.purl?.startsWith('pkg:nuget/')) {
           const potentialNs = sbomDetail.name.split('.')[0];
           if (!groupMap.includes(potentialNs)) {
             groupMap.push(potentialNs);
             elements.push({ data: { id: potentialNs, label: potentialNs }, classes: 'nodeCommon' });
-          };
-        };
+          }
+        }
         elements.push({
           data: {
             id: id,
-            label: sbomDetail.name ?? "",
-            parent: (sbomDetail.purl?.startsWith("pkg:nuget/") && !sbomDetail.name.includes("Runtime.linux-x64"))
-              ? sbomDetail.name.split('.')[0]
-              : undefined
+            label: sbomDetail.name ?? '',
+            parent:
+              sbomDetail.purl?.startsWith('pkg:nuget/') && !sbomDetail.name.includes('Runtime.linux-x64')
+                ? sbomDetail.name.split('.')[0]
+                : undefined,
           },
           classes: `nodeCommon nodePackage ${sbomDetail.dependsOn?.length ? 'nodeBranch' : 'nodeLeaf'}`,
         });
-        sbomDetail.dependsOn?.forEach(depends => {
-            elements.push({
-              data: {
-                source: sbomDetail.bomRef,
-                target: depends
-              },
-              classes: 'edgeCommon'
-            });
+        sbomDetail.dependsOn?.forEach((depends) => {
+          elements.push({
+            data: {
+              source: sbomDetail.bomRef,
+              target: depends,
+            },
+            classes: 'edgeCommon',
           });
+        });
       }
-
     });
 
     return elements;
   }
 
   private getNodeIds(nodeId: string, nodeIds: string[]) {
-    const detail = this.dataDtos[0].details?.find(x => x.bomRef == nodeId);
+    const detail = this.dataDtos[0].details?.find((x) => x.bomRef == nodeId);
     if (!detail) {
       return;
     }
@@ -410,9 +414,9 @@ export class FcoseComponent {
       return;
     }
 
-    const newIds: string[] = detailRefIds.filter(id => !nodeIds.includes(id));
+    const newIds: string[] = detailRefIds.filter((id) => !nodeIds.includes(id));
     nodeIds.push(...newIds);
-    newIds.forEach(id => this.getNodeIds(id, nodeIds))
+    newIds.forEach((id) => this.getNodeIds(id, nodeIds));
   }
 
   //this.dataDtos[0].details?.forEach(detail => {

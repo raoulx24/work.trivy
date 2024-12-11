@@ -1,25 +1,12 @@
-<div class="grid flex" >
+<div class="grid flex">
   <div class="col-12">
-    <p-button label="Zoom In"
-              icon="pi pi-search-plus"
-              size="small"
-              [text]="true"
-              (onClick)="onZoomIn($event)" />
-    <p-button label="Zoom Out"
-              icon="pi pi-search-minus"
-              size="small"
-              [text]="true"
-              (onClick)="onZoomOut($event)" />
-    <p-button label="Reset Zoom"
-              icon="pi pi-refresh"
-              size="small"
-              [text]="true"
-              (onClick)="onZoomReset($event)" />
+    <p-button icon="pi pi-search-plus" label="Zoom In" size="small" [text]="true" (onClick)="onZoomIn($event)" />
+    <p-button icon="pi pi-search-minus" label="Zoom Out" size="small" [text]="true" (onClick)="onZoomOut($event)" />
+    <p-button icon="pi pi-refresh" label="Reset Zoom" size="small" [text]="true" (onClick)="onZoomReset($event)" />
   </div>
   <div class="col-12 h-full">
     <div #mermaid>
-      <div [innerHTML]="mermaidGraphDefinition" style="height: 80vh">
-      </div>
+      <div style="height: 80vh" [innerHTML]="mermaidGraphDefinition"></div>
     </div>
   </div>
 </div>

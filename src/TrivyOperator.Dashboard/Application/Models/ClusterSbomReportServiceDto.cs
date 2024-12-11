@@ -28,7 +28,7 @@ public static class ClusterSbomReportCrExtensions
         ComponentsComponent[] allComponents = clusterSbomReportCr.Report?.Components.ComponentsComponents ?? [];
         SanitizeComponents(allComponents);
         Array.Resize(ref allComponents, allComponents.Length + 1);
-        allComponents[^1] = new()
+        allComponents[^1] = new ComponentsComponent
         {
             BomRef = Guid.Empty.ToString(),
             Name = clusterSbomReportCr.Report?.Components.Metadata.Component.Name ?? string.Empty,
@@ -36,31 +36,38 @@ public static class ClusterSbomReportCrExtensions
             Type = clusterSbomReportCr.Report?.Components.Metadata.Component.Type ?? string.Empty,
             Version = clusterSbomReportCr.Report?.Components.Metadata.Component.Version ?? string.Empty,
         };
-        var alldependencies = clusterSbomReportCr.Report?.Components.Dependencies ?? [];
+        Dependency[] alldependencies = clusterSbomReportCr.Report?.Components.Dependencies ?? [];
 
-        var details = allComponents.Select(component =>
-        {
-            Guid.TryParse(component.BomRef, out Guid bomRef);
-
-            var refDependency = alldependencies.FirstOrDefault(dep => dep.Ref == bomRef.ToString() || dep.Ref == component.Purl) ?? new();
-            var dependencies = refDependency.DependsOn
-                .Select(depOn => {
-                    var dependsOn = allComponents.FirstOrDefault(dep => dep.BomRef == depOn || dep.Purl == depOn)?.BomRef ?? string.Empty;
-                    Guid.TryParse(dependsOn, out Guid dependsOnBomRef);
-
-                    return dependsOnBomRef;
-                }).ToArray();
-            ClusterSbomReportDetailDto detailDto = new()
+        IEnumerable<ClusterSbomReportDetailDto> details = allComponents.Select(
+            component =>
             {
-                BomRef = bomRef,
-                Name = HttpUtility.HtmlEncode(component.Name),
-                Purl = component.Purl,
-                Version = HttpUtility.HtmlEncode(component.Version),
-                DependsOn = dependencies,
-            };
+                Guid.TryParse(component.BomRef, out Guid bomRef);
 
-            return detailDto;
-        });
+                Dependency refDependency =
+                    alldependencies.FirstOrDefault(dep => dep.Ref == bomRef.ToString() || dep.Ref == component.Purl) ??
+                    new Dependency();
+                Guid[] dependencies = refDependency.DependsOn.Select(
+                        depOn =>
+                        {
+                            string dependsOn =
+                                allComponents.FirstOrDefault(dep => dep.BomRef == depOn || dep.Purl == depOn)?.BomRef ??
+                                string.Empty;
+                            Guid.TryParse(dependsOn, out Guid dependsOnBomRef);
+
+                            return dependsOnBomRef;
+                        })
+                    .ToArray();
+                ClusterSbomReportDetailDto detailDto = new()
+                {
+                    BomRef = bomRef,
+                    Name = HttpUtility.HtmlEncode(component.Name),
+                    Purl = component.Purl,
+                    Version = HttpUtility.HtmlEncode(component.Version),
+                    DependsOn = dependencies,
+                };
+
+                return detailDto;
+            });
 
         ClusterSbomReportDto result = new()
         {
@@ -76,19 +83,13 @@ public static class ClusterSbomReportCrExtensions
 
     private static void SanitizeComponents(ComponentsComponent[] components)
     {
-        foreach (var component in components)
+        foreach (ComponentsComponent component in components)
         {
             component.BomRef = SanitizeBomRef(component.BomRef);
         }
     }
 
-    private static string SanitizeBomRef(string? bomRef)
-    {
-        if (string.IsNullOrWhiteSpace(bomRef) || bomRef.Length != 36)
-        {
-            return Guid.NewGuid().ToString();
-        }
-
-        return Guid.TryParse(bomRef,out _) ? bomRef : Guid.NewGuid().ToString();
-    }
+    private static string SanitizeBomRef(string? bomRef) => string.IsNullOrWhiteSpace(bomRef) || bomRef.Length != 36
+            ? Guid.NewGuid().ToString()
+            : Guid.TryParse(bomRef, out _) ? bomRef : Guid.NewGuid().ToString();
 }
