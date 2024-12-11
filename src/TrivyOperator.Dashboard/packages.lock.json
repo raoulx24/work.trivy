@@ -16,9 +16,9 @@
       },
       "Microsoft.AspNetCore.SpaProxy": {
         "type": "Direct",
-        "requested": "[8.0.10, )",
-        "resolved": "8.0.10",
-        "contentHash": "8oqu48JT85gDrgkS8nbrIBYY4R+u3twEnycD8zSJJUVfw+Y14BmkymSGtH413ev3hc4hq4le9fD0P5468NlNbg=="
+        "requested": "[8.0.11, )",
+        "resolved": "8.0.11",
+        "contentHash": "jwE/cg81t/FTZF1DOKpd90ztzZz6NNNHdo+vLUL4I2IzqL3e8Coo+2eR0KeD4ShbJm+3LNPXH9a6gYv/oP+aQQ=="
       },
       "Microsoft.Extensions.Http": {
         "type": "Direct",
@@ -36,9 +36,9 @@
       },
       "Microsoft.Extensions.Http.Polly": {
         "type": "Direct",
-        "requested": "[8.0.10, )",
-        "resolved": "8.0.10",
-        "contentHash": "Of5qq+Xovs6/hDY+n86keBL3Ww1zIIm52eNEHcdW1fvamXIcG0rvbkW1VM4SJNWqmR2fqhFSOLz0wGdBgpZROg==",
+        "requested": "[8.0.11, )",
+        "resolved": "8.0.11",
+        "contentHash": "4KP2hYtniRB6QDGsEbByEmM1dp1Og0iz3yxeZFJzSQDaCGwM2HpGZAEUptfxQVIj3SFt+x8u8rcO+0HIvsOJvA==",
         "dependencies": {
           "Microsoft.Extensions.Http": "8.0.1",
           "Polly": "7.2.4",
@@ -47,9 +47,9 @@
       },
       "Serilog": {
         "type": "Direct",
-        "requested": "[4.1.0, )",
-        "resolved": "4.1.0",
-        "contentHash": "u1aZI8HZ62LWlq5dZLFwm6jMax/sUwnWZSw5lkPsCt518cJBxFKoNmc7oSxe5aA5BgSkzy9rzwFGR/i/acnSPw=="
+        "requested": "[4.2.0, )",
+        "resolved": "4.2.0",
+        "contentHash": "gmoWVOvKgbME8TYR+gwMf7osROiWAURterc6Rt2dQyX7wtjZYpqFiA/pY6ztjGQKKV62GGCyOcmtP1UKMHgSmA=="
       },
       "Serilog.AspNetCore": {
         "type": "Direct",
