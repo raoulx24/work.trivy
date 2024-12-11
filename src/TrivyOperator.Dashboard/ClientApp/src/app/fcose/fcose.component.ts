@@ -77,7 +77,7 @@ export class FcoseComponent {
     if (node) {
       const x = this.dataDtos[0].details?.find((x) => x.bomRef == node.id());
       if (x) {
-        this.testText = `BomRef: ${x.bomRef} - Name: ${x.name} - Version: ${x.version} - purl: ${x.purl} - dependencies: ${x.dependsOn.length}`;
+        this.testText = `<b>Name:</b> ${x.name} - <b>Version:</b> ${x.version} - <b>Dependencies:</b> ${x.dependsOn.length}`;
       }
     } else {
       this.testText = 'no info...';
@@ -98,7 +98,7 @@ export class FcoseComponent {
     fit: true,
     padding: 10,
     sampleSize: 50,
-    nodeSeparation: 4000,
+    nodeSeparation: 500,
     tilingPaddingHorizontal: 1000,
     tilingPaddingVertical: 1000,
     idealEdgeLength: (edge: EdgeSingular) => {
