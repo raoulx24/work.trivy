@@ -41,7 +41,7 @@ testem.log
 Thumbs.db
 
 # ng-openapi-gen generated
-src/api
+/src/api
 
 # allow Angular build folder
 !/build

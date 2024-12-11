@@ -6,7 +6,7 @@ const parser = require('@typescript-eslint/parser');
 
 module.exports = [
   {
-    ignores: ['dist', 'node_modules'],
+    ignores: ['.angular', 'dist', 'node_modules', 'src/api'],
   },
   {
     files: ['**/*.ts'],

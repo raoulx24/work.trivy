@@ -1,4 +1,5 @@
-.angular
+/.angular
 /dist
 /coverage
 /node_modules
+/src/api
