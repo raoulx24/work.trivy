@@ -10,4 +10,3 @@ public class ClusterSbomReportCrd : CustomResourceDefinition
     public override string Kind { get; } = "CResource";
     public override string? Namespace { get; init; } = null;
 }
-

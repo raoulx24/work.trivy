@@ -3,14 +3,20 @@ import { Component } from '@angular/core';
 import { ClusterComplianceReportDto } from '../../api/models/cluster-compliance-report-dto';
 import { ClusterComplianceReportService } from '../../api/services/cluster-compliance-report.service';
 import { GenericMasterDetailComponent } from '../generic-master-detail/generic-master-detail.component';
-import { TrivyExpandTableOptions, TrivyFilterData, TrivyTableCellCustomOptions, TrivyTableColumn, TrivyTableOptions } from '../trivy-table/trivy-table.types';
+import {
+  TrivyExpandTableOptions,
+  TrivyFilterData,
+  TrivyTableCellCustomOptions,
+  TrivyTableColumn,
+  TrivyTableOptions,
+} from '../trivy-table/trivy-table.types';
 
 @Component({
   selector: 'app-cluster-compliance-reports',
   standalone: true,
   imports: [GenericMasterDetailComponent],
   templateUrl: './cluster-compliance-reports.component.html',
-  styleUrl: './cluster-compliance-reports.component.scss'
+  styleUrl: './cluster-compliance-reports.component.scss',
 })
 export class ClusterComplianceReportsComponent {
   public dataDtos: ClusterComplianceReportDto[] = [];
@@ -209,22 +215,22 @@ export class ClusterComplianceReportsComponent {
         celStyle = 'white-space: normal; display: flex; align-items: center; height: 50px;';
         switch (rowIndex) {
           case 0:
-            celValue = dto.description ?? "";
+            celValue = dto.description ?? '';
             break;
           case 1:
-            celValue = dto.platform ?? "";
+            celValue = dto.platform ?? '';
             break;
           case 2:
-            celValue = dto.type ?? "";
+            celValue = dto.type ?? '';
             break;
           case 3:
-            celValue = dto.version ?? "";
+            celValue = dto.version ?? '';
             break;
           case 4:
-            celValue = dto.reportType ?? "";
+            celValue = dto.reportType ?? '';
             break;
           case 5:
-            celValue = dto.cron ?? "";
+            celValue = dto.cron ?? '';
             break;
           case 6:
             if (dto.updateTimestamp) {
@@ -233,14 +239,13 @@ export class ClusterComplianceReportsComponent {
               const month = ('0' + (date.getMonth() + 1)).slice(-2);
               const day = ('0' + date.getDate()).slice(-2);
               celValue = `${year}-${month}-${day}`;
-            }
-            else {
-              celValue = "";
+            } else {
+              celValue = '';
             }
             break;
           case 7:
-            celValue = dto.relatedResources ? dto.relatedResources[0] : "";
-            celUrl = dto.relatedResources ? dto.relatedResources[0] : "";
+            celValue = dto.relatedResources ? dto.relatedResources[0] : '';
+            celUrl = dto.relatedResources ? dto.relatedResources[0] : '';
             break;
         }
         break;

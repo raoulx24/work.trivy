@@ -7,6 +7,7 @@ using TrivyOperator.Dashboard.Domain.Trivy.CustomResources.Abstractions;
 using TrivyOperator.Dashboard.Domain.Trivy.RbacAssessmentReport;
 
 namespace TrivyOperator.Dashboard.Application.Services.CacheWatcherEventHandlers;
+
 public class RbacAssessmentReportCacheWatcherEventHandler(
     ICacheRefresh<RbacAssessmentReportCr, IBackgroundQueue<RbacAssessmentReportCr>> cacheRefresh,
     INamespacedWatcher<RbacAssessmentReportCr> kubernetesWatcher,

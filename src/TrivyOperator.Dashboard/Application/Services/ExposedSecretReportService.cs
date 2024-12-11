@@ -160,7 +160,10 @@ public class ExposedSecretReportService(IConcurrentCache<string, IList<ExposedSe
             .ToList();
         summaryDto = new EsSeveritiesByNsSummaryDto
         {
-            Uid = Guid.NewGuid(), NamespaceName = string.Empty, Details = detailDtos, IsTotal = true,
+            Uid = Guid.NewGuid(),
+            NamespaceName = string.Empty,
+            Details = detailDtos,
+            IsTotal = true,
         };
         summaryDtos.Add(summaryDto);
 

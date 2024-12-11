@@ -33,10 +33,12 @@ export class HomeComponent implements OnInit {
   get showDistinctValues() {
     return this._showDistinctValues;
   }
+
   set showDistinctValues(value: boolean) {
     this._showDistinctValues = value;
     localStorage.setItem('home.showDistinctValues', value.toString());
   }
+
   private _showDistinctValues: boolean = true;
   enabledTrivyReports: string[] = ['crar', 'car', 'esr', 'vr'];
   tabPageActiveIndex: number = 0;

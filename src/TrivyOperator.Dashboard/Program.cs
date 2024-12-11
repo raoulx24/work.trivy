@@ -140,7 +140,10 @@ static void ConfigureJsonSerializerOptions(JsonSerializerOptions options)
     options.Converters.Add(new DateTimeNullableJsonConverter());
 }
 
-static void ConfigureMvcOptions(MvcOptions options) => options.Filters.Add(new ProducesAttribute("application/json"));
+static void ConfigureMvcOptions(MvcOptions options)
+{
+    options.Filters.Add(new ProducesAttribute("application/json"));
+}
 
 static void CurrentDomainUnhandledException(object sender, UnhandledExceptionEventArgs e)
 {

@@ -1,6 +1,6 @@
-﻿using k8s.Autorest;
+﻿using k8s;
+using k8s.Autorest;
 using k8s.Models;
-using k8s;
 using TrivyOperator.Dashboard.Application.Services.BackgroundQueues.Abstractions;
 using TrivyOperator.Dashboard.Application.Services.WatcherEvents.Abstractions;
 using TrivyOperator.Dashboard.Application.Services.Watchers.Abstractions;
