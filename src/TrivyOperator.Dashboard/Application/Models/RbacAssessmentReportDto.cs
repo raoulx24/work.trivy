@@ -1,4 +1,5 @@
-﻿using TrivyOperator.Dashboard.Domain.Trivy.RbacAssessmentReport;
+﻿using Microsoft.Extensions.Localization;
+using TrivyOperator.Dashboard.Domain.Trivy.RbacAssessmentReport;
 
 namespace TrivyOperator.Dashboard.Application.Models;
 
@@ -31,6 +32,7 @@ public class RbacAssessmentReportDenormalizedDto
 {
     public Guid Uid { get; init; } = Guid.NewGuid();
     public string ResourceName { get; init; } = string.Empty;
+    public string ResourceNamespace { get; init; } = string.Empty;
 
     public string Category { get; init; } = string.Empty;
     public string CheckId { get; init; } = string.Empty;
@@ -89,12 +91,13 @@ public static class RbacAssessmentReportCrExtensions
     {
         List<RbacAssessmentReportDenormalizedDto> rbacAssessmentReportDetailDtos = [];
         string resourceName =
-            rbacAssessmentReportCr?.Metadata?.Annotations != null &&
-            rbacAssessmentReportCr.Metadata.Annotations.TryGetValue(
+            rbacAssessmentReportCr?.Metadata?.Labels != null &&
+            rbacAssessmentReportCr.Metadata.Labels.TryGetValue(
                 "trivy-operator.resource.name",
                 out string? tryResourceName)
                 ? tryResourceName
                 : string.Empty;
+        string resourceNamespace = rbacAssessmentReportCr?.Metadata.NamespaceProperty ?? string.Empty;
 
         foreach (Check check in rbacAssessmentReportCr?.Report?.Checks ?? [])
         {
@@ -109,6 +112,7 @@ public static class RbacAssessmentReportCrExtensions
                 Success = check.Success,
                 Title = check.Title,
                 ResourceName = resourceName,
+                ResourceNamespace = resourceNamespace,
             };
             rbacAssessmentReportDetailDtos.Add(rbacAssessmentReportDenormalizedDto);
         }
