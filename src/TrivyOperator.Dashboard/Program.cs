@@ -86,6 +86,9 @@ builder.Services.AddClusterRbacAssessmentReportServices(configuration.GetSection
 builder.Services.AddConfigAuditReportServices(configuration.GetSection(kubernetesConfigurationSectionKey));
 builder.Services.AddExposedSecretReportServices(configuration.GetSection(kubernetesConfigurationSectionKey));
 builder.Services.AddVulnerabilityReportServices(configuration.GetSection(kubernetesConfigurationSectionKey));
+builder.Services.AddClusterComplianceReportServices(configuration.GetSection(kubernetesConfigurationSectionKey));
+builder.Services.AddClusterVulnerabilityReportServices(configuration.GetSection(kubernetesConfigurationSectionKey));
+builder.Services.AddRbacAssessmentReportServices(configuration.GetSection(kubernetesConfigurationSectionKey));
 builder.Services.AddUiCommons();
 
 // TODO: Cluster SBOM - tests
@@ -145,7 +148,10 @@ static void ConfigureJsonSerializerOptions(JsonSerializerOptions options)
     options.Converters.Add(new DateTimeNullableJsonConverter());
 }
 
-static void ConfigureMvcOptions(MvcOptions options) => options.Filters.Add(new ProducesAttribute("application/json"));
+static void ConfigureMvcOptions(MvcOptions options)
+{
+    options.Filters.Add(new ProducesAttribute("application/json"));
+}
 
 static void CurrentDomainUnhandledException(object sender, UnhandledExceptionEventArgs e)
 {

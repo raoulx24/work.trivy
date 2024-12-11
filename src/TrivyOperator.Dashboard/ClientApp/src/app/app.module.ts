@@ -88,6 +88,20 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
           ),
       },
       {
+        path: 'cluster-compliance-reports',
+        loadComponent: () =>
+          import('./cluster-compliance-reports/cluster-compliance-reports.component').then(
+            (m) => m.ClusterComplianceReportsComponent,
+          ),
+      },
+      {
+        path: 'cluster-compliance-reports-detailed',
+        loadComponent: () =>
+          import('./cluster-compliance-reports-detailed/cluster-compliance-reports-detailed.component').then(
+            (m) => m.ClusterComplianceReportsDetailedComponent,
+          ),
+      },
+      {
         path: 'watcher-states',
         loadComponent: () => import('./watcher-state/watcher-state.component').then((m) => m.WatcherStateComponent),
       },

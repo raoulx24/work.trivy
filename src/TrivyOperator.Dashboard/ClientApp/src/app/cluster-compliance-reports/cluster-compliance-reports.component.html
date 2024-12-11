@@ -1,0 +1,14 @@
+<h3>Cluster Compliance Reports</h3>
+
+<app-generic-master-detail
+  [activeNamespaces]="activeNamespaces"
+  [dataDtos]="dataDtos"
+  [detailsTableColumns]="detailsTableColumns"
+  [detailsTableOptions]="detailsTableOptions"
+  [isMainTableLoading]="isMainTableLoading"
+  [mainTableColumns]="mainTableColumns"
+  [mainTableExpandCellOptions]="mainTableExpandCellOptions"
+  [mainTableExpandTableOptions]="mainTableExpandTableOptions"
+  [mainTableOptions]="mainTableOptions"
+  (refreshRequested)="onRefreshRequested($event)"
+/>

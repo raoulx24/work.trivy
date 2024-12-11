@@ -52,8 +52,8 @@ public class CacheRefresh<TKubernetesObject, TBackgroundQueue>(
                 case WatchEventType.Modified:
                     ProcessModifiedEvent(watcherEvent, cancellationToken);
                     break;
-                //default:
-                //    break;
+                    //default:
+                    //    break;
             }
         }
     }

@@ -33,19 +33,20 @@
         <p-button
           *ngIf="trivyTableOptions!.isRefreshVisible && !trivyTableOptions!.isRefreshFiltrable"
           icon="pi pi-refresh"
+          label="Refresh"
+          raised
           size="small"
           text
-          raised
-          label="Refresh"
           (onClick)="onFilterRefresh($event)"
         />
-        <p-splitButton #refreshSplitButton
+        <p-splitButton
           *ngIf="trivyTableOptions!.isRefreshVisible && trivyTableOptions!.isRefreshFiltrable"
+          #refreshSplitButton
           icon="pi pi-refresh"
+          label="Refresh"
+          raised
           size="small"
           text
-          raised
-          label="Refresh"
           (onClick)="onFilterRefresh($event)"
           (onDropdownClick)="onFilterDropdownClick($event)"
         />
@@ -62,9 +63,9 @@
           *ngIf="trivyTableOptions!.dataKey"
           icon="pi pi-expand"
           label="Collapse All"
+          raised
           size="small"
           text
-          raised
           [disabled]="!anyRowExpanded"
           (onClick)="onTableCollapseAll()"
         />
@@ -72,9 +73,9 @@
           *ngIf="trivyTableOptions!.isResetFiltersVisible"
           icon="pi pi-filter"
           label="Clear Sort/Filters"
+          raised
           size="small"
           text
-          raised
           [disabled]="!isTableFilteredOrSorted()"
           (onClick)="onClearSortFilters()"
         />
@@ -82,9 +83,9 @@
           *ngIf="trivyTableOptions!.isExportCsvVisible"
           icon="pi pi-file-excel"
           label="Export to CSV"
+          raised
           size="small"
           text
-          raised
           (onClick)="csvExportOp.toggle($event)"
         />
       </div>
@@ -255,20 +256,29 @@
                     *ngFor="let col of trivyExpandTableOptions.columnsArray"
                     style="{{ trivyExpandTableFunction(rowData, 'row', col, row).style }}"
                   >
-                    <a>{{ trivyExpandTableFunction(rowData, 'row', col, row).value }}</a>
-                    <p-button
-                      *ngIf="trivyExpandTableFunction(rowData, 'row', col, row).buttonLink"
-                      label="{{ trivyExpandTableFunction(rowData, 'row', col, row).buttonLink }}"
-                      size="small"
-                      [text]="true"
-                      (onClick)="onTrivyDetailsTableCallback(rowData)"
-                    />
-                    <p-tag
-                      *ngIf="trivyExpandTableFunction(rowData, 'row', col, row).badge"
-                      [rounded]="true"
-                      [style]="{ 'margin-left': '10px', background: severityWrapperGetCssColor(1) }"
-                      [value]="trivyExpandTableFunction(rowData, 'row', col, row).badge"
-                    />
+                    <div *ngIf="!trivyExpandTableFunction(rowData, 'row', col, row).url">
+                      <span>{{ trivyExpandTableFunction(rowData, 'row', col, row).value }}</span>
+                      <p-button
+                        *ngIf="trivyExpandTableFunction(rowData, 'row', col, row).buttonLink"
+                        label="{{ trivyExpandTableFunction(rowData, 'row', col, row).buttonLink }}"
+                        size="small"
+                        [text]="true"
+                        (onClick)="onTrivyDetailsTableCallback(rowData)"
+                      />
+                      <p-tag
+                        *ngIf="trivyExpandTableFunction(rowData, 'row', col, row).badge"
+                        [rounded]="true"
+                        [style]="{ 'margin-left': '10px', background: severityWrapperGetCssColor(1) }"
+                        [value]="trivyExpandTableFunction(rowData, 'row', col, row).badge"
+                      />
+                    </div>
+                    <a
+                      *ngIf="trivyExpandTableFunction(rowData, 'row', col, row).url"
+                      href="{{ trivyExpandTableFunction(rowData, 'row', col, row).url }}"
+                      target="_blank"
+                    >
+                      {{ trivyExpandTableFunction(rowData, 'row', col, row).value }}
+                    </a>
                   </td>
                 </tr>
               </ng-template>
@@ -301,9 +311,9 @@
           <p-button
             icon="pi pi-filter"
             label="Export Filtered"
+            raised
             size="small"
             text
-            raised
             [disabled]="!trivyTable.filteredValue"
             [style]="{ width: '100%' }"
             (onClick)="onExportToCsv('filtered')"
@@ -313,9 +323,9 @@
           <p-button
             icon="pi pi-align-justify"
             label="Export All"
+            raised
             size="small"
             text
-            raised
             [style]="{ width: '100%' }"
             (onClick)="onExportToCsv('all')"
           />
@@ -367,22 +377,26 @@
       <div class="row">
         <div class="grid">
           <div class="col-6">
-            <p-button icon="pi pi-refresh"
-                      label="Refresh"
-                      size="small"
-                      styleClass="w-full"
-                      text
-                      raised
-                      (onClick)="onFilterData()" />
+            <p-button
+              icon="pi pi-refresh"
+              label="Refresh"
+              raised
+              size="small"
+              styleClass="w-full"
+              text
+              (onClick)="onFilterData()"
+            />
           </div>
           <div class="col-6">
-            <p-button icon="pi pi-replay"
-                      label="Reset"
-                      size="small"
-                      styleClass="w-full"
-                      text
-                      raised
-                      (onClick)="onFilterReset()" />
+            <p-button
+              icon="pi pi-replay"
+              label="Reset"
+              raised
+              size="small"
+              styleClass="w-full"
+              text
+              (onClick)="onFilterReset()"
+            />
           </div>
         </div>
       </div>

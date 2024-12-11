@@ -3,7 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 
 import { BackendSettingsDto } from '../../api/models/backend-settings-dto';
 import { BackendSettingsService } from '../../api/services/backend-settings.service';
-import { LocalStorageUtils } from '../utils/local-storage.utils'
+import { LocalStorageUtils } from '../utils/local-storage.utils';
 
 @Injectable({
   providedIn: 'root',
@@ -77,8 +77,6 @@ export class MainAppInitService {
     primengThemeLink.href = this.isDarkMode ? 'primeng-dark.css' : 'primeng-light.css';
     localStorage.setItem('mainSettings.isDarkMode', this.isDarkMode.toString());
   }
-
-  
 
   private mergeBackendSettingsDto(backendSettingsDto: BackendSettingsDto) {
     const previousItems: string[] =
