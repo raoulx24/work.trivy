@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Localization;
-using TrivyOperator.Dashboard.Domain.Trivy.RbacAssessmentReport;
+﻿using TrivyOperator.Dashboard.Domain.Trivy.RbacAssessmentReport;
 
 namespace TrivyOperator.Dashboard.Application.Models;
 
@@ -7,7 +6,7 @@ public class RbacAssessmentReportDto
 {
     public Guid Uid { get; init; } = Guid.Empty;
     public string ResourceName { get; init; } = string.Empty;
-    public string ResourceNamespace {  get; init; } = string.Empty;
+    public string ResourceNamespace { get; init; } = string.Empty;
     public long CriticalCount { get; init; }
     public long HighCount { get; init; }
     public long MediumCount { get; init; }
