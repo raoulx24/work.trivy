@@ -1,7 +1,7 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 
-import cytoscape, { BaseLayoutOptions, EdgeSingular, ElementDefinition, NodeSingular } from 'cytoscape';
-import fcose from 'cytoscape-fcose';
+import cytoscape, { EdgeSingular, ElementDefinition, NodeSingular } from 'cytoscape';
+import fcose, { FcoseLayoutOptions } from 'cytoscape-fcose';
 cytoscape.use(fcose);
 
 import { ButtonModule } from 'primeng/button';
@@ -11,52 +11,6 @@ import { ClusterSbomReportService } from '../../api/services/cluster-sbom-report
 import { ClusterSbomReportDto } from '../../api/models/cluster-sbom-report-dto';
 import { ClusterSbomReportDetailDto } from '../../api/models/cluster-sbom-report-detail-dto';
 //
-
-interface FcoseLayoutOptions extends BaseLayoutOptions {
-  name: 'fcose';
-  quality: "draft" | "default" | "proof" | undefined;
-  randomize: boolean | undefined;
-  animate: boolean;
-  animationDuration: number;
-  animationEasing: undefined,
-  fit: boolean;
-  padding: number,
-  nodeDimensionsIncludeLabels: boolean;
-  uniformNodeDimensions: boolean;
-  packComponents: boolean;
-  step: "all" | "transformed" | "enforced" | "cose";
-  /* spectral layout options */
-  samplingType: boolean;
-  sampleSize: number;
-  nodeSeparation: number;
-  piTol: number;
-  /* incremental layout options */
-  nodeRepulsion: (node: NodeSingular) => number;
-  idealEdgeLength: (edge: EdgeSingular) => number;
-  edgeElasticity: (edge: EdgeSingular) => number;
-  nestingFactor: number;
-  numIter: number;
-  tile: boolean;
-  tilingCompareBy: undefined;
-  tilingPaddingVertical: number;
-  tilingPaddingHorizontal: number;
-  gravity: number;
-  gravityRangeCompound: number;
-  gravityCompound: number;
-  gravityRange: number;
-  initialEnergyOnIncremental: number;
-  /* constraint options */
-  // Fix desired nodes to predefined positions
-  // [{nodeId: 'n1', position: {x: 100, y: 200}}, {...}]
-  fixedNodeConstraint: undefined;
-  // Align desired nodes in vertical/horizontal direction
-  // {vertical: [['n1', 'n2'], [...]], horizontal: [['n2', 'n4'], [...]]}
-  alignmentConstraint: undefined;
-  // Place two nodes relatively in vertical/horizontal direction
-  // [{top: 'n1', bottom: 'n2', gap: 100}, {left: 'n3', right: 'n4', gap: 75}, {...}]
-  relativePlacementConstraint: undefined;
-
-}
 
 @Component({
   selector: 'app-fcose',
@@ -84,6 +38,8 @@ export class FcoseComponent {
     }
   }
   private _hoveredNode: NodeSingular | null = null;
+
+
 
   testText: string = "";
 
@@ -280,6 +236,15 @@ export class FcoseComponent {
       });
       this.hoveredNode = null;
     });
+
+    this.cy.on('dblclick', 'node', (event) => {
+      this.onDiveIn(event.target.id());
+    });
+
+    this.cy.on('click', 'node', (event) => {
+      const node = event.target;
+      console.log('Single-clicked on node:', node.id());
+    });
   }
 
   onZoomIn(_event: MouseEvent) {
@@ -306,6 +271,10 @@ export class FcoseComponent {
     });
   }
 
+  onResetView(_event: MouseEvent) {
+    this.onDiveIn("00000000-0000-0000-0000-000000000000");
+  }
+
   onDiveInUbuntu(_event: MouseEvent) {
     this.onDiveIn("78f660ea-c2f6-49e8-b116-c93884ad68bf");
   }
@@ -315,12 +284,12 @@ export class FcoseComponent {
   }
 
   onDiveIn(nodeId: string) {
-    const rootNode = this.cy.$(`#${nodeId}`);
-    //this.cy.elements().not(rootNode).animate({ style: { opacity: 0 }, duration: 300 });
-    this.cy.remove(this.cy.elements().not(rootNode));
+    //const rootNode = this.cy.$(`#${nodeId}`);
+    ////this.cy.elements().not(rootNode).animate({ style: { opacity: 0 }, duration: 300 });
+    //this.cy.remove(this.cy.elements().not(rootNode));
+    this.cy.elements().remove();
     const newElements = this.getElementsByNodeId(nodeId);
     this.cy.add(newElements);
-    this.removeSingleChildGroupNodes();
     //this.cy.elements().animate({ style: { opacity: 1 }, duration: 300 });
     this.cy.layout(this.fcoseLayoutOptions as FcoseLayoutOptions).run();
     this.cy.fit();
@@ -372,7 +341,6 @@ export class FcoseComponent {
             });
           });
       }
-
     });
 
     return elements;
@@ -395,18 +363,6 @@ export class FcoseComponent {
     const newSbomDetailDtos = this.dataDtos[0].details?.filter(x => newDetailBomRefIds.includes(x.bomRef));
     sbomDetailDtos.push(...newSbomDetailDtos);
     newSbomDetailDtos.forEach(sbomDetailDto => this.getSbomDtos(sbomDetailDto, sbomDetailDtos));
-  }
-
-  private removeSingleChildGroupNodes() {
-    //console.log("mama");
-    //const nodesToRemove = this.cy.nodes().filter(node => node.isParent() && node.children().length === 1);
-    //nodes: SingleElementReturnValue[] = [];
-    //nodesToRemove.forEach(node => {
-    //  console.log(node.id());
-    //  console.log(node.children()[0].id());
-    //  node.children()[0].data('parent', null);
-    //  this.cy.remove(node);
-    //});
   }
 
   // tests sbom
