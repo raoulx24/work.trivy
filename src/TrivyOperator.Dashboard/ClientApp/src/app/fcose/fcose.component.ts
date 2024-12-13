@@ -7,9 +7,9 @@ cytoscape.use(fcose);
 import { ButtonModule } from 'primeng/button';
 
 // tests.sbom
-import { ClusterSbomReportService } from '../../api/services/cluster-sbom-report.service';
-import { ClusterSbomReportDto } from '../../api/models/cluster-sbom-report-dto';
-import { ClusterSbomReportDetailDto } from '../../api/models/cluster-sbom-report-detail-dto';
+import { SbomReportService } from '../../api/services/sbom-report.service';
+import { SbomReportDto } from '../../api/models/sbom-report-dto';
+import { SbomReportDetailDto } from '../../api/models/sbom-report-detail-dto';
 //
 
 @Component({
@@ -59,7 +59,7 @@ export class FcoseComponent {
   };
 
 
-  constructor(private service: ClusterSbomReportService) {
+  constructor(private service: SbomReportService) {
     // tests.sbom
     this.getTableDataDtos();
     //
@@ -68,13 +68,13 @@ export class FcoseComponent {
 
   // tests.sbom
   getTableDataDtos() {
-    this.service.getClusterSbomReportDtos().subscribe({
+    this.service.getSbomReportDtos().subscribe({
       next: (res) => this.onGetDataDtos(res),
       error: (err) => console.error(err),
     });
   }
 
-  onGetDataDtos(dtos: ClusterSbomReportDto[]) {
+  onGetDataDtos(dtos: SbomReportDto[]) {
     this.dataDtos = dtos;
 
     const elements: ElementDefinition[] = this.getElementsByNodeId("00000000-0000-0000-0000-000000000000");
@@ -288,14 +288,6 @@ export class FcoseComponent {
     this.onDiveIn("00000000-0000-0000-0000-000000000000");
   }
 
-  onDiveInUbuntu(_event: MouseEvent) {
-    this.onDiveIn("78f660ea-c2f6-49e8-b116-c93884ad68bf");
-  }
-
-  onDiveInDotnet(_event: MouseEvent) {
-    this.onDiveIn("404f2067-003e-47cd-aade-16875d0c6899");
-  }
-
   onDiveIn(nodeId: string) {
     this.cy.elements().addClass('hidden');
 
@@ -313,11 +305,11 @@ export class FcoseComponent {
       setTimeout(() => {
         this.cy.elements().removeClass('hidden');
       }, 500);
-    }, 300);
+    }, 350);
   }
 
   private getElementsByNodeId(nodeId: string): ElementDefinition[] {
-    const sbomDetailDtos: ClusterSbomReportDetailDto[] = [];
+    const sbomDetailDtos: SbomReportDetailDto[] = [];
     const rootSbomDto = this.dataDtos[0].details?.find(x => x.bomRef == nodeId);
     if (rootSbomDto) {
       sbomDetailDtos.push(rootSbomDto);
@@ -367,7 +359,7 @@ export class FcoseComponent {
     return elements;
   }
 
-  private getSbomDtos(sbomDetailDto: ClusterSbomReportDetailDto, sbomDetailDtos: ClusterSbomReportDetailDto[]) {
+  private getSbomDtos(sbomDetailDto: SbomReportDetailDto, sbomDetailDtos: SbomReportDetailDto[]) {
     if (!sbomDetailDto) {
       return;
     }
@@ -387,6 +379,6 @@ export class FcoseComponent {
   }
 
   // tests sbom
-  private dataDtos: ClusterSbomReportDto[] = [];
+  private dataDtos: SbomReportDto[] = [];
   //
 }

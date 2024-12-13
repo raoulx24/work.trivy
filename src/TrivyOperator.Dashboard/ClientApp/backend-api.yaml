@@ -635,6 +635,32 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
+  /api/sbom-reports:
+    get:
+      tags:
+        - SbomReport
+      operationId: GetSbomReportDtos
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SbomReportDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
   /api/severities:
     get:
       tags:
@@ -1884,6 +1910,61 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/RbacAssessmentReportDetailDto'
+          nullable: true
+      additionalProperties: false
+    SbomReportDetailDto:
+      type: object
+      properties:
+        bomRef:
+          type: string
+          format: uuid
+        name:
+          type: string
+          nullable: true
+        purl:
+          type: string
+          nullable: true
+        version:
+          type: string
+          nullable: true
+        dependsOn:
+          type: array
+          items:
+            type: string
+            format: uuid
+          nullable: true
+      additionalProperties: false
+    SbomReportDto:
+      type: object
+      properties:
+        uid:
+          type: string
+          nullable: true
+        resourceName:
+          type: string
+          nullable: true
+        resourceNamespace:
+          type: string
+          nullable: true
+        resourceKind:
+          type: string
+          nullable: true
+        resourceContainerName:
+          type: string
+          nullable: true
+        imageName:
+          type: string
+          nullable: true
+        imageTag:
+          type: string
+          nullable: true
+        repository:
+          type: string
+          nullable: true
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/SbomReportDetailDto'
           nullable: true
       additionalProperties: false
     Severity:

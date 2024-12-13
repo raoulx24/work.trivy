@@ -94,6 +94,8 @@ builder.Services.AddUiCommons();
 // TODO: SBOM - tests
 builder.Services.AddScoped<IClusterSbomReportDomainService, ClusterSbomReportDomainService>();
 builder.Services.AddScoped<IClusterSbomReportService, ClusterSbomReportService>();
+builder.Services.AddScoped<ISbomReportDomainService, SbomReportDomainService>();
+builder.Services.AddScoped<ISbomReportService, SbomReportService>();
 
 
 WebApplication app = builder.Build();
