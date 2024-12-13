@@ -47,7 +47,7 @@ export class FcoseComponent {
     name: "fcose",
     nodeRepulsion: (node: NodeSingular) => { return 20000 },
     numIter: 2500,
-    animate: true,
+    animate: false,
     fit: true,
     padding: 10,
     sampleSize: 50,
@@ -85,7 +85,7 @@ export class FcoseComponent {
       layout: this.fcoseLayoutOptions as FcoseLayoutOptions,
       style: [
         {
-          selector: '$node > .nodeCommon', // Compound (parent) node selector
+          selector: '$node > .nodeCommon',
           style: {
             'background-color': 'gray',
             'background-opacity': 0.2,
@@ -100,7 +100,9 @@ export class FcoseComponent {
         {
           selector: '.nodeCommon',
           style: {
-            
+            'opacity': 1,
+            'transition-property': 'opacity',
+            'transition-duration': 300,
             'border-width': 1,
           }
         },
@@ -117,7 +119,7 @@ export class FcoseComponent {
             'text-max-width': '200px',
             'font-size': '10px',
             'border-color': '#000',
-            'transition-property': 'width height background-color font-size border-color',
+            'transition-property': 'width height background-color font-size border-color opacity',
             'transition-duration': 300,
           }
         },
@@ -140,8 +142,9 @@ export class FcoseComponent {
             'line-color': '#ccc',
             'target-arrow-color': '#ccc',
             'target-arrow-shape': 'triangle',
-            'transition-property': 'width line-color',
+            'transition-property': 'width line-color opacity',
             'transition-duration': 300,
+            'opacity': 1,
           }
         },
         {
@@ -150,7 +153,7 @@ export class FcoseComponent {
             'width': 'mapData(label.length, 1, 30, 20, 240)',
             'height': '24px',
             'font-size': '12px',
-            'transition-property': 'width height background-color font-size border-color',
+            'transition-property': 'width height background-color font-size border-color opacity',
             'transition-duration': 300,
           }
         },
@@ -185,10 +188,16 @@ export class FcoseComponent {
           style: {
             'width': 3,
             "line-color": "Violet",
-            'transition-property': 'line-color',
+            'transition-property': 'line-color opacity',
             'transition-duration': 300,
           }
         },
+        {
+          selector: '.hidden',
+          style: {
+            'opacity': 0,
+          }
+        }
       ]
     });
 
@@ -241,10 +250,10 @@ export class FcoseComponent {
       this.onDiveIn(event.target.id());
     });
 
-    this.cy.on('click', 'node', (event) => {
-      const node = event.target;
-      console.log('Single-clicked on node:', node.id());
-    });
+    //this.cy.on('click', 'node', (event) => {
+    //  const node = event.target;
+    //  console.log('Single-clicked on node:', node.id());
+    //});
   }
 
   onZoomIn(_event: MouseEvent) {
@@ -284,15 +293,23 @@ export class FcoseComponent {
   }
 
   onDiveIn(nodeId: string) {
-    //const rootNode = this.cy.$(`#${nodeId}`);
-    ////this.cy.elements().not(rootNode).animate({ style: { opacity: 0 }, duration: 300 });
-    //this.cy.remove(this.cy.elements().not(rootNode));
-    this.cy.elements().remove();
-    const newElements = this.getElementsByNodeId(nodeId);
-    this.cy.add(newElements);
-    //this.cy.elements().animate({ style: { opacity: 1 }, duration: 300 });
-    this.cy.layout(this.fcoseLayoutOptions as FcoseLayoutOptions).run();
-    this.cy.fit();
+    this.cy.elements().addClass('hidden');
+
+    setTimeout(() => {
+      this.cy.elements().remove();
+
+      const newElements = this.getElementsByNodeId(nodeId);
+      this.cy.add(newElements);
+
+      this.cy.elements().addClass('hidden');
+
+      this.cy.layout(this.fcoseLayoutOptions as FcoseLayoutOptions).run();
+      this.cy.fit();
+
+      setTimeout(() => {
+        this.cy.elements().removeClass('hidden');
+      }, 500);
+    }, 300);
   }
 
   private getElementsByNodeId(nodeId: string): ElementDefinition[] {
