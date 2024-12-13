@@ -43,7 +43,7 @@ export class FcoseComponent {
 
   testText: string = "";
 
-  private fcoseLayoutOptions = {
+  private fcoseLayoutOptions: FcoseLayoutOptions = {
     name: "fcose",
     nodeRepulsion: (node: NodeSingular) => { return 20000 },
     numIter: 2500,
