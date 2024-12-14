@@ -640,6 +640,11 @@ paths:
       tags:
         - SbomReport
       operationId: GetSbomReportDtos
+      parameters:
+        - name: namespaceName
+          in: query
+          schema:
+            type: string
       responses:
         '200':
           description: OK
@@ -679,9 +684,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/SbomReportDto'
+                $ref: '#/components/schemas/SbomReportDto'
         '400':
           description: Bad Request
           content:

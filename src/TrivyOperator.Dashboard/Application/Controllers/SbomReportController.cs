@@ -17,7 +17,7 @@ public class SbomReportController(ISbomReportService sbomReportService) : Contro
         await sbomReportService.GetSbomReportDtos(namespaceName);
 
     [HttpGet("{uid}", Name = "GetSbomReportDtoByUid")]
-    [ProducesResponseType<IEnumerable<SbomReportDto>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<SbomReportDto>(StatusCodes.Status200OK)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetByUid(Guid uid)

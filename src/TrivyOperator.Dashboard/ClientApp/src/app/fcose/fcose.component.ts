@@ -45,7 +45,7 @@ export class FcoseComponent {
     },
   };
   // tests sbom
-  private dataDtos: SbomReportDto[] = [];
+  private dataDtos: SbomReportDto | null = null;
 
   constructor(private service: SbomReportService) {
     // tests.sbom
@@ -62,7 +62,7 @@ export class FcoseComponent {
   private set hoveredNode(node: NodeSingular | null) {
     this._hoveredNode = node;
     if (node) {
-      const x = this.dataDtos[0].details?.find((x) => x.bomRef == node.id());
+      const x = this.dataDtos?.details?.find((x) => x.bomRef == node.id());
       if (x) {
         this.testText = `<b>Name:</b> ${x.name} - <b>Version:</b> ${x.version} - <b>Dependencies:</b> ${x.dependsOn?.length ?? 0}`;
       }
@@ -73,13 +73,13 @@ export class FcoseComponent {
 
   // tests.sbom
   getTableDataDtos() {
-    this.service.getSbomReportDtos().subscribe({
+    this.service.getSbomReportDtoByUid({ uid: "25d158fe-10b9-49a3-ac5d-c393c12d040c" }).subscribe({
       next: (res) => this.onGetDataDtos(res),
       error: (err) => console.error(err),
     });
   }
 
-  onGetDataDtos(dtos: SbomReportDto[]) {
+  onGetDataDtos(dtos: SbomReportDto) {
     this.dataDtos = dtos;
 
     const elements: ElementDefinition[] = this.getElementsByNodeId('00000000-0000-0000-0000-000000000000');
@@ -314,7 +314,7 @@ export class FcoseComponent {
 
   private getElementsByNodeId(nodeId: string): ElementDefinition[] {
     const sbomDetailDtos: SbomReportDetailDto[] = [];
-    const rootSbomDto = this.dataDtos[0].details?.find((x) => x.bomRef == nodeId);
+    const rootSbomDto = this.dataDtos?.details?.find((x) => x.bomRef == nodeId);
     if (rootSbomDto) {
       sbomDetailDtos.push(rootSbomDto);
       this.getSbomDtos(rootSbomDto, sbomDetailDtos);
@@ -379,7 +379,7 @@ export class FcoseComponent {
       }
     });
     const newSbomDetailDtos =
-      this.dataDtos[0].details?.filter((x) => newDetailBomRefIds.includes(x.bomRef ?? '')) ?? [];
+      this.dataDtos?.details?.filter((x) => newDetailBomRefIds.includes(x.bomRef ?? '')) ?? [];
     sbomDetailDtos.push(...newSbomDetailDtos);
     newSbomDetailDtos.forEach((sbomDetailDto) => this.getSbomDtos(sbomDetailDto, sbomDetailDtos));
   }
