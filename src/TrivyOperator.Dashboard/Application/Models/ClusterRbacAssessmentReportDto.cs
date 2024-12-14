@@ -81,9 +81,14 @@ public static class ClusterRbacAssessmentReportCrExtensions
                 clusterRbacAssessmentReportCr.Metadata.Annotations != null &&
                 clusterRbacAssessmentReportCr.Metadata.Annotations.TryGetValue(
                     "trivy-operator.resource.name",
-                    out string? resourceName)
-                    ? resourceName
-                    : string.Empty,
+                    out string? resourceNameFromAnnotations)
+                    ? resourceNameFromAnnotations
+                    : (clusterRbacAssessmentReportCr.Metadata.Labels != null &&
+                        clusterRbacAssessmentReportCr.Metadata.Labels.TryGetValue(
+                            "trivy-operator.resource.name",
+                            out string? resourceNameFromLabels)
+                            ? resourceNameFromLabels
+                            : $"[{clusterRbacAssessmentReportCr.Metadata.Name}]"),
             CriticalCount = clusterRbacAssessmentReportCr.Report?.Summary?.CriticalCount ?? 0,
             HighCount = clusterRbacAssessmentReportCr.Report?.Summary?.HighCount ?? 0,
             MediumCount = clusterRbacAssessmentReportCr.Report?.Summary?.MediumCount ?? 0,
@@ -112,12 +117,17 @@ public static class ClusterRbacAssessmentReportCrExtensions
                 Title = check.Title,
                 Uid = new Guid(clusterRbacAssessmentReportCr?.Metadata?.Uid ?? string.Empty),
                 ResourceName =
-                    clusterRbacAssessmentReportCr?.Metadata?.Annotations != null &&
+                    clusterRbacAssessmentReportCr?.Metadata.Annotations != null &&
                     clusterRbacAssessmentReportCr.Metadata.Annotations.TryGetValue(
-                        "trivy-operator.resource.name",
-                        out string? resourceName)
-                        ? resourceName
-                        : string.Empty,
+                    "trivy-operator.resource.name",
+                    out string? resourceNameFromAnnotations)
+                    ? resourceNameFromAnnotations
+                    : (clusterRbacAssessmentReportCr?.Metadata.Labels != null &&
+                        clusterRbacAssessmentReportCr.Metadata.Labels.TryGetValue(
+                            "trivy-operator.resource.name",
+                            out string? resourceNameFromLabels)
+                            ? resourceNameFromLabels
+                            : $"[{clusterRbacAssessmentReportCr?.Metadata.Name}]"),
                 CriticalCount = clusterRbacAssessmentReportCr?.Report?.Summary?.CriticalCount ?? 0,
                 HighCount = clusterRbacAssessmentReportCr?.Report?.Summary?.HighCount ?? 0,
                 MediumCount = clusterRbacAssessmentReportCr?.Report?.Summary?.MediumCount ?? 0,
