@@ -1,6 +1,5 @@
 ﻿using System.Web;
 using TrivyOperator.Dashboard.Domain.Trivy.SbomReport;
-using TrivyOperator.Dashboard.Domain.Trivy.VulnerabilityReport;
 
 namespace TrivyOperator.Dashboard.Application.Models;
 
@@ -79,23 +78,19 @@ public static class SbomReportCrExtensions
             Uid = sbomReportCr.Metadata.Uid,
             ResourceName =
                 sbomReportCr.Metadata.Labels != null &&
-                sbomReportCr.Metadata.Labels.TryGetValue(
-                    "trivy-operator.resource.name",
-                    out string? resourceName)
+                sbomReportCr.Metadata.Labels.TryGetValue("trivy-operator.resource.name", out string? resourceName)
                     ? resourceName
-            : string.Empty,
+                    : string.Empty,
             ResourceNamespace =
                 sbomReportCr.Metadata.Labels != null &&
                 sbomReportCr.Metadata.Labels.TryGetValue(
                     "trivy-operator.resource.namespace",
                     out string? resourceNamespace)
                     ? resourceNamespace
-            : string.Empty,
+                    : string.Empty,
             ResourceKind =
                 sbomReportCr.Metadata.Labels != null &&
-                sbomReportCr.Metadata.Labels.TryGetValue(
-                    "trivy-operator.resource.kind",
-                    out string? resourceKind)
+                sbomReportCr.Metadata.Labels.TryGetValue("trivy-operator.resource.kind", out string? resourceKind)
                     ? resourceKind
                     : string.Empty,
             ResourceContainerName =
@@ -123,6 +118,9 @@ public static class SbomReportCrExtensions
     }
 
     private static string SanitizeBomRef(string? bomRef) => string.IsNullOrWhiteSpace(bomRef) || bomRef.Length != 36
-            ? Guid.NewGuid().ToString()
-            : Guid.TryParse(bomRef, out _) ? bomRef : Guid.NewGuid().ToString();
+        ?
+        Guid.NewGuid().ToString()
+        : Guid.TryParse(bomRef, out _)
+            ? bomRef
+            : Guid.NewGuid().ToString();
 }

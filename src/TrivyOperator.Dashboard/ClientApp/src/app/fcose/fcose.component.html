@@ -3,13 +3,7 @@
     <p-button icon="pi pi-search-plus" label="Zoom In" size="small" [text]="true" (onClick)="onZoomIn($event)" />
     <p-button icon="pi pi-search-minus" label="Zoom Out" size="small" [text]="true" (onClick)="onZoomOut($event)" />
     <p-button icon="pi pi-refresh" label="Fit" size="small" [text]="true" (onClick)="onZoomFit($event)" />
-    <p-button
-      icon="pi pi-sitemap"
-      label="Reset View"
-      size="small"
-      [text]="true"
-      (onClick)="onResetView($event)"
-    />
+    <p-button icon="pi pi-sitemap" label="Reset View" size="small" [text]="true" (onClick)="onResetView($event)" />
   </div>
   <div class="col-12 h-full">
     <div #graphContainer style="width: 100%; height: 80vh"></div>

@@ -30,6 +30,13 @@ import { TabViewChangeEvent, TabViewModule } from 'primeng/tabview';
   styleUrl: './home.component.scss',
 })
 export class HomeComponent implements OnInit {
+  enabledTrivyReports: string[] = ['crar', 'car', 'esr', 'vr'];
+  tabPageActiveIndex: number = 0;
+
+  constructor(private mainAppInitService: MainAppInitService) {}
+
+  private _showDistinctValues: boolean = true;
+
   get showDistinctValues() {
     return this._showDistinctValues;
   }
@@ -38,12 +45,6 @@ export class HomeComponent implements OnInit {
     this._showDistinctValues = value;
     localStorage.setItem('home.showDistinctValues', value.toString());
   }
-
-  private _showDistinctValues: boolean = true;
-  enabledTrivyReports: string[] = ['crar', 'car', 'esr', 'vr'];
-  tabPageActiveIndex: number = 0;
-
-  constructor(private mainAppInitService: MainAppInitService) {}
 
   ngOnInit() {
     this.mainAppInitService.backendSettingsDto$.subscribe((updatedBackendSettingsDto) => {

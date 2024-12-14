@@ -6,8 +6,7 @@ using TrivyOperator.Dashboard.Infrastructure.Abstractions;
 
 namespace TrivyOperator.Dashboard.Domain.Services;
 
-public class SbomReportDomainService(IKubernetesClientFactory kubernetesClientFactory)
-    : ISbomReportDomainService
+public class SbomReportDomainService(IKubernetesClientFactory kubernetesClientFactory) : ISbomReportDomainService
 {
     private readonly Kubernetes kubernetesClient = kubernetesClientFactory.GetClient();
 
@@ -15,12 +14,11 @@ public class SbomReportDomainService(IKubernetesClientFactory kubernetesClientFa
     {
         SbomReportCrd myCrd = new();
         CustomResourceList<SbomReportCr> csr =
-            await kubernetesClient.CustomObjects
-                .ListNamespacedCustomObjectAsync<CustomResourceList<SbomReportCr>>(
-                    myCrd.Group,
-                    myCrd.Version,
-                    "trivy",
-                    myCrd.PluralName);
+            await kubernetesClient.CustomObjects.ListNamespacedCustomObjectAsync<CustomResourceList<SbomReportCr>>(
+                myCrd.Group,
+                myCrd.Version,
+                "trivy",
+                myCrd.PluralName);
 
         return csr.Items ?? [];
     }

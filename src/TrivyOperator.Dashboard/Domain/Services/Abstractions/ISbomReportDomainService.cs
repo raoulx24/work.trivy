@@ -1,5 +1,4 @@
-﻿
-using TrivyOperator.Dashboard.Domain.Trivy.SbomReport;
+﻿using TrivyOperator.Dashboard.Domain.Trivy.SbomReport;
 
 namespace TrivyOperator.Dashboard.Domain.Services.Abstractions;
 

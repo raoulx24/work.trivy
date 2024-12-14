@@ -90,6 +90,9 @@ public static class ClusterSbomReportCrExtensions
     }
 
     private static string SanitizeBomRef(string? bomRef) => string.IsNullOrWhiteSpace(bomRef) || bomRef.Length != 36
-            ? Guid.NewGuid().ToString()
-            : Guid.TryParse(bomRef, out _) ? bomRef : Guid.NewGuid().ToString();
+        ?
+        Guid.NewGuid().ToString()
+        : Guid.TryParse(bomRef, out _)
+            ? bomRef
+            : Guid.NewGuid().ToString();
 }

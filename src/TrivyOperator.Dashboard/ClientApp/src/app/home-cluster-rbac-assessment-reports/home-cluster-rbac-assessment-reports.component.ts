@@ -14,17 +14,7 @@ import { TableModule } from 'primeng/table';
   styleUrl: './home-cluster-rbac-assessment-reports.component.scss',
 })
 export class HomeClusterRbacAssessmentReportsComponent {
-  @Input() set showDistinctValues(value: boolean) {
-    this.localShowDistinctValues = value;
-    this.onDistinctSwitch();
-  }
-
-  get showDistinctValues(): boolean {
-    return this.localShowDistinctValues;
-  }
-
   clusterRbacAssessmentReportSummaryDtos: ClusterRbacAssessmentReportSummaryDto[] = [];
-
   private localShowDistinctValues: boolean = true;
 
   constructor(private clusterRbacAssessmentReportService: ClusterRbacAssessmentReportService) {
@@ -34,8 +24,13 @@ export class HomeClusterRbacAssessmentReportsComponent {
     });
   }
 
-  private onDtos(dtos: ClusterRbacAssessmentReportSummaryDto[]) {
-    this.clusterRbacAssessmentReportSummaryDtos = dtos;
+  get showDistinctValues(): boolean {
+    return this.localShowDistinctValues;
+  }
+
+  @Input() set showDistinctValues(value: boolean) {
+    this.localShowDistinctValues = value;
+    this.onDistinctSwitch();
   }
 
   onDistinctSwitch() {
@@ -44,5 +39,9 @@ export class HomeClusterRbacAssessmentReportsComponent {
 
   severityWrapperGetCapitalizedName(severityId: number): string {
     return SeverityUtils.getCapitalizedName(severityId);
+  }
+
+  private onDtos(dtos: ClusterRbacAssessmentReportSummaryDto[]) {
+    this.clusterRbacAssessmentReportSummaryDtos = dtos;
   }
 }

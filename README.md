@@ -66,7 +66,8 @@ While we recognize the potential value these features could bring, our current a
 on perfecting the core functionality of the dashboard. However, we remain open to the possibility of expanding its
 capabilities if the app gains significant traction and user demand increases.
 
-For now, our priority is to deliver the rest of the provided features by Trivy (such as SBOMs and so on), to have a robust and reliable dashboard that meets
+For now, our priority is to deliver the rest of the provided features by Trivy (such as SBOMs and so on), to have a
+robust and reliable dashboard that meets
 immediate needs and serves the community effectively.
 
 > **Important:** Given the sensitivity of the data being handled, we recommend implementing external authentication

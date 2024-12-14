@@ -15,11 +15,10 @@ public class ClusterSbomReportDomainService(IKubernetesClientFactory kubernetesC
     {
         SbomReportCRD myCrd = new();
         CustomResourceList<ClusterSbomReportCr> csr =
-            await kubernetesClient.CustomObjects
-                .ListClusterCustomObjectAsync<CustomResourceList<ClusterSbomReportCr>>(
-                    myCrd.Group,
-                    myCrd.Version,
-                    myCrd.PluralName);
+            await kubernetesClient.CustomObjects.ListClusterCustomObjectAsync<CustomResourceList<ClusterSbomReportCr>>(
+                myCrd.Group,
+                myCrd.Version,
+                myCrd.PluralName);
 
         return csr.Items ?? [];
     }
