@@ -8,10 +8,10 @@ public class Components
     public string BomFormat { get; init; } = string.Empty;
 
     [JsonPropertyName("components")]
-    public ComponentsComponent[] ComponentsComponents { get; init; } = [];
+    public ComponentsComponent[] ComponentsComponents { get; set; } = [];
 
     [JsonPropertyName("dependencies")]
-    public Dependency[] Dependencies { get; init; } = [];
+    public Dependency[] Dependencies { get; set; } = [];
 
     [JsonPropertyName("metadata")]
     public ComponentsMetadata Metadata { get; init; } = new();

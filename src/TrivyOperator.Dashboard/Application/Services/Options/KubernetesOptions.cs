@@ -10,4 +10,6 @@ public record KubernetesOptions
     public bool? TrivyUseVulnerabilityReport { get; init; }
     public bool? TrivyUseClusterVulnerabilityReport { get; init; }
     public bool? TrivyUseRbacAssessmentReport { get; init; }
+    public bool? TrivyUseSbomReport { get; init; }
+    public bool? TrivyUseClusterSbomReport { get; init; }
 }

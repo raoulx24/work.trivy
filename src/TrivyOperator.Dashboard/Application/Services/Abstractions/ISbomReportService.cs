@@ -4,5 +4,6 @@ namespace TrivyOperator.Dashboard.Application.Services.Abstractions;
 
 public interface ISbomReportService
 {
-    Task<IEnumerable<SbomReportDto>> GetSbomReportDtos();
+    Task<IEnumerable<SbomReportDto>> GetSbomReportDtos(string? namespaceName = null);
+    Task<SbomReportDto?> GetSbomReportDtoByUid(Guid uid);
 }

@@ -80,6 +80,7 @@ public abstract class
                         isFreshStart = false;
                     }
 
+                    ProcessReceivedKubernetesObject(item);
                     TKubernetesWatcherEvent kubernetesWatcherEvent =
                         new() { KubernetesObject = item, WatcherEventType = type };
                     await BackgroundQueue.QueueBackgroundWorkItemAsync(kubernetesWatcherEvent);
@@ -126,4 +127,7 @@ public abstract class
         CancellationToken cancellationToken);
 
     protected abstract Task EnqueueWatcherEventWithError(IKubernetesObject<V1ObjectMeta>? sourceKubernetesObject);
+
+    protected virtual void ProcessReceivedKubernetesObject(TKubernetesObject kubernetesObject) 
+    { }
 }

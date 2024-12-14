@@ -19,6 +19,7 @@ using TrivyOperator.Dashboard.Domain.Trivy.ClusterVulnerabilityReport;
 using TrivyOperator.Dashboard.Domain.Trivy.ConfigAuditReport;
 using TrivyOperator.Dashboard.Domain.Trivy.ExposedSecretReport;
 using TrivyOperator.Dashboard.Domain.Trivy.RbacAssessmentReport;
+using TrivyOperator.Dashboard.Domain.Trivy.SbomReport;
 using TrivyOperator.Dashboard.Domain.Trivy.VulnerabilityReport;
 using TrivyOperator.Dashboard.Infrastructure.Abstractions;
 using TrivyOperator.Dashboard.Infrastructure.Clients;
@@ -216,6 +217,39 @@ public static class BuilderServicesExtensions
                 RbacAssessmentReportCr, IBackgroundQueue<RbacAssessmentReportCr>>>();
         services.AddSingleton<INamespacedCacheWatcherEventHandler, RbacAssessmentReportCacheWatcherEventHandler>();
         services.AddScoped<IRbacAssessmentReportService, RbacAssessmentReportService>();
+    }
+
+    public static void AddSbomReportServices(
+        this IServiceCollection services,
+        IConfiguration kubernetesConfiguration)
+    {
+        bool? useServices = kubernetesConfiguration.GetValue<bool?>("TrivyUseSbomReport");
+
+        if (useServices == null || !(bool)useServices)
+        {
+            services.AddScoped<ISbomReportService, SbomReportNullService>();
+            return;
+        }
+
+        services.AddSingleton<
+            IConcurrentCache<string, IList<SbomReportCr>>,
+            ConcurrentCache<string, IList<SbomReportCr>>>();
+        services.AddSingleton<IBackgroundQueue<SbomReportCr>, BackgroundQueue<SbomReportCr>>();
+        services.AddSingleton<INamespacedWatcher<SbomReportCr>, SbomReportWatcher>();
+        services.AddSingleton<
+            ICacheRefresh<SbomReportCr, IBackgroundQueue<SbomReportCr>>, CacheRefresh<
+                SbomReportCr, IBackgroundQueue<SbomReportCr>>>();
+        services.AddSingleton<INamespacedCacheWatcherEventHandler, SbomReportCacheWatcherEventHandler>();
+        services.AddScoped<ISbomReportService, SbomReportService>();
+        services.AddScoped<ISbomReportDomainService, SbomReportDomainService>();
+    }
+
+    public static void AddClusterSbomReportServices(
+        this IServiceCollection services,
+        IConfiguration kubernetesConfiguration)
+    {
+        services.AddScoped<IClusterSbomReportDomainService, ClusterSbomReportDomainService>();
+        services.AddScoped<IClusterSbomReportService, ClusterSbomReportService>();
     }
 
     public static void AddWatcherStateServices(this IServiceCollection services)

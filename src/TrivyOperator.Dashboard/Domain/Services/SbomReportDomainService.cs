@@ -22,4 +22,31 @@ public class SbomReportDomainService(IKubernetesClientFactory kubernetesClientFa
 
         return csr.Items ?? [];
     }
+
+    public async Task<IList<SbomReportCr>> GetSbomReportCrs(string resourceNamespace)
+    {
+        SbomReportCrd myCrd = new();
+        CustomResourceList<SbomReportCr> csr =
+            await kubernetesClient.CustomObjects.ListNamespacedCustomObjectAsync<CustomResourceList<SbomReportCr>>(
+                myCrd.Group,
+                myCrd.Version,
+                resourceNamespace,
+                myCrd.PluralName);
+
+        return csr.Items ?? [];
+    }
+
+    public async Task<SbomReportCr> GetSbomReportCr(string resourceName, string resourceNamespace)
+    {
+        SbomReportCrd myCrd = new();
+        SbomReportCr sr =
+            await kubernetesClient.CustomObjects.GetNamespacedCustomObjectAsync<SbomReportCr>(
+                myCrd.Group,
+                myCrd.Version,
+                resourceNamespace,
+                myCrd.PluralName,
+                resourceName);
+
+        return sr;
+    }
 }

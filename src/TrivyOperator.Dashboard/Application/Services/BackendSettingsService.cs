@@ -60,6 +60,20 @@ public class BackendSettingsService(IOptions<KubernetesOptions> options) : IBack
                 Name = "RBAC Assessment Report",
                 Enabled = options.Value.TrivyUseRbacAssessmentReport ?? false,
             });
+        backendSettingsDto.TrivyReportConfigDtos.Add(
+            new BackendSettingsTrivyReportConfigDto
+            {
+                Id = "sr",
+                Name = "SBOM Report",
+                Enabled = options.Value.TrivyUseSbomReport ?? false,
+            });
+        backendSettingsDto.TrivyReportConfigDtos.Add(
+            new BackendSettingsTrivyReportConfigDto
+            {
+                Id = "csr",
+                Name = "Cluster SBOM Report",
+                Enabled = options.Value.TrivyUseClusterSbomReport ?? false,
+            });
 
         return Task.FromResult(backendSettingsDto);
     }
