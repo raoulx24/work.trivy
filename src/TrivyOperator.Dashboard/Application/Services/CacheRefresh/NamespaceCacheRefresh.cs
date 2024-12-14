@@ -10,31 +10,27 @@ namespace TrivyOperator.Dashboard.Application.Services.CacheRefresh;
 public class NamespaceCacheRefresh(
     IBackgroundQueue<V1Namespace> backgroundQueue,
     IConcurrentCache<string, IList<V1Namespace>> cache,
-    IServiceProvider serviceProvider,
+    IEnumerable<INamespacedCacheWatcherEventHandler> services,
     ILogger<NamespaceCacheRefresh> logger)
     : CacheRefresh<V1Namespace, IBackgroundQueue<V1Namespace>>(backgroundQueue, cache, logger)
 {
-    protected readonly IServiceProvider ServiceProvider = serviceProvider;
-
     protected override void ProcessAddEvent(
         IWatcherEvent<V1Namespace> watcherEvent,
         CancellationToken cancellationToken)
     {
         base.ProcessAddEvent(watcherEvent, cancellationToken);
-        foreach (INamespacedCacheWatcherEventHandler knwcs in ServiceProvider
-                     .GetServices<INamespacedCacheWatcherEventHandler>())
+        foreach (INamespacedCacheWatcherEventHandler service in services)
         {
-            knwcs.Start(cancellationToken, watcherEvent.KubernetesObject);
+            service.Start(cancellationToken, watcherEvent.KubernetesObject);
         }
     }
 
     protected override void ProcessDeleteEvent(IWatcherEvent<V1Namespace> watcherEvent)
     {
         base.ProcessDeleteEvent(watcherEvent);
-        foreach (INamespacedCacheWatcherEventHandler knwcs in ServiceProvider
-                     .GetServices<INamespacedCacheWatcherEventHandler>())
+        foreach (INamespacedCacheWatcherEventHandler service in services)
         {
-            knwcs.Stop(watcherEvent.KubernetesObject);
+            service.Stop(watcherEvent.KubernetesObject);
         }
     }
 }
