@@ -27,8 +27,11 @@ export class FcoseComponent {
   @ViewChild('graphContainer', { static: true }) graphContainer!: ElementRef;
   testText: string = '';
 
+  private readonly rootNodeId: string = "00000000-0000-0000-0000-000000000000";
+  private selectedRootNodeId: string = this.rootNodeId;
+
   navItems: MenuItem[] = [];
-  navHome: MenuItem = { icon: 'pi pi-sitemap' };
+  navHome: MenuItem = { id: this.rootNodeId, icon: 'pi pi-sitemap' };
   private cy!: cytoscape.Core;
   private fcoseLayoutOptions: FcoseLayoutOptions = {
     name: 'fcose',
@@ -50,10 +53,6 @@ export class FcoseComponent {
       return 0.15;
     },
   };
-
-  private readonly rootNodeId: string = "00000000-0000-0000-0000-000000000000";
-  private selectedRootNodeId: string = "00000000-0000-0000-0000-000000000000";
-
 
   // tests sbom
   private dataDtos: SbomReportDto | null = null;
@@ -80,7 +79,7 @@ export class FcoseComponent {
   private set hoveredNode(node: NodeSingular | null) {
     this._hoveredNode = node;
     if (node) {
-      const x = this.dataDtos?.details?.find((x) => x.bomRef == node.id());
+      const x = this.getDataDetailDtoById(node.id());
       if (x) {
         this.testText = `<b>Name:</b> ${x.name} - <b>Version:</b> ${x.version} - <b>Dependencies:</b> ${x.dependsOn?.length ?? 0}`;
       }
@@ -227,59 +226,66 @@ export class FcoseComponent {
     this.setupCyEvents();
   }
 
-  setupCyEvents() {
+  private setupCyEvents() {
     this.cy.on('mouseover', 'node', (event) => {
-      if (this.hoveredNode || event.target.isParent()) {
-        return;
-      }
-      this.hoveredNode = event.target;
-      if (!this.hoveredNode) {
-        return;
-      }
-      this.hoveredNode.addClass('hoveredCommon hovered');
-      this.hoveredNode.incomers('node').forEach((depNode: NodeSingular) => {
-        depNode.addClass('hoveredCommon ');
-        // WTF? why it might be null?
-        if (this.hoveredNode!.outgoers('node').has(depNode)) {
-          depNode.addClass('hoveredHighlight');
-        } else {
-          depNode.addClass('hoveredIncomers');
-        }
-      });
-      this.hoveredNode.outgoers('node').forEach((depNode: NodeSingular) => {
-        depNode.addClass('hoveredCommon hoveredOutgoers');
-      });
-
-      this.hoveredNode.connectedEdges().forEach((edge: EdgeSingular) => {
-        edge.addClass('highlighted-edge');
-      });
+      this.highlightNode(event.target as NodeSingular);
     });
 
     this.cy.on('mouseout', 'node', (event) => {
-      const node: NodeSingular = event.target;
-      node.removeClass('hoveredCommon hovered');
-
-      node.outgoers('node').forEach((depNode: NodeSingular) => {
-        depNode.removeClass('hoveredCommon hoveredOutgoers hoveredHighlight');
-      });
-      node.incomers('node').forEach((depNode: NodeSingular) => {
-        depNode.removeClass('hoveredCommon hoveredIncomers');
-      });
-
-      node.connectedEdges().forEach((edge: EdgeSingular) => {
-        edge.removeClass('highlighted-edge');
-      });
-      this.hoveredNode = null;
+      this.unhighlightNode(event.target as NodeSingular);
     });
 
     this.cy.on('dblclick', 'node', (event) => {
-      this.onDiveIn(event.target.id());
+      this.graphDiveIn(event.target.id());
     });
 
     //this.cy.on('click', 'node', (event) => {
     //  const node = event.target;
     //  console.log('Single-clicked on node:', node.id());
     //});
+  }
+
+  private highlightNode(node: NodeSingular) {
+    if (this.hoveredNode || node.isParent()) {
+      return;
+    }
+    this.hoveredNode = node;
+    //if (!this.hoveredNode) {
+    //  return;
+    //}
+    this.hoveredNode.addClass('hoveredCommon hovered');
+    this.hoveredNode.incomers('node').forEach((depNode: NodeSingular) => {
+      depNode.addClass('hoveredCommon ');
+      // WTF? why it might be null?
+      if (this.hoveredNode!.outgoers('node').has(depNode)) {
+        depNode.addClass('hoveredHighlight');
+      } else {
+        depNode.addClass('hoveredIncomers');
+      }
+    });
+    this.hoveredNode.outgoers('node').forEach((depNode: NodeSingular) => {
+      depNode.addClass('hoveredCommon hoveredOutgoers');
+    });
+
+    this.hoveredNode.connectedEdges().forEach((edge: EdgeSingular) => {
+      edge.addClass('highlighted-edge');
+    });
+  }
+
+  private unhighlightNode(node: NodeSingular) {
+    node.removeClass('hoveredCommon hovered');
+
+    node.outgoers('node').forEach((depNode: NodeSingular) => {
+      depNode.removeClass('hoveredCommon hoveredOutgoers hoveredHighlight');
+    });
+    node.incomers('node').forEach((depNode: NodeSingular) => {
+      depNode.removeClass('hoveredCommon hoveredIncomers');
+    });
+
+    node.connectedEdges().forEach((edge: EdgeSingular) => {
+      edge.removeClass('highlighted-edge');
+    });
+    this.hoveredNode = null;
   }
 
   onZoomIn(_event: MouseEvent) {
@@ -306,11 +312,7 @@ export class FcoseComponent {
     });
   }
 
-  onResetView(_event: MouseEvent) {
-    this.onDiveIn('00000000-0000-0000-0000-000000000000');
-  }
-
-  onDiveIn(nodeId: string) {
+  private graphDiveIn(nodeId: string) {
     this.cy.elements().addClass('hidden');
 
     setTimeout(() => {
@@ -407,10 +409,11 @@ export class FcoseComponent {
   onNavItemClick(event: BreadcrumbItemClickEvent) {
     console.log(event.item);
     if (event.item.icon) {
-      this.onDiveIn(this.rootNodeId);
+      this.graphDiveIn(this.rootNodeId);
+      return;
     }
-    if (event.item.label) {
-      this.onDiveIn(event.item.label)
+    if (event.item.id) {
+      this.graphDiveIn(event.item.id)
     }
   }
 
@@ -429,7 +432,7 @@ export class FcoseComponent {
       return;
     }
 
-    const potentialIndex = this.navItems.map(x => x.label).indexOf(nodeId);
+    const potentialIndex = this.navItems.map(x => x.id).indexOf(nodeId);
     console.log("mama3");
     if (potentialIndex !== -1) {
       console.log("mama4");
@@ -443,10 +446,18 @@ export class FcoseComponent {
       console.log("mama5");
       this.navItems[this.navItems.length - 1].styleClass = "breadcrumb-pointer";
     }
-    this.navItems.push({ label: nodeId, styleClass: 'breadcrumb-size' });
-    this.navItems = [...this.navItems];
+    const newDataDetailDto = this.getDataDetailDtoById(nodeId);
+    this.navItems = [...this.navItems, {
+      id: nodeId,
+      label: newDataDetailDto?.name ?? "no-name",
+      styleClass: 'breadcrumb-size',
+    }];
     this.selectedRootNodeId = nodeId;
     console.log("mama6");
     console.log("mama6 - " + this.navItems.length);
+  }
+
+  private getDataDetailDtoById(id: string): SbomReportDetailDto | undefined {
+    return this.dataDtos?.details?.find((x) => x.bomRef == id);
   }
 }
