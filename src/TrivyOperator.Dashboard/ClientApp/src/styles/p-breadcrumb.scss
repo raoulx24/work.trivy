@@ -1,0 +1,21 @@
+.breadcrumb-size {
+  font-size: 14px;
+}
+
+
+.breadcrumb-pointer a {
+  cursor: pointer;
+  @extend .breadcrumb-size
+}
+
+.breadcrumb-no-background .p-breadcrumb {
+  background-color: transparent !important; /* Remove background color */
+  border: none; /* Remove border if any */
+  color: inherit; /* Keep the text color inherited */
+  box-shadow: none; /* Remove any box-shadow */
+}
+
+.breadcrumb-no-overflow {
+  max-width: 100%; /* You can adjust this width as needed */
+  overflow: hidden;
+}

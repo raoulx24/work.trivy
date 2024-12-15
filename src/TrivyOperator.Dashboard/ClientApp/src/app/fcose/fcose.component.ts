@@ -2,12 +2,15 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 
 import cytoscape, { EdgeSingular, ElementDefinition, NodeSingular } from 'cytoscape';
 import fcose, { FcoseLayoutOptions } from 'cytoscape-fcose';
+
+import { BreadcrumbItemClickEvent, BreadcrumbModule } from 'primeng/breadcrumb';
 import { ButtonModule } from 'primeng/button';
 
 // tests.sbom
 import { SbomReportDetailDto } from '../../api/models/sbom-report-detail-dto';
 import { SbomReportDto } from '../../api/models/sbom-report-dto';
 import { SbomReportService } from '../../api/services/sbom-report.service';
+import { MenuItem } from 'primeng/api';
 
 cytoscape.use(fcose);
 
@@ -16,13 +19,16 @@ cytoscape.use(fcose);
 @Component({
   selector: 'app-fcose',
   standalone: true,
-  imports: [ButtonModule],
+  imports: [BreadcrumbModule, ButtonModule],
   templateUrl: './fcose.component.html',
   styleUrl: './fcose.component.scss',
 })
 export class FcoseComponent {
   @ViewChild('graphContainer', { static: true }) graphContainer!: ElementRef;
   testText: string = '';
+
+  navItems: MenuItem[] = [];
+  navHome: MenuItem = { icon: 'pi pi-sitemap' };
   private cy!: cytoscape.Core;
   private fcoseLayoutOptions: FcoseLayoutOptions = {
     name: 'fcose',
@@ -44,10 +50,22 @@ export class FcoseComponent {
       return 0.15;
     },
   };
+
+  private readonly rootNodeId: string = "00000000-0000-0000-0000-000000000000";
+  private selectedRootNodeId: string = "00000000-0000-0000-0000-000000000000";
+
+
   // tests sbom
   private dataDtos: SbomReportDto | null = null;
 
   constructor(private service: SbomReportService) {
+    //this.navItems = [
+    //  { label: 'Electronics', styleClass: 'breadcrumb-pointer' },
+    //  { label: 'Computer', styleClass: 'breadcrumb-pointer' },
+    //  { label: 'Accessories', styleClass: 'breadcrumb-pointer' },
+    //  { label: 'Keyboard', styleClass: 'breadcrumb-pointer' },
+    //  { label: 'Wireless', styleClass: 'breadcrumb-size' }
+    //];
     // tests.sbom
     this.getTableDataDtos();
     //
@@ -306,8 +324,10 @@ export class FcoseComponent {
       this.cy.layout(this.fcoseLayoutOptions as FcoseLayoutOptions).run();
       this.cy.fit();
 
+      this.updateNavMenuItems(nodeId);
       setTimeout(() => {
         this.cy.elements().removeClass('hidden');
+        
       }, 500);
     }, 350);
   }
@@ -383,5 +403,50 @@ export class FcoseComponent {
     sbomDetailDtos.push(...newSbomDetailDtos);
     newSbomDetailDtos.forEach((sbomDetailDto) => this.getSbomDtos(sbomDetailDto, sbomDetailDtos));
   }
-  //
+
+  onNavItemClick(event: BreadcrumbItemClickEvent) {
+    console.log(event.item);
+    if (event.item.icon) {
+      this.onDiveIn(this.rootNodeId);
+    }
+    if (event.item.label) {
+      this.onDiveIn(event.item.label)
+    }
+  }
+
+  private updateNavMenuItems(nodeId: string) {
+    console.log("mama0 - " + nodeId);
+    console.log("mama0 - " + this.navItems.length);
+    if (this.selectedRootNodeId === nodeId) {
+      console.log("mama1");
+      return;
+    }
+
+    if (this.rootNodeId === nodeId) {
+      console.log("mama2");
+      this.selectedRootNodeId = nodeId;
+      this.navItems = [];
+      return;
+    }
+
+    const potentialIndex = this.navItems.map(x => x.label).indexOf(nodeId);
+    console.log("mama3");
+    if (potentialIndex !== -1) {
+      console.log("mama4");
+      this.navItems = this.navItems.slice(0, potentialIndex + 1);
+      this.navItems[potentialIndex].styleClass = "breadcrumb-size";
+      this.selectedRootNodeId = nodeId;
+      return;
+    }
+
+    if (this.navItems.length > 0) {
+      console.log("mama5");
+      this.navItems[this.navItems.length - 1].styleClass = "breadcrumb-pointer";
+    }
+    this.navItems.push({ label: nodeId, styleClass: 'breadcrumb-size' });
+    this.navItems = [...this.navItems];
+    this.selectedRootNodeId = nodeId;
+    console.log("mama6");
+    console.log("mama6 - " + this.navItems.length);
+  }
 }
