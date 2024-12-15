@@ -41,7 +41,7 @@ export class FcoseComponent {
     },
     numIter: 2500,
     animate: false,
-    fit: false,
+    fit: true,
     padding: 10,
     sampleSize: 50,
     nodeSeparation: 500,
