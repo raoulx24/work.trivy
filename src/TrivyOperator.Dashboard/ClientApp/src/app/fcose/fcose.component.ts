@@ -29,6 +29,7 @@ export class FcoseComponent {
 
   private readonly rootNodeId: string = "00000000-0000-0000-0000-000000000000";
   private selectedRootNodeId: string = this.rootNodeId;
+  private isDivedIn: boolean = false;
 
   navItems: MenuItem[] = [];
   navHome: MenuItem = { id: this.rootNodeId, icon: 'pi pi-sitemap' };
@@ -40,7 +41,7 @@ export class FcoseComponent {
     },
     numIter: 2500,
     animate: false,
-    fit: true,
+    fit: false,
     padding: 10,
     sampleSize: 50,
     nodeSeparation: 500,
@@ -239,10 +240,23 @@ export class FcoseComponent {
   }
 
   private highlightNode(node: NodeSingular) {
-    if (this.hoveredNode || node.isParent()) {
+    if (this.hoveredNode?.id() == node.id() || node.isParent()) {
+      console.log("cucu0 - " + this.hoveredNode?.id());
+      console.log("cucu0 - " + node.id());
+      console.log("cucu0 - " + node.isParent());
       return;
     }
+    console.log("cucu1 - " + this.hoveredNode?.id());
+    console.log("cucu1 - " + node.id());
+    if (this.hoveredNode) {
+      console.log("cucu2");
+      this.unhighlightNode(this.hoveredNode);
+    }
+    console.log("cucu3 - " + this.hoveredNode?.id());
+    console.log("cucu3 - " + node.id());
     this.hoveredNode = node;
+    console.log("cucu4 - " + this.hoveredNode?.id());
+    console.log("cucu4 - " + node.id());
     this.hoveredNode.addClass('hoveredCommon hovered');
     this.hoveredNode.incomers('node').forEach((depNode: NodeSingular) => {
       depNode.addClass('hoveredCommon ');
@@ -263,6 +277,14 @@ export class FcoseComponent {
   }
 
   private unhighlightNode(node: NodeSingular) {
+    if (node.isParent()) {
+      return;
+    }
+    if (this.isDivedIn) {
+      this.isDivedIn = false;
+      return;
+    }
+    console.log("lost focus on - " + node.id());
     node.removeClass('hoveredCommon hovered');
 
     node.outgoers('node').forEach((depNode: NodeSingular) => {
@@ -282,7 +304,9 @@ export class FcoseComponent {
     if (node.isParent() || node.hasClass('nodeLeaf')) {
       return;
     }
+    this.hoveredNode = null;
     this.graphDiveIn(node.id());
+    console.log("dived in - " + node.id());
   }
 
   onZoomIn(_event: MouseEvent) {
@@ -326,9 +350,13 @@ export class FcoseComponent {
       this.updateNavMenuItems(nodeId);
       setTimeout(() => {
         this.cy.elements().removeClass('hidden');
-        
+        const newRootNode = this.cy.$(`#${nodeId}`);
+        if (newRootNode) {
+          this.highlightNode(newRootNode);
+        }
       }, 500);
     }, 350);
+    this.isDivedIn = true;
   }
 
   private getElementsByNodeId(nodeId: string): ElementDefinition[] {
@@ -415,24 +443,18 @@ export class FcoseComponent {
   }
 
   private updateNavMenuItems(nodeId: string) {
-    console.log("mama0 - " + nodeId);
-    console.log("mama0 - " + this.navItems.length);
     if (this.selectedRootNodeId === nodeId) {
-      console.log("mama1");
       return;
     }
 
     if (this.rootNodeId === nodeId) {
-      console.log("mama2");
       this.selectedRootNodeId = nodeId;
       this.navItems = [];
       return;
     }
 
     const potentialIndex = this.navItems.map(x => x.id).indexOf(nodeId);
-    console.log("mama3");
     if (potentialIndex !== -1) {
-      console.log("mama4");
       this.navItems = this.navItems.slice(0, potentialIndex + 1);
       this.navItems[potentialIndex].styleClass = "breadcrumb-size";
       this.selectedRootNodeId = nodeId;
@@ -440,7 +462,6 @@ export class FcoseComponent {
     }
 
     if (this.navItems.length > 0) {
-      console.log("mama5");
       this.navItems[this.navItems.length - 1].styleClass = "breadcrumb-pointer";
     }
     const newDataDetailDto = this.getDataDetailDtoById(nodeId);
@@ -450,8 +471,6 @@ export class FcoseComponent {
       styleClass: 'breadcrumb-size',
     }];
     this.selectedRootNodeId = nodeId;
-    console.log("mama6");
-    console.log("mama6 - " + this.navItems.length);
   }
 
   private getDataDetailDtoById(id: string): SbomReportDetailDto | undefined {
