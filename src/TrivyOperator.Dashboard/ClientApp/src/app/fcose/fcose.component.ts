@@ -58,13 +58,6 @@ export class FcoseComponent {
   private dataDtos: SbomReportDto | null = null;
 
   constructor(private service: SbomReportService) {
-    //this.navItems = [
-    //  { label: 'Electronics', styleClass: 'breadcrumb-pointer' },
-    //  { label: 'Computer', styleClass: 'breadcrumb-pointer' },
-    //  { label: 'Accessories', styleClass: 'breadcrumb-pointer' },
-    //  { label: 'Keyboard', styleClass: 'breadcrumb-pointer' },
-    //  { label: 'Wireless', styleClass: 'breadcrumb-size' }
-    //];
     // tests.sbom
     this.getTableDataDtos();
     //
@@ -99,7 +92,7 @@ export class FcoseComponent {
   onGetDataDtos(dtos: SbomReportDto) {
     this.dataDtos = dtos;
 
-    const elements: ElementDefinition[] = this.getElementsByNodeId('00000000-0000-0000-0000-000000000000');
+    const elements: ElementDefinition[] = this.getElementsByNodeId(this.rootNodeId);
 
     this.cy = cytoscape({
       container: this.graphContainer.nativeElement,
@@ -236,7 +229,7 @@ export class FcoseComponent {
     });
 
     this.cy.on('dblclick', 'node', (event) => {
-      this.graphDiveIn(event.target.id());
+      this.selectNode(event.target as NodeSingular);
     });
 
     //this.cy.on('click', 'node', (event) => {
@@ -250,9 +243,6 @@ export class FcoseComponent {
       return;
     }
     this.hoveredNode = node;
-    //if (!this.hoveredNode) {
-    //  return;
-    //}
     this.hoveredNode.addClass('hoveredCommon hovered');
     this.hoveredNode.incomers('node').forEach((depNode: NodeSingular) => {
       depNode.addClass('hoveredCommon ');
@@ -286,6 +276,13 @@ export class FcoseComponent {
       edge.removeClass('highlighted-edge');
     });
     this.hoveredNode = null;
+  }
+
+  private selectNode(node: NodeSingular) {
+    if (node.isParent() || node.hasClass('nodeLeaf')) {
+      return;
+    }
+    this.graphDiveIn(node.id());
   }
 
   onZoomIn(_event: MouseEvent) {
