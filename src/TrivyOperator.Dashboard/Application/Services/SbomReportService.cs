@@ -45,4 +45,7 @@ public class SbomReportService(ISbomReportDomainService service, IConcurrentCach
 
         return null;
     }
+
+    public Task<IEnumerable<string>> GetActiveNamespaces() =>
+        Task.FromResult(cache.Where(x => x.Value.Any()).Select(x => x.Key));
 }

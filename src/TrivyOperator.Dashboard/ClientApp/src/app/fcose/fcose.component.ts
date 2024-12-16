@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 
 import cytoscape, { EdgeSingular, ElementDefinition, NodeSingular } from 'cytoscape';
 import fcose, { FcoseLayoutOptions } from 'cytoscape-fcose';
@@ -55,12 +55,18 @@ export class FcoseComponent {
     },
   };
 
-  // tests sbom
-  private dataDtos: SbomReportDto | null = null;
+  get dataDtos(): SbomReportDto | null {
+    return this._dataDtos;
+  }
+  @Input() set dataDtos(sbomDto: SbomReportDto | null) {
+    this._dataDtos = sbomDto;
+    this.onGetDataDtos(sbomDto);
+  }
+  private _dataDtos: SbomReportDto | null = null;
 
   constructor(private service: SbomReportService) {
     // tests.sbom
-    this.getTableDataDtos();
+    //this.getTableDataDtos();
     //
   }
 
@@ -90,9 +96,13 @@ export class FcoseComponent {
     });
   }
 
-  onGetDataDtos(dtos: SbomReportDto) {
-    this.dataDtos = dtos;
+  onGetDataDtos(dtos: SbomReportDto | null) {
+    if (!dtos) {
+      return;
+    }
 
+    console.log("fcose - onGetDateDtos");
+    
     const elements: ElementDefinition[] = this.getElementsByNodeId(this.rootNodeId);
 
     this.cy = cytoscape({

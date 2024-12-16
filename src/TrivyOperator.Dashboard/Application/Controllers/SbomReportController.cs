@@ -27,4 +27,11 @@ public class SbomReportController(ISbomReportService sbomReportService) : Contro
 
         return sbomReportDto is null ? NotFound() : Ok(sbomReportDto);
     }
+
+    [HttpGet("active-namespaces", Name = "GetSbomReportActiveNamespaces")]
+    [ProducesResponseType<IEnumerable<string>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status500InternalServerError)]
+    public async Task<IEnumerable<string>> GetActiveNamespaces() =>
+        await sbomReportService.GetActiveNamespaces();
 }

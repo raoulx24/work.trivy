@@ -139,6 +139,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
         loadComponent: () => import('./settings/settings.component').then((m) => m.SettingsComponent),
       },
       { path: 'about', loadComponent: () => import('./about/about.component').then((m) => m.AboutComponent) },
+
+      { path: 'sbom-reports', loadComponent: () => import('./sbom-reports/sbom-reports.component').then((m) => m.SbomReportsComponent) },
       { path: 'fcose', loadComponent: () => import('./fcose/fcose.component').then((m) => m.FcoseComponent) },
     ]),
     ApiModule.forRoot({ rootUrl: environment.baseUrl }),

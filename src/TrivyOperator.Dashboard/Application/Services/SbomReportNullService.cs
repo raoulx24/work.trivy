@@ -10,4 +10,7 @@ public class SbomReportNullService() : ISbomReportService
 
     public Task<SbomReportDto?> GetSbomReportDtoByUid(Guid uid) =>
         Task.FromResult<SbomReportDto?>(null);
+
+    public Task<IEnumerable<string>> GetActiveNamespaces() =>
+        Task.FromResult<IEnumerable<string>>([]);
 }
