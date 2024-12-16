@@ -236,3 +236,6 @@ _Pvt_Extensions
 
 # allow .NET build folder
 !/build
+
+# packages.lock.json
+**/packages.lock.json
