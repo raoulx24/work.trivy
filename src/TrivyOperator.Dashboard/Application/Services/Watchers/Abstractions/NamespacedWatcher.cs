@@ -26,7 +26,7 @@ public abstract class
     public void Delete(IKubernetesObject<V1ObjectMeta>? sourceKubernetesObject)
     {
         string sourceNamespace = GetNamespaceFromSourceEvent(sourceKubernetesObject);
-        Logger.LogInformation(
+        logger.LogInformation(
             "Deleting Watcher for {kubernetesObjectType} and key {watcherKey}.",
             typeof(TKubernetesObject).Name,
             sourceNamespace);

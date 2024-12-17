@@ -25,15 +25,12 @@ public abstract class
     protected readonly TBackgroundQueue BackgroundQueue = backgroundQueue;
     protected readonly Kubernetes KubernetesClient = kubernetesClientFactory.GetClient();
 
-    protected readonly ILogger<KubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TBackgroundQueue,
-        TKubernetesWatcherEvent>> Logger = logger;
-
     protected readonly Dictionary<string, TaskWithCts> Watchers = [];
 
     public Task Add(CancellationToken cancellationToken, IKubernetesObject<V1ObjectMeta>? sourceKubernetesObject = null)
     {
         string watcherKey = GetNamespaceFromSourceEvent(sourceKubernetesObject);
-        Logger.LogInformation(
+        logger.LogInformation(
             "Adding Watcher for {kubernetesObjectType} and key {watcherKey}.",
             typeof(TKubernetesObject).Name,
             watcherKey);
@@ -66,7 +63,7 @@ public abstract class
                     GetKubernetesObjectWatchList(sourceKubernetesObject, cancellationToken);
                 await foreach ((WatchEventType type, TKubernetesObject item) in kubernetesObjectsResp
                                    .WatchAsync<TKubernetesObject, TKubernetesObjectList>(
-                                       ex => Logger.LogError(
+                                       ex => logger.LogError(
                                            $"{nameof(KubernetesWatcher<TKubernetesObjectList, TKubernetesObject, TBackgroundQueue, TKubernetesWatcherEvent>)} - WatchAsync - {ex.Message}",
                                            ex),
                                        cancellationToken))
@@ -79,6 +76,11 @@ public abstract class
                         isRecoveringfromError = false;
                         isFreshStart = false;
                     }
+                    logger.LogDebug("Sending to Queue - {kubernetesObjectType} - {kubernetesWatchEvent} - {watcherKey} - {kubernetesObjectName}",
+                        typeof(TKubernetesObject).Name,
+                        type.ToString(),
+                        watcherKey,
+                        item.Metadata.Name);
 
                     TKubernetesWatcherEvent kubernetesWatcherEvent =
                         new() { KubernetesObject = item, WatcherEventType = type };
@@ -100,7 +102,7 @@ public abstract class
             }
             catch (Exception ex)
             {
-                Logger.LogError(
+                logger.LogError(
                     ex,
                     "Watcher for {kubernetesObjectType} and key {watcherKey} crashed - {ex.Message}",
                     typeof(TKubernetesObject).Name,
@@ -108,11 +110,33 @@ public abstract class
                     ex.Message);
             }
 
-            if (!cancellationToken.IsCancellationRequested)
+            bool enqueueErrorEventIsSuccessful = false;
+            while (!cancellationToken.IsCancellationRequested && !enqueueErrorEventIsSuccessful)
             {
-                await EnqueueWatcherEventWithError(sourceKubernetesObject);
-                isRecoveringfromError = true;
+                try
+                {
+                    logger.LogDebug("Sending to Queue - {kubernetesObjectType} - EventWithError - {watcherKey} - {kubernetesObjectName}",
+                        typeof(TKubernetesObject).Name,
+                        watcherKey,
+                        sourceKubernetesObject?.Metadata.Name);
+
+                    await EnqueueWatcherEventWithError(sourceKubernetesObject);
+                    enqueueErrorEventIsSuccessful = true;
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(
+                        ex,
+                        "Watcher for {kubernetesObjectType} and key {watcherKey} could not enqueue EventWithError - {ex.Message}",
+                        typeof(TKubernetesObject).Name,
+                        watcherKey,
+                        ex.Message);
+                    await Task.Delay(10000, cancellationToken);
+                }
+                
             }
+
+            isRecoveringfromError = true;
         }
     }
 

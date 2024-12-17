@@ -63,27 +63,23 @@ public class CacheRefresh<TKubernetesObject, TBackgroundQueue>(
         CancellationToken cancellationToken)
     {
         string watcherKey = VarUtils.GetCacheRefreshKey(watcherEvent.KubernetesObject);
-        string eventKubernetesObjectName = watcherEvent.KubernetesObject.Metadata.Name;
 
         logger.LogDebug(
             "ProcessAddEvent - {kubernetesObjectType} - {watcherKey} - {kubernetesObjectName}",
             typeof(TKubernetesObject).Name,
             watcherKey,
-            eventKubernetesObjectName);
+            watcherEvent.KubernetesObject.Metadata.Name);
 
         if (cache.TryGetValue(watcherKey, out IList<TKubernetesObject>? kubernetesObjects))
         {
-            // TODO try catch - clear duplicates
-            TKubernetesObject? potentialExistingKubernetesObject =
-                kubernetesObjects.SingleOrDefault(x => x.Metadata.Name == eventKubernetesObjectName);
-            if (potentialExistingKubernetesObject is not null)
+            IEnumerable<TKubernetesObject> existingKubernetesObjects =
+                kubernetesObjects.Where(x => x.Uid == watcherEvent.KubernetesObject.Uid) ?? [];
+            foreach (TKubernetesObject existingKubernetesObject in existingKubernetesObjects)
             {
-                kubernetesObjects.Remove(potentialExistingKubernetesObject);
+                kubernetesObjects.Remove(existingKubernetesObject);
             }
 
             kubernetesObjects.Add(watcherEvent.KubernetesObject);
-            // TODO Clarify cache[key] vs cache.Remove and cache.Add
-            cache[watcherKey] = kubernetesObjects;
         }
         else // first time, the cache is really empty
         {
@@ -94,27 +90,21 @@ public class CacheRefresh<TKubernetesObject, TBackgroundQueue>(
     protected virtual void ProcessDeleteEvent(IWatcherEvent<TKubernetesObject> watcherEvent)
     {
         string watcherKey = VarUtils.GetCacheRefreshKey(watcherEvent.KubernetesObject);
-        string eventKubernetesObjectName = watcherEvent.KubernetesObject.Metadata.Name;
 
         logger.LogDebug(
             "ProcessDeleteEvent - {kubernetesObjectType} - {watcherKey} - {kubernetesObjectName}",
             typeof(TKubernetesObject).Name,
             watcherKey,
-            eventKubernetesObjectName);
+            watcherEvent.KubernetesObject.Metadata.Name);
 
         if (cache.TryGetValue(watcherKey, out IList<TKubernetesObject>? kubernetesObjects))
         {
-            // TODO try catch - clear duplicates
-            TKubernetesObject? toBeDeletedKubernetesObject =
-                kubernetesObjects.SingleOrDefault(x => x.Metadata.Name == eventKubernetesObjectName);
-            if (toBeDeletedKubernetesObject is not null)
+            IEnumerable<TKubernetesObject> existingKubernetesObjects =
+                kubernetesObjects.Where(x => x.Uid == watcherEvent.KubernetesObject.Uid) ?? [];
+            foreach (TKubernetesObject existingKubernetesObject in existingKubernetesObjects)
             {
-                kubernetesObjects.Remove(toBeDeletedKubernetesObject);
+                kubernetesObjects.Remove(existingKubernetesObject);
             }
-
-            // TODO Clarify cache[key] vs cache.Remove and cache.Add
-            cache.TryRemove(watcherKey, out _);
-            cache.TryAdd(watcherKey, kubernetesObjects);
         }
     }
 
@@ -125,9 +115,7 @@ public class CacheRefresh<TKubernetesObject, TBackgroundQueue>(
             "ProcessErrorEvent - {kubernetesObjectType} - {watcherKey}",
             typeof(TKubernetesObject).Name,
             watcherKey);
-        // TODO Clarify cache[key] vs cache.Remove and cache.Add
         cache.TryRemove(watcherKey, out _);
-        cache.TryAdd(watcherKey, []);
     }
 
     protected virtual void ProcessModifiedEvent(
