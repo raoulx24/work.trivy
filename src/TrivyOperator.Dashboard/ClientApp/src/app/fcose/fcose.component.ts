@@ -340,7 +340,7 @@ export class FcoseComponent implements AfterViewInit {
       this.cy.elements().addClass('hidden');
 
       this.cy.layout(this.fcoseLayoutOptions as FcoseLayoutOptions).run();
-      this.cy.fit();
+      this.onZoomFit();
 
       this.updateNavMenuItems(nodeId);
       setTimeout(() => {

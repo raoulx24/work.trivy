@@ -109,6 +109,8 @@ public static class SbomReportCrExtensions
             Details = details.ToArray(),
         };
 
+        RemoveSbomDetailDuplicates(result);
+
         return result;
     }
 
@@ -118,6 +120,33 @@ public static class SbomReportCrExtensions
         {
             component.BomRef = SanitizeBomRef(component.BomRef);
         }
+    }
+
+    private static void RemoveSbomDetailDuplicates(SbomReportDto sbomReportDto)
+    {
+        IEnumerable<IGrouping<string, SbomReportDetailDto>> groupedByPurl = sbomReportDto.Details
+            .GroupBy(x => string.IsNullOrEmpty(x.Purl) ? Guid.NewGuid().ToString() : x.Purl);
+
+        List<SbomReportDetailDto> uniqueSboms = new List<SbomReportDetailDto>();
+        Dictionary<Guid, Guid> guidMapping = new Dictionary<Guid, Guid>();
+
+        foreach (IGrouping<string, SbomReportDetailDto> group in groupedByPurl)
+        {
+            var retainedSbom = group.First();
+            uniqueSboms.Add(retainedSbom);
+            
+            foreach (SbomReportDetailDto sbom in group) {
+                guidMapping[sbom.BomRef] = retainedSbom.BomRef;
+            }
+        }
+        foreach (SbomReportDetailDto sbom in uniqueSboms) { 
+            sbom.DependsOn = sbom.DependsOn
+                .Select(dep => guidMapping.ContainsKey(dep) ? guidMapping[dep] : dep)
+                .Distinct()
+                .ToArray();
+        }
+
+        sbomReportDto.Details = [.. uniqueSboms];
     }
 
     private static string SanitizeBomRef(string? bomRef) => string.IsNullOrWhiteSpace(bomRef) || bomRef.Length != 36
