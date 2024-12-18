@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 
 import cytoscape, { EdgeSingular, ElementDefinition, NodeSingular } from 'cytoscape';
 import fcose, { FcoseLayoutOptions } from 'cytoscape-fcose';
@@ -7,10 +7,8 @@ import { BreadcrumbItemClickEvent, BreadcrumbModule } from 'primeng/breadcrumb';
 import { ButtonModule } from 'primeng/button';
 import { MenuItem } from 'primeng/api';
 
-// tests.sbom
+// TODO: change to dedicated interface
 import { SbomReportDetailDto } from '../../api/models/sbom-report-detail-dto';
-//import { SbomReportDto } from '../../api/models/sbom-report-dto';
-//import { SbomReportService } from '../../api/services/sbom-report.service';
 
 
 cytoscape.use(fcose);
@@ -24,22 +22,31 @@ cytoscape.use(fcose);
   templateUrl: './fcose.component.html',
   styleUrl: './fcose.component.scss',
 })
-export class FcoseComponent {
+export class FcoseComponent implements AfterViewInit {
   @ViewChild('graphContainer', { static: true }) graphContainer!: ElementRef;
   testText: string = '';
 
   @Input() set selectedInnerNodeId(value: string | undefined) {
     this._selectedInnerNodeId = value;
     this.selectedInnerNodeIdChange.emit(value);
+    if (value) {
+      this.graphDiveIn(value);
+    }
   }
   get selectedInnerNodeId(): string | undefined {
     return this._selectedInnerNodeId;
   }
   @Output() selectedInnerNodeIdChange: EventEmitter<string> = new EventEmitter<string>();
-
-  private readonly rootNodeId: string = "00000000-0000-0000-0000-000000000000";
   private _selectedInnerNodeId: string | undefined = this.rootNodeId;
-  private isDivedIn: boolean = false;
+
+  @Input() set rootNodeId(value: string) {
+    this._rootNodeId = value;
+    this.initNavMenuItems();
+  }
+  get rootNodeId(): string {
+    return this._rootNodeId;
+  }
+  private _rootNodeId: string = "00000000-0000-0000-0000-000000000000";
 
   navItems: MenuItem[] = [];
   navHome: MenuItem = { id: this.rootNodeId, icon: 'pi pi-sitemap' };
@@ -70,10 +77,11 @@ export class FcoseComponent {
   }
   @Input() set dataDtos(sbomDto: SbomReportDetailDto[]) {
     this._dataDtos = sbomDto;
-    this.onGetDataDtos(sbomDto);
   }
   private _dataDtos: SbomReportDetailDto[] = [];
 
+  
+  private isDivedIn: boolean = false;
   private get hoveredNode(): NodeSingular | null {
     return this._hoveredNode;
   }
@@ -90,14 +98,15 @@ export class FcoseComponent {
   }
   private _hoveredNode: NodeSingular | null = null;
 
-  onGetDataDtos(dtos: SbomReportDetailDto[]) {
-    console.log("fcose - onGetDateDtos");
-    
-    const elements: ElementDefinition[] = this.getElementsByNodeId(this.rootNodeId);
+  ngAfterViewInit() {
+    this.setupCyLayout();
+    this.setupCyEvents();
+  }
 
+  private setupCyLayout() {
     this.cy = cytoscape({
       container: this.graphContainer.nativeElement,
-      elements: elements,
+      elements: [],
       layout: this.fcoseLayoutOptions as FcoseLayoutOptions,
       style: [
         {
@@ -216,8 +225,6 @@ export class FcoseComponent {
         },
       ],
     });
-
-    this.setupCyEvents();
   }
 
   private setupCyEvents() {
@@ -417,6 +424,11 @@ export class FcoseComponent {
       this.dataDtos.filter((x) => newDetailBomRefIds.includes(x.bomRef ?? '')) ?? [];
     sbomDetailDtos.push(...newSbomDetailDtos);
     newSbomDetailDtos.forEach((sbomDetailDto) => this.getSbomDtos(sbomDetailDto, sbomDetailDtos));
+  }
+
+  private initNavMenuItems() {
+    this.navItems = [];
+    this.navHome = { id: this.rootNodeId, icon: 'pi pi-sitemap' };
   }
 
   onNavItemClick(event: BreadcrumbItemClickEvent) {

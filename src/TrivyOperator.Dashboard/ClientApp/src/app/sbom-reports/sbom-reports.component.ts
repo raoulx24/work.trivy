@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { SbomReportDetailDto } from '../../api/models/sbom-report-detail-dto';
@@ -20,7 +21,7 @@ export interface ImageDto {
 @Component({
   selector: 'app-sbom-reports',
   standalone: true,
-  imports: [FormsModule, FcoseComponent, TrivyTableComponent, DropdownModule, CardModule],
+  imports: [CommonModule, FormsModule, FcoseComponent, TrivyTableComponent, DropdownModule, CardModule],
   templateUrl: './sbom-reports.component.html',
   styleUrl: './sbom-reports.component.scss'
 })
@@ -34,7 +35,6 @@ export class SbomReportsComponent {
   }
   set selectedNamespace(value: string | null) {
     this._selectedNamespace = value;
-
   }
   private _selectedNamespace: string | null = "";
 
@@ -44,24 +44,15 @@ export class SbomReportsComponent {
   set selectedImageDto(value: ImageDto | null) {
     this._imageDto = value;
     this.getFullSbomDto(value?.uid);
-    
   }
   private _imageDto: ImageDto | null = null;
 
+  private _rootNodeId: string = "00000000-0000-0000-0000-000000000000";
 
   set selectedInnerNodeId(value: string | undefined) {
-    console.log("sbom - selectedInnerNodeId - value - " + value);
     this._selectedInnerNodeId = value;
-    const temp1 = this.dataDtos?.
-      find(x => x.uid = this.selectedImageDto?.uid);
-    console.log("sbom - selectedInnerNodeId - temp1 - " + temp1?.uid);
-    const temp2 = this.fullSbomDataDto?.details?.
+    this.selectedSbomDetailDto = this.fullSbomDataDto?.details?.
       find(x => x.bomRef == value);
-    console.log("sbom - selectedInnerNodeId - temp2 - " + temp2);
-    const temp3 = temp1?.details?.map(x => x.bomRef).join(", ");
-    console.log("sbom - selectedInnerNodeId - temp3 - " + temp3);
-    this.selectedSbomDetailDto = temp2;
-    console.log("sbom - selectedInnerNodeId - " + this.selectedSbomDetailDto);
   }
   get selectedInnerNodeId(): string | undefined {
     return this._selectedInnerNodeId;
@@ -129,7 +120,7 @@ export class SbomReportsComponent {
       error: (err) => console.error(err),
     });
     this.service.getSbomReportActiveNamespaces().subscribe({
-      next: (res) => this.activeNamespaces = res,
+      next: (res) => this.activeNamespaces = res.sort(),
       error: (err) => console.error(err),
     });
   }
@@ -137,11 +128,16 @@ export class SbomReportsComponent {
   getFullSbomDto(uid: string | null | undefined) {
     if (uid) {
       this.service.getSbomReportDtoByUid({ uid: uid }).subscribe({
-        next: (res) => this.fullSbomDataDto = res,
+        next: (res) => this.onGetSbomReportDtoByUid(res),
         error: (err) => console.error(err),
       });
     }
     this.fullSbomDataDto = null;
+  }
+
+  onGetSbomReportDtoByUid(fullSbomDataDto: SbomReportDto) {
+    this.fullSbomDataDto = fullSbomDataDto;
+    this.selectedInnerNodeId = this._rootNodeId;
   }
 
   onGetDataDtos(dtos: SbomReportDto[]) {
@@ -159,13 +155,6 @@ export class SbomReportsComponent {
   }
 
   public onRefreshRequested(event: TrivyFilterData) {
-    //const excludedSeverities =
-    //  SeverityUtils.getSeverityIds().filter((severityId) => !event.selectedSeverityIds.includes(severityId)) || [];
-
-    //const params: GetVulnerabilityReportImageDtos$Params = {
-    //  namespaceName: event.namespaceName ?? undefined,
-    //  excludedSeverities: excludedSeverities.length > 0 ? excludedSeverities.join(',') : undefined,
-    //};
     this.isMainTableLoading = true;
     this.service.getSbomReportDtos().subscribe({
       next: (res) => this.onGetDataDtos(res),
@@ -175,6 +164,11 @@ export class SbomReportsComponent {
 
   filterImageDtos() {
     this.imageDtos = this.dataDtos?.filter(x => x.resourceNamespace == this.selectedNamespace)
-      .map(x => ({ uid: x.uid ?? "", imageNameTag: `${x.imageName}:${x.imageTag}` }));
+      .map(x => ({ uid: x.uid ?? "", imageNameTag: `${x.imageName}:${x.imageTag}` }))
+      .sort((a, b) => {
+        if (a.imageNameTag < b.imageNameTag) { return -1; }
+        else if (a.imageNameTag > b.imageNameTag) { return 1; }
+              else { return 0; }
+      });;
   }
 }
