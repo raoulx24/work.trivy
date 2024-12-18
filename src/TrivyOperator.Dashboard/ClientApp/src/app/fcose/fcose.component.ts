@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 
 import cytoscape, { EdgeSingular, ElementDefinition, NodeSingular } from 'cytoscape';
 import fcose, { FcoseLayoutOptions } from 'cytoscape-fcose';
@@ -27,8 +27,18 @@ export class FcoseComponent {
   @ViewChild('graphContainer', { static: true }) graphContainer!: ElementRef;
   testText: string = '';
 
+  @Input() set selectedInnerNodeId(value: string | undefined) {
+    this._selectedInnerNodeId = value;
+    this.selectedInnerNodeIdChange.emit(value);
+    console.log("focse - selectedInnerNodeId - " + value);
+  }
+  get selectedInnerNodeId(): string | undefined {
+    return this._selectedInnerNodeId;
+  }
+  @Output() selectedInnerNodeIdChange: EventEmitter<string> = new EventEmitter<string>();
+
   private readonly rootNodeId: string = "00000000-0000-0000-0000-000000000000";
-  private selectedRootNodeId: string = this.rootNodeId;
+  private _selectedInnerNodeId: string | undefined = this.rootNodeId;
   private isDivedIn: boolean = false;
 
   navItems: MenuItem[] = [];
@@ -251,22 +261,22 @@ export class FcoseComponent {
 
   private highlightNode(node: NodeSingular) {
     if (this.hoveredNode?.id() == node.id() || node.isParent()) {
-      console.log("cucu0 - " + this.hoveredNode?.id());
-      console.log("cucu0 - " + node.id());
-      console.log("cucu0 - " + node.isParent());
+      //console.log("cucu0 - " + this.hoveredNode?.id());
+      //console.log("cucu0 - " + node.id());
+      //console.log("cucu0 - " + node.isParent());
       return;
     }
-    console.log("cucu1 - " + this.hoveredNode?.id());
-    console.log("cucu1 - " + node.id());
+    //console.log("cucu1 - " + this.hoveredNode?.id());
+    //console.log("cucu1 - " + node.id());
     if (this.hoveredNode) {
-      console.log("cucu2");
+      //console.log("cucu2");
       this.unhighlightNode(this.hoveredNode);
     }
-    console.log("cucu3 - " + this.hoveredNode?.id());
-    console.log("cucu3 - " + node.id());
+    //console.log("cucu3 - " + this.hoveredNode?.id());
+    //console.log("cucu3 - " + node.id());
     this.hoveredNode = node;
-    console.log("cucu4 - " + this.hoveredNode?.id());
-    console.log("cucu4 - " + node.id());
+    //console.log("cucu4 - " + this.hoveredNode?.id());
+    //console.log("cucu4 - " + node.id());
     this.hoveredNode.addClass('hoveredCommon hovered');
     this.hoveredNode.incomers('node').forEach((depNode: NodeSingular) => {
       depNode.addClass('hoveredCommon ');
@@ -294,7 +304,7 @@ export class FcoseComponent {
       this.isDivedIn = false;
       return;
     }
-    console.log("lost focus on - " + node.id());
+    //console.log("lost focus on - " + node.id());
     node.removeClass('hoveredCommon hovered');
 
     node.outgoers('node').forEach((depNode: NodeSingular) => {
@@ -453,12 +463,12 @@ export class FcoseComponent {
   }
 
   private updateNavMenuItems(nodeId: string) {
-    if (this.selectedRootNodeId === nodeId) {
+    if (this.selectedInnerNodeId === nodeId) {
       return;
     }
 
     if (this.rootNodeId === nodeId) {
-      this.selectedRootNodeId = nodeId;
+      this.selectedInnerNodeId = nodeId;
       this.navItems = [];
       return;
     }
@@ -467,7 +477,7 @@ export class FcoseComponent {
     if (potentialIndex !== -1) {
       this.navItems = this.navItems.slice(0, potentialIndex + 1);
       this.navItems[potentialIndex].styleClass = "breadcrumb-size";
-      this.selectedRootNodeId = nodeId;
+      this.selectedInnerNodeId = nodeId;
       return;
     }
 
@@ -480,7 +490,7 @@ export class FcoseComponent {
       label: newDataDetailDto?.name ?? "no-name",
       styleClass: 'breadcrumb-size',
     }];
-    this.selectedRootNodeId = nodeId;
+    this.selectedInnerNodeId = nodeId;
   }
 
   private getDataDetailDtoById(id: string): SbomReportDetailDto | undefined {

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 import { SbomReportDetailDto } from '../../api/models/sbom-report-detail-dto';
 import { SbomReportDto } from '../../api/models/sbom-report-dto';
@@ -8,28 +9,74 @@ import { FcoseComponent } from '../fcose/fcose.component';
 import { TrivyTableComponent } from '../trivy-table/trivy-table.component';
 import { TrivyFilterData, TrivyTableColumn, TrivyTableOptions } from '../trivy-table/trivy-table.types';
 
+import { DropdownModule } from 'primeng/dropdown';
+import { CardModule } from 'primeng/card';
+
+export interface ImageDto {
+  uid: string;
+  imageNameTag: string;
+}
+
 @Component({
   selector: 'app-sbom-reports',
   standalone: true,
-  imports: [FcoseComponent, TrivyTableComponent],
+  imports: [FormsModule, FcoseComponent, TrivyTableComponent, DropdownModule, CardModule],
   templateUrl: './sbom-reports.component.html',
   styleUrl: './sbom-reports.component.scss'
 })
 export class SbomReportsComponent {
   dataDtos: SbomReportDto[] | null = null;
-  activeNamespaces: string[] | null = [];
+  activeNamespaces: string[] | undefined = [];
+  imageDtos: ImageDto[] | undefined = [];
+
+  get selectedNamespace(): string | null {
+    return this._selectedNamespace;
+  }
+  set selectedNamespace(value: string | null) {
+    this._selectedNamespace = value;
+
+  }
+  private _selectedNamespace: string | null = "";
+
+  get selectedImageDto(): ImageDto | null {
+    return this._imageDto;
+  }
+  set selectedImageDto(value: ImageDto | null) {
+    this._imageDto = value;
+    this.getFullSbomDto(value?.uid);
+    
+  }
+  private _imageDto: ImageDto | null = null;
+
+
+  set selectedInnerNodeId(value: string | undefined) {
+    console.log("sbom - selectedInnerNodeId - value - " + value);
+    this._selectedInnerNodeId = value;
+    const temp1 = this.dataDtos?.
+      find(x => x.uid = this.selectedImageDto?.uid);
+    console.log("sbom - selectedInnerNodeId - temp1 - " + temp1?.uid);
+    const temp2 = this.fullSbomDataDto?.details?.
+      find(x => x.bomRef == value);
+    console.log("sbom - selectedInnerNodeId - temp2 - " + temp2);
+    const temp3 = temp1?.details?.map(x => x.bomRef).join(", ");
+    console.log("sbom - selectedInnerNodeId - temp3 - " + temp3);
+    this.selectedSbomDetailDto = temp2;
+    console.log("sbom - selectedInnerNodeId - " + this.selectedSbomDetailDto);
+  }
+  get selectedInnerNodeId(): string | undefined {
+    return this._selectedInnerNodeId;
+  }
+  private _selectedInnerNodeId: string | undefined = undefined;
+
+  selectedSbomDetailDto: SbomReportDetailDto | undefined = undefined;
+
 
   public mainTableColumns: TrivyTableColumn[] = [];
   public mainTableOptions: TrivyTableOptions;
   public isMainTableLoading: boolean = true;
 
   set selectedDataDto(dataDto: SbomReportDto | null) {
-    if (dataDto) {
-      this.getFullSbomDto(dataDto.uid ?? "");
-    }
-    else {
-      this.fullSbomDataDto = null;
-    }
+    this.getFullSbomDto(dataDto?.uid);
   }
   private _selectedDataDto: SbomReportDto | null = null;
 
@@ -87,11 +134,14 @@ export class SbomReportsComponent {
     });
   }
 
-  getFullSbomDto(uid: string) {
-    this.service.getSbomReportDtoByUid({ uid: uid }).subscribe({
-      next: (res) => this.fullSbomDataDto = res,
-      error: (err) => console.error(err),
-    });
+  getFullSbomDto(uid: string | null | undefined) {
+    if (uid) {
+      this.service.getSbomReportDtoByUid({ uid: uid }).subscribe({
+        next: (res) => this.fullSbomDataDto = res,
+        error: (err) => console.error(err),
+      });
+    }
+    this.fullSbomDataDto = null;
   }
 
   onGetDataDtos(dtos: SbomReportDto[]) {
@@ -123,4 +173,8 @@ export class SbomReportsComponent {
     });
   }
 
+  filterImageDtos() {
+    this.imageDtos = this.dataDtos?.filter(x => x.resourceNamespace == this.selectedNamespace)
+      .map(x => ({ uid: x.uid ?? "", imageNameTag: `${x.imageName}:${x.imageTag}` }));
+  }
 }

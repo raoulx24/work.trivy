@@ -1,8 +1,35 @@
+<h3>SBOM Reports</h3>
+
 <div class="row">
   <div class="grid flex">
     <div class="col-12 md:col-5 lg:col-4 p-1">
+      <div class="grid flex">
+        <div class="col-4 p-fluid">
+          <p-dropdown [options]="activeNamespaces"
+                      [(ngModel)]="selectedNamespace"
+                      [showClear]="true"
+                      [filter]="true"
+                      class="p-inputtext-sm"
+                      placeholder="Select a Namespace"
+                      (onChange)="filterImageDtos()" />
+        </div>
+        <div class="col-8 p-fluid">
+          <p-dropdown [options]="imageDtos"
+                      [(ngModel)]="selectedImageDto"
+                      [showClear]="true"
+                      [filter]="true"
+                      optionLabel="imageNameTag"
+                      class="p-inputtext-sm"
+                      placeholder="Select a Namespace" />
+        </div>
+      </div>
+      <p-card [header]="selectedSbomDetailDto?.name ?? 'none'"
+              [subheader]="selectedSbomDetailDto?.version ?? 'none'" >
+        <span>{{ selectedSbomDetailDto?.purl ?? 'none' }}</span>
+      </p-card>
       <app-trivy-table #mainTable
-                       tableHeight="82vh"
+                       *ngIf="false"
+                       tableHeight="70vh"
                        [activeNamespaces]="activeNamespaces"
                        [dataDtos]="dataDtos!"
                        [isLoading]="isMainTableLoading"
@@ -12,7 +39,8 @@
                        (selectedRowsChanged)="onMainTableSelectionChange($event)" />
     </div>
     <div class="col-12 md:col-7 lg:col-8 p-1">
-      <app-fcose [dataDtos]="fullSbomDataDto" />
+      <app-fcose [dataDtos]="fullSbomDataDto"
+                 [(selectedInnerNodeId)]="selectedInnerNodeId" />
     </div>
   </div>
 </div>
