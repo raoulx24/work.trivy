@@ -5,12 +5,13 @@ import fcose, { FcoseLayoutOptions } from 'cytoscape-fcose';
 
 import { BreadcrumbItemClickEvent, BreadcrumbModule } from 'primeng/breadcrumb';
 import { ButtonModule } from 'primeng/button';
+import { MenuItem } from 'primeng/api';
 
 // tests.sbom
 import { SbomReportDetailDto } from '../../api/models/sbom-report-detail-dto';
-import { SbomReportDto } from '../../api/models/sbom-report-dto';
-import { SbomReportService } from '../../api/services/sbom-report.service';
-import { MenuItem } from 'primeng/api';
+//import { SbomReportDto } from '../../api/models/sbom-report-dto';
+//import { SbomReportService } from '../../api/services/sbom-report.service';
+
 
 cytoscape.use(fcose);
 
@@ -30,7 +31,6 @@ export class FcoseComponent {
   @Input() set selectedInnerNodeId(value: string | undefined) {
     this._selectedInnerNodeId = value;
     this.selectedInnerNodeIdChange.emit(value);
-    console.log("focse - selectedInnerNodeId - " + value);
   }
   get selectedInnerNodeId(): string | undefined {
     return this._selectedInnerNodeId;
@@ -65,27 +65,18 @@ export class FcoseComponent {
     },
   };
 
-  get dataDtos(): SbomReportDto | null {
+  get dataDtos(): SbomReportDetailDto[] {
     return this._dataDtos;
   }
-  @Input() set dataDtos(sbomDto: SbomReportDto | null) {
+  @Input() set dataDtos(sbomDto: SbomReportDetailDto[]) {
     this._dataDtos = sbomDto;
     this.onGetDataDtos(sbomDto);
   }
-  private _dataDtos: SbomReportDto | null = null;
-
-  constructor(private service: SbomReportService) {
-    // tests.sbom
-    //this.getTableDataDtos();
-    //
-  }
-
-  private _hoveredNode: NodeSingular | null = null;
+  private _dataDtos: SbomReportDetailDto[] = [];
 
   private get hoveredNode(): NodeSingular | null {
     return this._hoveredNode;
   }
-
   private set hoveredNode(node: NodeSingular | null) {
     this._hoveredNode = node;
     if (node) {
@@ -97,20 +88,9 @@ export class FcoseComponent {
       this.testText = 'no info...';
     }
   }
+  private _hoveredNode: NodeSingular | null = null;
 
-  // tests.sbom
-  getTableDataDtos() {
-    this.service.getSbomReportDtoByUid({ uid: "25d158fe-10b9-49a3-ac5d-c393c12d040c" }).subscribe({
-      next: (res) => this.onGetDataDtos(res),
-      error: (err) => console.error(err),
-    });
-  }
-
-  onGetDataDtos(dtos: SbomReportDto | null) {
-    if (!dtos) {
-      return;
-    }
-
+  onGetDataDtos(dtos: SbomReportDetailDto[]) {
     console.log("fcose - onGetDateDtos");
     
     const elements: ElementDefinition[] = this.getElementsByNodeId(this.rootNodeId);
@@ -261,22 +241,12 @@ export class FcoseComponent {
 
   private highlightNode(node: NodeSingular) {
     if (this.hoveredNode?.id() == node.id() || node.isParent()) {
-      //console.log("cucu0 - " + this.hoveredNode?.id());
-      //console.log("cucu0 - " + node.id());
-      //console.log("cucu0 - " + node.isParent());
       return;
     }
-    //console.log("cucu1 - " + this.hoveredNode?.id());
-    //console.log("cucu1 - " + node.id());
     if (this.hoveredNode) {
-      //console.log("cucu2");
       this.unhighlightNode(this.hoveredNode);
     }
-    //console.log("cucu3 - " + this.hoveredNode?.id());
-    //console.log("cucu3 - " + node.id());
     this.hoveredNode = node;
-    //console.log("cucu4 - " + this.hoveredNode?.id());
-    //console.log("cucu4 - " + node.id());
     this.hoveredNode.addClass('hoveredCommon hovered');
     this.hoveredNode.incomers('node').forEach((depNode: NodeSingular) => {
       depNode.addClass('hoveredCommon ');
@@ -304,7 +274,6 @@ export class FcoseComponent {
       this.isDivedIn = false;
       return;
     }
-    //console.log("lost focus on - " + node.id());
     node.removeClass('hoveredCommon hovered');
 
     node.outgoers('node').forEach((depNode: NodeSingular) => {
@@ -326,7 +295,6 @@ export class FcoseComponent {
     }
     this.hoveredNode = null;
     this.graphDiveIn(node.id());
-    console.log("dived in - " + node.id());
   }
 
   onZoomIn(_event: MouseEvent) {
@@ -381,7 +349,7 @@ export class FcoseComponent {
 
   private getElementsByNodeId(nodeId: string): ElementDefinition[] {
     const sbomDetailDtos: SbomReportDetailDto[] = [];
-    const rootSbomDto = this.dataDtos?.details?.find((x) => x.bomRef == nodeId);
+    const rootSbomDto = this.dataDtos.find((x) => x.bomRef == nodeId);
     if (rootSbomDto) {
       sbomDetailDtos.push(rootSbomDto);
       this.getSbomDtos(rootSbomDto, sbomDetailDtos);
@@ -446,7 +414,7 @@ export class FcoseComponent {
       }
     });
     const newSbomDetailDtos =
-      this.dataDtos?.details?.filter((x) => newDetailBomRefIds.includes(x.bomRef ?? '')) ?? [];
+      this.dataDtos.filter((x) => newDetailBomRefIds.includes(x.bomRef ?? '')) ?? [];
     sbomDetailDtos.push(...newSbomDetailDtos);
     newSbomDetailDtos.forEach((sbomDetailDto) => this.getSbomDtos(sbomDetailDto, sbomDetailDtos));
   }
@@ -494,6 +462,6 @@ export class FcoseComponent {
   }
 
   private getDataDetailDtoById(id: string): SbomReportDetailDto | undefined {
-    return this.dataDtos?.details?.find((x) => x.bomRef == id);
+    return this.dataDtos.find((x) => x.bomRef == id);
   }
 }

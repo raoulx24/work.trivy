@@ -39,7 +39,7 @@
                        (selectedRowsChanged)="onMainTableSelectionChange($event)" />
     </div>
     <div class="col-12 md:col-7 lg:col-8 p-1">
-      <app-fcose [dataDtos]="fullSbomDataDto"
+      <app-fcose [dataDtos]="fullSbomDataDto?.details ?? []"
                  [(selectedInnerNodeId)]="selectedInnerNodeId" />
     </div>
   </div>
