@@ -23,6 +23,7 @@ public class SbomReportDetailDto
     public string Purl { get; set; } = string.Empty;
     public string Version { get; set; } = string.Empty;
     public Guid[] DependsOn { get; set; } = [];
+    public string[][] Properties { get; set; } = [];
 }
 
 public static class SbomReportCrExtensions
@@ -39,6 +40,7 @@ public static class SbomReportCrExtensions
             Purl = sbomReportCr.Report?.Components.Metadata.Component.Purl ?? string.Empty,
             Type = sbomReportCr.Report?.Components.Metadata.Component.Type ?? string.Empty,
             Version = sbomReportCr.Report?.Components.Metadata.Component.Version ?? string.Empty,
+            Properties = sbomReportCr.Report?.Components.Metadata.Component.Properties ?? []
         };
         Dependency[] alldependencies = sbomReportCr.Report?.Components.Dependencies ?? [];
 
@@ -68,6 +70,7 @@ public static class SbomReportCrExtensions
                     Purl = component.Purl,
                     Version = HttpUtility.HtmlEncode(component.Version),
                     DependsOn = dependencies,
+                    Properties = component.Properties.Select(x => new string[] { x.Name, x.Value }).ToArray(),
                 };
 
                 return detailDto;
