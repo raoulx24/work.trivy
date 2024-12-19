@@ -18,6 +18,12 @@ export interface ImageDto {
   imageNameTag: string;
 }
 
+export interface DependsOn {
+  bomRef: string,
+  name: string,
+  version: string,
+}
+
 @Component({
   selector: 'app-sbom-reports',
   standalone: true,
@@ -47,12 +53,13 @@ export class SbomReportsComponent {
   }
   private _imageDto: ImageDto | null = null;
 
-  private _rootNodeId: string = "00000000-0000-0000-0000-000000000000";
-
   set selectedInnerNodeId(value: string | undefined) {
     this._selectedInnerNodeId = value;
     this.selectedSbomDetailDto = this.fullSbomDataDto?.details?.
       find(x => x.bomRef == value);
+    if (value) {
+      this.getDependsOnBoms(value)
+    }
   }
   get selectedInnerNodeId(): string | undefined {
     return this._selectedInnerNodeId;
@@ -60,11 +67,16 @@ export class SbomReportsComponent {
   private _selectedInnerNodeId: string | undefined = undefined;
 
   selectedSbomDetailDto: SbomReportDetailDto | undefined = undefined;
-
+  dependsOnBoms: DependsOn[] = [];
 
   public mainTableColumns: TrivyTableColumn[] = [];
   public mainTableOptions: TrivyTableOptions;
   public isMainTableLoading: boolean = true;
+
+  dependsOnTableColumns: TrivyTableColumn[] = [];
+  dependsOnTableOptions: TrivyTableOptions;
+
+  private readonly _rootNodeId: string = "00000000-0000-0000-0000-000000000000";
 
   set selectedDataDto(dataDto: SbomReportDto | null) {
     this.getFullSbomDto(dataDto?.uid);
@@ -112,6 +124,40 @@ export class SbomReportsComponent {
       extraClasses: 'trivy-half',
     };
 
+    this.dependsOnTableColumns = [
+      {
+        field: 'name',
+        header: 'Name',
+        isFiltrable: true,
+        isSortable: true,
+        multiSelectType: 'none',
+        style: 'width: 400px; max-width: 480px;',
+        renderType: 'standard',
+      },
+      {
+        field: 'version',
+        header: 'Version',
+        isFiltrable: true,
+        isSortable: true,
+        multiSelectType: 'none',
+        style: 'white-space: normal;',
+        renderType: 'standard',
+      },
+    ];
+    this.dependsOnTableOptions = {
+      isClearSelectionVisible: false,
+      isExportCsvVisible: false,
+      isResetFiltersVisible: true,
+      isRefreshVisible: false,
+      isRefreshFiltrable: false,
+      isFooterVisible: true,
+      tableSelectionMode: null,
+      tableStyle: {},
+      stateKey: 'SBOM Reports - Depends On',
+      dataKey: null,
+      rowExpansionRender: null,
+      extraClasses: 'trivy-half',
+    };
   }
 
   getTableDataDtos() {
@@ -133,6 +179,7 @@ export class SbomReportsComponent {
       });
     }
     this.fullSbomDataDto = null;
+    this.selectedInnerNodeId = undefined;
   }
 
   onGetSbomReportDtoByUid(fullSbomDataDto: SbomReportDto) {
@@ -170,5 +217,22 @@ export class SbomReportsComponent {
         else if (a.imageNameTag > b.imageNameTag) { return 1; }
               else { return 0; }
       });;
+  }
+
+  getDependsOnBoms(bomRef: string) {
+    this.dependsOnBoms = this.fullSbomDataDto?.details?.
+      find(x => x.bomRef == bomRef)?.dependsOn?.
+      map(dep => {
+        const depBom = this.fullSbomDataDto?.details?.find(y => y.bomRef == dep);
+        if (depBom) {
+          return {
+            bomRef: depBom.bomRef ?? "",
+            name: depBom.name ?? "",
+            version: depBom.version ?? "",
+          } as DependsOn;
+        };
+        return { bomRef: "unknown", name: "", version: "" } as DependsOn;
+      }).filter(x => x.bomRef !== "unknown") ?? [];
+    //this.dependsOnBoms = depBoms ? depBoms : [];
   }
 }

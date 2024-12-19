@@ -24,9 +24,14 @@
         </div>
       </div>
       <p-card [header]="selectedSbomDetailDto?.name ?? 'none'"
-              [subheader]="selectedSbomDetailDto?.version ?? 'none'" >
+              [subheader]="selectedSbomDetailDto?.version ?? 'none'">
         <span>{{ selectedSbomDetailDto?.purl ?? 'none' }}</span>
       </p-card>
+      <app-trivy-table tableHeight="30vh"
+                       [dataDtos]="dependsOnBoms!"
+                       [isLoading]="false"
+                       [trivyTableColumns]="dependsOnTableColumns"
+                       [trivyTableOptions]="dependsOnTableOptions" />
       <app-trivy-table #mainTable
                        *ngIf="false"
                        tableHeight="70vh"
