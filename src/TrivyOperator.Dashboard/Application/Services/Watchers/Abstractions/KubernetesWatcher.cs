@@ -52,7 +52,7 @@ public abstract class
         IKubernetesObject<V1ObjectMeta>? sourceKubernetesObject,
         CancellationToken cancellationToken)
     {
-        bool isRecoveringfromError = false;
+        bool isRecoveringFromError = false;
         bool isFreshStart = true;
         while (!cancellationToken.IsCancellationRequested)
         {
@@ -68,12 +68,12 @@ public abstract class
                                            ex),
                                        cancellationToken))
                 {
-                    if (isRecoveringfromError || isFreshStart)
+                    if (isRecoveringFromError || isFreshStart)
                     {
                         using IServiceScope scope = serviceProvider.CreateScope();
                         IWatcherState watcherState = scope.ServiceProvider.GetRequiredService<IWatcherState>();
                         await watcherState.ProcessWatcherSuccess(typeof(TKubernetesObject), watcherKey);
-                        isRecoveringfromError = false;
+                        isRecoveringFromError = false;
                         isFreshStart = false;
                     }
                     logger.LogDebug("Sending to Queue - {kubernetesObjectType} - {kubernetesWatchEvent} - {watcherKey} - {kubernetesObjectName}",
@@ -136,7 +136,7 @@ public abstract class
                 
             }
 
-            isRecoveringfromError = true;
+            isRecoveringFromError = true;
         }
     }
 
